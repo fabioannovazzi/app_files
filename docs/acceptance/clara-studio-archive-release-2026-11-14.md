@@ -92,6 +92,11 @@ conflicting identities rather than creating a replacement case.
   pytest failing: its default PowerShell step returned the last command's exit
   code. The step now explicitly uses Bash's stop-on-error behavior on every
   platform, preventing a later syntax check from masking a failed regression.
+- Final Git-catalog inspection found that the new Cowork Archive files were
+  present in the generated ZIP/directory but absent from the committed catalog
+  source. The required release files are now included. A regression inspects
+  `git archive HEAD` directly, proving a checkout has the Archive helpers, skill
+  and privacy contract without relying on a local rebuild.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Archivio dello Studio" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M14 17h31v34H14z" fill="#F7F0DF"/>
+  <path d="M20 24h19M20 32h19M20 40h12" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M17 13h31v8H17z" fill="#F7F0DF" stroke="#1F211D" stroke-width="2"/>
+  <circle cx="43" cy="43" r="9" fill="#00B0F0"/>
+  <circle cx="43" cy="43" r="4" fill="#171816"/>
+  <path d="m49 49 6 6" stroke="#00B0F0" stroke-width="4" stroke-linecap="round"/>
+</svg>

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import importlib.util
+import io
 import json
 import re
+import subprocess
 import sys
+import tarfile
 from dataclasses import replace
 from pathlib import Path
 from zipfile import ZipFile
@@ -30,6 +33,29 @@ EXPECTED_ROOT_SKILLS = {
     "research-video",
     "studio-archive",
 }
+
+
+def test_git_catalog_source_contains_archive_runtime_without_rebuilding() -> None:
+    catalog = json.loads((ROOT / ".claude-plugin/marketplace.json").read_text())
+    source = next(p for p in catalog["plugins"] if p["name"] == "clara")[
+        "source"
+    ].removeprefix("./")
+    snapshot = subprocess.run(
+        ["git", "archive", "HEAD", "--", source],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+    )
+    with tarfile.open(fileobj=io.BytesIO(snapshot.stdout)) as archive:
+        shipped = set(archive.getnames())
+    required = {
+        "scripts/clara_studio_archive.py",
+        "modules/studio-archive/scripts/archive_core.py",
+        "modules/studio-archive/scripts/client_ledger.py",
+        "skills/mparanza-studio-archive/SKILL.md",
+        "privacy/contracts/studio-archive.json",
+    }
+    assert {f"{source}/{name}" for name in required} <= shipped
 
 
 def load_builder():
