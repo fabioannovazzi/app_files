@@ -103,7 +103,7 @@ def test_bank_failed_save_keeps_preparation_visible_without_navigation():
     [
         ("refresh", {"client_id": CLIENT, "engagement_id": ENGAGEMENT, "offset": 30}),
         ("← Clienti", {}),
-        ("← Incarichi del cliente", {"client_id": CLIENT}),
+        ("← Fascicoli", {"client_id": CLIENT}),
     ],
 )
 def test_directory_refresh_preserves_scope_and_explicit_back_changes_it(
