@@ -275,7 +275,9 @@ def test_temporary_archive_cannot_replace_default(tmp_path: Path) -> None:
     studio.mkdir()
     test.mkdir()
     preference = tmp_path / "profile" / "approved-archive.json"
-    assert _run(tmp_path, "test-session", "temporary", test)["archive_root"] == str(test)
+    assert _run(tmp_path, "test-session", "temporary", test)["archive_root"] == str(
+        test
+    )
     _run(tmp_path, "test-session", "create", test)
     assert not preference.exists()
 
@@ -284,7 +286,9 @@ def test_temporary_archive_cannot_replace_default(tmp_path: Path) -> None:
     _run(tmp_path, "test-session", "temporary", test)
     assert preference.read_bytes() == original
     assert _run(tmp_path, "fresh", "clients", studio)["registered_client_count"] == 0
-    assert json.loads((tmp_path / "fresh/config.json").read_text())["archive_root"] == str(studio)
+    assert json.loads((tmp_path / "fresh/config.json").read_text())[
+        "archive_root"
+    ] == str(studio)
 
 
 def test_legacy_default_requires_explicit_studio_choice(tmp_path: Path) -> None:

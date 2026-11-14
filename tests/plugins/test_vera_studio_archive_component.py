@@ -2209,7 +2209,9 @@ def test_mcp_verifies_same_name_imports_retry_and_continuation_in_fresh_session(
     archive.mkdir()
     state = tmp_path / "first-session"
     _mcp_tool(
-        "configure_studio_archive", {"archive_root": str(archive)}, state_dir=state
+        "configure_studio_archive",
+        {"archive_root": str(archive), "make_studio_default": True},
+        state_dir=state,
     )
     created = _mcp_tool(
         "create_studio_archive_client",

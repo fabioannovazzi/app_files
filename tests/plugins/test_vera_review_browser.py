@@ -468,7 +468,7 @@ def test_selecting_a_work_opens_detail_without_an_outer_expand_control(
     with review_host(env, inline=True) as (page, mount, errors):
         app = mount("vera_workspace_open", {})
         expect(
-            app.get_by_role("heading", name="Clienti e incarichi", exact=True)
+            app.get_by_role("heading", name="Clienti e progetti", exact=True)
         ).to_be_visible()
         assert page.evaluate("window.requestedDisplayMode ?? null") is None
         app.get_by_role("button", name="Apri lavoro →", exact=True).click()

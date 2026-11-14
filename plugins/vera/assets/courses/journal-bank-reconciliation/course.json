@@ -129,7 +129,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/retrieval_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/retrieval_review.py",
-      "sha256": "ac51c72aec28ff6ad498ae1b4baa6a6d2cdff782aa35d24a95cb2768cad9cbc2"
+      "sha256": "edc2779c27836081b7aadf19f32255951d40464f7ca679d7c619aa1abbd8426d"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",

@@ -82,7 +82,14 @@ def test_separate_commands_reuse_config_and_new_session_recovers_same_client(
     archive = tmp_path / "Existing Studio"
     archive.mkdir()
     first, second = str(uuid4()), str(uuid4())
-    configured = invoke(root, first, "configure", "--archive-root", str(archive))
+    configured = invoke(
+        root,
+        first,
+        "configure",
+        "--archive-root",
+        str(archive),
+        "--make-studio-default",
+    )
     assert configured.returncode == 0, configured.stderr + configured.stdout
     created = invoke(root, first, "create-client", "--legal-name", "Synthetic Client")
     assert created.returncode == 0, created.stderr + created.stdout
