@@ -12,6 +12,7 @@ Client documents, professional output and unreviewed logs are not reporting inpu
 Privacy policy: https://mparanza.com/privacy.
 
 - `lucia`: Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.
+- `luciaArchivePanel`: Local Studio Archive client and practice browser. Uses the same local runtime as Lucia chat; browsing labels stay in app-only metadata, and an explicit button sends selected stable IDs to a new host chat when supported.
 - `luciaDeepResearchValidator`: Review sourced legal answers and research evidence.
 - `luciaFirmMethod`: Native firm-method form; validates and saves immutable versions only in the explicitly selected studio directory. Form data stays app-only until selected for a model workflow.
 - `luciaIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
