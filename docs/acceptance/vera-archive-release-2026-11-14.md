@@ -102,3 +102,9 @@ rules. Its output is byte-identical to the already validated package stylesheet;
 114 theme tests pass. Fourteen additional Vera-only privacy fingerprints are
 refreshed for the canonical source, with no course binding change. The course
 review/projection checks pass 64 cases with one skip.
+
+The full teaching CI run then passed 1,747 cases and exposed five follow-up
+failures in the test-only New Client helper. That helper omitted registration of
+its dynamically loaded Archive module. Registering it fixes all ten demo and
+follow-up cases across five languages; Black and isort pass. This correction
+changes no production source, package, authored lesson or acceptance boundary.
