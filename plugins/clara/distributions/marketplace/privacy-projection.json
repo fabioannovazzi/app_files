@@ -60,6 +60,7 @@
       "scatter-bubble-analysis",
       "set-overlap-analysis",
       "statement-analysis",
+      "studio-archive",
       "transcribe",
       "variance-analysis"
     ]
