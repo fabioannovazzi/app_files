@@ -292,52 +292,36 @@ folders require the specialist's confirmed registration route. Directory browsin
 does not disclose private emails, legal-name aliases or fiscal identifiers from
 the contact registry.
 
-Every run read/write resolves its stable IDs inside that owned archive and replays
-the exact source receipts. A wrong client/engagement/run, changed source, changed
-top-level scope or foreign session refuses access. The panel never copies another
-session's configuration or creates a second client database. For a registered
-client, the panel can create an explicitly labelled engagement. Its app-only
-signed request has a durable receipt outside the domain ledger: retrying the
-identical request reuses the engagement, and an interrupted uncertain outcome
-refuses duplicate creation until the archive is checked. Choose one maintained
-Vera workflow, an explicit label/purpose and exact verified imported receipts to
-prepare a durable idempotent run. Input pages preserve explicit selections; no
-document is classified or selected automatically. A separate start action moves
-a prepared or failed run to running. Preparation and start never execute a
-specialist engine, qualify sources, approve evidence or finalize results.
-The engagement page also offers “Importa documenti”. Explicitly select each
-file and its journal, source or support role and confirm the engagement.
-The browser transfers complete selected bytes, up to 64 MiB per file in
-64 KiB chunks, through the host's app/tool channel. It sends File.name, size,
-SHA-256 and the declared role, never an original absolute OS path. Ordinary
-host/account processing applies; the transport makes no separate model call
-or external connector request. It does not classify or read document meaning.
-Private actor/tenant/case receipts retain exact chunk offsets and hashes inside
-the authoritative engagement. The unchanged public importer conserves the
-verified complete file and deduplicates identical bytes and roles. The original
-selected file remains unchanged. Reopening shows retained progress without
-restoring confirmation. Recovery requires an explicit choice of the same bytes
-or explicit completion of the exact retained import intent; changed or missing
-receipts require specialist verification. Uncertain pending writes block new
-imports and run preparation. Importing never creates or starts a run. Files
-larger than 64 MiB use the maintained specialist import. Selected imported
-contents can later enter model context under the chosen workflow's own rules.
-“Appunti del colloquio” accepts complete literal user notes, an optional declared
-speaker and a chosen JSON basename. Owner-bound private drafts use compare-and-set
-recovery and never restore confirmation. Explicit conservation captures an
-immutable `vera.user_statement.v1` original containing the exact text, unverified
-attribution, configured actor/tenant/client/engagement references and actual UTC
-capture time, then imports its complete bytes through the same public API. It is
-a user statement, not independent evidence of truth, adoption or operation;
-capture time is not prior fact or information availability. Interrupted capture
-reopens the exact retained original, without a new timestamp or OS-file selection.
-Discarding private fields keeps originals and public receipts. The literal-text
-limit is 256 KiB in UTF-8; longer originals use file import without truncation.
-Source selection, run preparation, start and specialist qualification remain
-separate. Notes and provenance pass through ordinary host processing and can
-enter the chosen model context when selected later; there is no automatic
-anonymization, authentication of the speaker, audio capture or separate provider
-call from this transport.
+The common Archive page shows client/project → incarico, associated
+conversations, saved documents and revision history. Clicking a conversation
+title requests its exact stored host link. Clicking a document title verifies
+and opens its declared primary file; companion files are available inside its
+document view, and each historical title opens that exact earlier revision.
+The portable HTML view follows the same navigation. Neither view composes or
+sends a request to Vera. Missing chat access does not remove saved documents.
+If host file opening is unavailable, retain the verified file path and available
+text preview without claiming that another app opened.
+
+The user supplies requests and new documents in the host chat. Vera recovers the
+same incarico through `vera_incarico_context`, imports new original sources there,
+uses the owning workflow and publishes the completed revision under its existing
+result entry. Drafts stay in the working area. Do not direct the user to manual
+incarico creation, a generic pipeline chooser, an import form or interview-note
+composer on the Archive page. Resolve new assignments and pipeline selection
+from the user's request, following `work-continuity.md`.
+
+Every saved work read/write resolves its stable IDs inside the owned archive and
+checks its exact receipts. A wrong client/engagement/run, changed evidence or
+foreign scope refuses access; the panel never copies another session's
+configuration or creates a second client database. Source import and preparation
+use the maintained services with exact receipts and retained retry identities.
+Previously interrupted import/capture records remain recoverable through their
+maintained APIs; removing their entry controls does not delete original files,
+notes, receipts or drafts. Do not automatically execute or repeat an uncertain
+write when browsing the Archive. Saved specialist work opens its existing exact
+review/setup route; the following specialist controls remain independent of the
+common Archive navigation.
+
 Giornale e banca now has a separate initial source-preparation page for a running
 run. Explicitly assign disjoint imported files to bank, journal and optional
 single sample. The maintained engine inspects exact copies kept in this run,
@@ -1642,3 +1626,36 @@ qualification contracts and are not established by panel tests.
 Client-file-preparation has focused views over its complete canonical queue: fiscal fields and coverage; formal XML anomalies and duplicate groups; memo and missing-document requests. Separate read-only views page every saved XML body and every notice date/amount/protocol reference. Filter before paging, keep the original evidence and refuse changed artifact hashes. Explicit fiscal correction regenerates a separate same-engagement run through the public producer, preserving the original and reviewed before/after provenance. No fiscal-treatment approval or Archive completion is inferred.
 
 For existing tax matters and studio-format reviews, read [the exact local connection and review contract](native-practice-reviews.md). The optional panel uses public matter/profile writers, saved versions, selected source citations and separately confirmed preview preparation/adoption. Extracted dates and authored terms remain unqualified until professional research and review. Actual installed-host acceptance is a separate release gate.
+
+
+## Incarico navigation and publication
+
+The Archive landing page is the selected incarico's purpose, documents, named
+current deliverables, their dated revisions, and associated chats. It works
+without a technical run. Open exact document/result references with
+`vera_incarico_document`. Existing specialist routes continue to own calculation
+and review. Do not offer a generic pipeline chooser inside an established job.
+
+Use `vera_incarico_begin` before model or engine work. All pipeline deliverables
+use `vera_incarico_publish_result`: one stable entry, all formats issued together,
+revision compare-and-swap and a repeat-safe save key. The panel and readable
+HTML share this projection. The source receipt, original files and old issued
+revisions remain intact. Creating a different job from a result selects a new
+incarico and snapshots its exact origin via `vera_incarico_reuse_result`.
+
+The Archive root lists clients/projects and the visible folder location. A
+collapsed folder setting retains the native folder picker. Refresh reloads the
+current directory or selected review without switching to an unrelated case.
+There is no global workflow launcher or request composer. Requests to create or
+change work, including a saved website, belong in the host chat.
+
+Saved operator-bound work reopens from its descriptive incarico link through
+`vera_incarico_open_work`. Tax matters and studio document formats use the same
+route and retain their separate type, owner and case identity. The specialist
+view returns to that incarico. Explicit synthetic transformation examples remain
+synthetic; this navigation change does not qualify them for real engagements.
+
+Claude history links use actual stored native IDs and
+`codex://threads/<thread-id>` links; successful dispatch alone does not prove
+that the host opened a chat. Record conversation identity only when established
+from actual host context/tools.

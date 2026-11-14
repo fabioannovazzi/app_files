@@ -218,6 +218,13 @@ configuration is only a rebuildable path pointer; it may be recreated from the
 same connected archive root without changing the client, engagement, input,
 run, lifecycle, or artifact records under `Vera/`.
 
+The Archive directory lists saved clients/projects and their incarichi, with
+one visible storage location. It is not a catalogue of pipeline launch buttons.
+A studio website or communication belongs to its named project and requested
+incarico. Reopen its saved documents and conversation; requests to change it or
+add a new source belong in chat. Synthetic-only prototypes are not ordinary
+professional services. Folder settings do not launch professional work.
+
 ## Routes
 
 - **Portable client ledger:** the normal route. It needs code execution plus
@@ -399,6 +406,42 @@ Use this sequence for archived client work. Explicit standalone invoice/answer
 work follows Vera's `references/standalone-work.md` and retains task artifacts
 without this archive configuration or client-registration gate.
 
+### One incarico and its saved results
+
+One incarico has one purpose and one owning workflow, resolved from the user's
+request. Client and project are the same filing level. Revisions and execution
+attempts stay in that incarico; a different job has its own incarico and may use
+an exact saved result from another one. Never ask the user to choose a pipeline
+from an Archive menu.
+
+Before substantive work, read the selected assignment with `incarico`, then
+establish it through `begin-incarico` with the exact client, engagement, purpose,
+workflow and retained retry key. Use its returned working directory for drafts.
+When a specialist run already owns work, retain its exact output directory,
+source bindings and normal execution/review/finalization contract.
+
+Publish completed deliverables with `publish-incarico-result`: use a stable entry
+key, meaningful document title, explicit primary format and every file of that
+issued revision with its exact digest. Use the current expected result revision
+and the same retry key for an identical save. A correction advances the same
+entry and retains earlier dated revisions; drafts stay in the working area.
+Do not import generated output as a new support document. Preserve legacy
+imported notes and their receipts without rewriting them. Publication organizes
+results; it does not sign, file, send or professionally approve them.
+
+Requests to modify work or add documents belong in the host chat. Recover the
+current saved incarico before updating it, import newly supplied original sources
+there, and publish the completed correction under the same result entry. An old
+chat answer may not be the current saved version. Archive and its saved HTML
+open document titles, exact revision history and registered conversation links;
+they do not compose or send requests. Use only actual host-provided conversation
+identities and supported navigation; do not invent a chat link or claim it opened.
+Missing host navigation does not remove the saved documents or block chat work.
+Use `open-incarico-document` for the selected saved file and
+`reuse-incarico-result` for explicit cross-incarico sources, retaining their exact
+issued versions and every required companion file. A later source revision
+does not silently change the receiving work.
+
 Complete the supplied-file checks above before these record-creation steps.
 
 1. Run `clients`. Select one returned stable client semantically from the
@@ -457,11 +500,13 @@ file and receipt hashes and check results may enter the host model context,
 but this operation returns no document text. Verification does not establish
 document meaning, payment, authored lineage or professional approval.
 
-For a document-only continuation, import the new derived note as `support`,
-retain the earlier receipt and verify both versions against their prior import
-receipts. For an exact retry, retain the actual import result `already_imported`
-and the same input ID; verification cannot invent a historical retry outcome.
-The full contract is in the component's `references/input-verification.md`.
+For a document-only continuation, retain drafts in the incarico working area and
+publish completed notes under their stable result entry as described above.
+Verify issued revisions through `incarico` and `open-incarico-document`.
+The input verifier applies to original sources and preserved legacy imports,
+not newly generated results. An identical original import must itself return
+`already_imported`; verification cannot invent that historical retry outcome.
+The source-verification contract is in `references/input-verification.md`.
 
 ## Local document search
 
@@ -514,3 +559,15 @@ This is purpose-based minimization, not anonymization or pseudonymization. Do
 not remove names, account labels, amounts, relationships, or evidence locators
 when they are necessary to select the right client, interpret the accounting
 evidence, or support the professional result.
+
+
+When beginning an incarico, supply `originating_conversation` with the actual
+host-provided user-visible chat identity and title. The begin operation saves
+that association before generation and merges it without duplicate links on
+retry. Native `CODEX_THREAD_ID`, when present, is captured automatically; private
+Archive session identifiers are never chat identities. Verify the parent chat
+with the host reader and retain that same origin through delegated work. A worker
+must not substitute an ephemeral execution chat. The portable begin command
+accepts `--originating-conversation-json` with host, thread_id, title and url.
+If the host provides no recoverable chat identity, keep that absence explicit;
+do not fabricate a link or block delivery of the user's work.

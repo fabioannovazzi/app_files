@@ -378,7 +378,7 @@ def test_token_only_mcp_requests_preserve_their_own_run(
     from archive_report_store import RunStore, digest
 
     first = start(archive_core, client_case, "report-builder")
-    second = start(archive_core, client_case, "report-enti-locali")
+    second = start(archive_core, client_case, "report-builder", new_run=True)
     assert first["run_root"] != second["run_root"]
     worker = tmp_path / "token-producer.cjs"
     worker.write_text(

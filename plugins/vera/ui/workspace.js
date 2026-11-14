@@ -136,10 +136,10 @@
   function showOpenError(error) {
     const message = error.message || String(error);
     say(message.includes("Run is not authorised in this workspace")
-      ? "Questo lavoro non è disponibile nella connessione corrente. Torna ai lavori autorizzati per riaprirlo."
+      ? "Non è stato possibile riaprire questo lavoro. Torna ai lavori dello studio e seleziona l’incarico."
       : message, true);
     if (!recoveryButton) {
-      recoveryButton = button("Torna ai lavori autorizzati", () => loadCatalogue());
+      recoveryButton = button("Torna ai lavori dello studio", () => loadCatalogue());
       root.append(recoveryButton);
     }
   }
@@ -167,12 +167,18 @@
     return { work_ref: state.work_ref, revision: state.revision, ...(selected ? { item_id: itemId(selected) } : {}), ...(state.data.selection?.source_ref ? { source_ref: state.data.selection.source_ref } : {}) };
   }
   function leaveDraft() { if (dirty) throw new Error(state ? "Ci sono modifiche non salvate. Salvale o scegli «Scarta modifiche» prima di cambiare lavoro o selezione." : "Questo modulo contiene modifiche. Completa l’azione oppure scegli «Scarta e torna agli incarichi» prima di cambiare pagina."); }
+  const catalogueNotifications = new Set();
+  const catalogueNotification = result => result.navigation_id || JSON.stringify(result);
+  function showCatalogue(result) {
+    catalogueNotifications.add(catalogueNotification(result));
+    catalogue = result; planningAuthorWork = null; businessPlanWork = null; salesWork = null; state = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; query = ""; renderCatalogue(); say("");
+  }
   async function loadCatalogue(args = {}) {
     notifiedReview = null;
     leaveDraft(); crWork = null; crPage = null;financialWork=null;financialPage=null; const generation = ++epoch;
     const result = await call("vera_workspace_open", args);
     if (generation !== epoch) return;
-    catalogue = result; planningAuthorWork = null; businessPlanWork = null; salesWork = null; state = null; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; query = ""; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive.");
+    showCatalogue(result);
   }
   function refreshCatalogue() {
     return loadCatalogue({
@@ -211,6 +217,7 @@
       "trasformazione":id=>transformationPanel.open(id), "fusione-guidata":id=>fusionPanel.open(id),
       "presenza-digitale-studio":id=>websitePanel.open(id), "comunicazione-professionale":id=>communicationPanel.open(id),
       "browser-automation":id=>browserPanel.open(id),
+      "contenzioso-tributario":id=>practicePanel.open(id), "studio-document-format":id=>practicePanel.open(id),
     };
     if (route.view === "items") return openWork(ref, 0, undefined, undefined, undefined, undefined, true);
     if (!taskViews[route.workflow]) throw new Error("Questo lavoro non ha una revisione disponibile.");
@@ -292,28 +299,122 @@
     label.append(node("span", caption), input); parent.append(label);
     input.addEventListener("input", () => { query = input.value; change(); });
   }
+  function archiveLink(label, action) {
+    return button(label, action, "archive-link");
+  }
+  function primaryDocument(version) {
+    return version.formats.find(file => file.format === version.primary_format) || version.formats[0];
+  }
+  function issuedDate(version) {
+    const issued = new Date(version.issued_at);
+    return Number.isNaN(issued.getTime()) ? version.issued_at : issued.toLocaleDateString("it-IT", {dateStyle:"medium"});
+  }
+  async function openIncaricoDocument(selected, reference, version) {
+    const document = await call("vera_incarico_document", {...selected,reference});
+    const main = archiveFormShell(document.name, renderCatalogue, "← Torna all’incarico");
+    if (document.preview !== null) main.append(node("pre", document.preview, "document-preview"));
+    if (host.hostCapabilities?.experimental?.["openai/files"]) {
+      const result = await request("openai/files/open", {path:document.path});
+      if (result?.isError) throw new Error("Non è stato possibile aprire il documento salvato.");
+    } else {
+      main.append(node("p", document.path, "archive-location"));
+      if (document.preview === null) main.append(node("p", "Questo host non apre i file locali. Il documento è disponibile nel percorso indicato.", "caption"));
+    }
+    const companions = version?.formats.filter(file => JSON.stringify(file.reference) !== JSON.stringify(reference)) || [];
+    if (companions.length) {
+      const files = node("section", undefined, "incarico-documents"); files.append(node("h2", "Altri file di questa versione"));
+      for (const file of companions) {
+        const link = archiveLink(file.name, () => openIncaricoDocument(selected, file.reference, version));
+        link.disabled = !file.available; files.append(link);
+      }
+      main.append(files);
+    }
+  }
+  function renderIncarico(parent, saved) {
+    const selected = {client_id:saved.client_id, engagement_id:saved.engagement_id};
+    if (saved.purpose) parent.append(node("p", saved.purpose, "sub"));
+    if (saved.legacy_assignments?.length) {
+      const mapped=node("section"); mapped.append(node("h2", "Incarichi"));
+      for (const item of saved.legacy_assignments) mapped.append(archiveLink(item.label, () => loadCatalogue({client_id:saved.client_id, engagement_id:item.engagement_id})));
+      parent.append(mapped);
+    }
+    if (saved.historical_assignments?.length) {
+      const history=node("details"); history.append(node("summary", "Attività precedenti"));
+      for (const item of saved.historical_assignments) history.append(archiveLink(item.label, () => loadCatalogue({client_id:saved.client_id, engagement_id:item.engagement_id, view:"history"})));
+      parent.append(history);
+    }
+    const chats=node("section", undefined, "incarico-conversations"); chats.append(node("h2", "Conversazioni"));
+    for (const conversation of saved.conversations) {
+      const row=node("div", undefined, "archive-document");
+      const title=conversation.title === "Chat di origine" ? "Vai alla chat" : conversation.title;
+      if (conversation.url) row.append(archiveLink(title, async () => {
+        try {
+          const result=await request("ui/open-link", {url:conversation.url});
+          if (result?.isError) throw new Error("Chat unavailable");
+        } catch {
+          say("Questa chat non è accessibile. I documenti sono conservati. Puoi chiedere a Vera in Codex di riprendere questo incarico.");
+        }
+      }));
+      else row.append(node("span", title), node("p", "Collegamento alla chat non disponibile.", "caption"));
+      chats.append(row);
+    }
+    if (!saved.conversations.length) chats.append(node("p", "Nessuna conversazione associata.", "caption"));
+    parent.append(chats);
+    const documents=node("section", undefined, "incarico-results incarico-documents"); documents.append(node("h2", "Documenti"));
+    function documentRow(parent, label, reference, caption, available=true, version) {
+      const row=node("div", undefined, "archive-document");
+      const open=archiveLink(label, () => openIncaricoDocument(selected, reference, version)); open.disabled=!available; row.append(open);
+      if (caption) row.append(node("p", caption, "caption"));
+      if (!available) row.append(node("p", "Il file non è disponibile. Il riferimento alla versione è conservato.", "notice"));
+      parent.append(row); return row;
+    }
+    for (const item of saved.results) documentRow(documents, item.label, item.reference, "", item.available);
+    for (const entry of saved.deliverables || []) {
+      const latest=entry.versions.at(-1), file=primaryDocument(latest);
+      const row=documentRow(documents, latest.label, file.reference, `Revisione ${latest.revision} · ${issuedDate(latest)}`, file.available, latest);
+      if (entry.versions.length>1) {
+        const history=node("details"); history.append(node("summary", "Storico"));
+        for (const version of [...entry.versions].reverse().slice(1)) {
+          const prior=primaryDocument(version);
+          documentRow(history, version.label, prior.reference, `Revisione ${version.revision} · ${issuedDate(version)}`, prior.available, version);
+        }
+        row.append(history);
+      }
+    }
+    if (saved.deliverable_issues?.length) documents.append(node("p", "Alcuni risultati richiedono verifica. I riferimenti restano conservati.", "notice"));
+    const sources=node("div"); documents.append(sources); parent.append(documents);
+    async function draw(page) {
+      sources.replaceChildren();
+      for (const item of page.documents) {
+        const row=documentRow(sources, item.name, item.reference, "");
+        if (item.origin) row.append(archiveLink(`Da: ${item.origin.label}`, () => loadCatalogue({client_id:item.origin.client_id, engagement_id:item.origin.engagement_id})));
+      }
+      if (!page.documents.length && !saved.results.length && !saved.deliverables?.length) sources.append(node("p", "Nessun documento salvato.", "caption"));
+      if (page.document_issues.length) sources.append(node("p", "Alcuni documenti richiedono verifica. Gli altri restano disponibili.", "notice"));
+      if (page.has_more || page.offset) {
+        const previous=button("Precedenti", async () => draw(await call("vera_incarico_read", {...selected, offset:Math.max(0,page.offset-30)})));
+        const next=button("Successivi", async () => draw(await call("vera_incarico_read", {...selected, offset:page.offset+30})));
+        previous.disabled=!page.offset; next.disabled=!page.has_more; sources.append(previous,next);
+      }
+    }
+    draw(saved);
+    if (saved.work_links?.length) {
+      const work=node("section", undefined, "incarico-work"); work.append(node("h2", "Lavori salvati"));
+      for (const link of saved.work_links) {
+        const row=node("div", undefined, "archive-document"); row.append(archiveLink(link.label, async () => {
+          const route=await call("vera_incarico_open_work", {...selected, workflow_id:link.workflow_id, work_ref:link.work_ref});
+          await showReviewRoute(route);
+        })); work.append(row);
+      }
+      parent.append(work);
+    }
+  }
   function renderCatalogue() {
     const { nav, main } = shell();
-    const services = node("details", undefined, "other-tools");
-    services.append(node("summary", "Altri strumenti dello studio")); nav.append(services);
-    services.append(button("Comunicazioni dello studio",()=>communicationPanel.catalogue()),button("Sito dello studio",()=>websitePanel.catalogue()),button("Automazione web · processi e lotti",()=>browserPanel.catalogue()),button("Fusione guidata",()=>fusionPanel.catalogue()),button("Trasformazione · prototipi sintetici",()=>transformationPanel.catalogue()));
-    services.append(button("Pratiche e formato documenti",()=>practicePanel.catalogue()));
-    services.append(button("Organizzazione del lavoro", async () => {
-      leaveDraft();
-      const text = "Apri vera_studio_work_panel_open per consultare il registro degli impegni, le riunioni e le ricevute calendario dello studio. Usa lo stesso registro owner-local di organizzazione-lavoro. Questa richiesta non autorizza operazioni calendario né configura automazioni.";
-      if (host.hostCapabilities?.message?.text) {
-        const result = await request("ui/message", { role: "user", content: [{ type: "text", text }] });
-        if (result?.isError) throw new Error("La chat non ha confermato la richiesta; verifica prima di riprovare.");
-        say("Richiesta consegnata alla chat corrente. L’apertura del registro resta da verificare.");
-      } else {
-        const copy = node("textarea", undefined, "request"); copy.readOnly = true; copy.value = text;
-        copy.setAttribute("aria-label", "Richiesta di apertura del registro da copiare nella chat corrente"); main.append(copy); copy.focus(); copy.select();
-      }
-    }));
     const archive = catalogue.mode === "studio-archive";
     const heading = catalogue.level === "runs" ? catalogue.engagement_label : catalogue.level === "engagements" ? catalogue.client_label : "Clienti e progetti";
-    main.append(node("p", "Vera", "eyebrow"), node("h1", heading), node("p", "Riprendi un lavoro e i suoi documenti nel fascicolo autorizzato.", "sub"));
-    if (archive && catalogue.archive_location) {
+    main.append(node("p", catalogue.client_label || "Vera", "eyebrow"), node("h1", heading));
+    if (archive && catalogue.archive_location && catalogue.level === "clients") {
       const location = node("p", catalogue.archive_location, "archive-location");
       location.setAttribute("aria-label", "Posizione dell’archivio: " + catalogue.archive_location);
       main.append(location);
@@ -333,20 +434,19 @@
       return;
     }
     if (archive) {
-      if (catalogue.level === "clients") services.append(button("Cambia cartella dello studio", chooseStudioArchive));
-      services.append(button("Aggiorna registro e fascicoli", async () => {
-        say("Verifica del registro e aggiornamento dell'indice locale…");
-        const result = await call("vera_workspace_archive_refresh", { confirmed: true });
-        await loadCatalogue();
-        say(result.scan_issue_count ? `Registro aggiornato. ${result.scan_issue_count} problemi di lettura restano da verificare nel percorso Archivio dello studio.` : "Registro aggiornato; fascicoli riletti dal servizio.");
-      }));
-      if (catalogue.client_id) nav.append(button("← Clienti", () => loadCatalogue()));
-      if (catalogue.engagement_id) nav.append(button("← Fascicoli", () => loadCatalogue({ client_id: catalogue.client_id })));
-      if (catalogue.can_create_engagement) main.append(button("Nuovo fascicolo", renderNewEngagement));
+      if (catalogue.level === "clients") {
+        const settings=node("details", undefined, "archive-settings");
+        settings.append(node("summary", "Cartella dell’archivio"), button("Cambia cartella", chooseStudioArchive));
+        nav.append(settings);
+      }
+      if (catalogue.client_id && !catalogue.engagement_id) nav.append(button("← Clienti", () => loadCatalogue()));
+      if (catalogue.engagement_id) nav.append(button("← Incarichi", () => loadCatalogue({ client_id: catalogue.client_id })));
       if(catalogue.collection_issues?.length)main.append(node("p","L’elenco dei lavori è incompleto: una parte dell’archivio non è leggibile. I record conservati restano invariati.","notice"));
-      if (catalogue.can_prepare) main.append(button("Importa documenti", () => renderImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Appunti del colloquio", () => renderNoteImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Prepara un lavoro", renderPreparation));
+      if (catalogue.incarico) renderIncarico(main, catalogue.incarico);
     }
-    if (archive && catalogue.level === "runs") {
+    const hasWorkViews = archive && catalogue.level === "runs" && (catalogue.works.length || Object.values(catalogue.work_counts || {}).some(count => count > 0) || catalogue.view && catalogue.view !== "active");
+    if (hasWorkViews) {
+      main.insertBefore(node("h2", "Lavorazione e versioni"),main.querySelector(".incarico-results"));
       const views = node("div", undefined, "work-views");
       views.setAttribute("role", "group");
       views.setAttribute("aria-label", "Vista dei lavori");
@@ -356,7 +456,9 @@
         control.setAttribute("aria-pressed", String((catalogue.view || "active") === view));
         views.append(control);
       }
-      main.append(views);
+      main.insertBefore(views,main.querySelector(".incarico-results"));
+      const viewCopy={active:"Lavorazioni aperte, da rivedere o interrotte.",history:"Lavorazioni completate o annullate.",hidden:"Lavorazioni nascoste da questo operatore."};
+      main.insertBefore(node("p",`${viewCopy[catalogue.view || "active"]} Documenti e risultati restano disponibili.`,"caption"),main.querySelector(".incarico-results"));
     }
     const list = node("div", undefined, "works");
     list.addEventListener("click", event => {
@@ -369,51 +471,54 @@
     const records = archive && catalogue.level !== "runs" ? (catalogue.clients || catalogue.engagements || []) : catalogue.works;
     if (records.length > 1) search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows);
     else query = "";
-    main.append(list);
+    main.insertBefore(list,main.querySelector(".incarico-results"));
     function rows() {
       list.replaceChildren();
       if (archive && catalogue.level !== "runs") {
         const source = catalogue.level === "clients" ? catalogue.clients : catalogue.engagements;
         const selected = source.filter(item => `${item.display_name || item.label}`.toLowerCase().includes(query.toLowerCase()));
         for (const item of selected) {
-          const row = node("section", undefined, "work-row"); row.append(node("h2", item.display_name || item.label));
+          const row = node("section", undefined, "work-row");
+          const title=item.display_name || item.label;
           if (catalogue.level === "clients") {
-            if (item.client_id && item.registration_status === "registered") row.append(button("Apri fascicoli →", () => loadCatalogue({ client_id: item.client_id })));
-            else row.append(node("p", item.registration_status === "blocked" ? "Identità del cliente non disponibile o in conflitto. I file sono conservati; gli altri clienti restano accessibili." : "Cartella non registrata. Conferma il cliente nel percorso Archivio dello studio in chat prima di creare un incarico.", "caption"));
-          } else if (item.status === "blocked") row.append(node("p", "Incarico non disponibile. I documenti e i registri originali sono conservati.", "caption"));
-          else row.append(button("Apri lavori →", () => loadCatalogue({ client_id: catalogue.client_id, engagement_id: item.engagement_id })));
+            if (item.client_id && item.registration_status === "registered") row.append(archiveLink(title, () => loadCatalogue({ client_id: item.client_id })));
+            else row.append(node("h2",title),node("p", item.registration_status === "blocked" ? "Identità del cliente non disponibile o in conflitto. I file sono conservati; gli altri clienti restano accessibili." : "Cartella non registrata. Conferma il cliente nel percorso Archivio dello studio in chat prima di creare un incarico.", "caption"));
+          } else if (item.status === "blocked") row.append(node("h2",title),node("p", "Incarico non disponibile. I documenti e i registri originali sono conservati.", "caption"));
+          else row.append(archiveLink(title, () => loadCatalogue({ client_id: catalogue.client_id, engagement_id: item.engagement_id })));
           list.append(row);
         }
-        if (!selected.length) list.append(node("p", source.length ? "Nessun risultato in questa pagina." : catalogue.level === "clients" ? "Nessun cliente presente nella cartella configurata." : "Nessun fascicolo salvato in questa cartella.", "empty"));
+        if (!selected.length) list.append(node("p", source.length ? "Nessun risultato in questa pagina." : catalogue.level === "clients" ? "Nessun cliente presente nella cartella configurata." : "Nessun incarico in questo progetto", "empty"));
         return;
       }
       const selected = [...catalogue.works].sort((a, b) => b.created_at.localeCompare(a.created_at)).filter(item => `${item.client_label} ${item.engagement_label} ${item.label} ${names[item.workflow] || item.workflow}`.toLowerCase().includes(query.toLowerCase()));
       for (const work of selected) {
         const row = node("section", undefined, "work-row"), text = node("div");
-        text.append(node("p", work.client_label, "eyebrow"), node("h2", work.label), node("p", work.engagement_label), node("p", names[work.workflow] || work.workflow), node("p", statusLabels[work.status] || work.status, "caption"));
-        row.append(text);
-        if (work.closure_available) row.append(button("Documenti e chiusura del lavoro →", () => openClosure(work)));
-        if (work.source_groups_available) row.append(button("Confronta i documenti originali →", () => openSourceGroup(work.work_ref)));
-        if (work.can_start) {
-          const start = node("div", undefined, "run-start");
-          start.append(node("p", "L’avvio cambia lo stato del run. Il motore e la qualificazione delle fonti proseguono nel percorso della funzione.", "caption"), button("Avvia lavorazione", async () => {
-            await call("vera_workspace_archive_start", { client_id: work.client_id, engagement_id: work.engagement_id, run_id: work.run_id, scope_revision: work.scope_revision, archive_ticket: work.archive_ticket, confirmed: true });
-            await loadCatalogue({ client_id: work.client_id, engagement_id: work.engagement_id });
-            say("Run in lavorazione. Riprendi la funzione nella chat per eseguire il motore.");
-          })); row.append(start);
+        if (!catalogue.incarico) text.append(node("p", work.client_label, "eyebrow"), node("h2", work.label), node("p", work.engagement_label), node("p", names[work.workflow] || work.workflow), node("p", statusLabels[work.status] || work.status, "caption"));
+        if (catalogue.incarico && !work.review_available && !work.setup_available) text.append(node("span", work.label));
+        if (catalogue.incarico) text.append(node("p", [statusLabels[work.status] || work.status, work.created_at ? new Date(work.created_at).toLocaleString("it-IT") : ""].filter(Boolean).join(" · "), "caption"));
+        if (!catalogue.incarico || text.children.length) row.append(text);
+        if (work.closure_available && !catalogue.incarico) row.append(button("Documenti e chiusura del lavoro →", () => openClosure(work)));
+        if (work.source_groups_available && !catalogue.incarico) row.append(button("Confronta i documenti originali →", () => openSourceGroup(work.work_ref)));
+        const separatePreparation = !catalogue.incarico && ["journal-bank-reconciliation", "open-item-reconciliation", "treasury-forecast", "registro-imprese-sari"].includes(work.workflow);
+        if (work.setup_available && (!work.review_available || separatePreparation)) {
+          const open = work.workflow === "passive-invoice-audit" ? button("Controllo fatture passive →", () => openPassive(work.work_ref)) : work.workflow === "sales-plan" ? button("Piano vendite →", () => openSales(work.work_ref)) : work.workflow === "business-planning" ? button("Business plan →", () => openBusinessPlan(work.work_ref)) : work.workflow === "business-valuation" ? button("Valutazione d’impresa →", () => openValuation(work.work_ref)) : work.workflow === "rating-legalita" ? button("Dossier Rating di legalità →", () => ratingPanel.open(work.work_ref)) : work.workflow === "patent-box-review" ? button("Fascicolo Patent Box →", () => patentBoxPanel.open(work.work_ref)) : work.workflow === "bandi-agevolazioni" ? button("Dossier Bandi →", () => openBandi(work.work_ref)): work.workflow === "registro-imprese-sari" ? button("Fascicolo Registro Imprese →", () => openSari(work.work_ref)) : work.workflow === "previdenza-inps" ? button("Fascicolo INPS →", () => openInps(work.work_ref)) : work.workflow === "esg-reporting-assurance" ? button("Fascicolo ESG →", () => openEsg(work.work_ref)) : work.workflow === "composizione-negoziata" ? button("Composizione negoziata →", () => openCnc(work.work_ref)) : work.workflow === "management-control-pack" ? button("Controllo di gestione →", () => openManagement(work.work_ref)) : work.workflow === "variance-analysis" ? button("Analisi degli scostamenti →", () => openVariance(work.work_ref)) : work.workflow === "open-item-reconciliation" ? button("Prepara partite aperte →", () => openItemsIntakePanel.open(work.work_ref)) : work.workflow === "treasury-forecast" ? button("Prepara Budget di tesoreria →", () => openTreasuryPreparation(work.work_ref)) : work.workflow === "invoice-xml" ? button("Fatture XML →", () => openInvoice(work.work_ref)) : work.workflow === "centrale-rischi-review" ? button("Centrale Rischi →", () => openCr(work.work_ref)) : work.workflow === "financial-analysis" ? button("Analisi finanziaria →", () => openFinancial(work.work_ref)) : work.workflow === "lipe" ? button("Calcoli LIPE →", () => openLipe(work.work_ref)) : ["aml-review", "adeguati-assetti", "scissione-guidata"].includes(work.workflow) ? button(work.workflow === "scissione-guidata" ? "Versioni della Scissione →" : work.workflow === "adeguati-assetti" ? "Valutazioni degli assetti →" : "Revisioni antiriciclaggio →", () => openAml(work.work_ref, 0, work.workflow)) : button("Prepara Giornale e banca →", () => openBank(work.work_ref));
+          if (catalogue.incarico) { open.textContent=work.label; open.className="archive-link"; }
+          row.append(open);
         }
-        const separatePreparation = ["journal-bank-reconciliation", "open-item-reconciliation", "treasury-forecast", "registro-imprese-sari"].includes(work.workflow);
-        if (work.setup_available && (!work.review_available || separatePreparation)) row.append(work.workflow === "passive-invoice-audit" ? button("Controllo fatture passive →", () => openPassive(work.work_ref)) : work.workflow === "sales-plan" ? button("Piano vendite →", () => openSales(work.work_ref)) : work.workflow === "business-planning" ? button("Business plan →", () => openBusinessPlan(work.work_ref)) : work.workflow === "business-valuation" ? button("Valutazione d’impresa →", () => openValuation(work.work_ref)) : work.workflow === "rating-legalita" ? button("Dossier Rating di legalità →", () => ratingPanel.open(work.work_ref)) : work.workflow === "patent-box-review" ? button("Fascicolo Patent Box →", () => patentBoxPanel.open(work.work_ref)) : work.workflow === "bandi-agevolazioni" ? button("Dossier Bandi →", () => openBandi(work.work_ref)): work.workflow === "registro-imprese-sari" ? button("Fascicolo Registro Imprese →", () => openSari(work.work_ref)) : work.workflow === "previdenza-inps" ? button("Fascicolo INPS →", () => openInps(work.work_ref)) : work.workflow === "esg-reporting-assurance" ? button("Fascicolo ESG →", () => openEsg(work.work_ref)) : work.workflow === "composizione-negoziata" ? button("Composizione negoziata →", () => openCnc(work.work_ref)) : work.workflow === "management-control-pack" ? button("Controllo di gestione →", () => openManagement(work.work_ref)) : work.workflow === "variance-analysis" ? button("Analisi degli scostamenti →", () => openVariance(work.work_ref)) : work.workflow === "open-item-reconciliation" ? button("Prepara partite aperte →", () => openItemsIntakePanel.open(work.work_ref)) : work.workflow === "treasury-forecast" ? button("Prepara Budget di tesoreria →", () => openTreasuryPreparation(work.work_ref)) : work.workflow === "invoice-xml" ? button("Fatture XML →", () => openInvoice(work.work_ref)) : work.workflow === "centrale-rischi-review" ? button("Centrale Rischi →", () => openCr(work.work_ref)) : work.workflow === "financial-analysis" ? button("Analisi finanziaria →", () => openFinancial(work.work_ref)) : work.workflow === "lipe" ? button("Calcoli LIPE →", () => openLipe(work.work_ref)) : ["aml-review", "adeguati-assetti", "scissione-guidata"].includes(work.workflow) ? button(work.workflow === "scissione-guidata" ? "Versioni della Scissione →" : work.workflow === "adeguati-assetti" ? "Valutazioni degli assetti →" : "Revisioni antiriciclaggio →", () => openAml(work.work_ref, 0, work.workflow)) : button("Prepara Giornale e banca →", () => openBank(work.work_ref)));
-        if (globalThis.VeraReviewRoutes[work.workflow] && ((!archive && !work.setup_available) || work.review_available)) row.append(button("Apri lavoro →", () => openReview(work.work_ref)));
+        if (globalThis.VeraReviewRoutes[work.workflow] && ((!archive && !work.setup_available) || work.review_available)) row.append(catalogue.incarico ? archiveLink(work.label, () => openReview(work.work_ref)) : button("Apri lavoro →", () => openReview(work.work_ref)));
         else if (archive && !work.inputs_valid) row.append(node("p", "Una fonte del run è mancante o cambiata. Verifica il fascicolo prima di riprenderlo.", "notice"));
         else if (!work.setup_available) {
           if (work.review_status === "specialist_recovery_required") row.append(node("p", work.workflow === "treasury-forecast" ? "La sessione di tesoreria richiede recupero nel percorso specialistico. Le fonti del run restano verificate; il pannello non modifica i riferimenti del motore." : "I risultati preparati richiedono verifica nel percorso della funzione. Il pannello conserva le fonti e le ricevute del run.", "notice"));
           if (work.review_status === "canonical_connection_required") row.append(node("p", "Il caso contabile deve essere collegato e autorizzato per questo incarico. Riprendi Bilancio nella chat per verificare il collegamento.", "notice"));
-          row.append(button("Riprendi nella chat", () => resumeWorkInChat(row, work)));
+          if (!catalogue.incarico) row.append(button("Riprendi nella chat", () => resumeWorkInChat(row, work)));
         }
         list.append(row);
       }
-      if (!selected.length) list.append(node("p", "Nessun lavoro disponibile. Il workspace mostra soltanto i run collegati e autorizzati in Studio Archive.", "empty"));
+      if (!selected.length && !archive) list.append(node("p", "Nessun lavoro salvato.", "empty"));
+      if (!selected.length && hasWorkViews) {
+        const empty={active:"Nessuna lavorazione in corso.",history:"Nessuna lavorazione nello storico.",hidden:"Nessuna lavorazione nascosta."};
+        list.append(node("p",query?"Nessun risultato in questa pagina.":empty[catalogue.view || "active"],"empty"));
+      }
     }
     rows();
     if (archive && (catalogue.offset || catalogue.has_more)) {
@@ -434,18 +539,6 @@
   function archiveFormShell(title, cancel, cancelLabel = "Scarta e torna agli incarichi") {
     leaveDraft(); const { nav, main } = shell(); nav.append(button(cancelLabel, () => { dirty = false; return cancel(); }));
     main.append(node("p", catalogue.client_label, "eyebrow"), node("h1", title)); return main;
-  }
-  function renderNewEngagement() {
-    const selected = catalogue, main = archiveFormShell("Nuovo fascicolo", renderCatalogue);
-    main.append(node("p", "Il fascicolo raccoglie i documenti e i lavori nella cartella selezionata.", "sub"));
-    const label = archiveFormField(main, "Nome del fascicolo", 160), key = crypto.randomUUID();
-    main.append(button("Crea fascicolo", async () => {
-      if (!label.reportValidity()) return;
-      const result = await call("vera_workspace_archive_create_engagement", { client_id: selected.client_id, scope_revision: selected.scope_revision, archive_ticket: selected.archive_ticket, label: label.value.trim(), idempotency_key: key, confirmed: true });
-      dirty = false;
-      await loadCatalogue({ client_id: result.client_id, engagement_id: result.engagement_id });
-      say("Fascicolo salvato.");
-    }, "primary")); label.focus();
   }
   const closureScope = view => ({client_id:view.client_id,engagement_id:view.engagement_id,run_id:view.run_id});
   async function closureAuthority(context, discard = false) {
@@ -614,7 +707,7 @@
     if(uploadRef){
       const source=JSON.parse(setup.source_text);
       main.append(node('h2','Originale conservato'),readFields({'Attribuzione dichiarata':source.reported_by||'Non indicata','Data di raccolta':source.capture.captured_at}),node('pre',source.text,'proposal-preview'),node('p','La data indica la raccolta di questi appunti; non dimostra quando una persona conosceva un fatto. L’attribuzione non è una firma autenticata.','caption'));
-      if(setup.upload.status==='imported')main.append(node('p','Questa dichiarazione è già una fonte registrata. Puoi sceglierla per preparare il lavoro; l’importazione non avvia alcun run.','notice'),button('Prepara un lavoro con le fonti',async()=>{dirty=false;await loadCatalogue(selected);await renderPreparation();}));
+      if(setup.upload.status==='imported')main.append(node('p','Questa dichiarazione è già una fonte registrata. Puoi sceglierla per preparare il lavoro; l’importazione non avvia alcun run.','notice'),button('Torna all’incarico',async()=>{dirty=false;await loadCatalogue(selected);}));
       else if(setup.can_write){
         const confirm=confirmation(main,'Confermo questo originale degli appunti e l’incarico. Conservo una dichiarazione da qualificare, non una prova indipendente.');
         main.append(button('Completa importazione degli appunti',async()=>{
@@ -654,69 +747,6 @@
         const saved=await noteCommit;noteContext=null;dirty=false;await renderNoteImport(selected,false,original.upload_ref);say(`Dichiarazione registrata: ${saved.name}. Sceglila per preparare un lavoro; nessuna valutazione o decisione professionale.`);
       } finally {for(const [element,disabled] of controls)element.disabled=disabled;}
     },'primary'));
-  }
-  async function renderPreparation() {
-    const selected = catalogue, prepared = await call("vera_workspace_archive_inputs", { client_id: selected.client_id, engagement_id: selected.engagement_id });
-    const main = archiveFormShell("Prepara un lavoro", renderCatalogue);
-    if (!prepared.can_prepare) { main.append(node("p", "Questo incarico non consente la preparazione di un nuovo lavoro.", "notice")); return; }
-    main.append(node("p", "Scegli una funzione e le fonti di questo incarico: documenti importati oppure output sigillati di un altro run, con il ruolo che avranno nel nuovo lavoro. La preparazione conserva copie esatte e la struttura dei gruppi. Esecuzione e revisione professionale sono passaggi successivi.", "sub"));
-    if(prepared.ledger_complete===false)main.append(node("p","L’elenco delle fonti e dei lavori è incompleto. Sono selezionabili soltanto le fonti verificate mostrate qui; gli altri record restano conservati.","notice"));
-    main.append(button("Nuova domanda per il Business plan", () => renderPlanningAuthor({
-      client_id: selected.client_id, engagement_id: selected.engagement_id,
-    })));
-    const picker = node("details", undefined, "workflow-picker"), chosen = node("summary", "Scegli la funzione"); picker.open = true;
-    const choices = node("fieldset", undefined, "workflow-choices"); choices.append(node("legend", "Funzione")); picker.append(chosen, choices); main.append(picker);
-    let workflow;
-    for (const value of prepared.workflow_choices) {
-      const label = node("label", undefined, "choice"), input = node("input"); input.type = "radio"; input.name = "workflow"; input.value = value;
-      input.addEventListener("change", () => { workflow = value; dirty = true; chosen.textContent = `Funzione: ${names[value] || value}`; picker.open = false; });
-      label.append(input, node("span", names[value] || value)); choices.append(label);
-    }
-    const label = archiveFormField(main, "Nome del lavoro", 160), purpose = archiveFormField(main, "Scopo del lavoro", 500, true);
-    const documents = node("section", undefined, "imported-inputs"), selectedInputs = new Map(), selectedArtifacts = new Map(), selectedList = node("div", undefined, "selected-inputs"), key = crypto.randomUUID();
-    main.append(node("h2", "Documenti importati"), documents, selectedList);
-    const roleNames = { journal: "Giornale", source: "Fonte", support: "Supporto" };
-    function drawSelection() {
-      selectedList.replaceChildren(node("h3", `${selectedInputs.size} documenti importati e ${selectedArtifacts.size} output selezionati`));
-      for (const [id, name] of selectedInputs) selectedList.append(button(`Rimuovi ${name}`, () => { selectedInputs.delete(id); dirty = true; drawDocuments(currentPage); }));
-      for (const [id, row] of selectedArtifacts) selectedList.append(button(`Rimuovi ${row.path}`, () => { selectedArtifacts.delete(id); dirty = true; drawArtifacts(currentArtifactPage); drawSelection(); }));
-    }
-    let currentPage = prepared;
-    async function changePage(offset) {
-      const next = await call("vera_workspace_archive_inputs", { client_id: prepared.client_id, engagement_id: prepared.engagement_id, offset });
-      if (next.scope_revision !== prepared.scope_revision) throw new Error("L’incarico o i documenti sono cambiati. Scarta questa preparazione e riapri l’incarico.");
-      drawDocuments(next);
-    }
-    function drawDocuments(page) {
-      currentPage = page; documents.replaceChildren();
-      for (const row of page.rows) {
-        const choice = node("label", undefined, "imported-input"), input = node("input"); input.type = "checkbox"; input.checked = selectedInputs.has(row.input_id);
-        input.addEventListener("change", () => { if (input.checked) selectedInputs.set(row.input_id, row.original_name); else selectedInputs.delete(row.input_id); dirty = true; drawSelection(); });
-        choice.append(input, node("span", row.original_name), node("small", `${roleNames[row.role] || row.role} · ${row.byte_count} byte`)); documents.append(choice);
-      }
-      if (!page.total) documents.append(node("p", "Nessun documento importato. Conserva i documenti o gli appunti originali del colloquio nell’incarico, poi riapri questa preparazione.", "empty"));
-      const controls = node("div", undefined, "pagination"), previous = button("Precedenti", () => changePage(Math.max(0, page.offset - 30))), next = button("Successivi", () => changePage(page.offset + 30));
-      previous.disabled = !page.offset; next.disabled = !page.has_more;
-      controls.append(previous, node("span", page.total ? `${page.offset + 1}–${Math.min(page.offset + 30, page.total)} di ${page.total}` : "0 documenti"), next); documents.append(controls); drawSelection();
-    }
-    drawDocuments(prepared);
-    const artifacts=node("section",undefined,"imported-inputs");let currentArtifactPage=prepared;main.append(node("h2","Output sigillati riutilizzabili"),artifacts);
-    function drawArtifacts(page){
-      currentArtifactPage=page;artifacts.replaceChildren();
-      for(const row of page.upstream_rows){const area=node("section",undefined,"finding"),choice=node("label",undefined,"imported-input"),check=node("input"),role=archiveFormField(area,"Ruolo nel nuovo lavoro",80);check.type="checkbox";check.checked=selectedArtifacts.has(row.id);role.value=selectedArtifacts.get(row.id)?.role||"";role.disabled=!check.checked;choice.append(check,node("span",`${row.run_label} · ${row.path}`));area.prepend(choice);area.append(node("p",`${row.purpose} · ${row.byte_count} byte`,"caption"));check.addEventListener("change",()=>{if(check.checked)selectedArtifacts.set(row.id,{run_id:row.run_id,artifact_id:row.artifact_id,path:row.path,role:role.value});else selectedArtifacts.delete(row.id);role.disabled=!check.checked;dirty=true;drawSelection();});role.addEventListener("input",()=>{const selected=selectedArtifacts.get(row.id);if(selected){selected.role=role.value;dirty=true;}});artifacts.append(area);}
-      if(!page.upstream_total)artifacts.append(node("p","Nessun output sigillato disponibile per questo incarico.","caption"));for(const run of page.upstream_unavailable)artifacts.append(node("p",`${run.label}: ricevute o file cambiati. Verifica il run prima del riuso.`,"notice"));
-      const change=async offset=>{const next=await call("vera_workspace_archive_inputs",{client_id:prepared.client_id,engagement_id:prepared.engagement_id,artifact_offset:offset});if(next.scope_revision!==prepared.scope_revision)throw new Error("Le fonti o gli output sigillati sono cambiati. Scarta la preparazione e riapri l’incarico.");drawArtifacts(next);};const controls=node("div",undefined,"pagination"),previous=button("Output precedenti",()=>change(Math.max(0,page.upstream_offset-30))),next=button("Output successivi",()=>change(page.upstream_offset+30));previous.disabled=!page.upstream_offset;next.disabled=!page.upstream_has_more;controls.append(previous,node("span",`${page.upstream_total} output sigillati`),next);artifacts.append(controls);
-    }
-    drawArtifacts(prepared);
-    main.append(button("Prepara lavoro", async () => {
-      if (!workflow) throw new Error("Scegli la funzione da preparare.");
-      if (!label.reportValidity() || !purpose.reportValidity()) return;
-      if (!selectedInputs.size&&!selectedArtifacts.size) throw new Error("Seleziona almeno un documento importato o un output sigillato.");
-      if([...selectedArtifacts.values()].some(row=>!row.role.trim()))throw new Error("Indica il ruolo di ogni output riutilizzato.");
-      const result = await call("vera_workspace_archive_prepare", { client_id: prepared.client_id, engagement_id: prepared.engagement_id, scope_revision: prepared.scope_revision, archive_ticket: prepared.archive_ticket, workflow_id: workflow, input_ids: [...selectedInputs.keys()], upstream_artifacts:[...selectedArtifacts.values()].map(({run_id,artifact_id,role})=>({run_id,artifact_id,role:role.trim()})), label: label.value.trim(), purpose: purpose.value.trim(), idempotency_key: key, confirmed: true });
-      dirty = false; await loadCatalogue({ client_id: result.client_id, engagement_id: result.engagement_id });
-      say("Lavoro preparato con le fonti selezionate. Avvia la lavorazione per proseguire; il motore non è stato eseguito.");
-    }, "primary"));
   }
   function planningIntakeAuthority(context,page) {return {...context.selected,scope_revision:page.scope_revision,archive_ticket:page.archive_ticket,confirmed:true,expected_draft_revision:context.stamp};}
   function schedulePlanningIntake() {clearTimeout(planningIntakeTimer);planningIntakeTimer=setTimeout(()=>persistPlanningIntake().catch(error=>say(error.message,true)),500);}
@@ -3237,7 +3267,7 @@
     const showReport=async exact=>{const report=await call("vera_workspace_business_plan_report",exact);area.replaceChildren(node("h2",report.entity_name),node("p",statusLabels[report.status]||report.status,"notice"));const frame=node("iframe",undefined,"planning-report");frame.title="Rapporto integrale del ciclo Business Planning";frame.setAttribute("sandbox","");frame.referrerPolicy="no-referrer";frame.srcdoc=report.report;area.append(frame,node("p","Rapporto completo del compilatore pubblico. Tutte le viste sono presenti; i comandi interattivi del rapporto sono disabilitati nel pannello. Apri il file HTML per la consultazione specialistica.","caption"));};
     const showPage=async (collection,start=0,caseId)=>{const exact={work_ref:workRef,revision:setup.revision,...(setup.generation?{generation:setup.generation}:{case_input_id:caseId})};const page=await call(setup.generation?"vera_workspace_business_plan_read":"vera_workspace_business_plan_inspect",{...exact,collection,offset:start});area.replaceChildren(node("h2",planningCollections[collection]),node("p",statusLabels[page.status]||page.status,"notice"),node("p",page.total?`${start+1}–${Math.min(start+20,page.total)} di ${page.total}`:"Nessun elemento dichiarato","caption"));page.rows.forEach((row,index)=>{const record=node("article",undefined,"planning-record");record.append(completePlanningRecord(row));if(setup.generation)record.append(button("Rivedi questo record",()=>openPlanningReview({...exact,collection,index:start+index})),button("Discuti questo record",()=>requestCurrentDiscussion(record,`Spiegami soltanto il record selezionato del Business plan. Prima leggi vera_workspace_business_plan_explain con questi riferimenti esatti:\n${JSON.stringify({...exact,collection,index:start+index})}\nNon registrare approvazioni o modifiche e non pubblicare. Se servono ulteriori evidenze, chiedi quelle pertinenti.`)));area.append(record);});const previous=button("Precedenti",()=>showPage(collection,Math.max(0,start-20),caseId)),next=button("Successivi",()=>showPage(collection,start+20,caseId));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};
     const sections=(parent,caseId)=>{const label=node("label",undefined,"field"),select=node("select");select.setAttribute("aria-label","Sezione del ciclo");label.append(node("span","Sezione del ciclo"));for(const [value,title] of Object.entries(planningCollections)){const option=node("option",title);option.value=value;select.append(option);}select.addEventListener("change",()=>run(()=>showPage(select.value,0,caseId)));label.append(select);parent.append(label);};
-    if(setup.generation){const exact={work_ref:workRef,revision:setup.revision,generation:setup.generation};const controls=supportingDetails("Riesami e revisioni del piano");main.insertBefore(controls,area);const filesButton=button("File del ciclo",()=>files(exact));main.insertBefore(filesButton,controls);controls.append(button("Torna al rapporto",()=>showReport(exact)),button("Rivedi il caso completo",()=>openPlanningReview({...exact,collection:"case_review",index:0})),button("Ricalcola con le revisioni",()=>openReviewedPlanningCase({...exact,collection:"case_review",index:0})),button("Decisione sull’intero piano",()=>openPlanningReview({...exact,collection:"whole_plan",index:0})),button("Decisioni professionali",async()=>{const show=async start=>{const page=await call("vera_workspace_business_plan_review_history",{work_ref:workRef,revision:setup.revision,offset:start});area.replaceChildren(node("h2","Decisioni professionali"),node("p","Le decisioni sui singoli record riguardano solo quei record. La decisione sull’intero piano riguarda la generazione esatta; il rapporto resta conservato.","notice"));if(page.whole_plan_decision){area.append(node("h3",page.professional_plan_approval?"Intero piano accettato":"Ultima decisione sull’intero piano"),completePlanningRecord(page.whole_plan_decision.fields),node("p","Decisione conservata","caption"));}else area.append(node("p","Nessuna decisione sull’intero piano registrata.","caption"));for(const review of page.rows){const row=node("article",undefined,"planning-record");row.append(node("h3",review.target.collection==="whole_plan"?"Intero piano":review.target.collection==="case_review"?"Riesame del caso":planningCollections[review.target.collection]),completePlanningRecord(review.fields),button("Apri contenuto e decisioni",()=>openPlanningReview({...exact,collection:review.target.collection,index:review.target.index})));area.append(row);}if(!page.total)area.append(node("p","Nessuna decisione registrata."));const previous=button("Precedenti",()=>show(Math.max(0,start-20))),next=button("Successive",()=>show(start+20));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};await show(0);}));sections(controls);controls.append(node("p","Per una nuova domanda, torna all’incarico, apri «Prepara un lavoro» e scegli «Nuova domanda per il Business plan». La chat prepara il caso; il pannello conserva la proposta ed esegue un nuovo run. Per riutilizzare questo piano e le decisioni professionali, sigilla prima tutti gli output in Studio Archive e selezionali esplicitamente tra le fonti.","caption"));await showReport(exact);return;}
+    if(setup.generation){const exact={work_ref:workRef,revision:setup.revision,generation:setup.generation};const controls=supportingDetails("Riesami e revisioni del piano");main.insertBefore(controls,area);const filesButton=button("File del ciclo",()=>files(exact));main.insertBefore(filesButton,controls);controls.append(button("Torna al rapporto",()=>showReport(exact)),button("Rivedi il caso completo",()=>openPlanningReview({...exact,collection:"case_review",index:0})),button("Ricalcola con le revisioni",()=>openReviewedPlanningCase({...exact,collection:"case_review",index:0})),button("Decisione sull’intero piano",()=>openPlanningReview({...exact,collection:"whole_plan",index:0})),button("Decisioni professionali",async()=>{const show=async start=>{const page=await call("vera_workspace_business_plan_review_history",{work_ref:workRef,revision:setup.revision,offset:start});area.replaceChildren(node("h2","Decisioni professionali"),node("p","Le decisioni sui singoli record riguardano solo quei record. La decisione sull’intero piano riguarda la generazione esatta; il rapporto resta conservato.","notice"));if(page.whole_plan_decision){area.append(node("h3",page.professional_plan_approval?"Intero piano accettato":"Ultima decisione sull’intero piano"),completePlanningRecord(page.whole_plan_decision.fields),node("p","Decisione conservata","caption"));}else area.append(node("p","Nessuna decisione sull’intero piano registrata.","caption"));for(const review of page.rows){const row=node("article",undefined,"planning-record");row.append(node("h3",review.target.collection==="whole_plan"?"Intero piano":review.target.collection==="case_review"?"Riesame del caso":planningCollections[review.target.collection]),completePlanningRecord(review.fields),button("Apri contenuto e decisioni",()=>openPlanningReview({...exact,collection:review.target.collection,index:review.target.index})));area.append(row);}if(!page.total)area.append(node("p","Nessuna decisione registrata."));const previous=button("Precedenti",()=>show(Math.max(0,start-20))),next=button("Successive",()=>show(start+20));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};await show(0);}));sections(controls);controls.append(node("p","Per aggiornare il piano, chiedilo a Vera nella chat di questo incarico. Le fonti e le decisioni della versione salvata restano conservate.","caption"));await showReport(exact);return;}
     if(!setup.items.length)main.append(node("p","Questo run non contiene ancora un caso interno Business Planning v3. Riprendi la funzione nella chat per l’analisi delle fonti e la preparazione del ciclo.","notice"));
     for(const item of setup.items){const choice=node("section",undefined,"work-row"),description=node("div"),controls=node("div");description.append(node("h2",item.entity_name),node("p",item.question||"Domanda del ciclo non dichiarata"),node("p",item.title,"caption"));controls.append(button("Esamina il ciclo",()=>showPage("assessment",0,item.id)));sections(controls,item.id);if(setup.can_prepare){let request;controls.append(button("Calcola e conserva rapporto",async()=>{request||={work_ref:workRef,revision:setup.revision,review_ticket:setup.review_ticket,case_input_id:item.id,idempotency_key:crypto.randomUUID()};await call("vera_workspace_business_plan_prepare",request);await openBusinessPlan(workRef);say("Rapporto conservato. Esamina lo stato e le questioni aperte prima del riesame professionale.");},"primary"));}choice.append(description,controls);main.insertBefore(choice,area);}
     if(offset||setup.has_more){const previous=button("Cicli precedenti",()=>openBusinessPlan(workRef,Math.max(0,offset-30))),next=button("Altri cicli registrati",()=>openBusinessPlan(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;main.append(previous,next);}
@@ -3956,13 +3986,13 @@
     if (supporting.children.length > 1) main.append(supporting);
   }
   openItemsIntakePanel = globalThis.VeraOpenItemsIntake.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,openReview,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  browserPanel = globalThis.VeraBrowser.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  fusionPanel = globalThis.VeraFusion.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  browserPanel = globalThis.VeraBrowser.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  fusionPanel = globalThis.VeraFusion.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   ratingPanel = globalThis.VeraRating.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  transformationPanel = globalThis.VeraTransformation.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  websitePanel = globalThis.VeraWebsite.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  practicePanel = globalThis.VeraPracticeReviews.create({node,button,call,say,shell,leaveDraft,openWorks:loadCatalogue,request,host:()=>host,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
-  communicationPanel = globalThis.VeraCommunication.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  transformationPanel = globalThis.VeraTransformation.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  websitePanel = globalThis.VeraWebsite.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  practicePanel = globalThis.VeraPracticeReviews.create({node,button,call,say,shell,leaveDraft,openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",request,host:()=>host,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  communicationPanel = globalThis.VeraCommunication.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:refreshCatalogue,backLabel:()=>catalogue?.engagement_id?"← Incarico":"← Lavori dello studio",setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   patentBoxPanel = globalThis.VeraPatentBox.create({
     node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,
     async sendToChat(text){if(!host.hostCapabilities?.message?.text)return false;const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta. Verifica prima di riprovare.");return true;},
@@ -3975,7 +4005,7 @@
     setDirty(value){dirty=value;}, enter(){state=null;return ++epoch;},
     isCurrent(generation){return generation===epoch;}
   });
-  document.getElementById("refresh").addEventListener("click", () => run(() => practicePanel.active() ? practicePanel.refresh() : openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : refreshCatalogue()));
+  document.getElementById("refresh").addEventListener("click", () => run(() => practicePanel.active() ? practicePanel.refresh() : openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : communicationPanel.active() ? communicationPanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : refreshCatalogue()));
   window.addEventListener("message", event => {
     if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
     const message = event.data;
@@ -3991,7 +4021,14 @@
           showOpenError(error);
         }).finally(() => root.setAttribute("aria-busy", "false"));
       }
-      else if (result?.works && !catalogue) { catalogue = result; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive."); root.setAttribute("aria-busy", "false"); }
+      else if (result?.works && !catalogueNotifications.has(catalogueNotification(result))) {
+        try {
+          leaveDraft();
+          ++epoch; notifiedReview = null; crWork = null; crPage = null; financialWork = null; financialPage = null;
+          showCatalogue(result);
+        } catch (error) { say(error.message, true); }
+        finally { root.setAttribute("aria-busy", "false"); }
+      }
     }
     if (message.method === "ui/notifications/host-context-changed") host.hostContext = { ...host.hostContext, ...message.params };
     if (message.method === "ui/resource-teardown") {

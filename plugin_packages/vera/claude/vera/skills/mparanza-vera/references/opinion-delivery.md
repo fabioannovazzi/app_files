@@ -111,16 +111,22 @@ document text against every material claim and source before sending it.
 
 ## Save to Archivio dello studio on request
 
-Legal and tax research can proceed in chat or in its working directory. When the
-user asks to retain it in Archive, use the same client-or-project choice and name
-in `work-continuity.md`. Reuse the configured Archive and any exact destination
-already selected. Once the answer has passed the normal review, import the
-requested reviewed report or opinion into the selected case with
-`import_studio_client_document`, using role `support`, the exact file path and
-SHA-256. Use the returned receipt and verify the retained input before claiming
-that the report was saved. When resuming an existing supported Archive run, use
-its existing finalization route. Report a failed Archive save separately and
-deliver the reviewed answer and files from the working directory.
+When Archive retention is requested or an incarico is already selected, bind
+that exact client/project and incarico **before research or delegated generation**
+using the common `vera_incarico_begin` operation. The owning workflow is
+`quesito-legale-fiscale`; supply the retained identity and working directory to
+any worker. Drafts remain in that working area.
+
+After the normal review, use the shared `vera_incarico_publish_result` contract
+from `work-continuity.md`. Keep one logical Incarico entry and one logical Parere
+entry when those are the requested deliverables. Publish the Parere's Markdown
+and PDF together as the same revision. A correction advances that entry and
+retains the previously issued version in Storico. The quesito remains a source.
+Never import these generated outputs as `support`. Follow the same common
+contract as reconciliation, business planning and other pipelines; there is no
+legal-only save mechanism. Existing engine runs still use their normal artifact
+finalization and substantive validation. Report any Archive save failure
+separately and deliver the reviewed files from their working directory.
 
 ## Keep substantive checks and records
 

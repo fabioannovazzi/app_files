@@ -1115,7 +1115,7 @@ def test_native_client_and_engagement_navigation_survives_folder_changes(
     )
     rows = json.loads(rendered.stdout)
     healthy = next(row for row in rows if "Synthetic healthy client" in row["text"])
-    assert healthy["buttons"] == ["Apri fascicoli →"]
+    assert healthy["buttons"] == ["Synthetic healthy client"]
     engagements = navigation.catalogue(
         ROOT / "plugins/studio-archive", {"client_id": cid}
     )

@@ -7,6 +7,7 @@ Answer generation and validation require separate native execution evidence.
 from __future__ import annotations
 
 import hashlib
+import sys
 from pathlib import Path
 
 import fitz
@@ -169,6 +170,7 @@ def _execute_planning(tmp_path, monkeypatch, product, language, phase, prior=Non
             root / "plugins/studio-archive/scripts/client_ledger.py",
         )
         ledger = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = ledger
         spec.loader.exec_module(ledger)
         context = prior["context"]
         case = tmp_path / "case"
@@ -303,6 +305,7 @@ def _execute_answer(tmp_path, monkeypatch, product, phase, language, prior=None)
         root / "plugins/studio-archive/scripts/client_ledger.py",
     )
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     context = planning["context"]
     case = tmp_path / "case"

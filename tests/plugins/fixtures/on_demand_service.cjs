@@ -1,7 +1,11 @@
 "use strict";
 const fs = require("node:fs");
 const readline = require("node:readline");
+const path = require("node:path");
+const { createHash, randomUUID } = require("node:crypto");
 const name = process.argv[2];
+const archiveSession = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
+const archiveState = path.join(path.dirname(process.env.START_LOG), `archive-${createHash("sha256").update(archiveSession).digest("hex")}.json`);
 fs.appendFileSync(process.env.START_LOG, `${name}:${process.pid}\n`);
 let value;
 const waiting = new Map();
@@ -26,6 +30,12 @@ input.on("line", line => {
   if (m.method === "prompts/get") { reply(m.id, { messages: [{ role: "user", content: { type: "text", text: name } }] }); return; }
   if (m.method === "notifications/cancelled") { const t = waiting.get(m.params.requestId); if (t) { clearTimeout(t); waiting.delete(m.params.requestId); send({ id: m.params.requestId, error: { code: -32800, message: "cancelled" } }); } return; }
   if (m.method !== "tools/call") return;
+  if (args.action === "archive-configure" || args.action === "archive-read") {
+    if (args.action === "archive-configure") fs.writeFileSync(archiveState, JSON.stringify(args.value));
+    const archive = fs.existsSync(archiveState) ? JSON.parse(fs.readFileSync(archiveState, "utf8")) : null;
+    reply(m.id, { content: [], structuredContent: { configured: archive !== null, archive } });
+    return;
+  }
   if (args.action === "crash") { fs.appendFileSync(process.env.WRITE_LOG, "saved\n"); process.exit(9); }
   if (args.action === "wait") { waiting.set(m.id, setTimeout(() => { waiting.delete(m.id); reply(m.id, { content: [] }); }, 5000)); return; }
   if (args.action === "error") { send({ id: m.id, error: { code: -32602, message: "original worker error" } }); return; }

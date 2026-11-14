@@ -40,7 +40,7 @@
     }
     function draw({nav,main}) {
       activeMain=main;
-      nav.append(button("← Pratiche e formati",catalogue),button("Scarta modifiche e rileggi",()=>{api.setDirty(false);return open(current.work_ref);}));
+      nav.append(button(api.backLabel(),api.openWorks),button("Scarta modifiche e rileggi",()=>{api.setDirty(false);return open(current.work_ref);}));
       main.append(node("h1",current.label),node("p",current.kind==="tax"?"Cronologia, termini dichiarati, riscontri e stato della pratica. Il registro non calcola termini legali e non prova notifica, deposito o pagamento.":"Impostazioni del documento e due esempi Word generati dal medesimo formato. L’adozione del profilo richiede una conferma separata.","caption"));
       if(current.kind==="tax")tax(main);else format(main);
     }
@@ -83,7 +83,7 @@
       adoption.append(node("p",already?"Questo formato risulta adottato nel profilo corrente.":current.data.base_current?"Esamina entrambi gli esempi prima di adottare il formato.":"Il profilo corrente è cambiato: prepara nuovi esempi prima dell’adozione.","caption"));
       accept=button("Adotta il formato esaminato",async()=>{if(!approve.checked||!reviewer.trim())throw new Error("Indica il revisore e conferma entrambi gli esempi.");const result=await call("vera_workspace_practice_format_approve",{...scope(),reviewer});api.setDirty(false);const layout=shell();current=result;key=undefined;proposal=structuredClone(result.data.proposal.profile.document.docx||{});draw(layout);say("Formato adottato dal writer dello studio; gli esempi e la revisione sono conservati.");},"primary");accept.disabled=!current.can_write||already||!current.data.base_current;adoption.append(accept);
     }
-    return {catalogue,active:()=>Boolean(current),refresh:()=>open(current.work_ref),dispose(){current=null;proposal=null;key=undefined;activeMain=null;}};
+    return {open,catalogue,active:()=>Boolean(current),refresh:()=>open(current.work_ref),dispose(){current=null;proposal=null;key=undefined;activeMain=null;}};
   }
   globalThis.VeraPracticeReviews={create};
 })();

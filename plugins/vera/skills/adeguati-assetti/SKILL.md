@@ -76,16 +76,15 @@ report, investment business plan, general legal answer or concordato review.
 
 ## Native assessment preparation and review in Codex
 
-For a first interview without supplied documents, the shared engagement page's
-“Appunti del colloquio” can conserve the user's literal notes as an original
-declared-statement JSON source. Explicitly select that imported source when
-preparing the Assetti run, then start it separately. Read its complete text and
-capture metadata: the configured attribution is not authenticated and collection
-time is not prior fact or information availability. Qualify reported practice
-and missing operating evidence through the full method; do not infer policy,
-adoption, effectiveness or adequacy from the notes. This preserves the producer's
-requirement for an actual registered source rather than creating source-free
-findings. The shared route does not transcribe audio or construct arrangements.
+For a first interview without supplied documents, collect the user's literal
+notes in the host chat and preserve them as an explicitly attributed original
+statement in the same incarico through the maintained source-import route.
+Archive does not provide an interview-note composer. Retain the complete words,
+actual capture time and declared attribution; collection time is not prior fact
+or information availability, and the attribution is not authenticated. Select
+that registered source for the Assetti run and qualify reported practice and
+missing operating evidence through the full method. Do not infer policy,
+adoption, effectiveness or adequacy from notes, or create source-free findings.
 
 When native workspace tools are callable, follow
 `../vera/references/native-workspace.md`. Choose the exact registered running

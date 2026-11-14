@@ -630,6 +630,7 @@ def test_managed_run_prepares_and_exports_bound_invoice(
         repository / "plugins/studio-archive/scripts/client_ledger.py",
     )
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     client = tmp_path / "synthetic-client"
     client.mkdir()

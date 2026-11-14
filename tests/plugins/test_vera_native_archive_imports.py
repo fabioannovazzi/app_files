@@ -26,7 +26,11 @@ def import_workspace(registry_workspace):
         VERA_WORKSPACE_TENANT_ID="fictional-studio",
         VERA_WORKSPACE_ROLES="REVIEWER",
     )
-    return env, studio / "Cliente Beta", client, engagement
+    folder = studio / "Cliente Beta"
+    engagement = _load_customer_ledger().create_engagement(
+        folder, client, "Source import fixture"
+    )["engagement_id"]
+    return env, folder, client, engagement
 
 
 def program(
@@ -421,7 +425,7 @@ const inputs=payload(call('vera_workspace_archive_inputs',selected));
 const begun=payload(call('vera_workspace_archive_import_begin',{{...beginArgs,idempotency_key:'independent-valid-upload'}}));
 const rejected=call('vera_workspace_archive_import_finish',{{...authority(),upload_ref:{json.dumps(first["upload_ref"])}}});
 const prepared=payload(call('vera_workspace_archive_prepare',{{...scope(inputs),workflow_id:'aml-review',input_ids:[{json.dumps(first["input_id"])}],upstream_artifacts:[],label:'Verified source',purpose:'Use committed source independently of transport',idempotency_key:'valid-source-after-upload-damage'}}));
-const result={{setup,inputs,begun,rejected,prepared}};
+const result={{setup,inputs,begun,rejected,prepared,incarico:payload(call('vera_incarico_read',selected))}};
 """,
         ),
     )
@@ -441,7 +445,7 @@ const result={{setup,inputs,begun,rejected,prepared}};
             NODE,
             str(ROOT / "tests/plugins/archive_run_list_ui.cjs"),
             str(ROOT / "plugins/vera/ui/workspace.js"),
-            "import",
+            "navigation",
         ],
         input=json.dumps(
             {
@@ -454,6 +458,7 @@ const result={{setup,inputs,begun,rejected,prepared}};
                     "client_id": client,
                     "engagement_id": engagement,
                     "engagement_label": "Synthetic",
+                    "incarico": result["incarico"],
                 },
                 "import_setup": result["setup"],
             }
@@ -464,7 +469,7 @@ const result={{setup,inputs,begun,rejected,prepared}};
         timeout=20,
     )
     view = json.loads(rendered.stdout)
-    assert "Importazione non disponibile" in view["text"]
-    assert "L’elenco delle importazioni è incompleto" in view["text"]
-    assert view["filePickers"] == 1
+    assert "évidence fictive.bin" in view["buttons"]
+    assert view["editableFields"] == 0
+    assert "Aggiungi documenti" not in view["buttons"]
     assert "Completa questa importazione interrotta" not in view["buttons"]

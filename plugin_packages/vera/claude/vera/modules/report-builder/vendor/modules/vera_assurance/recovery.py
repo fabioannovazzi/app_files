@@ -187,7 +187,7 @@ def _retain(source: Path, store: Path) -> dict[str, Any]:
 
 
 def checkpoint_run(context_path: Path, store: Path | None = None) -> dict[str, Any]:
-    """Retain only this run and its portable owner headers, preserving all stages."""
+    """Retain this run and its assignment's sources, context and issued work."""
     from .contracts import load_client_engagement_context_file
 
     context_path = Path(context_path).absolute()
@@ -231,6 +231,23 @@ def checkpoint_run(context_path: Path, store: Path | None = None) -> dict[str, A
 
         def files() -> list[Path]:
             paths = list(run_root.rglob("*"))
+            engagement_root = run_root.parents[1]
+            assignment = engagement_root / "incarico.json"
+            if assignment.exists() or assignment.is_symlink():
+                paths.append(assignment)
+                for name in ("inputs", "incarico-history", "deliverables", "working"):
+                    directory = engagement_root / name
+                    if not directory.exists() and not directory.is_symlink():
+                        continue
+                    _ordinary(directory, directory=True)
+                    paths.extend(
+                        path
+                        for path in directory.rglob("*")
+                        if not any(
+                            part.startswith(".saving-")
+                            for part in path.relative_to(directory).parts
+                        )
+                    )
             if any(path.is_symlink() for path in paths):
                 raise ValueError("A run checkpoint cannot follow symbolic links")
             excluded = {

@@ -51,6 +51,10 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
+Vera and Lucia retain separate saved archive locations. Reuse Vera's selected
+root for Vera work; never substitute Lucia's default. A temporary test selection
+must use `make_studio_default: false` and preserve both products' defaults.
+
 For work starting from supplied files, first follow "Check supplied files before
 starting client work" in `../vera/SKILL.md`. Call `check_studio_import_sources`
 on every selected path before processing attachments or creating a client,
@@ -94,68 +98,43 @@ exact `engagements/` ledger. A completed execution does not imply professional
 approval. Check the returned readable-view status before claiming navigation
 is available.
 
-For a resumed local engagement without a specialist run, preserve a generated
-follow-up as a clearly identified Vera-derived support note through the shared
-component's `import_studio_client_document` route. Re-list that engagement,
-then call `verify_studio_client_inputs` for the exact saved input IDs before
-claiming progress is saved. Copy prior `input_id` / `content_sha256` pairs
-from the import or verification response into `expected_receipts` to check
-preservation; never invent a baseline. Require `verified: true`. Read the
-controlled document for semantic work using the returned verified receipt's
-`path`; byte verification alone is not a semantic read. Never write an ad hoc
-verifier or assume raw `receipt.json` / `engagement.json` has the fields of
-the maintained listing. Return the
-archived copy, not only a memo in the chat workspace. Exact retries reuse its
-receipt; changed notes preserve earlier copies. Do not invent an archive run
-or bypass a specialist run's output/finalization contract. Read the component's
-complete follow-up preservation steps before doing this work.
+Continue the same incarico in its host chat. Recover its exact identity and
+current result with `vera_incarico_context`; an older conversation answer may
+not be the latest saved version. Import newly supplied original sources through
+`import_studio_client_document` into that incarico and verify their receipts.
+Keep generated drafts in its working area. Publish completed work through
+`vera_incarico_publish_result` under the same logical result entry, supplying its
+descriptive title, primary file and complete format set. Retain earlier issued
+versions in history. Never import generated results as source/support files,
+even when there is no specialist run. Preserve any existing legacy import
+receipts; do not rewrite them. Follow the shared work-continuity contract for
+publication, retries and source reuse, alongside the owning engine's normal
+output and finalization contract.
 
 When the Codex native workspace is callable, read
-`../vera/references/native-workspace.md` and open “Lavori dello studio”. Its
-ordinary directory uses this workflow's owned local archive session and portable
-client ledger. If setup is required, the panel offers the maintained operating
-system folder chooser, accepting no path from browser/model content. Cancellation
-does not save configuration. Navigate client, engagement and exact run explicitly;
-refresh/recovery uses the unchanged archive service. Private contacts remain in
-the existing registry. Unregistered folders require confirmed client registration
-through the specialist route; the panel does not register them automatically.
-The panel can create an explicitly labelled engagement for a registered client,
-import explicitly selected file bytes, list verified imported receipts, prepare an idempotent run with an explicit
-workflow/input/label/purpose choice, and move one prepared or failed run to running.
-These app-only actions require the exact displayed signed scope, current receipts
-and reviewer authority, and use this workflow's maintained APIs. Creation retains
-a separate native request receipt: identical retries reuse the engagement, while
-an interrupted uncertain outcome requires archive verification before another
-request. Preparation and start do not execute a specialist engine, qualify
-sources, approve a result or complete a run. Workflow choices come from the
-maintained Vera engagement gate; excluded prototypes remain excluded.
-“Importa documenti” requires a file selection and an explicit journal, source or
-support role for each file, then confirmation of the displayed engagement.
-It transfers at most 64 MiB per file in 64 KiB chunks, verifies the complete
-selected-file digest, and calls the unchanged public importer. The browser
-does not supply the original OS path; transport receipts say so. Original files
-remain unchanged. Reopening shows retained bytes and roles without restoring
-confirmation. Resume only the same selected bytes; explicitly complete a known
-interrupted import intent through the same public deduplication gate. Changed,
-unreceipted or foreign state requires specialist verification. A pending write
-blocks new imports and new run preparation until resolved. Importing does not
-classify or inspect the document, select it for a run, or start a workflow.
-Larger files use the maintained specialist import. File bytes pass through the
-selected host's app/tool channel; this route makes no separate model call or
-external connector request. Later workflow reads have their own data path.
-“Appunti del colloquio” retains the user's complete literal text, optional declared
-speaker and chosen JSON basename in a private recoverable draft. No questionnaire
-answers, speaker identity or company evidence are inferred. Explicit conservation
-captures one immutable `vera.user_statement.v1` original with the actual capture
-time, configured actor/tenant/client/engagement references and unverified
-attribution, then uses the same complete-byte public import. Capture time is not
-the date when a fact happened or became known; a statement is not independent
-evidence of truth, adoption or operation. Recovery reopens that exact original
-without restoring confirmation or generating a new timestamp. Clearing the draft
-keeps captured originals and imported receipts. Text above 256 KiB uses original
-file import without excerpts. Choose the source and workflow separately to prepare
-and start a run. Notes and metadata pass through the selected host; later selected
-workflow reads may place them in model context without automatic anonymization.
+`../vera/references/native-workspace.md` and open “Lavori dello studio”. Select
+client/project, then incarico. A document title opens its saved primary file;
+Storico opens exact earlier revisions. Companion files remain available inside
+the document view. A conversation title opens its registered host chat. Opening,
+refreshing or reading does not create, execute or revise work. The saved HTML
+view provides the same document, history and conversation navigation.
+
+Requests to modify work, add a document or start another incarico belong in the
+host chat. Do not direct the user to an Archive request composer, import form,
+manual incarico creation, or pipeline picker. Vera resolves the owning workflow
+from the request and uses the maintained creation, source-import, preparation
+and publication services. Literal interview notes supplied in chat can be saved
+as explicitly attributed original statements; keep the user's words and actual
+capture time separate from Vera's derived conclusions.
+
+An unconfigured Archive offers its maintained operating-system folder chooser.
+Cancellation does not save configuration. Refresh/recovery uses the owned local
+session and portable client ledger; private contacts stay in their registry.
+Unregistered folders require the maintained registration route. Specialist work
+titles open the exact saved review/setup interface, preserving its normal source
+qualification, decisions and output controls. Missing native UI does not block
+the chat/file workflow.
+
 For a running maintained run, “Output e chiusura del run” lists every physical
 output in pages, including working requests, versions and the actual run-bound
 model-data JSON/Markdown report. Declare each file's reuse reference, purpose,
@@ -178,11 +157,11 @@ retries revalidate the manifest; interrupted or changed outcomes require
 specialist verification without replay or automatic adoption. Concurrent
 specialist writes can leave a sealed result requiring that verification; the
 native panel does not roll back the authoritative ledger.
-The native preparation page also lists verified sealed artifacts from ready or
-completed runs in this same engagement. Explicitly select each artifact and
-author its role in the new run. The maintained preparer verifies its receipt and
-bytes again and preserves directory structure, including reviewed invoice source
-groups. Invalid upstream runs remain unavailable rather than becoming sources.
+For source reuse, select exact saved result revisions in chat using
+`vera_incarico_reuse_result`. The maintained preparer verifies retained receipt
+and byte identities and preserves required companion files and source groups.
+A later source revision does not silently alter the receiving incarico.
+
 Specialist source qualification, bound execution,
 engagement closure, cancellation/failure and recovery remain on existing
 specialist routes. Missing native tools never
@@ -299,3 +278,15 @@ expected_workflow_id=..., output_dir=...)`; it verifies and hydrates the manifes
 and current receipts before returning `input_bindings`. Archive tools already
 return this expanded projection. Do not parse raw context JSON as that projection
 or bypass the loader by constructing unverified paths from the manifest.
+
+
+When beginning an incarico, supply `originating_conversation` with the actual
+host-provided user-visible chat identity and title. The begin operation saves
+that association before generation and merges it without duplicate links on
+retry. Native `CODEX_THREAD_ID`, when present, is captured automatically; private
+Archive session identifiers are never chat identities. Verify the parent chat
+with the host reader and retain that same origin through delegated work. A worker
+must not substitute an ephemeral execution chat. The portable begin command
+accepts `--originating-conversation-json` with host, thread_id, title and url.
+If the host provides no recoverable chat identity, keep that absence explicit;
+do not fabricate a link or block delivery of the user's work.

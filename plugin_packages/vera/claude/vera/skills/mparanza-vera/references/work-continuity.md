@@ -51,6 +51,118 @@ customer or project name from an input filename, a test label, or a run title.
 Reuse an exact existing destination after checking its identity and scope.
 Folder selection never changes the studio's configured Archive root.
 
+### One incarico, one requested job
+
+Client and project are the same filing level. Each incarico has one purpose and
+one owning workflow, established from the user's request. Never ask the user to
+pick a pipeline from a catalogue. Revisions, calculations, review decisions and
+internal workflow stages stay within that incarico. A different assignment gets
+a separate incarico and may explicitly reuse the earlier assignment's results.
+
+For every client/project pipeline, establish the assignment **before** substantive
+engine work, model generation or delegation. Read `vera_incarico_read`, then call
+`vera_incarico_begin` with the exact client, engagement, user purpose and the owning
+workflow resolved from that request. Include `originating_conversation` from the
+actual user-visible host chat (host, thread_id, title, url), verified with the host
+reader. Begin saves it with the assignment, preserving earlier links on retries.
+When supplied directly by the host, `CODEX_THREAD_ID` is captured automatically;
+the Archive session ID is never a chat ID. If the service cannot see host identity,
+pass the actual chat identity explicitly instead of leaving the link until later.
+Do this in the parent chat before delegation, and pass the same origin, durable
+assignment identity and returned working directory to any delegated worker.
+An ephemeral worker must never replace the parent chat with its own execution ID. Generated drafts stay in that working
+area (or the already bound engine's run output area). Never generate a result
+first and choose its destination only when saving. Standalone work retains its
+normal standalone route when no Archive destination was requested.
+
+For a legal opinion, `quesito-legale-fiscale` owns its optimizer and research
+stages. Other pipelines use their own maintained workflow identities. A mixed
+legacy engagement requires an explicit mapping; do not relabel its run headers.
+`vera_incarico_update` uses the read revision to retain continuation and actual
+chat associations without overwriting concurrent work.
+
+When the workflow uses its own operator-bound specialist workspace instead of
+an Archive run (browser automation, communications, mergers, studio websites,
+tax matters, document formats or explicitly requested synthetic transformations), retain that exact existing work with `vera_incarico_link_work`
+after its normal setup. Supply the selected incarico, workflow, actual `work_ref`,
+descriptive label and read assignment revision. The service verifies the current
+operator binding and retains its stable case identity; the link does not grant
+access, move the case or create an Archive execution. Reopen it through
+`vera_incarico_open_work`, which rechecks access and refuses a different case
+behind a reused reference. Preserve `work_links` when editing context. If a
+binding is unavailable, recover it through that workflow's maintained setup;
+do not manufacture bindings, substitute a similarly named case or recreate work.
+
+All pipelines use the same publication contract. After completing their normal
+substantive checks, call `vera_incarico_publish_result` for each logical deliverable.
+The pipeline supplies a stable `entry_key`, the actual descriptive document title
+as `label`, a `primary_format` naming the file to open from that title, and **all formats
+of that issued revision together**. For example, a report may have Markdown/PDF,
+a reconciliation may have a workbook and summary, and a business plan may have
+its model and report. Choose grouping from the actual deliverable, not filename
+similarity. Choose the primary file for this deliverable; do not assume that every
+workflow produces PDF or Markdown. Verify each SHA-256. Use the entry's current revision (zero initially)
+and retain one idempotency key for that exact save. A correction uses the same
+entry key and a new revision, including its complete format set. The entry opens
+the latest issued version; previous versions remain dated and numbered in Storico.
+A lost-reply retry reuses its saved revision and cannot make an old result current.
+
+Do not import generated results as `source` or `support`, and do not make a folder
+or entry for every retry or format. Source documents remain sources. Drafts do
+not appear as issued results. Publication does not sign, file, approve or send
+work externally. Engine run finalization and its existing checks still apply;
+publication organizes the deliverables and does not replace those checks.
+For already imported legacy outputs only, reference the existing receipt as a
+saved result without rewriting it. `vera_incarico_document` opens the exact
+selected format/version, including work without a technical run.
+
+If native tools are unavailable, use the maintained Archive CLI: `incarico`
+(read/update), `begin-incarico`, `publish-incarico-result` and
+`reuse-incarico-result`. Their JSON arguments carry the same complete fields,
+formats, digests and revisions; do not fall back to importing generated outputs.
+
+### Continue the work in its host chat
+
+Archive is for finding an incarico, opening saved documents and recovering its
+associated chats. Its root lists clients/projects, with the selected folder visible
+and a collapsed folder setting. It has no function launcher or request composer.
+Studio work, such as changing an existing website, belongs to its named project
+and incarico; recover its current site and chat before applying the requested
+change. A generic website or merger button cannot identify the user’s work.
+Synthetic-only prototypes must not appear as ordinary professional services. Requests to change a result or
+continue with new documents belong in the host conversation. Opening Archive,
+a document or a chat link does not execute or revise the work.
+
+When the user continues the same assignment in its existing chat, recover its
+exact client and engagement identity and call `vera_incarico_context` before
+updating the result. Read the current issued result and only the earlier evidence
+needed for the request; an older answer in the conversation is not necessarily
+the current saved version. Import a newly supplied source into that same incarico
+through the normal source-import path. Retain the existing purpose and pipeline,
+use the new evidence, and publish the completed update under the same result
+entry. Keep drafts in the working area and preserve the earlier issued revision.
+Do not require the user to visit Archive, fill in another request, choose a
+pipeline or create a new incarico merely to update existing work.
+
+Use `vera_incarico_context` when returning in a new chat as well, then retrieve the
+selected documents needed for the new request. Record the actual host-provided
+conversation ID and title after checking it with available native host tools.
+Never infer the chat from recency, a directory name or a document filename.
+For a local Claude chat use host `codex` and the actual UUID; an empty URL is
+rendered using the documented `codex://threads/<thread-id>` format. The chat
+link opens history; the saved incarico context supports continuation even if
+that chat later becomes unavailable. Do not claim that opening the link succeeded
+until observed. Preserve other chat links when associating a new conversation.
+
+To reuse work in a different incarico, use `vera_incarico_reuse_result` with
+explicit originating and destination client/project and engagement identities.
+Select the exact issued revision and format, digest and label; the source revision
+is the issued receipt's `content_sha256` (or the assignment revision for a legacy
+result declaration). Repeat for each required supporting format/file. The source
+receipt and future engine input bindings retain this origin. Changing the source
+later never silently changes a saved receiving job. Existing sealed engine
+artifacts also support the `engagement_id` upstream selector in preparation.
+
 For standalone or studio-wide work, retain that route and its task directory;
 do not add Archive setup. Check the selected engine's actual capabilities and
 source requirements at intake. Do not discover a known storage, identity,
@@ -153,3 +265,35 @@ rewrite hashed artifacts, remove locks, relax host permissions, switch clients,
 overwrite uncertain outcomes or disguise a partial result as complete. When a
 necessary resource needs the user's action, retain the resumable job and ask
 only for that action. Recovery remains part of the current task.
+
+
+### Introducing legacy work
+
+For one unambiguous historical job, begin the existing incarico using its known
+purpose and owning workflow. Identify any wrongly imported outputs from their
+actual contents and prior instructions. Publish them into named entries with
+`legacy_input_id` on each explicitly identified old output. This preserves the
+original receipt and bytes and keeps the output out of the source-document list.
+Do not infer current/issued status from a name such as “Definitivo.” Existing
+record dates are evidence of retention; do not invent an original issue date.
+
+For an old container holding unrelated workflows, inventory every run first.
+Create and bind the distinct incarichi, then use `vera_incarico_map_legacy`
+(or `map_studio_legacy_incarichi` / CLI `map-legacy-incarichi`) with each target
+and its exact run IDs. Resolve ambiguous job boundaries from the actual work,
+asking only for genuinely missing intent. The code records an explicit mapping
+and links in both directions; it never moves or rewrites the old run headers,
+inputs or outputs. Continue work in the mapped incarico. Use exact selected
+upstream results as sources when creating a new calculation there.
+
+
+The client/project page lists and reopens existing incarichi; it does not offer
+manual fascicolo creation. The user requests work in Vera, and Vera creates the
+corresponding incarico as part of that workflow. When the user asks in chat to reuse a result, resolve its exact source references
+and create the different incarico as part of that requested work. Archive does
+not offer a separate request composer or a reuse button on every document. In a new Claude chat, use the actual
+host-provided `CODEX_THREAD_ID` when available in that chat's execution environment,
+and verify that exact ID with the native thread reader. Never use the Archive
+service's randomly generated session ID as a conversation identity. Use the
+canonical `fields` object returned by the read tool when updating metadata;
+keep availability/projection fields out of the saved fields.

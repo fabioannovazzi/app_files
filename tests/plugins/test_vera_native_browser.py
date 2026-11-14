@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import base64
 import copy
+import hashlib
 import importlib
 import json
 import os
@@ -14,6 +15,9 @@ import pytest
 
 from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
 from tests.plugins.test_vera_native_archive_lifecycle import rpc_program
+from tests.plugins.test_vera_native_archive_navigation import (  # noqa: F401
+    registry_workspace,
+)
 from tests.plugins.test_vera_native_workspace import workspace_module
 from tests.test_browser_batch_review import entry, payload, review  # noqa: F401
 from tests.test_browser_process_lifecycle import (  # noqa: F401
@@ -76,6 +80,41 @@ const authority=p=>({work_ref:p.work_ref,item_id:p.selection.id,revision:p.revis
 const save=(p,f)=>payload(call('vera_workspace_browser_draft_save',{...authority(p),expected_draft_revision:p.draft_revision,fields:f}));
 const prepare=(p,f,key)=>{const draft=save(p,f);return {...authority(p),expected_draft_revision:draft.draft_revision,fields:f,confirmed:true,idempotency_key:key};};
 """
+
+
+def test_incarico_cannot_link_a_browser_batch_owned_by_another_assignment(
+    batch,
+    registry_workspace,
+):
+    batch_env, directory, _, _ = batch
+    archive_env, root, _, _, client_id, _ = registry_workspace
+    ledger = _load_customer_ledger()
+    folder = root / "Cliente Beta"
+    eid = ledger.create_engagement(folder, client_id, "Different browser assignment")[
+        "engagement_id"
+    ]
+    before = {
+        str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in directory.rglob("*")
+        if path.is_file()
+    }
+    selected = {"client_id": client_id, "engagement_id": eid}
+    result = rpc_program(
+        {**archive_env, **batch_env},
+        f"""
+const selected={json.dumps(selected)};
+const begun=payload(call('vera_incarico_begin',{{...selected,workflow_id:'browser-automation',purpose:'Different requested browser job'}}));
+const result=call('vera_incarico_link_work',{{...selected,workflow_id:'browser-automation',work_ref:'fictional-batch',label:'Wrong batch',expected_revision:begun.revision}});
+""",
+    )
+    assert result["isError"] is True
+    assert "another incarico" in result["content"][0]["text"]
+    assert ledger.incarichi().read(folder, eid)["work_links"] == []
+    assert {
+        str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in directory.rglob("*")
+        if path.is_file()
+    } == before
 
 
 def test_browser_native_first_draft_restores_literal_note_without_consent(

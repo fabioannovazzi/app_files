@@ -18,6 +18,7 @@ from tests.plugins.test_archive_automatic_reporting import (
     client_case,
     finish,
     reporting_runtime,
+    separate_case,
     start,
 )
 
@@ -247,7 +248,10 @@ def test_foreign_binding_does_not_hide_a_later_clients_measurement_gap(
 ):
     from archive_report_store import RunStore
 
-    foreign = start(archive_core, client_case, "variance-analysis")
+    foreign_case = separate_case(
+        archive_core, client_case, "Separate variance analysis"
+    )
+    foreign = start(archive_core, foreign_case, "variance-analysis")
     runs, worker, loaded = acquisition_binding(
         archive_core, client_case, tmp_path, monkeypatch
     )
@@ -258,7 +262,7 @@ def test_foreign_binding_does_not_hide_a_later_clients_measurement_gap(
             {
                 "foreign": {
                     "client_id": client_case.client_id,
-                    "engagement_id": client_case.engagement_id,
+                    "engagement_id": foreign_case.engagement_id,
                     "run_id": foreign["run"]["run_id"],
                     "context_path": foreign["context"]["context_path"],
                 },

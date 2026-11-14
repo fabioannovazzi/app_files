@@ -19,7 +19,7 @@ Configuration shape (replace placeholders with the authorized existing paths):
 
 Use only the rows actually requested. Tax requires the public `matter.json` with kind `contenzioso-tributario` and its registered source pack. Format requires an existing public workspace and review with both generated Word previews. The service rechecks complete identities and hashes on every read/write. Set the environment through supported MCP configuration, reconnect the service and use a fresh conversation when its tool catalog changed. Never modify generated plugin caches.
 
-`vera_workspace_practice_catalogue` opens the maintained panel. Select the connected practice in **Pratiche e formato documenti**. If no binding is available, the panel says so; use the ordinary specialist file workflow until the operator connects the exact case.
+After normal setup, retain the exact connected work on its incarico with `vera_incarico_link_work`, using `contenzioso-tributario` or `studio-document-format` and the actual `work_ref`. The saved link opens only that case and returns to its incarico. From chat, `vera_open_review` accepts the same workflow and exact reference. A format binding cannot be opened as a tax matter or vice versa. If the binding is unavailable, continue through the ordinary specialist file workflow while recovering that connection; do not invent a replacement case. There is no combined practice/format launcher in Archive.
 
 A saved tax calendar is versioned with the matter. Actual event and deadline meanings remain model/professional judgments supported by current research; shape/date/citation checks cannot establish legal correctness. Unsaved edits must be conserved or explicitly discarded before navigation or discussion.
 

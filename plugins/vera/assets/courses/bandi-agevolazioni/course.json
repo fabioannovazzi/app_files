@@ -225,7 +225,7 @@
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "baa65740b1bf6879547540ffe1d4733539b60d6b1f8b0db6acde2cc86785e64e"
+      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
@@ -250,7 +250,7 @@
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
+      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/relationships.py",
@@ -520,7 +520,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "baa65740b1bf6879547540ffe1d4733539b60d6b1f8b0db6acde2cc86785e64e"
+      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -545,7 +545,7 @@
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
+      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

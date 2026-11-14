@@ -274,8 +274,12 @@ autorizzato e chiedi solo il contesto che cambia l'esecuzione; non inventare
 cliente, incarico, percorso o stato di un intake. Se l'atto deve ancora essere
 preparato, leggi `../mparanza-avviso-intake/SKILL.md` e segui il suo contratto una volta.
 Riusa l'intake già esaminato e gli originali pertinenti. Per un incarico
-gestito in Studio Archive avvia una run distinta di contenzioso nel medesimo
-incarico e usa il suo output autorizzato. Per `legal_documents.py prepare`,
+gestito in Studio Archive collega prima l’incarico alla procedura
+`contenzioso-tributario` con `vera_incarico_begin`. Se l’intake è una fase interna
+dell’incarico richiesto, eseguilo sotto questo stesso incarico. Se proviene da un
+lavoro precedente distinto, crea l’incarico di contenzioso e riusa gli elaborati
+sigillati indicando l’`engagement_id` di origine nei riferimenti upstream.
+Avvia la run di contenzioso nell’incarico così stabilito e usa il suo output autorizzato. Per `legal_documents.py prepare`,
 `<run>` è una nuova sottocartella di quell’`output_dir`, non l’`output_dir`
 già creato da Archive. Riprendi la stessa sottocartella e il suo `matter.json`
 finché la run Archive è aperta e non sigillata. Se è sigillata o completata,
@@ -301,6 +305,6 @@ non prova elaborazione offline né anonimizzazione degli atti.
 
 Read `../mparanza-vera/references/native-workspace.md` before opening the panel.
 
-On Claude, the optional **Pratiche e formato documenti** panel opens an existing, explicitly connected tax matter. Read `../mparanza-vera/references/native-practice-reviews.md` for the trusted local-service binding. It shows saved questions, stages, outputs and a source-linked calendar. Enter actual event/date/term/status, basis and reviewer; attach literal citations to existing source units. Save only after explicit confirmation. The unchanged public matter writer retains the prior version and verifies citations and dates. The calendar does not calculate or certify legal deadlines, authenticate the reviewer, notify, file or update an external calendar. Discussion reads only the exact saved selected item and its cited units.
+On Claude, open the existing, explicitly connected tax matter from its saved incarico link or `vera_open_review` with workflow `contenzioso-tributario` and its exact `work_ref`. Read `../mparanza-vera/references/native-practice-reviews.md` for the trusted local-service binding. It shows saved questions, stages, outputs and a source-linked calendar. Enter actual event/date/term/status, basis and reviewer; attach literal citations to existing source units. Save only after explicit confirmation. The unchanged public matter writer retains the prior version and verifies citations and dates. The calendar does not calculate or certify legal deadlines, authenticate the reviewer, notify, file or update an external calendar. Discussion reads only the exact saved selected item and its cited units.
 
 The ordinary connected-file workflow remains available when the native panel is unavailable.

@@ -1,15 +1,15 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-11-13/verify-in-this-fresh-codex-chat/work/app_files/plugins/vera",
-  "version": "0.1.634",
-  "captured_at": "2026-11-14T09:40:07.252828+00:00",
-  "catalogue_fingerprint": "98e0fa0f36d18adeea5a8be30c24525a5758ca172b2e97f69dc8ddf9de32b6d4",
-  "manifest_sha256": "d3bf4285e8c9193ca27ed09c0a6daa615b8474f05ba4d32382e6ca64e9609413",
+  "root": "/Users/fabio/Documents/Codex/2026-11-14/independently-investigate-the-logic-of-vera/work/vera-release/plugins/vera",
+  "version": "0.1.643",
+  "captured_at": "2026-11-14T19:07:11.701025+00:00",
+  "catalogue_fingerprint": "05f0998931b27b5fd1388daba116c8abdc6c67f55a90705aa8a07c0b9832ab85",
+  "manifest_sha256": "97541f0e1993767fde5fb89442518abc216659e00a89999f0df240e41c05087f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
       "skill_path": "skills/adeguati-assetti/SKILL.md",
-      "sha256": "f0ceb740dee4caf7b37a94e2572b1538a122d6c81f3dfb030b4dbc55931190a6"
+      "sha256": "1ff241eb208c5edba9299e66688c7f4617c7315b17511698f8d926d2544d2e37"
     },
     {
       "function_id": "adversarial-opinion",
@@ -89,7 +89,7 @@
     {
       "function_id": "contenzioso-tributario",
       "skill_path": "skills/contenzioso-tributario/SKILL.md",
-      "sha256": "e531b4fb3659d9a8294df55b704ccaca986e8ac53bd5c7e770930c541572039e"
+      "sha256": "c3ededcbe7ac4080649ac5d599e65993614ed1bb5ab7c18523e166d092c5b8e3"
     },
     {
       "function_id": "datev-invoice-start",
@@ -249,12 +249,12 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "27e97b0756b2077237051a5f839013a7df411e6ca8195a58e484f8226606863f"
+      "sha256": "15d1189f336198488126703d6a2156b4419277963402fddff59f18684ff13888"
     },
     {
       "function_id": "studio-document-format",
       "skill_path": "skills/studio-document-format/SKILL.md",
-      "sha256": "c13dfd2f08a26f560e82518cc69ecfffc199dd23a647c978c6320e51b2eb09d7"
+      "sha256": "380614a5a41b3c2ef532bcab4e53b82bd50646a54e883a17215e247ca7d6d07c"
     },
     {
       "function_id": "trasformazione",

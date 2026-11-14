@@ -26,11 +26,11 @@ def test_communication_ui_literal_matrix_restores_without_consent_or_public_writ
         """
 const ui=fixture(source);await ui.panel.open('fictional-communication');
 ui.field('Confermo questo passaggio sulla versione completa corrente. Invio e pubblicazione restano distinti').checked=true;
-ui.field('Ho aperto tutti gli elaborati grafici esatti e confermo la checklist del workflow').checked=true;
+ui.field('Ho aperto tutti gli elaborati grafici esatti e confermo la checklist del percorso di lavoro').checked=true;
 const reviewer=ui.field('Professionista che ha svolto il riesame');reviewer.value='  Fictional literal reviewer  ';reviewer.dispatch('input');
 const decision=ui.field('Decisione · Affermazioni da verificare');decision.value='returned';decision.dispatch('change');
 const note=ui.field('Motivazione · Affermazioni da verificare');note.value='Fictional missing scope';note.dispatch('input');
-await ui.panel.flush();await ui.panel.refresh();process.stdout.write(JSON.stringify({fields:ui.page.fields,calls:ui.calls,confirmation:ui.field('Confermo questo passaggio sulla versione completa corrente. Invio e pubblicazione restano distinti').checked,quality:ui.field('Ho aperto tutti gli elaborati grafici esatti e confermo la checklist del workflow').checked}));
+await ui.panel.flush();await ui.panel.refresh();process.stdout.write(JSON.stringify({fields:ui.page.fields,calls:ui.calls,confirmation:ui.field('Confermo questo passaggio sulla versione completa corrente. Invio e pubblicazione restano distinti').checked,quality:ui.field('Ho aperto tutti gli elaborati grafici esatti e confermo la checklist del percorso di lavoro').checked}));
 """
     )
     assert result["fields"]["reviewer"] == "  Fictional literal reviewer  "

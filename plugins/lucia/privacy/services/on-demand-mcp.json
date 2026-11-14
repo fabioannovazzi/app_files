@@ -52,6 +52,14 @@
       "on_violation": "Close the transport on input closure or termination; do not introduce an update-protection companion or retained full-package snapshot."
     },
     {
+      "id": "archive-session-scope",
+      "control": "The shared entry supplies the same local Archive session identifier to every lazily started service in this connection. It retains an explicitly supplied session or host chat identity; otherwise it generates a new identifier for this connection only. The identifier is local routing metadata, not an inferred conversation identity. Separate connections without a host identity receive distinct identifiers. Existing Archive session checks and explicit permanent-default selection remain unchanged.",
+      "implemented_by": [
+        "scripts/on_demand_mcp.cjs"
+      ],
+      "on_violation": "Keep the existing Archive ownership checks; do not adopt another connection's temporary root or replace the permanent default."
+    },
+    {
       "id": "archive-panel-projection",
       "control": "The local Archive wrapper serves the same runtime in chat and panel-only modes. The panel returns client/practice labels, stable IDs and registration/status fields only in app-only _meta.archive; model-visible tool content is a generic status. Private identities, source documents and raw worker errors are not projected. The HTML uses local embedded fonts, no external resources, and textContent for stored labels. Only an explicit new-chat button sends the selected stable client and optional engagement IDs with a fixed user request through the host ui/message capability. No document content is read or sent by browsing. The host may expose UI through separately authorized screen or DOM inspection; app-only metadata is not a promise of host-wide invisibility. Backend failures render a retryable error without marking the opening tool as an unusable app.",
       "implemented_by": [
@@ -81,6 +89,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "01af2a844edc17a0a6f1dcc134d681145b1a04906235488735d3a7f3403320da"
+    "source_fingerprint": "128f5ed2fbb465ec310b4cb4ef2b4a214adaee6625925cdae96090fe2c2e202e"
   }
 }

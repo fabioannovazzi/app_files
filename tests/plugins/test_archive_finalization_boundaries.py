@@ -487,7 +487,7 @@ def test_mcp_retains_operation_error_when_recording_write_fails(
     server = product / "modules/studio-archive/mcp/server.cjs"
     server.parent.mkdir(parents=True)
     source = Path(__file__).resolve().parents[2] / "plugins/studio-archive"
-    shutil.copy2(source / "mcp/server.cjs", server)
+    shutil.copytree(source / "mcp", server.parent, dirs_exist_ok=True)
     (server.parent.parent / ".codex-plugin").mkdir()
     shutil.copy2(
         source / ".codex-plugin/plugin.json",
