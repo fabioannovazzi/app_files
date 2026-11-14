@@ -45,7 +45,7 @@
     {
       "path": "modules/fusione-guidata/scripts/fusione_archive.py",
       "repository_path": "plugins/fusione-guidata/scripts/fusione_archive.py",
-      "sha256": "58ea9e573c63cd6ab01a9c28f1d544372fb278d06c976ea3a78de20f65507169"
+      "sha256": "fef0d1133c14aecff80b35939948b21f0066a6eec7769d8f00c8278f1fa79651"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_case.py",

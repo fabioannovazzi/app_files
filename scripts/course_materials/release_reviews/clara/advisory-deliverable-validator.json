@@ -199,7 +199,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "21af2ff073ca412b05cabdf2d0b4301457acd5b4262edd9eb21559962c063fda",
+  "course_sha256": "a2d11637f030eaacef10c6ba5136178ac773c574cbbab926c98b62c7ac94d4b7",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "84b44e81c5032688c4e2ecd2280a2175df088f1ee095aaf730c06945cd6e93fd",
@@ -1010,5 +1010,12 @@
     "previous_course_sha256": "469ce754cb222f8a76fa9065adac065f63f57d7ca36f505aef977d54acc54ece",
     "reviewed_at": "2026-11-13T23:11:25.973097+00:00",
     "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "dynamic_archive_loader_source_binding_20261114": {
+    "date": "2026-11-14",
+    "previous_course_sha256": "21af2ff073ca412b05cabdf2d0b4301457acd5b4262edd9eb21559962c063fda",
+    "course_sha256": "a2d11637f030eaacef10c6ba5136178ac773c574cbbab926c98b62c7ac94d4b7",
+    "authored_content_unchanged": true,
+    "scope": "Source bindings updated after registering the dynamically loaded Archive modules in tutorial and merger adapters. Reproduced missing-module failures are covered by regressions for assignment binding and grouped publication. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   }
 }

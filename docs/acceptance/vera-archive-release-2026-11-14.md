@@ -81,3 +81,24 @@ changes the validated package contents or accepted interface.
 The readable Archive CI suite now exercises two issued revisions and their chat
 link after a client-folder move, including a missing historical format. All 14
 cases pass with 85.02% coverage; the required 80% threshold is unchanged.
+
+The shared tutorial and merger adapters register their dynamically loaded Archive
+modules before execution, matching the existing adapters. Without registration,
+assignment and publication calls raised a missing-module error outside pytest as
+well. Both adapter regressions failed before the repair and now pass; the combined
+assignment/tutorial/merger suite passes 258 cases. The exact input/source job passes
+368 cases with one skip and 86.46% coverage. All 65 browser/review cases pass after
+updating the expected direct-native routes and checking the visible heading's font
+instead of the removed subtitle. The first local browser run was denied OS launch
+access by the sandbox; the authorized rerun used the existing Chromium installation.
+
+All host distributions are rebuilt for the loader repair. Fifteen course source
+bindings and five privacy fingerprints were refreshed after reviewing the two
+registration changes; authored lessons, historical review evidence, recipients and
+the accepted product interfaces are unchanged.
+
+Canonical theme synchronization moves the generated block after the local Archive
+rules. Its output is byte-identical to the already validated package stylesheet;
+114 theme tests pass. Fourteen additional Vera-only privacy fingerprints are
+refreshed for the canonical source, with no course binding change. The course
+review/projection checks pass 64 cases with one skip.

@@ -117,6 +117,24 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 
 .archive-location { overflow-wrap: anywhere; }
 
+
+
+.archive-location { overflow-wrap: anywhere; }
+
+/* Read selected text without letting long document lines widen the app. */
+.document-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 80ch; line-height: 1.6; }
+/* Shared Archive: document and conversation titles open saved work directly. */
+.incarico-documents, .incarico-conversations, .incarico-work { margin-block: 1.6rem; max-width: 56rem; }
+.archive-document { border-top: 1px solid var(--line); padding-block: .9rem; overflow-wrap: anywhere; }
+:root button.archive-link { display: block; border: 0; border-radius: 0; background: none; padding: .15rem 0; margin: 0; color: var(--accent); font-size: 1rem; font-weight: 500; text-align: left; overflow-wrap: anywhere; }
+:root button.archive-link:hover { background: none; text-decoration: underline; }
+:root button.archive-link:disabled { color: var(--muted); text-decoration: none; }
+.archive-document .caption { margin: .35rem 0 0; }
+.archive-document details { margin-top: .4rem; }
+.archive-document details summary { cursor: pointer; font-size: .85rem; }
+.archive-document details .archive-document { margin-top: .6rem; padding-left: 1rem; }
+.incarico-documents > .archive-link { margin-block: .5rem; }
+
 /* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
 /* Canonical Vera workflow theme. Derived from the Vouching review surface.
  * Run: python scripts/sync_vera_ui_theme.py after changing this file.
@@ -293,19 +311,3 @@ nav[aria-label="Revisione del bilancio per area"] {
   margin-block: var(--space-md);
 }
 /* VERA_SHARED_THEME_END */
-
-.archive-location { overflow-wrap: anywhere; }
-
-/* Read selected text without letting long document lines widen the app. */
-.document-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 80ch; line-height: 1.6; }
-/* Shared Archive: document and conversation titles open saved work directly. */
-.incarico-documents, .incarico-conversations, .incarico-work { margin-block: 1.6rem; max-width: 56rem; }
-.archive-document { border-top: 1px solid var(--line); padding-block: .9rem; overflow-wrap: anywhere; }
-:root button.archive-link { display: block; border: 0; border-radius: 0; background: none; padding: .15rem 0; margin: 0; color: var(--accent); font-size: 1rem; font-weight: 500; text-align: left; overflow-wrap: anywhere; }
-:root button.archive-link:hover { background: none; text-decoration: underline; }
-:root button.archive-link:disabled { color: var(--muted); text-decoration: none; }
-.archive-document .caption { margin: .35rem 0 0; }
-.archive-document details { margin-top: .4rem; }
-.archive-document details summary { cursor: pointer; font-size: .85rem; }
-.archive-document details .archive-document { margin-top: .6rem; padding-left: 1rem; }
-.incarico-documents > .archive-link { margin-block: .5rem; }

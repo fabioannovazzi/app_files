@@ -559,7 +559,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "aefced62b1836e8b68cd0a7a8b16125f079c124bd8913d20be4384e15c84aa5e",
+      "sha256": "94e6cd6322217e1bff699e6fe268df844e36341ec3f787a1e8559f8bf65db519",
       "languages": [
         "it",
         "en",
@@ -584,7 +584,7 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442"
+      "source_sha256": "c3a5f3de18796c16292d48c3d3c911ea96b62342cab45eb24e404e753bb514b2"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",

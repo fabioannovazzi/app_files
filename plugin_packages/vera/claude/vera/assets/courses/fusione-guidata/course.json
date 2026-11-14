@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_archive.py",
-      "sha256": "58ea9e573c63cd6ab01a9c28f1d544372fb278d06c976ea3a78de20f65507169"
+      "sha256": "fef0d1133c14aecff80b35939948b21f0066a6eec7769d8f00c8278f1fa79651"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_case.py",
@@ -526,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fedba52c0d35f77ada30f43de3fc52327614af704b3084ad30937188961c273c"
+  "canonical_course_sha256": "a3217a59dd26cc67081500eb9caebde7100ce5424ed3f754e68388fb95f879c1"
 }

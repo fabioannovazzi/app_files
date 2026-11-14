@@ -22,7 +22,11 @@ def test_every_registered_vera_workflow_has_one_declared_editor_or_none() -> Non
     routes = json.loads((VERA / "ui/review-routes.json").read_bytes())
     components = json.loads((VERA / "components.json").read_bytes())["plugins"]
 
-    assert set(routes) == set(components)
+    native_workflows = {"contenzioso-tributario", "studio-document-format"}
+    pipelines = json.loads((VERA / "usage/pipelines.json").read_bytes())["pipelines"]
+    assert native_workflows <= set(pipelines)
+    assert set(routes) == set(components) | native_workflows
+    assert all(routes[name] == "task" for name in native_workflows)
     assert set(routes.values()) == {None, "items", "task"}
     assert routes["deep-research-validator"] is None
     assert routes["journal-bank-reconciliation"] == "items"

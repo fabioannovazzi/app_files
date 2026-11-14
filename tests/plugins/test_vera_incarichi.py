@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -351,6 +352,33 @@ def publish_files(tmp_path, text="First revision"):
             }
         )
     return files
+
+
+@pytest.mark.parametrize("adapter", ["tutorial", "fusion"])
+def test_dynamic_archive_adapters_can_bind_and_publish(
+    assignment, tmp_path, monkeypatch, adapter
+):
+    _, root, eid, _ = assignment
+    repository = Path(__file__).resolve().parents[2]
+    if adapter == "tutorial":
+        monkeypatch.syspath_prepend(str(repository / "plugins/_shared/vendor/modules"))
+        cases = importlib.import_module("desktop_teaching.cases")
+        ledger = cases._ledger(repository / "plugins/lucia")
+        workflow = "apertura-pratica"
+    else:
+        monkeypatch.syspath_prepend(str(repository / "plugins/fusione-guidata/scripts"))
+        ledger = importlib.import_module("fusione_archive").ledger()
+        workflow = "fusione-guidata"
+    ledger.incarichi().begin(root, eid, workflow, "Synthetic adapter publication")
+    ledger.deliverables().publish(
+        root, eid, "report", "Report", publish_files(tmp_path), 0, "save-report"
+    )
+    saved = ledger.incarichi().overview(root, eid)
+    assert saved["workflow_id"] == workflow
+    assert saved["deliverables"][0]["current_revision"] == 1
+    assert all(
+        item["available"] for item in saved["deliverables"][0]["versions"][0]["formats"]
+    )
 
 
 def test_primary_document_is_explicit_and_old_receipts_remain_unchanged(
