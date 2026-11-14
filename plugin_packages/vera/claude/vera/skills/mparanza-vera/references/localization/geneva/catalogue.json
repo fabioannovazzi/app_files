@@ -4,7 +4,7 @@
   "version": "0.1.634",
   "captured_at": "2026-11-14T09:40:07.252828+00:00",
   "catalogue_fingerprint": "98e0fa0f36d18adeea5a8be30c24525a5758ca172b2e97f69dc8ddf9de32b6d4",
-  "manifest_sha256": "be23d81b0bb87624c86f6d72ff87c957faa749e542c4185eb738f1fd99c07931",
+  "manifest_sha256": "d3bf4285e8c9193ca27ed09c0a6daa615b8474f05ba4d32382e6ca64e9609413",
   "entries": [
     {
       "function_id": "adeguati-assetti",
