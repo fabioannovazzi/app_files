@@ -358,7 +358,9 @@ def bind_research_record(
         "record_sha256": _record_digest(record),
         "artifacts": artifacts,
     }
-    path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n")
+    path.write_text(
+        json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     return verify_research_record(root)
 
 

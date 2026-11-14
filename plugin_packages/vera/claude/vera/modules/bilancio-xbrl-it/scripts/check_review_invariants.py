@@ -58,9 +58,12 @@ def main() -> int:
             "Mandatory review probes must run from the app_files source repository"
         )
     LOGGER.info("Running %d Bilancio invariant probes", len(INVARIANT_NODES))
-    _run([sys.executable, "-m", "pytest", "-q", *INVARIANT_NODES], repository)
+    _run(
+        [sys.executable, "-X", "utf8", "-m", "pytest", "-q", *INVARIANT_NODES],
+        repository,
+    )
     LOGGER.info("Checking Vera privacy-surface fingerprint freshness")
-    _run([sys.executable, str(privacy_validator)], repository)
+    _run([sys.executable, "-X", "utf8", str(privacy_validator)], repository)
     LOGGER.info("All Bilancio review invariants passed")
     return 0
 

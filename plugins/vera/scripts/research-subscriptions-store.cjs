@@ -65,7 +65,7 @@ function mutate(expected, change) {
     if(value.revision!==expected)throw new Error("Subscription choices changed; refresh before retrying");
     change(value);value.revision++;
     temporary=path.join(dir,".subscriptions-"+randomUUID()+".json");
-    fs.writeFileSync(temporary,JSON.stringify(value,null,2)+"\n",{flag:"wx",mode:0o600});
+    fs.writeFileSync(temporary,JSON.stringify(value,null,2)+"\n",{encoding:"utf8",flag:"wx",mode:0o600});
     fs.renameSync(temporary,path.join(dir,"subscriptions.json"));temporary=null;
     return view(value);
   }finally{

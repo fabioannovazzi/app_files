@@ -455,10 +455,21 @@ def _validate_module(root: Path, module: str | None) -> None:
         "namespace['validate_implementation_tree'](sys.argv[2])"
     )
     result = subprocess.run(
-        [sys.executable, "-I", "-B", "-c", code, str(bootstrap), str(component)],
+        [
+            sys.executable,
+            "-X",
+            "utf8",
+            "-I",
+            "-B",
+            "-c",
+            code,
+            str(bootstrap),
+            str(component),
+        ],
         capture_output=True,
         text=True,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(f"Module integrity check failed: {result.stderr.strip()}")
@@ -778,7 +789,10 @@ def _collect_execution_store(directory: Path, keep_idle: int) -> None:
                 ):
                     continue
                 info = root.stat()
-                record.write_text(json.dumps({"identity": [info.st_dev, info.st_ino]}))
+                record.write_text(
+                    json.dumps({"identity": [info.st_dev, info.st_ino]}),
+                    encoding="utf-8",
+                )
             except (OSError, ValueError):
                 LOGGER.warning("Unrecognized execution store entry retained: %s", root)
     for record in directory.glob("*.json"):
@@ -1091,6 +1105,8 @@ def report_preparation_failure(
             result = subprocess.run(
                 [
                     sys.executable,
+                    "-X",
+                    "utf8",
                     "-I",
                     "-B",
                     "-c",
@@ -1131,6 +1147,7 @@ def report_preparation_failure(
                 capture_output=True,
                 check=False,
                 timeout=45,
+                encoding="utf-8",
             )
             if result.returncode:
                 raise ValueError("Verified incident reporting process failed")

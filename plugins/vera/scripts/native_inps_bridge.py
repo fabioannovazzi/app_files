@@ -143,6 +143,7 @@ def main() -> None:
             "PYTHON": sys.executable,
             "VERA_CLIENT_WORKFLOW_PYTHON": sys.executable,
         },
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(completed.stderr.strip() or "Public INPS review refused")

@@ -54,6 +54,8 @@ def producer(root: Path, value: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_esg_author_bridge.py")),
@@ -64,6 +66,7 @@ def producer(root: Path, value: dict) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

@@ -31,7 +31,7 @@ def _amount(value: Any) -> str:
 
 def load_reviewed_invoices(path: Path) -> list[dict[str, Any]]:
     """Bind reviewed fields and line locators to exact source files and extract digest."""
-    payload = json.loads(path.read_text())
+    payload = json.loads(path.read_text(encoding="utf-8"))
     if (
         payload.get("schema_version") != "vera.reviewed_invoices.v1"
         or payload.get("jurisdiction") != "CH-GE"

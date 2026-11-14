@@ -374,7 +374,7 @@ function callBridge(tool, args) {
   const command = launcher
     ? [launcher, "--module", "bilancio-xbrl-it", "run", "scripts/service_bridge.py"]
     : [BRIDGE];
-  const result = spawnSync(python, command, {
+  const result = spawnSync(python, ["-X", "utf8", ...command], {
     cwd: PLUGIN_ROOT,
     env: process.env,
     input: JSON.stringify({ tool, arguments: args }),

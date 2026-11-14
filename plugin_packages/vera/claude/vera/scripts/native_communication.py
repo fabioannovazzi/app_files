@@ -163,6 +163,8 @@ def producer(
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_communication_bridge.py")),
@@ -172,6 +174,7 @@ def producer(
         capture_output=True,
         timeout=120,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

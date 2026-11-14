@@ -21,7 +21,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 18
+POLICY_REVISION = 19
 SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
@@ -123,7 +123,7 @@ def reenter_base(script: Path, arguments: list[str]) -> int | None:
     for name in ("PYTHONHOME", "PYTHONPATH", INSTALLING):
         environment.pop(name, None)
     return subprocess.run(
-        [str(base), "-s", str(script.absolute()), *arguments],
+        [str(base), "-X", "utf8", "-s", str(script.absolute()), *arguments],
         env=environment,
         check=False,
     ).returncode
@@ -248,6 +248,8 @@ def ready(
         checked = runner(
             [
                 str(api.runtime_python(path)),
+                "-X",
+                "utf8",
                 str(Path(__file__).resolve()),
                 "--check-requirements",
                 *files,
@@ -257,6 +259,7 @@ def ready(
             check=False,
             timeout=120,
             env=api.runtime_environment(path),
+            encoding="utf-8",
         )
         return checked.returncode == 0 and api._dependencies_ready(
             selection, path, runner=runner, require_receipt=False
@@ -489,11 +492,12 @@ def _install(
     (path / RECEIPT).unlink(missing_ok=True)
     if not existing:
         result = run(
-            [interpreter, "-m", "venv", "--without-pip", str(path)],
+            [interpreter, "-X", "utf8", "-m", "venv", "--without-pip", str(path)],
             capture_output=True,
             text=True,
             check=False,
             timeout=120,
+            encoding="utf-8",
         )
         if result.returncode:
             return False, path, api._process_detail(result)
@@ -523,6 +527,7 @@ def _install(
         text=True,
         check=False,
         timeout=900,
+        encoding="utf-8",
     )
     if installed.returncode:
         return (
@@ -540,6 +545,7 @@ def _install(
         text=True,
         check=False,
         timeout=120,
+        encoding="utf-8",
     )
     if checked.returncode:
         return False, path, api._process_detail(checked)
@@ -593,6 +599,8 @@ def _reconcile_locked_inventory(
     inspected = run(
         [
             str(api.runtime_python(path)),
+            "-X",
+            "utf8",
             "-I",
             "-S",
             str(root / "scripts/_locked_dependencies.py"),
@@ -603,6 +611,7 @@ def _reconcile_locked_inventory(
         text=True,
         check=False,
         timeout=30,
+        encoding="utf-8",
     )
     if inspected.returncode:
         raise ValueError(
@@ -644,6 +653,7 @@ def _reconcile_locked_inventory(
             text=True,
             check=False,
             timeout=120,
+            encoding="utf-8",
         )
         if removed.returncode or set(obsolete) & inventory().keys():
             raise ValueError(

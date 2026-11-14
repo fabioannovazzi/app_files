@@ -32,6 +32,8 @@ def engine(root: Path, args: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_cnc_authenticated_bridge.py")),
@@ -42,6 +44,7 @@ def engine(root: Path, args: dict) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

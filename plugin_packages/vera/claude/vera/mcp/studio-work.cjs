@@ -39,13 +39,13 @@ function bridge(action, args) {
   let python = process.env.VERA_STUDIO_WORK_PYTHON;
   if (!python) {
     const resolved = spawnSync(process.platform === "win32" ? "python" : "python3",
-      [path.join(ROOT, "scripts/studio_work_runtime.py")],
+      ["-X", "utf8", path.join(ROOT, "scripts/studio_work_runtime.py")],
       { encoding: "utf8", timeout: 30000 });
     if (resolved.error) throw resolved.error;
     if (resolved.status !== 0) throw new Error("Complete Vera's managed Python setup before using studio work");
     python = resolved.stdout.trim();
   }
-  const result = spawnSync(python, [path.join(ROOT, "scripts/studio_work.py")], {
+  const result = spawnSync(python, ["-X", "utf8", path.join(ROOT, "scripts/studio_work.py")], {
     input: JSON.stringify({ action, arguments: args }), encoding: "utf8",
     timeout: 30000, maxBuffer: 4 * 1024 * 1024,
   });

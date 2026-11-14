@@ -254,6 +254,8 @@ class Store:
             "required_access": "read_write",
             "setup_argv": [
                 sys.executable,
+                "-X",
+                "utf8",
                 str(self.plugin_root / "scripts/local_onboarding.py"),
                 "setup",
                 "--state-root",
@@ -331,7 +333,7 @@ class Store:
             # Enrollment is a separate loss sentinel, not a version-dependent flag.
             _write(self.enrollment, {"onboarding_id": state["onboarding_id"]})
             (self.root / MARKER).write_text(
-                "Vera onboarding: local-only tutorial artifacts.\n"
+                "Vera onboarding: local-only tutorial artifacts.\n", encoding="utf-8"
             )
             _write(self.path, state)
         return self.status()

@@ -22,7 +22,7 @@ function recorderPython(pluginRoot) {
   for (const candidate of new Set(candidates)) {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
     // Probe a usable interpreter; PATH aliases must not hide the managed runtime.
-    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+    const probe = spawnSync(candidate, ["-X", "utf8", "-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
       encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
     });
     if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
@@ -40,7 +40,7 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
   const reviewToken = (value) => value?.persistence_token
     || (typeof value?.review_reference === "string" ? value.review_reference
       : value?.review_reference?.persistence_token || value?.review_reference?.reference);
-  const record = (envelope) => spawnSync(recorderPython(pluginRoot), [
+  const record = (envelope) => spawnSync(recorderPython(pluginRoot), ["-X", "utf8",
     path.join(pluginRoot, "scripts/archive_emit.py"),
   ], {
     input: JSON.stringify({ component, ...envelope }), encoding: "utf8",

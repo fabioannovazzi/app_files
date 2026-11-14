@@ -176,7 +176,7 @@ def _run_adapter(layout: dict[str, Any], inventory: dict[str, Any]) -> dict[str,
             source.seek(0)
             try:
                 completed = subprocess.run(  # nosec B603
-                    [sys.executable, "-I", "-B", str(executable)],
+                    [sys.executable, "-X", "utf8", "-I", "-B", str(executable)],
                     stdin=source,
                     stdout=output,
                     stderr=errors,

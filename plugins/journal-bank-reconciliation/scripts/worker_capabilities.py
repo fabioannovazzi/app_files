@@ -151,7 +151,9 @@ def select_worker(
 ) -> dict[str, Any]:
     """Select a policy candidate actually advertised by this host's model API."""
     policy = json.loads(
-        Path(__file__).with_name("semantic_worker_policy.json").read_text()
+        Path(__file__)
+        .with_name("semantic_worker_policy.json")
+        .read_text(encoding="utf-8")
     )
     if stage not in {"luna", "sol"}:
         raise ValueError("Unknown reconciliation stage")
@@ -246,7 +248,9 @@ def validate_selection(
         )
     model, selected_effort = value["model"], value["reasoning_effort"]
     owned = json.loads(
-        Path(__file__).with_name("semantic_worker_policy.json").read_text()
+        Path(__file__)
+        .with_name("semantic_worker_policy.json")
+        .read_text(encoding="utf-8")
     )
     configured = owned[
         "strong_candidates" if value["cost_class"] == "escalation" else "candidates"
@@ -287,7 +291,9 @@ def validate_selection(
 def legacy_selection(effort: str | None) -> tuple[str, str, None]:
     """Read the retained API default; new reconciliation paths use discovery."""
     policy = json.loads(
-        Path(__file__).with_name("semantic_worker_policy.json").read_text()
+        Path(__file__)
+        .with_name("semantic_worker_policy.json")
+        .read_text(encoding="utf-8")
     )
     selected = effort or policy["legacy_default"]["effort"]
     if selected not in {"none", "low", "medium", "high", "xhigh", "max"}:

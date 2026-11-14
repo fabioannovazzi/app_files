@@ -14,7 +14,9 @@ __all__ = ["configured_runtime", "run_cowork_chunk"]
 
 def configured_runtime() -> str:
     """Read the distribution's explicit worker configuration."""
-    payload = json.loads(Path(__file__).with_name("worker_config.json").read_text())
+    payload = json.loads(
+        Path(__file__).with_name("worker_config.json").read_text(encoding="utf-8")
+    )
     runtime = payload["runtime"]
     if runtime not in {"codex-luna", "cowork-haiku"}:
         raise AuditError("Unsupported packaged semantic runtime")
@@ -67,7 +69,9 @@ def run_cowork_chunk(
     for path in (request_path, response_path, record_path):
         if path.is_symlink() or (path.exists() and not path.is_file()):
             raise AuditError("Unsafe Cowork worker artifact")
-    request_path.write_text(json.dumps(request, ensure_ascii=False, indent=2) + "\n")
+    request_path.write_text(
+        json.dumps(request, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     if not response_path.exists():
         raise SemanticReviewPending(f"Dispatch {request['agent']} for {request_path}")
     if not record_path.exists():
@@ -77,7 +81,7 @@ def run_cowork_chunk(
     if response_text.startswith("```json\n") and response_text.endswith("\n```"):
         response_text = response_text[8:-4]
     response = json.loads(response_text)
-    record = json.loads(record_path.read_text())
+    record = json.loads(record_path.read_text(encoding="utf-8"))
     if not isinstance(record, dict) or (
         record.get("schema_version") != "vera.cowork_worker_record.v1"
         or record.get("request_sha256") != request["request_sha256"]

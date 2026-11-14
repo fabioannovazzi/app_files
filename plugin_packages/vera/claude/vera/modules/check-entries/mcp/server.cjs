@@ -4474,7 +4474,7 @@ function checkEntriesAssuranceChildPython() {
   // Resolve an already prepared runtime. MCP review never installs dependencies.
   const completed = spawnSync(
     pythonExecutable(),
-    ["-I", "-B", "-c", CHECK_ENTRIES_MANAGED_PYTHON_RESOLVER, launcher],
+    ["-X", "utf8", "-I", "-B", "-c", CHECK_ENTRIES_MANAGED_PYTHON_RESOLVER, launcher],
     { cwd: PLUGIN_ROOT, encoding: "utf8", timeout: 60_000, maxBuffer: 64 * 1024, env: localHelperEnvironment() },
   );
   if (completed.error || completed.status !== 0) {
@@ -4629,7 +4629,7 @@ function runWorkflowPython(args, phase) {
   try {
     completed = spawnSync(
       childPython.executable,
-      ["-I", "-B", ...args],
+      ["-X", "utf8", "-I", "-B", ...args],
       {
         cwd: PLUGIN_ROOT,
         env: localHelperEnvironment(childPython.environment),

@@ -750,7 +750,8 @@ def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_f
     repeated = module.check_incidents(remote_status=remote)
 
     assert len(calls) == 1
-    assert calls[0][2:] == ([] if workflow == "vera-core" else ["--module", workflow])
+    assert calls[0][1:3] == ["-X", "utf8"]
+    assert calls[0][4:] == ([] if workflow == "vera-core" else ["--module", workflow])
     assert result["queued"] == repeated["queued"] == 1
     state = module._read()
     assert state["outbox"][0]["payload"]["outcome"]["execution_succeeded"] is False

@@ -20,6 +20,8 @@ def engine(root: Path, value: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_esg_bridge.py")),
@@ -30,6 +32,7 @@ def engine(root: Path, value: dict) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(result.stderr.strip().splitlines()[-1] or "ESG resume refused")

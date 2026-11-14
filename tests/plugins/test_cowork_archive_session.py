@@ -176,8 +176,10 @@ def test_session_forwarding_keeps_managed_runtime_and_return_code(
     expected_script = (
         "check_dependencies.py" if command == "check" else "managed_python_runtime.py"
     )
-    assert captured["argv"][:4] == [
+    assert captured["argv"][:6] == [
         sys.executable,
+        "-X",
+        "utf8",
         str(root / "scripts" / expected_script),
         "--module",
         "studio-archive",

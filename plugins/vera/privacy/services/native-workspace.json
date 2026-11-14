@@ -1150,7 +1150,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0501af474363aedad53b93c9323ea53091babc97a83886364babc2c29a239322",
+    "source_fingerprint": "29e0fbc8838dd32b8933b85aae22df22e0ca0dcd383053ea1a3edda874512957",
     "reviewed_at": "2026-11-04"
   },
   "governed_repository_paths": [

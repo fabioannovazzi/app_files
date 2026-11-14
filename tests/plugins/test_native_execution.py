@@ -98,6 +98,7 @@ def native(root, tmp_path, entry="native_execution_mcp.cjs"):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
         env=environment(tmp_path),
     )
     if entry == "on_demand_mcp.cjs":
@@ -547,6 +548,7 @@ def test_termination_keeps_accepted_work_and_releases_code(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
         env=environment(tmp_path),
         start_new_session=True,
     )
@@ -612,6 +614,7 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
         env=environment(tmp_path),
         start_new_session=True,
     )
@@ -709,6 +712,7 @@ def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
+        encoding="utf-8",
         env=environment(tmp_path),
         start_new_session=True,
     )

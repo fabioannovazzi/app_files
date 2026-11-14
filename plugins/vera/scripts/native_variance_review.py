@@ -456,6 +456,8 @@ def review_recipe(
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_variance_review_bridge.py")),
@@ -478,6 +480,7 @@ def review_recipe(
         capture_output=True,
         timeout=45,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

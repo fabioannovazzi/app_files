@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-11-12/eccolli-reconciliation-vera-0-1-625/work/vera-deploy-git/plugins/vera",
-  "version": "0.1.630",
-  "captured_at": "2026-11-13T15:48:03.070982+00:00",
-  "catalogue_fingerprint": "6955c78356784e11e73ca681d31853efa6ed13357b378f5314b936d6b38dc10b",
-  "manifest_sha256": "beedbc41cc2dda6004c69d29d119b9f9a1f40770fbc8b87887450ce35421f7fb",
+  "root": "/private/tmp/vera-utf8/plugins/vera",
+  "version": "0.1.631",
+  "captured_at": "2026-11-13T22:20:54.961113+00:00",
+  "catalogue_fingerprint": "dc8a5b18c452932f87690eb5c3e4ac408f1bd2ea747374647a94ee87aaf3a9f3",
+  "manifest_sha256": "8712786eb74dc637b3bfb005a6b6053eb003cb43edca0d4d65ccd4488488ce50",
   "entries": [
     {
       "function_id": "adeguati-assetti",

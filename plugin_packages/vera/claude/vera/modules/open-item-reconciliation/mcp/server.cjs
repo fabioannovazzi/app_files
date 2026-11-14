@@ -2668,7 +2668,7 @@ function auditReviewPythonBridge(command, outputDir, ...args) {
   for (const executable of auditReviewPythonCandidates()) {
     const replay = childProcess.spawnSync(
       executable,
-      [
+      ["-X", "utf8",
         "-I",
         "-B",
         scriptPath,

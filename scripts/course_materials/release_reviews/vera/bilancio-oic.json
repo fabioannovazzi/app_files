@@ -218,7 +218,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "827e8d1a73f27de0949b46801d380c1d5ffef5b03e1ca07212948b6dae2bd97b",
+  "course_sha256": "f9817744812dbe29e990de687fc33c169a723edeef7f81b9f1cda69bf80696d8",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2a87b99d8481f246fdca4c32f692ed7a5b79a347140be14095d12983e90e4d1c",
@@ -997,5 +997,33 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
+    "changed_source_paths": [
+      "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
+      "modules/bilancio-xbrl-it/scripts/managed_ocr_runtime.py",
+      "modules/bilancio-xbrl-it/scripts/run_xbrl_conformance.py",
+      "modules/bilancio-xbrl-it/scripts/validate_xbrl.py",
+      "scripts/archive_cli.py",
+      "scripts/model_data_report.py",
+      "scripts/operational_incidents.py",
+      "scripts/verified_execution.py",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/scripts/legal_documents.py",
+      "vendor/modules/scripts/legal_negotiation.py",
+      "vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/vera_journal_pdf/adapter.py",
+      "vendor/modules/vera_journal_pdf/recovery.py"
+    ],
+    "current_course_sha256": "f9817744812dbe29e990de687fc33c169a723edeef7f81b9f1cda69bf80696d8",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "827e8d1a73f27de0949b46801d380c1d5ffef5b03e1ca07212948b6dae2bd97b",
+    "reviewed_at": "2026-11-13T23:11:25.963543+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
   }
 }

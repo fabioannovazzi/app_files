@@ -71,6 +71,8 @@ def public(root: Path, request: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_management_author_bridge.py")),
@@ -81,6 +83,7 @@ def public(root: Path, request: dict) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

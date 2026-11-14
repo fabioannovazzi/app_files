@@ -31,6 +31,8 @@ def engine(root: Path, request: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_sari_author_bridge.py")),
@@ -41,6 +43,7 @@ def engine(root: Path, request: dict) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(
@@ -343,7 +346,7 @@ def dispatch(
                 proposal=api.read_json(home / "proposal.json"),
                 preview=api.read_json(home / "preview-result.json"),
                 checklist=(
-                    (home / "preview/studio_checklist.md").read_text()
+                    (home / "preview/studio_checklist.md").read_text(encoding="utf-8")
                     if (home / "preview/studio_checklist.md").exists()
                     else None
                 ),

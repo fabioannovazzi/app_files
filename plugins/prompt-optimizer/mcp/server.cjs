@@ -1875,7 +1875,7 @@ function preflightClientRun(outputDir, expectedRunId) {
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       scriptPath,
       "--output-dir",
       outputDir,
@@ -1916,7 +1916,7 @@ function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, fi
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       scriptPath,
       "--output-dir",
       outputDir,
@@ -1955,7 +1955,7 @@ function hasPromptOptimizerPromptEditTarget(appliedDecisions) {
 
 function callTool(name, args = {}) {
   const modelResult = modelPolicy.call(name, args, (request) => {
-    const completed = spawnSync(pythonExecutable(), [path.join(PLUGIN_ROOT, "scripts", "model_policy.py")], {
+    const completed = spawnSync(pythonExecutable(), ["-X", "utf8", path.join(PLUGIN_ROOT, "scripts", "model_policy.py")], {
       cwd: PLUGIN_ROOT, encoding: "utf8", input: JSON.stringify(request), timeout: 30000, maxBuffer: 2_000_000,
     });
     if (completed.error) throw completed.error;

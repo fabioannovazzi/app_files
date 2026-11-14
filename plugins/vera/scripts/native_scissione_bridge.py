@@ -123,7 +123,7 @@ def main() -> None:
             # Verification deliberately calls the maintained private report formatter.
             # It is bound by the complete implementation hash, rather than duplicated.
             memo = producer._report(value)
-            if (folder / "review.md").read_text() != memo:
+            if (folder / "review.md").read_text(encoding="utf-8") != memo:
                 raise ValueError("Scissione memo differs from the maintained report")
             # Re-render HTML in an isolated temporary output with the maintained
             # formatter. Never reproduce its template or touch official versions.

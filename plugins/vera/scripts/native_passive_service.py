@@ -36,6 +36,8 @@ def engine(root: Path, request: dict) -> dict:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_passive_audit_bridge.py")),
@@ -46,6 +48,7 @@ def engine(root: Path, request: dict) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(
@@ -664,6 +667,8 @@ def dispatch(
         process = subprocess.Popen(
             [
                 sys.executable,
+                "-X",
+                "utf8",
                 "-I",
                 "-B",
                 str(Path(__file__).with_name("native_passive_supervisor.py")),

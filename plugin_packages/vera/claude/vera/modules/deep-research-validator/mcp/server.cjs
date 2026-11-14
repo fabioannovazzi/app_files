@@ -1876,7 +1876,7 @@ function preflightClientRun(outputDir, expectedRunId) {
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       scriptPath,
       "--output-dir",
       outputDir,
@@ -1918,7 +1918,7 @@ function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, fi
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       scriptPath,
       "--output-dir",
       outputDir,

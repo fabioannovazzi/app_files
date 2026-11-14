@@ -43,6 +43,8 @@ def preflight(root: Path, current: dict, task: str, body: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_patent_box_author_bridge.py")),
@@ -53,6 +55,7 @@ def preflight(root: Path, current: dict, task: str, body: dict) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(
@@ -367,7 +370,9 @@ def model_packet(
             },
             "control_catalog": api.read_json(root / "config/control_catalog.json"),
             "method_root": str(root),
-            "public_skill": (root / "skills/mparanza-patent-box-review/SKILL.md").read_text(),
+            "public_skill": (root / "skills/mparanza-patent-box-review/SKILL.md").read_text(
+                encoding="utf-8"
+            ),
             "real_rules": api.read_json(root / "config/ruleset.proposed.json"),
             "untrusted_evidence": True,
             "no_automatic_anonymization": True,

@@ -561,7 +561,9 @@ def build_record(
     previous_hash = None
     previous = review.get("previous")
     if previous is not None:
-        previous_record = json.loads(source_paths[previous["source_id"]].read_text())
+        previous_record = json.loads(
+            source_paths[previous["source_id"]].read_text(encoding="utf-8")
+        )
         if (
             previous_record.get("workflow_id") != "adeguati-assetti"
             or previous_record.get("schema_version") != 1
@@ -924,7 +926,7 @@ def main() -> int:
     )
     if context["schema_version"] != "vera.client_workflow_context.v2":
         raise ValueError("assetti review requires a portable v2 client run")
-    review = json.loads(args.review.read_text())
+    review = json.loads(args.review.read_text(encoding="utf-8"))
     input_root = Path(context["run_root"]) / "inputs"
     paths = [input_root / row["path"] for row in review["sources"]]
     context = load_client_engagement_context_file(

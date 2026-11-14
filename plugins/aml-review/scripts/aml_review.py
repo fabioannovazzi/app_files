@@ -211,7 +211,9 @@ def build_record(
     previous_hash = None
     previous = review.get("previous")
     if previous is not None:
-        previous_record = json.loads(source_paths[previous["source_id"]].read_text())
+        previous_record = json.loads(
+            source_paths[previous["source_id"]].read_text(encoding="utf-8")
+        )
         if (
             previous_record.get("workflow_id") != "aml-review"
             or previous_record.get("schema_version") != 1
@@ -244,7 +246,11 @@ def build_record(
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         intake = module.validate_new_client_input(
-            json.loads(source_paths[review["calculation_source_id"]].read_text())
+            json.loads(
+                source_paths[review["calculation_source_id"]].read_text(
+                    encoding="utf-8"
+                )
+            )
         )
         if intake["jurisdiction"] != review["jurisdiction"]:
             raise ValueError("Calculation intake belongs to another jurisdiction")
@@ -380,7 +386,7 @@ def save_record(record: dict[str, Any], output: Path) -> Path:
     path = output / f"aml-review-{record['record_sha256']}.json"
     content = json.dumps(record, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
     if path.exists():
-        if path.read_text() != content:
+        if path.read_text(encoding="utf-8") != content:
             raise ValueError("Existing review differs from its digest")
     else:
         with path.open("x", encoding="utf-8") as handle:
@@ -389,7 +395,7 @@ def save_record(record: dict[str, Any], output: Path) -> Path:
     memo = path.with_suffix(".md")
     rendered = render_memo(record)
     if memo.exists():
-        if memo.read_text() != rendered:
+        if memo.read_text(encoding="utf-8") != rendered:
             raise ValueError("Existing memo differs from its record")
     else:
         with memo.open("x", encoding="utf-8") as handle:
@@ -421,7 +427,7 @@ def main() -> int:
     )
     if context["schema_version"] != "vera.client_workflow_context.v2":
         raise ValueError("AML review requires a portable v2 client run")
-    review = json.loads(args.review.read_text())
+    review = json.loads(args.review.read_text(encoding="utf-8"))
     input_root = Path(context["run_root"]) / "inputs"
     paths = [input_root / row["path"] for row in review["sources"]]
     context = load_client_engagement_context_file(

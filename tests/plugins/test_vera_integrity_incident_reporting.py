@@ -102,7 +102,7 @@ def transport(tmp_path, monkeypatch, offline=False):
     def isolated_reporter(command, **options):
         # Run the fixed child program with the test's in-process fake transport.
         # A separate real-process regression verifies Python import isolation.
-        assert command[1:4] == ["-I", "-B", "-c"]
+        assert command[1:6] == ["-X", "utf8", "-I", "-B", "-c"]
         output = io.StringIO()
         with monkeypatch.context() as child:
             child.setattr(sys, "argv", ["-c", command[-1]])

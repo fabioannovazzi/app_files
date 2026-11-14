@@ -236,14 +236,15 @@ def run_demo(destination: Path) -> dict:
         "limitations": "Foundation demonstration only. No model-read attestation, professional opinion, release, publication or live-client acceptance.",
     }
     (destination / "demo_result.json").write_text(
-        json.dumps(result, ensure_ascii=False, indent=2) + "\n"
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     (destination / "README.md").write_text(
         "# Synthetic ESG foundation demo\n\n"
         + "\n".join(f"- {name}: {passed}" for name, passed in checks.items())
         + "\n\nCurrent context: "
         + str(context)
-        + "\n\nThe former memo and approval are obsolete in the successor. Both runs and original inputs are retained.\n"
+        + "\n\nThe former memo and approval are obsolete in the successor. Both runs and original inputs are retained.\n",
+        encoding="utf-8",
     )
     if not all(checks.values()):
         raise ESGError(

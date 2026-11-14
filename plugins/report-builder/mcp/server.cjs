@@ -2491,7 +2491,7 @@ function rederiveReportBuilderPreparedState(outputDir) {
   );
   const completed = spawnSync(
     pythonExecutable(),
-    ["-I", "-B", scriptPath, "--output-dir", outputDir],
+    ["-X", "utf8", "-I", "-B", scriptPath, "--output-dir", outputDir],
     {
       cwd: PLUGIN_ROOT,
       encoding: "utf8",
@@ -4576,7 +4576,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
   if (!outputDir) return null;
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       "-c",
@@ -4651,7 +4651,7 @@ function applyWorkflowSpecificReviewApplication(
   }
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       scriptPath,

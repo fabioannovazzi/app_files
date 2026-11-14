@@ -235,7 +235,7 @@ def fetch_public(
     )
     try:
         result = subprocess.run(
-            [sys.executable, "-I", __file__, arguments],
+            [sys.executable, "-X", "utf8", "-I", __file__, arguments],
             check=False,
             capture_output=True,
             timeout=timeout,

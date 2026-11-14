@@ -165,7 +165,7 @@
     },
     {
       "path": "modules/patent-box-review/patent_box/source_transport.py",
-      "sha256": "126576147803092b7279776720f0e4c877b5fbffcb4226bd67c1bbf4e731b63e"
+      "sha256": "4600540dcb63d614cb1d51946671dffdb468684860c5058504aeda973f6eca2b"
     },
     {
       "path": "modules/patent-box-review/references/DATA_BOUNDARY_REVIEW.md",
@@ -325,7 +325,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -405,7 +405,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_documents.py",
-      "sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+      "sha256": "3c2b4d6592521987f8561f9ae39a1b0aa1c96df140059c21a71e36b866036bab"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_labels.json",
@@ -433,7 +433,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",
-      "sha256": "9dac089491f64475736b43c50be8209ec65ccf1aaf841e1e079a3ac042e4358c"
+      "sha256": "3caf6f3780c5bd70ac4c8e823b63c7ec3f7fd41908f350b3dd653cedeba3a382"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.schema.json",
@@ -461,7 +461,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -505,7 +505,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+      "sha256": "05cb587d2d4bca8478ac602dd63d7da296bc3e67be9e6dfceee3fc2ad0fb8c25"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/bank.py",
@@ -513,7 +513,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
+      "sha256": "9abdaad96cc5a2fb76bf4d0810128bb2f9c460738301a5ebe2d8b0f2e27d7d58"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -782,5 +782,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2cc23c7c2f328dcce45883ef6a0f902c1dccbf63854d8eab48e7559e2c6bd09d"
+  "canonical_course_sha256": "df39fd87ab8319fb1ecf15486c57bff4b49ed92c372992dd2b399b18c38230d7"
 }

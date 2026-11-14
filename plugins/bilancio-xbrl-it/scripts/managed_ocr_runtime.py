@@ -298,6 +298,7 @@ def _prefetch_models(target: Path, runner: Runner, python: Path) -> None:
         capture_output=True,
         check=False,
         text=True,
+        encoding="utf-8",
     )
     if completed.returncode != 0 or not _models_present(target):
         detail = (completed.stderr or completed.stdout).strip()

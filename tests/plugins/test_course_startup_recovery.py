@@ -192,8 +192,9 @@ def test_course_cli_uses_verified_managed_launcher_before_render(
     args = [action, "--workflow", "variance-analysis", "--language", "it"]
     assert cli.main(args) == 23
     command, kwargs = calls[0]
-    assert Path(command[1]).name == "managed_python_runtime.py"
-    assert command[2:] == ["run", "scripts/local_courses.py", *args]
+    assert command[1:3] == ["-X", "utf8"]
+    assert Path(command[3]).name == "managed_python_runtime.py"
+    assert command[4:] == ["run", "scripts/local_courses.py", *args]
     assert kwargs["cwd"] == cli.PLUGIN_ROOT
 
 

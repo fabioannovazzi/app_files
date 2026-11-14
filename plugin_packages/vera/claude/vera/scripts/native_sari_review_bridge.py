@@ -153,6 +153,7 @@ def main() -> None:
             "PYTHON": sys.executable,
             "VERA_CLIENT_WORKFLOW_PYTHON": sys.executable,
         },
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

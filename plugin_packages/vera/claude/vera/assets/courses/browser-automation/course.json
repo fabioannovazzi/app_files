@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/browser-automation/scripts/agenzia_acquire.py",
-      "sha256": "a6c3ed54116c6c5117e35ac2fc37b765ca4fd5877fd3dbca895bfd6df69ba13a"
+      "sha256": "598006c0632fa54a1e7c755921a9087dc4029d902e976ab57255833277d50d2a"
     },
     {
       "path": "modules/browser-automation/scripts/agenzia_demo.py",
@@ -265,7 +265,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_documents.py",
-      "sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+      "sha256": "3c2b4d6592521987f8561f9ae39a1b0aa1c96df140059c21a71e36b866036bab"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_labels.json",
@@ -293,7 +293,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",
-      "sha256": "9dac089491f64475736b43c50be8209ec65ccf1aaf841e1e079a3ac042e4358c"
+      "sha256": "3caf6f3780c5bd70ac4c8e823b63c7ec3f7fd41908f350b3dd653cedeba3a382"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.schema.json",
@@ -321,7 +321,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -365,7 +365,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+      "sha256": "05cb587d2d4bca8478ac602dd63d7da296bc3e67be9e6dfceee3fc2ad0fb8c25"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/bank.py",
@@ -373,7 +373,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
+      "sha256": "9abdaad96cc5a2fb76bf4d0810128bb2f9c460738301a5ebe2d8b0f2e27d7d58"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fbc3da82dc6fb3b237e949544b39c094221ddf71fbb8b6641a4c3361c922e5b2"
+  "canonical_course_sha256": "351c09ca2c86a6529fa258f65e3c3bcb20915f48cbc850e61f7565d0220d740c"
 }

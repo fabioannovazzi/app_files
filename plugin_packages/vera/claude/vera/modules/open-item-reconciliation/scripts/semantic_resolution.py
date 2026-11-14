@@ -360,7 +360,9 @@ def _legacy_prepare_resolution(
                     for row in [*packet["targets"], *packet["sources"]]
                 ],
             )
-            launch = json.loads(Path(execution["launch_receipt"]).read_text())
+            launch = json.loads(
+                Path(execution["launch_receipt"]).read_text(encoding="utf-8")
+            )
             result["batches"].append(
                 {
                     "packet": packet,
@@ -943,7 +945,7 @@ def semantic_artifact_paths(output: Path) -> set[str]:
     prepared_path = output / "prepared_records.json"
     if not prepared_path.is_file():
         return set()
-    prepared = json.loads(prepared_path.read_text())
+    prepared = json.loads(prepared_path.read_text(encoding="utf-8"))
     receipt = prepared["assumptions"].get(KEY)
     if receipt is None:
         return set()

@@ -28,6 +28,8 @@ def engine(root: Path, value: dict, api: Any) -> dict:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_inps_bridge.py")),
@@ -38,6 +40,7 @@ def engine(root: Path, value: dict, api: Any) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(

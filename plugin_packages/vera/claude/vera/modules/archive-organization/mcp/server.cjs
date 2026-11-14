@@ -436,7 +436,7 @@ function pythonExecutable() {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
     // Probe the actual interpreter, not the presence of a PATH alias. This
     // avoids ENOENT/Store aliases hiding an already working managed Python.
-    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+    const probe = spawnSync(candidate, ["-X", "utf8", "-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
       encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
     });
     if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
@@ -458,7 +458,7 @@ function workerArguments(args) {
 }
 
 function callCli(args) {
-  const result = spawnSync(pythonExecutable(), workerArguments(args), {
+  const result = spawnSync(pythonExecutable(), ["-X", "utf8", ...workerArguments(args)], {
     cwd: PLUGIN_ROOT,
     env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
     encoding: "utf8",

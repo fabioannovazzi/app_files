@@ -50,7 +50,11 @@ def main() -> None:
         path = output / "model_data_report.json"
         if not path.exists() and not (output / "model_data_report.md").exists():
             state_path = output.parent / "model_data_reporting.json"
-            state = json.loads(state_path.read_text()) if state_path.is_file() else {}
+            state = (
+                json.loads(state_path.read_text(encoding="utf-8"))
+                if state_path.is_file()
+                else {}
+            )
             matches = (
                 state.get("run_id") == request["run_id"]
                 and state.get("workflow_id") == request["workflow_id"]

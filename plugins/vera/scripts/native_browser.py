@@ -90,6 +90,8 @@ def producer(module: Path, row: dict, action: str, **args: Any) -> dict:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_browser_bridge.py")),
@@ -101,6 +103,7 @@ def producer(module: Path, row: dict, action: str, **args: Any) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(

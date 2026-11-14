@@ -68,6 +68,8 @@ def consumer(root: Path, directory: Path) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_passive_sources_bridge.py")),
@@ -78,6 +80,7 @@ def consumer(root: Path, directory: Path) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(result.stderr.strip().splitlines()[-1] or "Review refused")

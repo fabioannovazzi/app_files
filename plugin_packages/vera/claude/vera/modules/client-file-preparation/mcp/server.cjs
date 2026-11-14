@@ -148,7 +148,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
   // persistence boundary reuses the shared v2 validator immediately before write.
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       "-c",
@@ -187,7 +187,7 @@ function refreshModelHandoff(outputDir) {
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "model_handoff.py");
   const completed = spawnSync(
     pythonExecutable(),
-    ["-I", "-B", scriptPath, "--output-dir", outputDir],
+    ["-X", "utf8", "-I", "-B", scriptPath, "--output-dir", outputDir],
     { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 4 * 1024 * 1024 },
   );
   if (completed.error || completed.status !== 0) {

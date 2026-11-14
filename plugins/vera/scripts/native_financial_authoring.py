@@ -26,6 +26,8 @@ def public_check(root: Path, request: dict) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_financial_author_bridge.py")),
@@ -36,6 +38,7 @@ def public_check(root: Path, request: dict) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

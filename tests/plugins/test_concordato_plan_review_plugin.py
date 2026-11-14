@@ -3445,7 +3445,7 @@ def _concordato_phase_child(
     )
     script.write_text(
         "#!/bin/sh\n"
-        'if [ "$3" = "-c" ] || [ "$(basename "$3")" = "replay_assurance.py" ]; then\n'
+        'if [ "$5" = "-c" ] || [ "$(basename "$5")" = "replay_assurance.py" ]; then\n'
         '  exec "$REAL_PYTHON" "$@"\n'
         "fi\n"
         f"{branch}",
@@ -4183,7 +4183,7 @@ def test_concordato_child_receives_only_working_output_paths(
     wrapper = tmp_path / "recording-python.sh"
     wrapper.write_text(
         "#!/bin/sh\n"
-        'if [ "$3" != "-c" ]; then\n'
+        'if [ "$5" != "-c" ]; then\n'
         '  printf "%s\\n" "$@" >> "$REVIEW_TX_CHILD_LOG"\n'
         "fi\n"
         'exec "$REAL_PYTHON" "$@"\n',
@@ -4237,7 +4237,7 @@ def test_concordato_child_start_failure_is_fixed_and_rolls_back(
     non_executable = tmp_path / "python-becomes-non-executable.sh"
     non_executable.write_text(
         "#!/bin/sh\n"
-        'if [ "$3" = "-c" ]; then\n'
+        'if [ "$5" = "-c" ]; then\n'
         '  "$REAL_PYTHON" "$@"\n'
         "  status=$?\n"
         '  chmod 000 "$0"\n'

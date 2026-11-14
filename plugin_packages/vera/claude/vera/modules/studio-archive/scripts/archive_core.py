@@ -1268,6 +1268,7 @@ def _native_folder_picker_command() -> tuple[str, ...]:
         if executable is None:
             raise ArchiveFolderPickerUnavailableError()
         script = (
+            "[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); "
             "Add-Type -AssemblyName System.Windows.Forms; "
             "$dialog = New-Object System.Windows.Forms.FolderBrowserDialog; "
             "$dialog.Description = 'Select the Vera Studio Archive folder'; "
@@ -1314,6 +1315,7 @@ def _select_archive_root_with_native_picker() -> Path | None:
             text=True,
             check=False,
             timeout=300,
+            encoding="utf-8",
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise ArchiveFolderPickerUnavailableError() from exc

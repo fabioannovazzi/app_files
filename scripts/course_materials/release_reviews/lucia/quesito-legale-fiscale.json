@@ -137,7 +137,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "3896fc188890479475d76f001952b41b0392d9e7a757d204eba4193f1292771a",
+  "course_sha256": "f859e9c13d8f1705781e0dd247fe728856990262271875e434c1e662efe12b02",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "6f9aa081be53b5bc71d68835cc667530c533ea836ed90428f740e6020577c29d",
@@ -815,5 +815,23 @@
     "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
     "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
     "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
+  },
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
+    "changed_source_paths": [
+      "modules/deep-research-validator/scripts/research_record.py",
+      "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/desktop_teaching/onboarding.py"
+    ],
+    "current_course_sha256": "f859e9c13d8f1705781e0dd247fe728856990262271875e434c1e662efe12b02",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "3896fc188890479475d76f001952b41b0392d9e7a757d204eba4193f1292771a",
+    "reviewed_at": "2026-11-13T23:11:25.971531+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
   }
 }

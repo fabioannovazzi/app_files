@@ -1999,6 +1999,8 @@ def check_incidents(
                 completed = subprocess.run(
                     [
                         sys.executable,
+                        "-X",
+                        "utf8",
                         str(ROOT / script),
                         *(
                             []
@@ -2032,6 +2034,7 @@ def check_incidents(
                         },
                         "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1",
                     },
+                    encoding="utf-8",
                 )
             except (subprocess.TimeoutExpired, OSError):
                 traceback.print_exc(file=handle)

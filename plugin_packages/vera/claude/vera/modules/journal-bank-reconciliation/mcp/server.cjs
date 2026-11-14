@@ -3889,7 +3889,7 @@ function runWorkflowPython(args, phase) {
   try {
     completed = spawnSync(
       pythonExecutable(),
-      ["-I", "-B", ...args],
+      ["-X", "utf8", "-I", "-B", ...args],
       {
         cwd: PLUGIN_ROOT,
         encoding: "utf8",

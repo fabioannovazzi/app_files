@@ -469,6 +469,8 @@ def bilancio_call(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             str(module_root("bilancio-xbrl-it") / "scripts/service_bridge.py"),
         ],
         input=json.dumps({"tool": tool, "arguments": args}),
@@ -476,6 +478,7 @@ def bilancio_call(tool: str, args: dict[str, Any]) -> dict[str, Any]:
         capture_output=True,
         timeout=120,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(completed.stderr.strip() or "Bilancio service failed")
@@ -1311,7 +1314,7 @@ def write_lock(output: Path) -> Iterator[None]:
         with _windows_write_lock(path):
             yield
         return
-    lock = path.open("x")
+    lock = path.open("x", encoding="utf-8")
     try:
         with lock:
             yield
@@ -1440,6 +1443,7 @@ def engine_context(
         timeout=40,
         env=local_helper_environment(python=os.environ.get("PYTHON") or sys.executable),
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(completed.stderr.strip() or "Selected context was refused")
@@ -1453,6 +1457,8 @@ def open_item_review(
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(ROOT / "scripts/native_open_item_bridge.py"),
@@ -1470,6 +1476,7 @@ def open_item_review(
         capture_output=True,
         timeout=120,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(
@@ -2693,6 +2700,8 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     )
                 command = [
                     sys.executable,
+                    "-X",
+                    "utf8",
                     str(
                         module_root("archive-organization")
                         / "scripts/archive_organization.py"
@@ -2708,7 +2717,12 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                         "--explicit-approval",
                     ]
                 completed = subprocess.run(
-                    command, text=True, capture_output=True, timeout=120, check=False
+                    command,
+                    text=True,
+                    capture_output=True,
+                    timeout=120,
+                    check=False,
+                    encoding="utf-8",
                 )
                 response = json.loads(completed.stdout)
                 if completed.returncode:

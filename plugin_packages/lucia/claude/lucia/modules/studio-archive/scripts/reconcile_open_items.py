@@ -44,7 +44,15 @@ def _command(script: str, arguments: list[str], log: Path) -> dict[str, Any]:
         with log.open("w", encoding="utf-8") as handle:
             # Fixed published component and Python; no shell or caller code.
             result = subprocess.run(  # nosec B603
-                [sys.executable, "-I", "-B", str(component / script), *arguments],
+                [
+                    sys.executable,
+                    "-X",
+                    "utf8",
+                    "-I",
+                    "-B",
+                    str(component / script),
+                    *arguments,
+                ],
                 stdout=handle,
                 stderr=subprocess.STDOUT,
                 check=False,
@@ -206,11 +214,12 @@ def check_sources(request: dict[str, Any]) -> dict[str, Any]:
     """Check current cells before imports; source meaning stays agent-selected."""
     script = SCRIPTS / "open_items_source_preflight.py"
     result = subprocess.run(  # nosec B603
-        [sys.executable, "-I", "-B", str(script)],
+        [sys.executable, "-X", "utf8", "-I", "-B", str(script)],
         input=json.dumps(request),
         text=True,
         capture_output=True,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise archive.ArchiveError("Source preflight failed: " + result.stderr.strip())

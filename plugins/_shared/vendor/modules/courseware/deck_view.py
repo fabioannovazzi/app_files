@@ -82,7 +82,7 @@ def deck_files(
         [
             runtime.fixed_16_9_deck_js().strip(),
             (plugin_root / "skills/html-deck/assets/deck-engine/deck.js")
-            .read_text()
+            .read_text(encoding="utf-8")
             .strip(),
         ]
     )
@@ -90,7 +90,7 @@ def deck_files(
     for record in execution["native_records"]:
         path = lesson / record["path"]
         if path.suffix == ".json":
-            data = json.loads(path.read_text())
+            data = json.loads(path.read_text(encoding="utf-8"))
             if (
                 isinstance(data, dict)
                 and data.get("schema_version") == "clara.html_deck_validation.v1"
@@ -104,7 +104,7 @@ def deck_files(
         path = lesson / item["path"]
         if path.suffix != ".html":
             continue
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8")
         if not is_output and 'data-clara-deck-mode="stage"' not in text:
             continue
         digest = hashlib.sha256(path.read_bytes()).hexdigest()
