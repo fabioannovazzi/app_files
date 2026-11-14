@@ -3222,6 +3222,19 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 continue
             if (
                 plugin_root.name == "clara"
+                and skill_file.parent.name == "studio-archive"
+            ):
+                # This adapter resumes a saved case; the case director owns
+                # substantive outputs rather than the generic run-review template.
+                assert "clara_archive_case" in skill_text
+                assert "../advisory-case-director/SKILL.md" in skill_text
+                assert "skills/studio-archive/SKILL.md" in skill_text
+                assert "preserves its files and location" in normalized_skill_text
+                assert "Do not rerun completed work" in normalized_skill_text
+                assert "references/model-data-report-contract.md" in skill_text
+                continue
+            if (
+                plugin_root.name == "clara"
                 and skill_file.parent.name == "business-planning"
             ):
                 assert "Read that module's" in normalized_skill_text

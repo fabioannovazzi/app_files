@@ -64,6 +64,10 @@ conflicting identities rather than creating a replacement case.
   current contract; the product catalog includes Archive; the projection test
   explicitly requires the retained panel. A package-directory check run during
   generation required rerunning after the build completed.
+- The full package suite expected generic run-review boilerplate in the new
+  Archive adapter. Like the existing product adapters, its test now verifies
+  the actual shared Archive/case-director routing, preservation of saved work
+  and model-data report contract rather than an unrelated output template.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.
