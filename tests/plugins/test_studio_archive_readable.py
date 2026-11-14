@@ -20,6 +20,13 @@ from readable_archive import refresh_readable_archive
 from tests.model_data_helpers import write_no_model_report
 
 
+@pytest.fixture(autouse=True)
+def archive_imports(monkeypatch):
+    """Restore the real ledger after repository-wide import isolation."""
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    monkeypatch.setitem(sys.modules, ledger.__name__, ledger)
+
+
 class Links(HTMLParser):
     def __init__(self) -> None:
         super().__init__()

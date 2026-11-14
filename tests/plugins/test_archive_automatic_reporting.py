@@ -6,6 +6,7 @@ import shlex
 import subprocess
 import sys
 from pathlib import Path
+from types import ModuleType, SimpleNamespace
 
 import pytest
 
@@ -309,7 +310,30 @@ def reporting_runtime(tmp_path, monkeypatch, archive_script_imports):
     yield original_stamp
 
 
-def start(core, case, workflow="variance-analysis"):
+def separate_case(
+    core: ModuleType, case: SimpleNamespace, label: str
+) -> SimpleNamespace:
+    """Create another assignment with an explicitly imported source."""
+    engagement = core.create_studio_client_engagement(
+        case.client_id, label, state_dir=case.state_dir
+    )["engagement"]
+    imported = core.import_studio_client_document(
+        case.client_id,
+        case.source,
+        "journal",
+        engagement_id=engagement["engagement_id"],
+        state_dir=case.state_dir,
+    )
+    return SimpleNamespace(
+        **{
+            **vars(case),
+            "engagement_id": engagement["engagement_id"],
+            "imported": imported,
+        }
+    )
+
+
+def start(core, case, workflow="variance-analysis", *, new_run=False):
     workflow = {
         "vouching": "check-entries",
         "purchase-invoice-review": "passive-invoice-audit",
@@ -319,6 +343,7 @@ def start(core, case, workflow="variance-analysis"):
         case.engagement_id,
         workflow,
         input_ids=[case.imported["input_id"]],
+        new_run=new_run,
         state_dir=case.state_dir,
     )
     run_id = prepared["run"]["run_id"]
@@ -866,7 +891,8 @@ def test_invalid_pending_proof_does_not_block_other_archive_work(
     report = (output / "model_data_report.json").read_bytes()
     (output / "result.txt").write_text("Changed after sealing")
 
-    result = start(archive_core, client_case, "report-builder")
+    other_case = separate_case(archive_core, client_case, "Separate report")
+    result = start(archive_core, other_case, "report-builder")
 
     assert result["run"]["workflow_id"] == "report-builder"
     assert result["run"]["status"] == "running"
@@ -958,7 +984,7 @@ def test_relative_run_artifact_read_cannot_escape_to_another_run(
     archive_core, client_case
 ):
     first = start(archive_core, client_case)
-    other = start(archive_core, client_case, "report-builder")
+    other = start(archive_core, client_case, new_run=True)
     artifact = Path(other["output_dir"]) / "inspection.json"
     artifact.write_text('{"other_case": true}')
 

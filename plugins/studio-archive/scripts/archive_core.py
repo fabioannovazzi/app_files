@@ -70,6 +70,13 @@ from vera_assurance import (  # noqa: E402
 CLIENT_WORKFLOW_IDS = (*VERA_CLIENT_WORKFLOW_IDS, "apertura-pratica")
 
 __all__ = [
+    "map_studio_legacy_incarichi",
+    "read_studio_incarico_document",
+    "begin_studio_incarico",
+    "publish_studio_incarico_result",
+    "reuse_studio_incarico_result",
+    "get_studio_incarico",
+    "update_studio_incarico",
     "ArchiveAccessError",
     "ArchiveError",
     "ArchiveFolderPickerUnavailableError",
@@ -723,7 +730,9 @@ def _remember_approved_root(state: Path, root: Path) -> None:
         profile.chmod(0o700)
     path = profile / "approved-archive.json"
     payload = {"schema_version": 2, "archive_root": str(root)}
-    with preferences.file_lock(profile / ".approved-archive.lock", label="default archive"):
+    with preferences.file_lock(
+        profile / ".approved-archive.lock", label="default archive"
+    ):
         if preferences.read_json(path) != payload:
             _write_private_json(path, payload)
 
@@ -2525,6 +2534,188 @@ def create_studio_client(
 
 
 @_readable_after_write
+def map_studio_legacy_incarichi(
+    client_id: str,
+    engagement_id: str,
+    targets: list[dict[str, Any]],
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Add a reviewed explicit mapping without moving or rewriting old executions."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        result = ledger.incarichi().map_legacy(folder, engagement_id, targets)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "saved": True,
+        "mapping": result,
+    }
+
+
+@_readable_after_write
+def begin_studio_incarico(
+    client_id: str,
+    engagement_id: str,
+    workflow_id: str,
+    purpose: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Bind one job and its draft area before model or engine work begins."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        result = ledger.incarichi().begin(folder, engagement_id, workflow_id, purpose)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {"client_id": client_id, "engagement_id": engagement_id, **result}
+
+
+def get_studio_incarico(
+    client_id: str, engagement_id: str, *, state_dir: Path | None = None
+) -> dict[str, Any]:
+    """Read saved assignment state through the selected Archive owner."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        return ledger.incarichi().overview(folder, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+
+
+def read_studio_incarico_document(
+    client_id: str,
+    engagement_id: str,
+    reference: dict[str, Any],
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Open one selected source or issued format without selecting it for execution."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        document = ledger.incarichi().document(folder, engagement_id, reference)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    path = Path(document["path"])
+    preview = None
+    if (
+        path.suffix.lower() in {".md", ".txt", ".json", ".csv"}
+        and document["byte_count"] <= 262144
+    ):
+        content = path.read_bytes()
+        if hashlib.sha256(content).hexdigest() != document["sha256"]:
+            raise ArchiveError("Document changed while opening it")
+        try:
+            preview = content.decode("utf-8-sig")
+        except UnicodeDecodeError:
+            preview = None
+    return {**document, "preview": preview}
+
+
+@_readable_after_write
+def update_studio_incarico(
+    client_id: str,
+    engagement_id: str,
+    fields: dict[str, Any],
+    expected_revision: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Keep assignment revisions and refresh derived navigation independently."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        saved = ledger.incarichi().update(
+            folder, engagement_id, fields, expected_revision
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {"saved": True, **saved}
+
+
+@_readable_after_write
+def publish_studio_incarico_result(
+    client_id: str,
+    engagement_id: str,
+    entry_key: str,
+    label: str,
+    files: list[dict[str, str]],
+    expected_revision: int,
+    idempotency_key: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Publish one named result revision, with all its formats, through the shared ledger."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    try:
+        result = ledger.deliverables().publish(
+            folder,
+            engagement_id,
+            entry_key,
+            label,
+            files,
+            expected_revision,
+            idempotency_key,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {"client_id": client_id, "engagement_id": engagement_id, **result}
+
+
+@_readable_after_write
+def reuse_studio_incarico_result(
+    client_id: str,
+    engagement_id: str,
+    origin: dict[str, Any],
+    role: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Resolve both explicit Archive identities and retain the exact selected version."""
+    folder = Path(
+        get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"][
+            "client_root"
+        ]
+    )
+    origin_root = Path(
+        get_studio_client_folder(origin["client_id"], state_dir=state_dir)[
+            "client_folder"
+        ]["client_root"]
+    )
+    try:
+        result = ledger.incarichi().reuse(
+            folder, engagement_id, origin_root, origin, role
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {"client_id": client_id, "engagement_id": engagement_id, **result}
+
+
+@_readable_after_write
 def create_studio_client_engagement(
     client_id: str,
     engagement_label: str,
@@ -3562,6 +3753,14 @@ def prepare_studio_client_workflow(
         client_id, scope = matches[0]
         client_root = _resolve_scope_root(current.archive_root, scope)
     try:
+        ledger.incarichi().begin(
+            client_root,
+            engagement_id,
+            workflow_id,
+            purpose
+            or label
+            or ledger.load_engagement_manifest(client_root, engagement_id)["label"],
+        )
         prepared = ledger.prepare_run(
             client_root,
             client_id,
@@ -3659,6 +3858,7 @@ def start_check_entries_from_sample(
     sample_run_id: str,
     *,
     support_input_ids: Sequence[str],
+    source_engagement_id: str | None = None,
     label: str | None = None,
     purpose: str | None = None,
     idempotency_key: str | None = None,
@@ -3668,9 +3868,17 @@ def start_check_entries_from_sample(
     """Prepare and start Check Entries from one exact sample and support batch."""
 
     private_state = _state_dir(state_dir)
+    source_engagement_id = source_engagement_id or engagement_id
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=private_state, run_id=sample_run_id
+        client_id, source_engagement_id, state_dir=private_state, run_id=sample_run_id
     )
+    destination = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state
+    )
+    if destination != root:
+        raise ArchiveError(
+            "Select source and destination incarichi in the same registered client"
+        )
     if isinstance(support_input_ids, (str, bytes)) or not support_input_ids:
         raise ArchiveError("Select at least one support input for Check Entries.")
     normalized_support_ids = list(support_input_ids)
@@ -3693,10 +3901,21 @@ def start_check_entries_from_sample(
         )
     upstream_artifacts = _journal_sampling_handoff_references(
         root,
-        engagement_id,
+        source_engagement_id,
         sample_run_id,
     )
+    if source_engagement_id != engagement_id:
+        upstream_artifacts = [
+            {**item, "engagement_id": source_engagement_id}
+            for item in upstream_artifacts
+        ]
     try:
+        ledger.incarichi().begin(
+            root,
+            engagement_id,
+            "check-entries",
+            purpose or label or "Verifica documentale del campione selezionato",
+        )
         prepared = ledger.prepare_run(
             root,
             client_id,

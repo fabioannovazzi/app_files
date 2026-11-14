@@ -11,6 +11,53 @@ env:
   MPARANZA_INCIDENT_DELIVERY: local-only
 
 jobs:
+  incarico-continuity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install declared Archive and native-fixture dependencies
+        run: >-
+          python -m pip install pytest pytest-cov black==25.1.0 isort==6.0.1 mypy bandit polars numpy beautifulsoup4
+          -r plugins/studio-archive/requirements.txt
+          -r plugins/client-file-preparation/requirements.txt
+          -r plugins/comunicazione-professionale/requirements.txt
+          -r plugins/report-builder/requirements.txt
+      - name: Verify assignment versions, exact reuse, recovery and native continuity
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests
+          tests/plugins/test_vera_incarichi.py tests/plugins/test_vera_native_incarichi.py
+          tests/plugins/test_archive_work_recovery.py tests/plugins/test_studio_archive_readable.py
+          tests/plugins/test_vera_studio_archive_component.py
+          --cov --cov-config=tests/incarico.coveragerc --cov-report=term-missing
+          --cov-fail-under=80 --junitxml=vera-incarico.xml
+      - name: Verify native lifecycle and exact source selection
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests
+          tests/plugins/test_vera_native_archive_lifecycle.py
+          -k 'not fresh_extracted_package' --junitxml=vera-incarico-lifecycle.xml
+      - name: Check shared assignment helpers and protocol syntax
+        run: |
+          python -m black --check plugins/studio-archive/scripts/incarico.py plugins/studio-archive/scripts/deliverables.py plugins/vera/scripts/native_incarichi.py tests/plugins/test_vera_incarichi.py tests/plugins/test_vera_native_incarichi.py
+          python -m isort --check-only plugins/studio-archive/scripts/incarico.py plugins/studio-archive/scripts/deliverables.py plugins/vera/scripts/native_incarichi.py tests/plugins/test_vera_incarichi.py tests/plugins/test_vera_native_incarichi.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/incarico.py plugins/studio-archive/scripts/deliverables.py plugins/vera/scripts/native_incarichi.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/incarico.py plugins/studio-archive/scripts/deliverables.py plugins/vera/scripts/native_incarichi.py
+          node --check plugins/studio-archive/mcp/incarico-api.cjs
+          node --check plugins/vera/mcp/workspace.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vera-incarico-results
+          path: |
+            vera-incarico.xml
+            vera-incarico-lifecycle.xml
+
   focused-ui:
     runs-on: ubuntu-latest
     timeout-minutes: 20

@@ -1486,6 +1486,10 @@ def open_item_review(
 
 
 def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
+    if tool.startswith("vera_incarico_"):
+        from native_incarichi import dispatch as incarico_dispatch
+
+        return incarico_dispatch(module_root("studio-archive"), tool, args)
     if tool.startswith("vera_workspace_practice_"):
         from types import SimpleNamespace
 

@@ -279,6 +279,8 @@
           "source_root": "plugins/studio-archive/scripts",
           "module_roots": [
             "client_ledger.py",
+            "incarico.py",
+            "deliverables.py",
             "run_reporting.py"
           ]
         }

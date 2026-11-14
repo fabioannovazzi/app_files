@@ -1292,6 +1292,7 @@ def archive_case(
     )
     assert spec is not None and spec.loader is not None
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     customer = tmp_path / "Customer"
     customer.mkdir()

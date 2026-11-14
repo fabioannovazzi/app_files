@@ -10,6 +10,7 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -284,6 +285,7 @@ def test_tax_course_preserves_evidence_unknown_terms_and_prior_run(
             ROOT / "plugins/studio-archive/scripts/client_ledger.py",
         )
         ledger = spec.module_from_spec(module_spec)
+        sys.modules[module_spec.name] = ledger
         module_spec.loader.exec_module(ledger)
         previous = {
             p: p.read_bytes()

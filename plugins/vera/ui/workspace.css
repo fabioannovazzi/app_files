@@ -291,3 +291,13 @@ nav[aria-label="Revisione del bilancio per area"] {
 /* VERA_SHARED_THEME_END */
 
 .archive-location { overflow-wrap: anywhere; }
+
+/* Read selected text without letting long document lines widen the app. */
+.document-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 80ch; line-height: 1.6; }
+.incarico-results, .incarico-documents, .incarico-conversations { margin-block: 1.5rem; }
+.incarico-results details { margin-block-start: .75rem; }
+.incarico-results section.work-row { display: block; }
+.incarico-results section.work-row h3 { margin: 0 0 .5rem; }
+.incarico-results section.work-row button { margin: .5rem .5rem 0 0; }
+.incarico-results details section { padding-block: .75rem; }
+.incarico-continuation textarea { display: block; min-height: 6rem; width: min(100%, 44rem); }

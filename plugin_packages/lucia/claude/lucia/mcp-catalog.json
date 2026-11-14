@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.241",
+  "version": "0.1.243",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
@@ -2419,6 +2419,644 @@
       },
       "tools": [
         {
+          "name": "map_studio_legacy_incarichi",
+          "title": "Map historical work to its incarichi",
+          "description": "For a legacy container with unrelated work, explicitly map every existing run into distinct already-bound incarichi of the same client. Resolve the professional grouping from the actual work, never filenames. Retains every original file, run header and receipt; adds links in both directions. Exact retries reuse the mapping. Ambiguous or incomplete inventories require clarification, not automatic conversion.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "targets": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 1000,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "engagement_id": {
+                      "type": "string",
+                      "pattern": "^eng_[0-9a-f]{24}$"
+                    },
+                    "run_ids": {
+                      "type": "array",
+                      "minItems": 1,
+                      "uniqueItems": true,
+                      "items": {
+                        "type": "string",
+                        "pattern": "^run_[0-9a-f]{24}$"
+                      }
+                    }
+                  },
+                  "required": [
+                    "engagement_id",
+                    "run_ids"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "targets"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "read_studio_incarico_document",
+          "title": "Open one selected document or result format",
+          "description": "Verify one exact imported source, sealed engine artifact or issued result format. Return its local path and a complete UTF-8 preview for small text documents. This does not select new calculation inputs or execute work.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "reference": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "input_id": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "input_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "run_id": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "artifact_id": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "run_id",
+                      "artifact_id"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "entry_key": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "revision": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "format": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "entry_key",
+                      "revision",
+                      "format"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "reference"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "get_studio_incarico",
+          "title": "Read the selected incarico",
+          "description": "Read the purpose, owning workflow, sources, named current deliverables, issued revision history and actual saved chat references, even without a technical run. This does not execute work or read every source document.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "begin_studio_incarico",
+          "title": "Bind work before execution",
+          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Return its durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "workflow_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2000
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "workflow_id",
+              "purpose"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "update_studio_incarico",
+          "title": "Retain incarico context and chat links",
+          "description": "Save complete assignment metadata using the read revision; preserve existing results and actual host-provided conversation identities. Never invent chat IDs or infer deliverables from filenames. Exact retries reuse the saved revision.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "fields": {
+                "type": "object",
+                "properties": {
+                  "purpose": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "workflow_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "continuation": {
+                    "type": "string",
+                    "maxLength": 12000
+                  },
+                  "results": {
+                    "type": "array",
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "reference": {
+                          "oneOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "input_id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "input_id"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "run_id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "artifact_id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "run_id",
+                                "artifact_id"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "entry_key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "revision": {
+                                  "type": "integer",
+                                  "minimum": 1
+                                },
+                                "format": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "entry_key",
+                                "revision",
+                                "format"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "sha256": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        }
+                      },
+                      "required": [
+                        "reference",
+                        "label",
+                        "sha256"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "conversations": {
+                    "type": "array",
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "host": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "thread_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "title": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "type": "string",
+                          "maxLength": 2048
+                        }
+                      },
+                      "required": [
+                        "host",
+                        "thread_id",
+                        "title",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "purpose",
+                  "workflow_id",
+                  "continuation",
+                  "results",
+                  "conversations"
+                ],
+                "additionalProperties": false
+              },
+              "expected_revision": {
+                "type": "string",
+                "maxLength": 64
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "fields",
+              "expected_revision"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "publish_studio_incarico_result",
+          "title": "Publish a named result revision",
+          "description": "Shared publication for every pipeline: keep a stable entry_key per logical deliverable and issue all formats of one revision together. Drafts stay in the working area. Use current_revision (zero initially), verified hashes and a retained retry key. Corrections advance the same entry; earlier issued revisions remain dated in history. legacy_input_id is only for explicitly identified old outputs wrongly imported as inputs; original receipts remain unchanged. This does not sign, send or professionally adopt work.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "entry_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "files": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 30,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "format": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source_path": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    },
+                    "legacy_input_id": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "format",
+                    "source_path",
+                    "sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "entry_key",
+              "label",
+              "files",
+              "expected_revision",
+              "idempotency_key"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "reuse_studio_incarico_result",
+          "title": "Use an issued result in another incarico",
+          "description": "Copy an explicitly selected result version into a different selected incarico, including another registered client/project. Retain exact origin, revision and digest in the receiving source receipt and future runs. For an issued format use its publication receipt digest as origin.revision; for a legacy result declaration use the assignment revision. Does not execute work or automatically update an existing plan.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "origin": {
+                "type": "object",
+                "properties": {
+                  "client_id": {
+                    "type": "string",
+                    "pattern": "^client_[0-9a-f]{24}$"
+                  },
+                  "engagement_id": {
+                    "type": "string",
+                    "pattern": "^eng_[0-9a-f]{24}$"
+                  },
+                  "revision": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  },
+                  "reference": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "input_id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "input_id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "run_id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "artifact_id": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "run_id",
+                          "artifact_id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "entry_key": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "revision": {
+                            "type": "integer",
+                            "minimum": 1
+                          },
+                          "format": {
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        },
+                        "required": [
+                          "entry_key",
+                          "revision",
+                          "format"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "sha256": {
+                    "type": "string",
+                    "pattern": "^[0-9a-f]{64}$"
+                  }
+                },
+                "required": [
+                  "client_id",
+                  "engagement_id",
+                  "revision",
+                  "reference",
+                  "label",
+                  "sha256"
+                ],
+                "additionalProperties": false
+              },
+              "role": {
+                "enum": [
+                  "source",
+                  "support",
+                  "journal"
+                ]
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "origin",
+              "role"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
           "name": "checkpoint_studio_client_workflow",
           "title": "Retain this Archive run's completed stages",
           "description": "Save exact admitted inputs, provenance and current outputs to the owner-private recovery store independently of the archive destination. Reuse the existing client, engagement and run IDs; inspect recovery.status before claiming a checkpoint was saved.",
@@ -3229,6 +3867,11 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "engagement_id": {
+                      "type": "string",
+                      "pattern": "^eng_[0-9a-f]{24}$",
+                      "description": "Originating incarico in the same client/project; omit for the receiving incarico."
+                    },
                     "run_id": {
                       "type": "string",
                       "pattern": "^run_[0-9a-f]{24}$"

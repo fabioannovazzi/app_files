@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import builtins
+import hashlib
 import json
 import os
 import shutil
@@ -142,6 +143,61 @@ def test_restore_selected_run_retains_completed_work_after_archive_loss(case, tm
         == rid
     )
     assert not studio.exists()
+
+
+def test_restore_preserves_assignment_chat_and_issued_history(case, tmp_path):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    store = core.ledger.incarichi()
+    fields = core.get_studio_incarico(cid, eid, state_dir=state)["fields"]
+    fields["conversations"] = [
+        {
+            "host": "codex",
+            "thread_id": "11111111-1111-4111-8111-111111111111",
+            "title": "Synthetic original conversation",
+            "url": "",
+        }
+    ]
+    store.update(root, eid, fields, store.read(root, eid)["revision"])
+    working = Path(
+        store.begin(root, eid, "posizioni-negoziali", fields["purpose"])[
+            "working_directory"
+        ]
+    )
+    draft = working / "Report.md"
+    for revision in (1, 2):
+        draft.write_text(f"Issued revision {revision}", encoding="utf-8")
+        core.publish_studio_incarico_result(
+            cid,
+            eid,
+            "report",
+            "Report",
+            [
+                {
+                    "format": "md",
+                    "source_path": str(draft),
+                    "sha256": hashlib.sha256(draft.read_bytes()).hexdigest(),
+                }
+            ],
+            revision - 1,
+            f"issue-{revision}",
+            state_dir=state,
+        )
+    draft.write_text("Unissued work", encoding="utf-8")
+    before = store.overview(root, eid)
+    checkpoint = core.checkpoint_studio_client_workflow(cid, eid, rid, state_dir=state)
+    assert checkpoint["recovery"]["status"] == "retained"
+    shutil.rmtree(studio)
+
+    destination = tmp_path / "Recovered assignment"
+    core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
+
+    after = store.overview(destination, eid)
+    assert after["conversations"] == before["conversations"]
+    assert after["revision"] == before["revision"]
+    assert after["documents"] == before["documents"]
+    assert after["deliverables"] == before["deliverables"]
+    assert (destination / draft.relative_to(root)).read_text() == "Unissued work"
+    assert after["deliverables"][0]["current_revision"] == 2
 
 
 @pytest.mark.parametrize("damage", ["removed", "changed"])

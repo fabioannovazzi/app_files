@@ -49,6 +49,14 @@
         "scripts/on_demand_mcp.cjs"
       ],
       "on_violation": "Close the transport on input closure or termination; do not introduce an update-protection companion or retained full-package snapshot."
+    },
+    {
+      "id": "archive-session-scope",
+      "control": "The shared entry supplies the same local Archive session identifier to every lazily started service in this connection. It retains an explicitly supplied session or host chat identity; otherwise it generates a new identifier for this connection only. The identifier is local routing metadata, not an inferred conversation identity. Separate connections without a host identity receive distinct identifiers. Existing Archive session checks and explicit permanent-default selection remain unchanged.",
+      "implemented_by": [
+        "scripts/on_demand_mcp.cjs"
+      ],
+      "on_violation": "Keep the existing Archive ownership checks; do not adopt another connection's temporary root or replace the permanent default."
     }
   ],
   "service_details": {
@@ -68,9 +76,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-12",
+    "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "5b0325b0272e26671774722cd9fb91948788924ca07d2b2c138c1f3ddc975df9"
+    "source_fingerprint": "50bcb73d0a0a1f8a9604e3f355f367e1e9171fbd4f41777045d573089454ea6f"
   }
 }

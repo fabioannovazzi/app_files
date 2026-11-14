@@ -115,7 +115,17 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "62cbd13a02eacd379e7688086c446064b158ae118b95db43df8b020a4d72698c"
+      "sha256": "0fd54f286371f65c64be7bbab7967c59e169bc888e5932bf30e3c5be4a6ed1d0"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/deliverables.py",
+      "repository_path": "plugins/studio-archive/scripts/deliverables.py",
+      "sha256": "70b2c4bf19deecdc74b4e21de40d9a5ebfbddab0b06ad6b5b174995edce44a67"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/incarico.py",
+      "repository_path": "plugins/studio-archive/scripts/incarico.py",
+      "sha256": "2286364ae0b32e819e728243fb9e09c5133c5af8d8a8882b4aca8548917a2390"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -390,7 +400,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "baa65740b1bf6879547540ffe1d4733539b60d6b1f8b0db6acde2cc86785e64e"
+      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -415,7 +425,7 @@
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
+      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

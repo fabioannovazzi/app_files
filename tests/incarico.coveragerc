@@ -1,0 +1,8 @@
+[run]
+include =
+    */plugins/studio-archive/scripts/incarico.py
+    */plugins/studio-archive/scripts/deliverables.py
+
+[report]
+show_missing = True
+fail_under = 80

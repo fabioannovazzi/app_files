@@ -816,9 +816,9 @@ def _validated_client_check_stage(
         if upstream["schema_version"] == "vera.client_workflow_context.v2"
         else upstream["studio_client_folder"]["studio_client_id"]
     )
-    if (
-        current_client_id != upstream_client_id
-        or context["engagement_id"] != upstream["engagement_id"]
+    if current_client_id != upstream_client_id or (
+        context["schema_version"] != "vera.client_workflow_context.v2"
+        and context["engagement_id"] != upstream["engagement_id"]
     ):
         raise ValueError(
             "Journal Sampling and Check Entries belong to different client engagements."
@@ -831,8 +831,12 @@ def _validated_client_check_stage(
             and item["upstream_workflow_id"] == "journal-sampling"
         ]
         if not journal_sampling_bindings or {
-            item["upstream_run_id"] for item in journal_sampling_bindings
-        } != {upstream["run_id"]}:
+            (
+                item.get("upstream_engagement_id", context["engagement_id"]),
+                item["upstream_run_id"],
+            )
+            for item in journal_sampling_bindings
+        } != {(upstream["engagement_id"], upstream["run_id"])}:
             raise ValueError(
                 "Check Entries requires Journal Sampling artifacts from one exact "
                 "upstream run."
@@ -855,7 +859,7 @@ def _validated_client_check_stage(
         upstream_output_root = (
             Path("Vera")
             / "engagements"
-            / context["engagement_id"]
+            / upstream["engagement_id"]
             / "runs"
             / upstream["run_id"]
             / "outputs"
