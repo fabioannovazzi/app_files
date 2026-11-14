@@ -32,6 +32,8 @@ uses current main’s shared Archive rather than the unfinished Vera branch.
   tests. Building the source packages supplies that prerequisite.
 - Shared-source edits stale course hashes and privacy fingerprints. Maintained
   generators refresh those records without importing Vera’s unfinished changes.
+- CI initially expected three Lucia HTML shells. The new Archive is the fourth;
+  the projection regression now explicitly checks it is retained.
 - Local update-notification tests detect an unrelated Clara discrepancy: public
   manifest 0.1.248 versus installed curated 0.1.407. This release does not change
   published-version claims or Marketplace state.
