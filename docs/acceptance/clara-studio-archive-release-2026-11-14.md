@@ -68,6 +68,9 @@ conflicting identities rather than creating a replacement case.
   Archive adapter. Like the existing product adapters, its test now verifies
   the actual shared Archive/case-director routing, preservation of saved work
   and model-data report contract rather than an unrelated output template.
+- CI's cross-host service check initially required Clara's Codex-only Archive
+  bridges in Cowork. Its expectation now reflects the documented projection
+  and explicitly checks that the Archive/case CLI helpers and instructions ship.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.
