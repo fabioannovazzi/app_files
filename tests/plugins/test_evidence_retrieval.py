@@ -259,11 +259,10 @@ def test_sol_can_search_outside_initial_context(tmp_path):
     assert result["groups"][0]["journal_ids"] == ["delayed"]
     assert native.calls[1]["journal_records"] == []
     assert len(native.calls[1]["prior_conclusions"]) == 1
-    prior = native.calls[1]["retrieval"]["prior_investigations"]
-    assert len(prior) == 1
-    assert prior[0]["search_count"] == 1
-    assert prior[0]["recent_searches"][0]["total_candidates"] == 0
-    assert prior[0]["omitted_search_count"] == 0
+    assert native.calls[1]["retrieval"]["prior_investigations"] == []
+    prior_search = result["retained_native_evidence"][0]["packet"]["retrieval"]
+    assert prior_search["search_count"] == 1
+    assert prior_search["recent_searches"][0]["total_candidates"] == 0
     assert "retrieval_context" not in native.calls[1]["prior_conclusions"][0]
     assert bf.replay_retained(result, bank, journal, REL) == result["groups"]
 
@@ -618,3 +617,27 @@ def test_context_budget_batches_whole_focus_without_dropping_bank_work(tmp_path)
         == result["groups"]
     )
     assert native.calls == []
+
+
+def test_sol_timeout_resume_splits_focus_and_replays_completed_work(tmp_path):
+    bank = [row(f"b{i}") for i in range(7)]
+    native = NativeFixture({"luna": {"complete": False}})
+    original = native.invoke
+
+    def time_out_sol(**kwargs):
+        if kwargs["worker_selection"]["model"] == "fixture-sol":
+            raise ValueError("Worker process exceeded its time limit")
+        return original(**kwargs)
+
+    native.invoke = time_out_sol
+    interrupted = execute(tmp_path, native, bank=bank)
+    assert interrupted["attempts"][-1]["status"] == "technical_error"
+
+    native.calls.clear()
+    native.invoke = original
+    resumed = execute(tmp_path, native, bank=bank, resume_checkpoint=True)
+
+    assert resumed["errors"] == []
+    assert [packet["stage"] for packet in native.calls] == ["sol", "sol"]
+    assert [len(packet["focus"]) for packet in native.calls] == [5, 2]
+    assert bf.replay_retained(resumed, bank, [], REL) == resumed["groups"]
