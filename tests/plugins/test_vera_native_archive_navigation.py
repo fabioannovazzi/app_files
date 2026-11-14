@@ -248,6 +248,31 @@ def test_native_unconfigured_registry_offers_setup_without_json(tmp_path):
     assert not (tmp_path / "state/config.json").exists()
 
 
+def test_missing_studio_folder_offers_recovery_in_the_panel(tmp_path):
+    profile = tmp_path / "profile"
+    profile.mkdir(mode=0o700)
+    preference = profile / "approved-archive.json"
+    preference.write_text(json.dumps({
+        "schema_version": 2,
+        "archive_root": str(tmp_path / "Disconnected studio"),
+    }))
+    preference.chmod(0o600)
+    env = process_environment()
+    env.update(
+        VERA_WORKSPACE_PYTHON=sys.executable,
+        VERA_STUDIO_ARCHIVE_SESSION_ID="fictional-missing-studio",
+        VERA_STUDIO_ARCHIVE_STATE_DIR=str(tmp_path / "state"),
+        VERA_STUDIO_ARCHIVE_PROFILE_DIR=str(profile),
+    )
+
+    result = native_call(env, "vera_workspace_open", {})
+
+    assert result["setup_required"] is True
+    assert result["archive_unavailable"] is True
+    assert not (tmp_path / "state/config.json").exists()
+    assert json.loads(preference.read_text())["schema_version"] == 2
+
+
 def test_native_registry_reads_clients_engagements_runs_without_private_contacts(
     registry_workspace,
 ):
@@ -267,6 +292,8 @@ def test_native_registry_reads_clients_engagements_runs_without_private_contacts
     assert run["run_id"] == binding["run_id"]
     assert run["review_available"] is True
     assert run["inputs_valid"] is True
+    assert clients.pop("archive_location") == str(root)
+    assert engagements.pop("archive_location") == str(root)
     assert str(root) not in json.dumps([clients, engagements, run])
     assert "email_addresses" not in json.dumps(clients)
 

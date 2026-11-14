@@ -283,7 +283,7 @@
     clearTimeout(passiveTimer); passiveContext = null;
     recoveryButton = null;
     root.replaceChildren(); const wrapper = node("div", undefined, "shell"), rail = node("aside", undefined, "rail");
-    rail.append(node("p", "Studio Archive", "eyebrow"), node("h2", "Lavori dello studio"));
+    rail.append(node("p", "Archivio dello studio", "eyebrow"), node("h2", "Lavori dello studio"));
     const nav = node("nav"); nav.setAttribute("aria-label", "Navigazione dei lavori"); rail.append(nav);
     const main = node("main", undefined, "main"); wrapper.append(rail, main); root.append(wrapper); return { nav, main };
   }
@@ -311,18 +311,29 @@
       }
     }));
     const archive = catalogue.mode === "studio-archive";
-    const heading = catalogue.level === "runs" ? catalogue.engagement_label : catalogue.level === "engagements" ? catalogue.client_label : "Clienti e incarichi";
+    const heading = catalogue.level === "runs" ? catalogue.engagement_label : catalogue.level === "engagements" ? catalogue.client_label : "Clienti e progetti";
     main.append(node("p", "Vera", "eyebrow"), node("h1", heading), node("p", "Riprendi un lavoro e i suoi documenti nel fascicolo autorizzato.", "sub"));
+    if (archive && catalogue.archive_location) {
+      const location = node("p", catalogue.archive_location, "archive-location");
+      location.setAttribute("aria-label", "Posizione dell’archivio: " + catalogue.archive_location);
+      main.append(location);
+    }
+    async function chooseStudioArchive() {
+      say("Scegli la cartella nella finestra del sistema operativo.");
+      const result = await call("vera_workspace_archive_setup", { confirmed: true });
+      if (result.setup_status === "cancelled") { say("Scelta annullata."); return; }
+      await loadCatalogue();
+    }
     if (archive && !catalogue.configured) {
-      main.append(node("p", "Scegli la cartella dello studio che contiene i fascicoli dei clienti. Vera verifica l'accesso e usa il registro esistente; non crea clienti né importa documenti durante questa scelta.", "sub"));
-      main.append(button("Scegli cartella dello studio", async () => {
-        say("Scegli la cartella nella finestra del sistema operativo.");
-        const result = await call("vera_workspace_archive_setup", { confirmed: true });
-        if (result.setup_status === "cancelled") { say("Scelta annullata. Nessuna configurazione salvata."); return; }
-        await loadCatalogue();
-      }, "primary")); return;
+      const message = catalogue.archive_unavailable
+        ? "La cartella dell’Archivio dello studio non è accessibile. Ricollegala e aggiorna, oppure scegli la nuova posizione."
+        : "Scegli la cartella da usare come Archivio dello studio. Vera la riaprirà nelle nuove chat.";
+      main.append(node("p", message, "sub"));
+      main.append(button("Scegli cartella dello studio", chooseStudioArchive, "primary"));
+      return;
     }
     if (archive) {
+      if (catalogue.level === "clients") services.append(button("Cambia cartella dello studio", chooseStudioArchive));
       services.append(button("Aggiorna registro e fascicoli", async () => {
         say("Verifica del registro e aggiornamento dell'indice locale…");
         const result = await call("vera_workspace_archive_refresh", { confirmed: true });
@@ -330,8 +341,8 @@
         say(result.scan_issue_count ? `Registro aggiornato. ${result.scan_issue_count} problemi di lettura restano da verificare nel percorso Archivio dello studio.` : "Registro aggiornato; fascicoli riletti dal servizio.");
       }));
       if (catalogue.client_id) nav.append(button("← Clienti", () => loadCatalogue()));
-      if (catalogue.engagement_id) nav.append(button("← Incarichi del cliente", () => loadCatalogue({ client_id: catalogue.client_id })));
-      if (catalogue.can_create_engagement) main.append(button("Nuovo incarico", renderNewEngagement));
+      if (catalogue.engagement_id) nav.append(button("← Fascicoli", () => loadCatalogue({ client_id: catalogue.client_id })));
+      if (catalogue.can_create_engagement) main.append(button("Nuovo fascicolo", renderNewEngagement));
       if(catalogue.collection_issues?.length)main.append(node("p","L’elenco dei lavori è incompleto: una parte dell’archivio non è leggibile. I record conservati restano invariati.","notice"));
       if (catalogue.can_prepare) main.append(button("Importa documenti", () => renderImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Appunti del colloquio", () => renderNoteImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Prepara un lavoro", renderPreparation));
     }
@@ -367,13 +378,13 @@
         for (const item of selected) {
           const row = node("section", undefined, "work-row"); row.append(node("h2", item.display_name || item.label));
           if (catalogue.level === "clients") {
-            if (item.client_id && item.registration_status === "registered") row.append(button("Apri incarichi →", () => loadCatalogue({ client_id: item.client_id })));
+            if (item.client_id && item.registration_status === "registered") row.append(button("Apri fascicoli →", () => loadCatalogue({ client_id: item.client_id })));
             else row.append(node("p", item.registration_status === "blocked" ? "Identità del cliente non disponibile o in conflitto. I file sono conservati; gli altri clienti restano accessibili." : "Cartella non registrata. Conferma il cliente nel percorso Archivio dello studio in chat prima di creare un incarico.", "caption"));
           } else if (item.status === "blocked") row.append(node("p", "Incarico non disponibile. I documenti e i registri originali sono conservati.", "caption"));
           else row.append(button("Apri lavori →", () => loadCatalogue({ client_id: catalogue.client_id, engagement_id: item.engagement_id })));
           list.append(row);
         }
-        if (!selected.length) list.append(node("p", source.length ? "Nessun risultato in questa pagina." : catalogue.level === "clients" ? "Nessun cliente presente nella cartella configurata." : "Nessun incarico salvato per questo cliente.", "empty"));
+        if (!selected.length) list.append(node("p", source.length ? "Nessun risultato in questa pagina." : catalogue.level === "clients" ? "Nessun cliente presente nella cartella configurata." : "Nessun fascicolo salvato in questa cartella.", "empty"));
         return;
       }
       const selected = [...catalogue.works].sort((a, b) => b.created_at.localeCompare(a.created_at)).filter(item => `${item.client_label} ${item.engagement_label} ${item.label} ${names[item.workflow] || item.workflow}`.toLowerCase().includes(query.toLowerCase()));
@@ -425,15 +436,15 @@
     main.append(node("p", catalogue.client_label, "eyebrow"), node("h1", title)); return main;
   }
   function renderNewEngagement() {
-    const selected = catalogue, main = archiveFormShell("Nuovo incarico", renderCatalogue);
-    main.append(node("p", "L’incarico viene salvato nel fascicolo di questo cliente. Documenti, preparazione dei lavori e attivazione del rapporto professionale sono passaggi distinti.", "sub"));
-    const label = archiveFormField(main, "Nome dell’incarico", 160), key = crypto.randomUUID();
-    main.append(button("Crea incarico", async () => {
+    const selected = catalogue, main = archiveFormShell("Nuovo fascicolo", renderCatalogue);
+    main.append(node("p", "Il fascicolo raccoglie i documenti e i lavori nella cartella selezionata.", "sub"));
+    const label = archiveFormField(main, "Nome del fascicolo", 160), key = crypto.randomUUID();
+    main.append(button("Crea fascicolo", async () => {
       if (!label.reportValidity()) return;
       const result = await call("vera_workspace_archive_create_engagement", { client_id: selected.client_id, scope_revision: selected.scope_revision, archive_ticket: selected.archive_ticket, label: label.value.trim(), idempotency_key: key, confirmed: true });
       dirty = false;
       await loadCatalogue({ client_id: result.client_id, engagement_id: result.engagement_id });
-      say("Incarico salvato nel fascicolo del cliente.");
+      say("Fascicolo salvato.");
     }, "primary")); label.focus();
   }
   const closureScope = view => ({client_id:view.client_id,engagement_id:view.engagement_id,run_id:view.run_id});
@@ -1048,7 +1059,7 @@
     const generation=++epoch, page=await call("vera_workspace_invoice_setup",{work_ref:workRef,offset});
     if(generation!==epoch)return;
     state=null;salesWork=null;bankWork=null;lipeWork=null;amlWork=null;invoiceContext=null;query="";
-    const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Fatture XML","eyebrow"),node("h1","Proposte e file esportati"),node("p","Scegli la proposta da verificare. Ogni versione conserva dati, fonti e decisioni; l’esportazione richiede la revisione della versione esatta.","sub"));
     main.append(button("Nuova proposta dalle fonti",()=>openAmlAuthor(workRef,0,undefined,"invoice-xml")));
     if(page.interrupted)main.append(node("p","Un’operazione interrotta richiede verifica nel flusso Fatture XML. Le versioni restano consultabili; non ripetere la scrittura dal pannello.","notice"));
@@ -1253,7 +1264,7 @@
     leaveDraft();const generation=++epoch;let page=await call("vera_workspace_bandi_setup",{work_ref:workRef,scope});
     if(page.setup_status==="empty_run"&&scope!=="initialization")page=await call("vera_workspace_bandi_setup",{work_ref:workRef,scope:"initialization"});
     if(generation!==epoch)return;
-    state=null;const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    state=null;const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Bandi e agevolazioni","eyebrow"),node("h1",page.setup_status==="empty_run"?"Apri il dossier del bando":"Dossier del bando"));
     main.append(node("p","Esamina il dossier e scegli quali richieste e documenti includere. Puoi consultare le fonti e le decisioni già registrate per ciascun requisito.","notice"));
     main.append(node("p","Le letture rimangono nel pannello: nessuna domanda o documento viene inviato al modello da queste azioni. Il radar privato dello studio e le contribuzioni in sessioni separate richiedono ancora il flusso specialistico.","caption"));
@@ -1639,7 +1650,7 @@
   }
   async function openCnc(workRef,offset=0) {
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_cnc_setup",{work_ref:workRef,offset});if(generation!==epoch)return;state=null;
-    const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Composizione negoziata","eyebrow"),node("h1",page.role==="esperto"?"Fascicolo dell’esperto":page.role==="advisor"?"Fascicolo dell’advisor":"Prepara il fascicolo CNC"));
     main.append(node("p","Riprendi fatti, ipotesi, documenti, bozze e decisioni nella loro versione. Il ruolo è fissato per questo incarico. Dipendenze obsolete richiedono un nuovo esame; nessun punteggio o fase obbligatoria decide l’esito professionale.","notice"));
     if(page.recovery_required)main.append(node("p","Sono presenti scritture incomplete o memo da recuperare. Conserva i file ed esegui il recupero dello specialista prima di nuovo lavoro.","notice"));
@@ -1688,7 +1699,7 @@
     const page = await call(recordTool({workflow}, "setup"), {work_ref:workRef, offset});
     if (generation !== epoch) return;
     state = null; salesWork = null; bankWork = null; lipeWork = null; amlWork = {workRef, workflow}; amlDraftContext = null; query = "";
-    const {nav, main} = shell(); nav.append(button("← Clienti e incarichi", loadCatalogue));
+    const {nav, main} = shell(); nav.append(button("← Clienti e progetti", loadCatalogue));
     main.append(node("p", names[workflow], "eyebrow"), node("h1", workTitle(page.label, workflow)), node("p", "Scegli la proposta da esaminare. Puoi consultare il riesame del professionista e le versioni precedenti.", "sub"));
     for (const item of page.items) {
       const row = node("section", undefined, "work-row");
@@ -1931,7 +1942,7 @@
     const setup = await call("vera_workspace_sales_plan_setup", {work_ref:workRef, offset});
     if (generation !== epoch) return;
     state=null; bankWork=null; lipeWork=null; amlWork=null; salesWork=workRef; query="";
-    const {nav,main}=shell(); nav.append(button("← Clienti e incarichi",loadCatalogue));
+    const {nav,main}=shell(); nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Piano vendite","eyebrow"),node("h1",workTitle(setup.label,"sales-plan")),node("p","Seleziona il caso con le ipotesi già riesaminate e il CSV delle vendite consuntive utilizzato per prepararlo.","sub"));
     main.append(button("Prepara o riprendi le ipotesi",()=>openSalesAuthor(workRef)),button("Consulta fonti registrate",()=>openSalesSources(workRef)));
     main.append(node("p","Il calcolo conserva tutte le righe osservate e le revisioni precedenti. Controlli superati e conferma delle ipotesi non approvano professionalmente il piano. Il pannello permette di preparare e correggere le ipotesi su CSV registrati. Nuovi formati di input e approvazione professionale proseguono nel flusso Piano vendite. Ogni revisione offre una consultazione mirata delle righe dello scenario.","notice"));
@@ -2200,7 +2211,7 @@
     const prepared = await call("vera_workspace_lipe_setup", {work_ref:workRef, offset});
     if (generation !== epoch) return;
     state = null; salesWork = null; bankWork = null; amlWork = null; lipeWork = workRef; query = "";
-    const {nav, main} = shell(); nav.append(button("← Clienti e incarichi", loadCatalogue));
+    const {nav, main} = shell(); nav.append(button("← Clienti e progetti", loadCatalogue));
     main.append(node("p", "LIPE", "eyebrow"), node("h1", workTitle(prepared.label,"lipe")), node("p", "Scegli il caso LIPE già riesaminato fra i documenti registrati per calcolare i righi del quadro VP.", "sub"));
     main.append(node("p", "Questo passaggio esegue il calcolo. Classificazioni, completezza dei registri, correzioni del caso, catalogo, approvazione firmata ed export XML si verificano nel flusso LIPE.", "notice"));
     if (prepared.status === "recovery_required") main.append(node("p", "Ci sono output senza ricevuta nativa o un calcolo interrotto. Riprendi il run nel flusso LIPE per verificarli prima di eseguire nuovamente.", "notice"));
@@ -2341,7 +2352,7 @@
   async function openFinancial(workRef) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_financial_setup",{work_ref:workRef});if(generation!==epoch)return;
     state=null;crWork=null;crPage=null;financialWork=workRef;financialPage=()=>openFinancial(workRef);
-    const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     nav.append(button("Prepara o modifica un caso",()=>openFinancialAuthor(workRef)));
     main.append(node("p","Analisi finanziaria","eyebrow"),node("h1","Caso riesaminato e fonti"),node("p","Scegli il tipo di analisi e il caso da esaminare. Abbina le fonti ai documenti registrati, poi verifica le quadrature e le conclusioni.","notice"));
     if(setup.recovery_required)main.append(node("p","Un’esecuzione interrotta o output alterati richiedono verifica prima di nuove scritture o della chiusura del run.","notice"));
@@ -2456,7 +2467,7 @@
     const prepared=await call("vera_workspace_cr_setup",{work_ref:workRef,offset});
     if(generation!==epoch)return;
     state=null;bankWork=null;lipeWork=null;amlWork=null;salesWork=null;crWork=workRef;crPage=()=>openCr(workRef,offset);
-    const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Centrale dei Rischi","eyebrow"),node("h1",workTitle(prepared.label,"centrale-rischi-review")),node("p","Seleziona un PDF digitale ufficiale oppure esportazioni tabellari da verificare. Il motore conserva provenienza e popolazioni distinte; i PDF scansionati richiedono il documento digitale originale.","sub"));
     if(!prepared.can_write)main.append(node("p",prepared.status==="recovery_required"?"Un’esecuzione interrotta o output senza ricevuta richiedono verifica nel flusso Centrale Rischi.":"Questo lavoro può essere consultato; le modifiche richiedono un lavoro in corso e il ruolo di revisore.","notice"));
     crLocalContext=draft;const chosen=new Set(draft.fields.input_ids),count=node("p",undefined,"caption"),showCount=()=>{count.textContent=`${chosen.size} fonti nella bozza, anche nelle altre pagine. La conferma dell’ispezione deve essere rinnovata.`;},sources=node("fieldset");sources.append(node("legend","Fonti registrate"));
@@ -2971,7 +2982,7 @@
   }
   async function openManagement(workRef,offset=0,artifactName,start=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_management_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
-    state=null;financialWork=workRef;financialPage=()=>openManagement(workRef,offset,artifactName,start);const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
+    state=null;financialWork=workRef;financialPage=()=>openManagement(workRef,offset,artifactName,start);const {nav,main}=shell();nav.append(button("← Clienti e progetti",loadCatalogue));
     main.append(node("p","Controllo di gestione","eyebrow"),node("h1",setup.source_ref?"Calcolo conservato":"Fonti e caso riesaminato"),node("p","Il reporting ricorrente usa il libro mastro e le altre fonti pertinenti. Il costing analizza costi e margini con i metodi riesaminati nel caso; non richiede un libro mastro. Scegli il percorso, le fonti registrate e il caso completo già riscontrato. Il motore conserva i normali file e i controlli. Classificazioni, ipotesi e giudizio professionale restano da verificare.","notice"));
     main.append(button("Prepara o correggi il caso",()=>openManagementAuthor(workRef)));
     if(setup.status==="recovery_required"){main.append(node("p","Un’esecuzione interrotta o output alterati richiedono recupero nel percorso della funzione prima di ripetere il calcolo o chiudere il run.","notice"));return;}
@@ -3083,7 +3094,7 @@
   async function openVariance(workRef,offset=0,artifactName,start=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_variance_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     state=null;const {nav,main}=shell();financialWork=workRef;financialPage=()=>openVariance(workRef,offset,artifactName,start);
-    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Analisi degli scostamenti","eyebrow"),node("h1",setup.source_ref?"Scostamenti conservati":"Fonti e confronto"),node("p","Confronta gli importi o i contributi di prezzo, volume e mix. Le differenze calcolate non dimostrano da sole una causa economica.","notice"));
+    nav.append(button("← Clienti e progetti",loadCatalogue));main.append(node("p","Analisi degli scostamenti","eyebrow"),node("h1",setup.source_ref?"Scostamenti conservati":"Fonti e confronto"),node("p","Confronta gli importi o i contributi di prezzo, volume e mix. Le differenze calcolate non dimostrano da sole una causa economica.","notice"));
     main.append(button("Prepara o correggi confronto nella chat",()=>openVarianceAuthor(workRef)));
     if(setup.status==="recovery_required"){main.append(node("p","L’esportazione o la preparazione è incerta. Riprendi il recupero nel percorso della funzione prima di ripetere l’esecuzione o chiudere il run.","notice"));return;}
     if(setup.status==="authoring"){main.append(node("p","La domanda e l’ispezione sono conservate. Apri la preparazione per scegliere una proposta e riscontrarla; il confronto verrà registrato in un nuovo run prima del calcolo.","notice"));return;}
@@ -3119,7 +3130,7 @@
   async function openValuation(workRef,offset=0,sourceRef,collection="methods",start=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_valuation_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     state=null;const {nav,main}=shell();financialWork=workRef;financialPage=()=>openValuation(workRef,offset,sourceRef,collection,start);
-    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Valutazione d’impresa","eyebrow"),node("h1",sourceRef?"Carte di valutazione conservate":"Caso e carte di valutazione"),node("p","Consulta i valori ottenuti con ciascun metodo, le formule e le fonti. Riesamina la scelta dei metodi, le rettifiche e le questioni aperte prima di firmare la valutazione.","notice"));
+    nav.append(button("← Clienti e progetti",loadCatalogue));main.append(node("p","Valutazione d’impresa","eyebrow"),node("h1",sourceRef?"Carte di valutazione conservate":"Caso e carte di valutazione"),node("p","Consulta i valori ottenuti con ciascun metodo, le formule e le fonti. Riesamina la scelta dei metodi, le rettifiche e le questioni aperte prima di firmare la valutazione.","notice"));
     if(setup.status==="recovery_required"){main.append(node("p","Un’esportazione è incerta o priva di ricevuta. Riprendi il recupero nel percorso specialistico senza adottare il risultato o ripetere il calcolo.","notice"));return;}
     nav.append(button("Prepara o correggi un caso",()=>openValuationAuthor(workRef)));
     for(const version of setup.versions)nav.append(button(version.entity_name+" · "+(statusLabels[version.status]||version.status),()=>openValuation(workRef,0,version.source_ref)));

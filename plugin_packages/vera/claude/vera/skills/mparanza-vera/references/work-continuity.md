@@ -40,14 +40,16 @@ authorization already supplied; ask only for an unresolved material decision.
 Never ask the professional to invent or remember a client, engagement, run or
 job ID. Those identifiers are maintained by Vera.
 
-For Archive work, reuse the selected destination and engagement. A general
-destination such as **Vari** is valid when the user selects it. Use
-`general_workspace: true` when creating or registering such a folder; no legal
-name, email or tax identity is required for registration, and its display label
-is not a legal identity. Folder creation does not initiate the New Client
-professional workflow. Run that workflow only when the task actually requests
-client onboarding. General storage does not replace any client facts needed by
-the substantive professional question.
+For Archive work, use the single configured **Archivio dello studio**. Reuse the
+destination when the current work already has one. Otherwise ask once whether
+to file it under a **Cliente** or a **Progetto**, and ask for the name in the
+same question. If the user has already supplied the choice and name, use them.
+A client folder uses the confirmed client name or an exact existing match. A
+project folder uses the user-confirmed project name and is registered with
+`general_workspace: true`; it requires no client identity. Do not derive a
+customer or project name from an input filename, a test label, or a run title.
+Reuse an exact existing destination after checking its identity and scope.
+Folder selection never changes the studio's configured Archive root.
 
 For standalone or studio-wide work, retain that route and its task directory;
 do not add Archive setup. Check the selected engine's actual capabilities and

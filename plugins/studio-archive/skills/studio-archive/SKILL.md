@@ -192,6 +192,12 @@ copy, state the selected client, engagement and sources. Reuse established write
 authority; ask one concise question only if that association or authority is
 genuinely unresolved. Internal ledger steps remain separate.
 
+Use one permanent **Archivio dello studio** for ordinary work. Choose its folder
+once with the user. For an explicitly selected test or temporary folder, use
+`configure_studio_archive` with the selected path and omit `make_studio_default`.
+For manual setup of the permanent archive, set `make_studio_default: true`
+only when the user has chosen that folder as the studio archive.
+
 When the archive is not configured, offer the local guided setup first. Tell
 the user that Vera will open the operating system's folder chooser, then call
 `setup_studio_archive`. That action accepts no path argument: the chooser

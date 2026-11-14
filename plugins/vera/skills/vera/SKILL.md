@@ -529,10 +529,13 @@ begins. Do not infer the client from a
 filename or assume that a similarly named folder is registered. Follow this
 explicit sequence:
 
-1. List/reconnect the approved archive and identify an existing customer folder
-   by its `Vera/client.json` identity. Resolve available confirmed aliases before
-   registration; create a new folder only after the user chooses New client.
-2. Create or select one explicit engagement.
+1. Reconnect the configured **Archivio dello studio** and follow the
+   client-or-project name choice in `references/work-continuity.md`. Use the
+   selected top-level folder's verified `Vera/client.json` identity. Resolve
+   confirmed client aliases before registration. For projects use the existing
+   general-workspace registration route, without customer identity fields.
+2. Select or create the case for this work inside the chosen folder. Reuse an
+   exact existing case and a title the user has already confirmed.
 3. After authorization, import each selected file as an immutable, receipted
    input. Use role `source` generally, `journal` for Journal Sampling, and
    `support` for Vouching evidence. Import does not prepare or start a run.

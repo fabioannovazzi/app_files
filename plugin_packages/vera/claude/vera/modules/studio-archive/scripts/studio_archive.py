@@ -109,6 +109,7 @@ def _parser() -> argparse.ArgumentParser:
 
     configure = subparsers.add_parser("configure")
     configure.add_argument("--archive-root", type=Path, required=True)
+    configure.add_argument("--make-studio-default", action="store_true")
     configure.add_argument(
         "--host-folder-access-approved",
         action="store_true",
@@ -376,6 +377,7 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
             result = configure_archive(
                 args.archive_root,
                 host_access_approved=args.host_folder_access_approved,
+                make_studio_default=args.make_studio_default,
             )
         elif args.command == "diagnose-access":
             result = diagnose_archive_access(

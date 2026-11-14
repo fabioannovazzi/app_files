@@ -99,6 +99,19 @@ applies when issuing a new opinion from an older review. Keep previously issued
 records intact. If local tooling is unavailable, compare the actual chat or
 document text against every material claim and source before sending it.
 
+## Save to Archivio dello studio on request
+
+Legal and tax research can proceed in chat or in its working directory. When the
+user asks to retain it in Archive, use the same client-or-project choice and name
+in `work-continuity.md`. Reuse the configured Archive and any exact destination
+already selected. Once the answer has passed the normal review, import the
+requested reviewed report or opinion into the selected case with
+`import_studio_client_document`, using role `support`, the exact file path and
+SHA-256. Use the returned receipt and verify the retained input before claiming
+that the report was saved. When resuming an existing supported Archive run, use
+its existing finalization route. Report a failed Archive save separately and
+deliver the reviewed answer and files from the working directory.
+
 ## Keep substantive checks and records
 
 Review retained source passages, answer-contract conformance, claim coverage,
