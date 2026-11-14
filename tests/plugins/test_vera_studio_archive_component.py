@@ -2849,7 +2849,10 @@ def test_mcp_client_list_returns_guided_setup_when_archive_is_not_configured(
     assert not state_dir.exists()
 
 
-def test_public_mcp_publishes_retries_opens_and_reuses_a_named_result(tmp_path):
+@pytest.mark.parametrize("primary_format", [None, "md"])
+def test_public_mcp_publishes_retries_opens_and_reuses_a_named_result(
+    tmp_path, primary_format
+):
     studio = tmp_path / "Studio"
     (studio / "Project").mkdir(parents=True)
     state_dir = tmp_path / "state"
@@ -2895,7 +2898,10 @@ def test_public_mcp_publishes_retries_opens_and_reuses_a_named_result(tmp_path):
         "idempotency_key": "original-publication",
     }
 
+    if primary_format is not None:
+        request["primary_format"] = primary_format
     issued = call("publish_studio_incarico_result", request)
+    assert issued["issued"].get("primary_format") == primary_format
     repeated = call("publish_studio_incarico_result", request)
     overview = call("get_studio_incarico", scope)
     reference = {"entry_key": "report", "revision": 1, "format": "md"}

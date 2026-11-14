@@ -3,20 +3,76 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from native_archive_navigation import archive_module, engagement_scope, reviewer
 
 __all__ = ["dispatch"]
 
 
-def dispatch(root: Path, tool: str, args: dict[str, Any]) -> dict[str, Any]:
+def dispatch(
+    root: Path,
+    tool: str,
+    args: dict[str, Any],
+    independent_work: Callable[[str, str], dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Resolve the selected assignment through its current owned Archive."""
     core = archive_module(root)
     folder, engagement = engagement_scope(
         core, args["client_id"], args["engagement_id"]
     )
     store = core.ledger.incarichi()
+    if tool in {"vera_incarico_link_work", "vera_incarico_open_work"}:
+        if independent_work is None:
+            raise ValueError("Use the native service to resolve the selected work")
+        current = store.overview(folder, args["engagement_id"])
+        link = next(
+            (
+                item
+                for item in current["work_links"]
+                if (item["workflow_id"], item["work_ref"])
+                == (args["workflow_id"], args["work_ref"])
+            ),
+            None,
+        )
+        resolved = independent_work(args["workflow_id"], args["work_ref"])
+        if any(
+            key in resolved and resolved[key] != args[key]
+            for key in ("client_id", "engagement_id")
+        ):
+            raise PermissionError(
+                "The saved specialist work belongs to another incarico"
+            )
+        if link and link["binding_identity"] != resolved["binding_identity"]:
+            raise ValueError(
+                "The saved work binding changed; recover the exact case before reopening"
+            )
+        if tool == "vera_incarico_open_work":
+            if link is None:
+                raise ValueError("This work is not linked to the selected incarico")
+            return {
+                key: value
+                for key, value in resolved.items()
+                if key != "binding_identity"
+            }
+        if not reviewer():
+            raise PermissionError("This Archive session is read-only")
+        retained = {
+            "workflow_id": args["workflow_id"],
+            "work_ref": args["work_ref"],
+            "binding_identity": resolved["binding_identity"],
+            "label": args["label"],
+        }
+        links = [retained if item is link else item for item in current["work_links"]]
+        if link is None:
+            links.append(retained)
+        saved = core.update_studio_incarico(
+            args["client_id"],
+            args["engagement_id"],
+            {**current["fields"], "work_links": links},
+            args["expected_revision"],
+        )
+        return {"saved": True, **saved}
     if tool == "vera_incarico_map_legacy":
         if not reviewer():
             raise PermissionError("This Archive session is read-only")
@@ -31,6 +87,7 @@ def dispatch(root: Path, tool: str, args: dict[str, Any]) -> dict[str, Any]:
             args["engagement_id"],
             args["workflow_id"],
             args["purpose"],
+            originating_conversation=args.get("originating_conversation"),
         )
     if tool in {"vera_incarico_publish_result", "vera_incarico_reuse_result"}:
         if not reviewer():
@@ -44,6 +101,7 @@ def dispatch(root: Path, tool: str, args: dict[str, Any]) -> dict[str, Any]:
                 args["files"],
                 args["expected_revision"],
                 args["idempotency_key"],
+                primary_format=args.get("primary_format"),
             )
         return core.reuse_studio_incarico_result(
             args["client_id"], args["engagement_id"], args["origin"], args["role"]
@@ -77,6 +135,7 @@ def dispatch(root: Path, tool: str, args: dict[str, Any]) -> dict[str, Any]:
             "workflow_id": overview["workflow_id"],
             "revision": overview["revision"],
             "continuation": overview["continuation"],
+            "work_links": overview["work_links"][-20:],
             "results": overview["results"][-20:],
             "deliverables": [
                 {

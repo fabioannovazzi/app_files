@@ -45,7 +45,9 @@ the selected customer folder at
 `Vera/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
 only its rebuildable search index, local configuration, and optional private
 contact metadata in the machine-local state directory, normally
-`~/.mparanza/vera-studio-archive/sessions/<session-key>`. Never place that private state inside the
+`~/.mparanza/vera-studio-archive/sessions/<session-key>` for Vera or
+`~/.mparanza/lucia-studio-archive/sessions/<session-key>` for Lucia.
+Never place that private state inside the
 shared archive. It is not the source of truth for engagement inputs, runs, or
 artifacts. An admitted run also has an owner-private independent recovery
 checkpoint containing exact inputs, retained receipts, run headers and saved
@@ -488,42 +490,33 @@ approval remain separate. See `references/input-verification.md`.
 
 ### Preserve a follow-up when there is no workflow run
 
-When the user asks to continue an existing engagement and preserve progress,
-recovering its source is only the first step. Preserve the new work in that
-same engagement before reporting that the continuation is saved:
+Continue the selected incarico in the host chat. Recover its exact client and
+engagement identity and current saved result through `vera_incarico_context`
+(or the maintained `incarico` CLI). Establish an unbound legacy assignment
+from the actual request and owning workflow before substantive work; do not
+invent a technical run just to save a document.
 
-1. Retain the selected `client_id` and `engagement_id`. If a specialist run
-   already owns this work, follow its exact output and finalization contract;
-   do not import its outputs as a substitute for run finalization or modify a
-   sealed output tree. For a document-only archive follow-up without such a
-   run, use the steps below. Do not create an unsupported archive workflow run,
-   another engagement or another client just to save the memo.
-2. Prepare a separately named follow-up document in the current authorized
-   working folder outside the plugin/Git workspace. Identify it as a
-   **Vera-derived working note**, distinguish source facts from conclusions,
-   cite the prior source/receipt, and retain open questions and the next step.
-   It is not an external original, independently verified evidence or
-   professional approval. This working copy alone is not the durable result.
-3. Call `import_studio_client_document` with the same selected client and
-   engagement, the working file's exact `source_path`, and `role: "support"`.
-   Reuse the user's established authority to continue and save this case;
-   do not ask again when its association and write scope are already clear.
-   The maintained importer copies immutable bytes and returns an `input_id`,
-   receipt, digest and `imported_path`. Never hand-write files or receipts in
-   the engagement's managed input tree. An identical retry reuses the existing
-   import; a changed follow-up gets a new receipt and preserves the old copy.
-4. Call `list_studio_client_engagements` again, then
-   `verify_studio_client_inputs` with the saved input IDs and prior receipt
-   identities as described above. Check the returned `support` role and
-   `verified: true`; use the returned controlled path for document readback.
-   Include prior and new notes when checking a continuation. Deliver the
-   archived copy's path and the readable engagement link,
-   with the remaining work. A file link in the chat workspace is insufficient.
+Import only newly supplied original source/support material. Keep generated
+drafts in the incarico's durable working directory. Once the requested follow-up
+is ready to issue, use `vera_incarico_publish_result` (CLI:
+`publish-incarico-result`) with a stable logical entry key, descriptive title,
+primary format and all files of that revision with their exact SHA-256 values.
+Use the current expected result revision and a retained retry key. An exact
+retry reuses its issued revision; a correction advances the same entry and
+retains earlier dated versions. Read back the saved result through the maintained
+incarico/document readers before claiming successful publication.
 
-If import or verification fails, state that the new memo is **not yet saved
-in the engagement** and retain the working file for recovery. Do not claim a
-successful saved continuation or silently switch its destination. Ordinary
-read-only questions answered in chat do not require a new document import.
+Clearly identify Vera-derived conclusions and working notes; they are not
+external originals, independent evidence or professional approval. Do not import
+generated output as a new support document. Preserve existing legacy imported
+notes and receipts without rewriting them. A specialist run's normal output,
+review and finalization contract still applies when it owns this work.
+
+If publication fails, deliver the useful working file and say that Archive
+publication is pending. Retain it for recovery without duplicating the assignment
+or silently switching its destination. Ordinary read-only questions need no new
+published document. Requests, source additions and output corrections belong in
+chat; Archive opens saved documents, history and the associated conversation.
 
 For `archive-organization`, select the intake that matches the real archive:
 `snapshot_studio_client_folder` for a local tree, or Drive status, exact binding,
@@ -1061,8 +1054,9 @@ generated ZIPs during an archive run.
   accurate artifact declarations, and finalize the same run again. This closure
   issue does not prevent delivering an independently verified draft.
 - A document-only continuation is present only in the chat workspace: the
-  engagement save is incomplete. Import it as a derived support note and
-  verify the returned receipt and controlled bytes before reporting success.
+  engagement publication is pending. Keep drafts in the working area; publish
+  a completed result under its stable entry and verify the issued revision
+  before reporting successful Archive publication.
 - Gmail message matches another client: exclude it from the selected client's
   answer.
 - Gmail headers are incomplete or unparseable: do not route automatically.
@@ -1093,7 +1087,12 @@ automatically.
 ### Session state ownership
 
 State now defaults to a private session subdirectory under
-`~/.mparanza/vera-studio-archive/sessions/`. The session key is
+`~/.mparanza/vera-studio-archive/sessions/` for Vera or
+`~/.mparanza/lucia-studio-archive/sessions/` for Lucia. Their default roots and
+private profiles remain separate even when both products use the same host chat.
+Use Lucia's maintained entrypoints to select its namespace. Never move archive
+contents or adopt another product's saved location during setup.
+The session key is
 `VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
 process identity as the fallback. The MCP server supplies a stable session ID
 across its helper commands. For a multi-command terminal workflow, set one
@@ -1108,7 +1107,8 @@ Reuse a session ID only to resume that same session. A fresh default session
 revalidates the owner-private profile's approved root and creates its own config;
 run `recover-ledger` when ledger verification is needed. Explicit state directories
 stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a private
-profile. The default profile is `~/.mparanza/vera-studio-archive/profile`, outside
+profile. The default profile is `~/.mparanza/vera-studio-archive/profile` for Vera
+or `~/.mparanza/lucia-studio-archive/profile` for Lucia, outside
 sources. It stores the approved root and root-specific private identity aliases,
 not shared indexes, active run selection, OAuth tokens or session configuration.
 Registry updates use short root-specific locks. A changed/unavailable root requires
@@ -1155,3 +1155,15 @@ expected_workflow_id=..., output_dir=...)`; it verifies and hydrates the manifes
 and current receipts before returning `input_bindings`. Archive tools already
 return this expanded projection. Do not parse raw context JSON as that projection
 or bypass the loader by constructing unverified paths from the manifest.
+
+
+When beginning an incarico, supply `originating_conversation` with the actual
+host-provided user-visible chat identity and title. The begin operation saves
+that association before generation and merges it without duplicate links on
+retry. Native `CODEX_THREAD_ID`, when present, is captured automatically; private
+Archive session identifiers are never chat identities. Verify the parent chat
+with the host reader and retain that same origin through delegated work. A worker
+must not substitute an ephemeral execution chat. The portable begin command
+accepts `--originating-conversation-json` with host, thread_id, title and url.
+If the host provides no recoverable chat identity, keep that absence explicit;
+do not fabricate a link or block delivery of the user's work.

@@ -38,14 +38,24 @@ const document = { getElementById: key => elements[key], createElement: tag => n
 const fixture = JSON.parse(fs.readFileSync(0, "utf8")), importMode = process.argv[3] === "import", navigationMode = process.argv[3] === "navigation", reviewMode = process.argv[3] === "review";
 const recoveryMode = process.argv[3] === "recovery";
 const calls = [];
+const opened = [];
+const hostCalls = [];
 const listeners = {}, parent = { postMessage(message) {
   if ((!importMode && !navigationMode && !reviewMode && !recoveryMode) || !message.id) return;
-  let result = message.method === "ui/initialize" ? {} : { _meta: { workspace: fixture.import_setup } };
+  let result = message.method === "ui/initialize" ? {hostCapabilities:fixture.host_capabilities || {}} : { _meta: { workspace: fixture.import_setup } };
+  if (["ui/open-link", "openai/files/open", "ui/message"].includes(message.method)) {
+    hostCalls.push({method:message.method, params:message.params});
+    result = fixture.fail_navigation ? {isError:true} : {};
+  }
   if ((navigationMode || reviewMode || recoveryMode) && message.method === "tools/call") {
     calls.push(message.params);
     const name = message.params.name;
     let workspace;
-    if (name === "vera_workspace_open") workspace = fixture.catalogue;
+    if (name === "vera_workspace_open") workspace = fixture.catalogues?.[message.params.arguments.view || "active"] || fixture.catalogue;
+    else if (name === "vera_workspace_archive_setup") workspace = {setup_status:"cancelled"};
+    else if (name === "vera_incarico_document") workspace = fixture.document;
+    else if (name === "vera_incarico_read") workspace = fixture.document_page;
+    else if (name === "vera_incarico_open_work") workspace = {kind:"review_route",workflow:message.params.arguments.workflow_id,view:"task",work_ref:message.params.arguments.work_ref};
     else if (name === "vera_workspace_bank_setup") workspace = fixture.bank_setup;
     else if (name === "vera_workspace_bank_draft_read") workspace = { draft: null };
     else if (name === "vera_workspace_bank_draft_save") workspace = { draft_revision: "saved-draft" };
@@ -55,7 +65,9 @@ const listeners = {}, parent = { postMessage(message) {
     else if (reviewMode && name === "vera_workspace_draft_read") workspace = {draft:null};
     else if (reviewMode && ["vera_workspace_save", "vera_workspace_apply"].includes(name)) workspace = {saved:true};
     else throw new Error(`Unexpected UI call: ${name}`);
-    result = fixture.fail_save && ["vera_workspace_bank_draft_save", "vera_workspace_save"].includes(name)
+    result = fixture.fail_link && name === "vera_incarico_open_work"
+      ? {isError:true,content:[{type:"text",text:"The saved case is unavailable"}]}
+      : fixture.fail_save && ["vera_workspace_bank_draft_save", "vera_workspace_save"].includes(name)
       ? { isError: true, content: [{ type: "text", text: "Draft write failed" }] }
       : { _meta: { workspace } };
   }
@@ -64,7 +76,14 @@ const listeners = {}, parent = { postMessage(message) {
 const window = { matchMedia: () => ({matches:false,addEventListener(){}}), parent, addEventListener: (name, callback) => { listeners[name] = callback; } };
 const factories = {VeraReviewRoutes: reviewRoutes};
 for (const name of ["VeraOpenItemsIntake", "VeraBrowser", "VeraFusion", "VeraRating", "VeraTransformation", "VeraWebsite", "VeraPracticeReviews", "VeraCommunication", "VeraPatentBox", "VeraBandiContributions"]) {
-  factories[name] = { create: () => ({ dispose() {}, async flush() {}, active: name === "VeraBandiContributions" ? false : () => false }) };
+  factories[name] = { create: api => {
+    let current;
+    return { dispose() {current=null;}, async flush() {}, async open(work_ref) {
+      const {nav}=api.shell(); current=work_ref;
+      opened.push({panel:name,work_ref});
+      if(api.backLabel) nav.append(api.button(api.backLabel(), api.openWorks));
+    }, async refresh() {opened.push({panel:name,work_ref:current,refresh:true});}, active: name === "VeraBandiContributions" ? false : () => Boolean(current) };
+  } };
 }
 vm.runInNewContext(fs.readFileSync(process.argv[2], "utf8"), {
   document, window, globalThis: factories, setTimeout: () => 1, clearTimeout() {},
@@ -79,7 +98,7 @@ const collect = element => [element, ...element.children.flatMap(collect)];
   if (recoveryMode) {
     await new Promise(resolve => setImmediate(resolve));
     const before = {status:elements.status.textContent, buttons:collect(elements.app).filter(el=>el.tagName === "BUTTON").map(el=>el.textContent)};
-    const recovery = collect(elements.app).find(el=>el.tagName === "BUTTON" && el.textContent === "Torna ai lavori autorizzati");
+    const recovery = collect(elements.app).find(el=>el.tagName === "BUTTON" && el.textContent === "Torna ai lavori dello studio");
     await recovery.listeners.click();
     process.stdout.write(JSON.stringify({before,calls,status:elements.status.textContent,text:collect(elements.app).map(el=>el.textContent).join(" ")}));
   } else if (reviewMode) {
@@ -114,9 +133,20 @@ const collect = element => [element, ...element.children.flatMap(collect)];
       label.children[0].listeners.change();
     }
     if (fixture.action === "refresh") await elements.refresh.listeners.click();
-    else await click(fixture.action);
+    else if (fixture.action) await click(fixture.action);
+    for (const action of fixture.actions || []) await click(action);
+    const notificationViews = [];
+    for (const workspace of fixture.notifications || []) {
+      listeners.message({ source: parent, data: {
+        jsonrpc: "2.0", method: "ui/notifications/tool-result", params: { _meta: { workspace } },
+      } });
+      await new Promise(resolve => setImmediate(resolve));
+      notificationViews.push(collect(elements.app).map(element => element.textContent || "").join(" "));
+    }
+    if (fixture.next_action === "refresh") await elements.refresh.listeners.click();
+    else if (fixture.next_action) await click(fixture.next_action);
     const nodes = collect(elements.app);
-    process.stdout.write(JSON.stringify({ calls, status: elements.status.textContent,
+    process.stdout.write(JSON.stringify({ calls, opened, hostCalls, notificationViews, editableFields:nodes.filter(element => ["TEXTAREA","SELECT"].includes(element.tagName)).length, pressed:nodes.filter(element=>element.attributes["aria-pressed"]==="true").map(element=>element.textContent), disabled:nodes.filter(element=>element.disabled).map(element=>element.textContent), status: elements.status.textContent,
       text: nodes.map(element => element.textContent || "").join(" "),
       buttons: nodes.filter(element => element.tagName === "BUTTON").map(element => element.textContent),
     }));

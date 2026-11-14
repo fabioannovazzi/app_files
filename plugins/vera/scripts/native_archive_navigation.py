@@ -371,6 +371,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("Unknown saved work view")
     visibility = visibility_directory(core)
     visible_rows = []
+    work_counts = dict.fromkeys(("active", "history", "hidden"), 0)
     for row in rows:
         marker = core.preferences.read_json(visibility / f"{row['work_ref']}.json")
         hidden = marker is not None and marker.get("hidden") is True
@@ -379,6 +380,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
             row_view = "hidden"
         elif row["status"] in HISTORY_STATUSES:
             row_view = "history"
+        work_counts[row_view] += 1
         if row_view == view:
             visible_rows.append(row)
     visible_rows.sort(key=lambda row: row["created_at"], reverse=True)
@@ -407,6 +409,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "level": "runs",
         "incarico": saved_incarico,
         "view": view,
+        "work_counts": work_counts,
         "works": result["rows"],
         "engagement_id": selected_engagement,
         "engagement_label": engagement["label"],

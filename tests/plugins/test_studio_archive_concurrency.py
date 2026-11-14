@@ -25,7 +25,7 @@ import archive_core as a
 state,root=Path(sys.argv[2]),Path(sys.argv[3])
 action=sys.argv[4]
 if action=='configure':
-    result=a.configure_archive(root,state_dir=state)
+    result=a.configure_archive(root,state_dir=state,make_studio_default=True)
 elif action=='create':
     client=a.create_studio_client(sys.argv[5],state_dir=state)
     cid=client['client']['client_id']

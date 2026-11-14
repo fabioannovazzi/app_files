@@ -120,12 +120,12 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/deliverables.py",
       "repository_path": "plugins/studio-archive/scripts/deliverables.py",
-      "sha256": "70b2c4bf19deecdc74b4e21de40d9a5ebfbddab0b06ad6b5b174995edce44a67"
+      "sha256": "d419ec257f7322da55253f862b0498f707c9f8755628358123d1c1a4478e4675"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/incarico.py",
       "repository_path": "plugins/studio-archive/scripts/incarico.py",
-      "sha256": "2286364ae0b32e819e728243fb9e09c5133c5af8d8a8882b4aca8548917a2390"
+      "sha256": "d8ef343683f690d203e931bc4d5e15daac1c0da66febd0e92e72126568c91e7c"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",

@@ -232,6 +232,7 @@ def _parser() -> argparse.ArgumentParser:
     begin_incarico = subparsers.add_parser("begin-incarico")
     for flag in ("client-id", "engagement-id", "workflow-id", "purpose"):
         begin_incarico.add_argument("--" + flag, required=True)
+    begin_incarico.add_argument("--originating-conversation-json")
     publish_result = subparsers.add_parser("publish-incarico-result")
     for flag in (
         "client-id",
@@ -243,6 +244,7 @@ def _parser() -> argparse.ArgumentParser:
     ):
         publish_result.add_argument("--" + flag, required=True)
     publish_result.add_argument("--expected-revision", type=int, required=True)
+    publish_result.add_argument("--primary-format")
     reuse_result = subparsers.add_parser("reuse-incarico-result")
     for flag in ("client-id", "engagement-id", "origin-json"):
         reuse_result.add_argument("--" + flag, required=True)
@@ -526,7 +528,15 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
             )
         elif args.command == "begin-incarico":
             result = begin_studio_incarico(
-                args.client_id, args.engagement_id, args.workflow_id, args.purpose
+                args.client_id,
+                args.engagement_id,
+                args.workflow_id,
+                args.purpose,
+                originating_conversation=(
+                    json.loads(args.originating_conversation_json)
+                    if args.originating_conversation_json
+                    else None
+                ),
             )
         elif args.command == "publish-incarico-result":
             result = publish_studio_incarico_result(
@@ -537,6 +547,7 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
                 json.loads(args.files_json),
                 args.expected_revision,
                 args.idempotency_key,
+                primary_format=args.primary_format,
             )
         elif args.command == "reuse-incarico-result":
             result = reuse_studio_incarico_result(

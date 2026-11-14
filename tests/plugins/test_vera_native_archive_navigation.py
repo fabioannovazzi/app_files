@@ -231,6 +231,35 @@ def selected_run(env: dict[str, str], binding: dict) -> dict:
     )["works"][0]
 
 
+def test_native_reopening_distinguishes_new_navigation_from_host_replay(
+    registry_workspace,
+):
+    env, *_ = registry_workspace
+    code = """
+const workspace = require(process.argv[1]);
+const call = id => workspace.handle({jsonrpc: '2.0', id,
+  method: 'tools/call', params: {name: 'vera_workspace_open', arguments: {}}}).result;
+process.stdout.write(JSON.stringify([call(1), call(2)]));
+"""
+    completed = subprocess.run(
+        [NODE, "-e", code, str(SERVER)],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=45,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    first, second = json.loads(completed.stdout)
+    assert not first.get("isError") and not second.get("isError")
+    first_id = first["_meta"]["workspace"]["navigation_id"]
+    second_id = second["_meta"]["workspace"]["navigation_id"]
+    assert first_id and second_id and first_id != second_id
+    assert first["structuredContent"] == second["structuredContent"]
+    assert "navigation_id" not in json.dumps(first["structuredContent"])
+    assert "navigation_id" not in json.dumps(first["content"])
+
+
 def test_native_unconfigured_registry_offers_setup_without_json(tmp_path):
     env = process_environment()
     env.update(
@@ -252,10 +281,14 @@ def test_missing_studio_folder_offers_recovery_in_the_panel(tmp_path):
     profile = tmp_path / "profile"
     profile.mkdir(mode=0o700)
     preference = profile / "approved-archive.json"
-    preference.write_text(json.dumps({
-        "schema_version": 2,
-        "archive_root": str(tmp_path / "Disconnected studio"),
-    }))
+    preference.write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "archive_root": str(tmp_path / "Disconnected studio"),
+            }
+        )
+    )
     preference.chmod(0o600)
     env = process_environment()
     env.update(
@@ -306,16 +339,18 @@ def test_work_visibility_is_reversible_and_keeps_the_saved_run(registry_workspac
 
     active = native_call(env, "vera_workspace_open", scope)
     assert active["view"] == "active"
+    assert active["work_counts"] == {"active": 1, "history": 0, "hidden": 0}
     assert [row["run_id"] for row in active["works"]] == [ids["run_id"]]
-    assert not native_call(
-        env, "vera_workspace_open", {**scope, "view": "history"}
-    )["works"]
+    assert not native_call(env, "vera_workspace_open", {**scope, "view": "history"})[
+        "works"
+    ]
 
     tool = "vera_workspace_archive_work_visibility"
     assert native_call(env, tool, {**ids, "hidden": "yes"})["status"] == "hidden"
     assert not native_call(env, "vera_workspace_open", scope)["works"]
     hidden = native_call(env, "vera_workspace_open", {**scope, "view": "hidden"})
     assert [row["run_id"] for row in hidden["works"]] == [ids["run_id"]]
+    assert hidden["work_counts"] == {"active": 0, "history": 0, "hidden": 1}
 
     assert native_call(env, tool, {**ids, "hidden": "no"})["status"] == "visible"
     assert selected_run(env, binding)["run_id"] == ids["run_id"]
@@ -325,6 +360,7 @@ def test_work_visibility_is_reversible_and_keeps_the_saved_run(registry_workspac
     ledger.cancel_run(Path(binding["client_root"]), ids["engagement_id"], ids["run_id"])
     assert not native_call(env, "vera_workspace_open", scope)["works"]
     history = native_call(env, "vera_workspace_open", {**scope, "view": "history"})
+    assert history["work_counts"] == {"active": 0, "history": 1, "hidden": 0}
     assert [(row["run_id"], row["status"]) for row in history["works"]] == [
         (ids["run_id"], "cancelled")
     ]

@@ -31,7 +31,8 @@ On first use, Vera opens the
 operating system's folder chooser, diagnoses the selected root, and saves the
 private local configuration; a typed absolute path is only a fallback when the
 native chooser is unavailable. Each computer builds its own
-derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the index,
+derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive` for Vera or
+`~/.mparanza/lucia-studio-archive` for Lucia; the index,
 configuration, private contact metadata, and ChatGPT history are not shared.
 They are not the operational source of truth. Search and indexing never modify
 existing source documents. After an explicit client choice, intake may create
@@ -261,7 +262,12 @@ appropriate backup policy.
 ### Session state ownership
 
 State now defaults to a private session subdirectory under
-`~/.mparanza/vera-studio-archive/sessions/`. The session key is
+`~/.mparanza/vera-studio-archive/sessions/` for Vera or
+`~/.mparanza/lucia-studio-archive/sessions/` for Lucia. Their saved defaults and
+private alias profiles are separate, even in the same host chat. Lucia's
+maintained entrypoints select its namespace; neither product adopts the other's
+default. Archive source folders and their contents are not moved or merged.
+The session key is
 `VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
 process identity as the fallback. The MCP server supplies a stable session ID
 across its helper commands. For a multi-command terminal workflow, set one

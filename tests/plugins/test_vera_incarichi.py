@@ -122,6 +122,73 @@ def test_exact_retry_does_not_create_history_and_stale_edit_cannot_overwrite(
     assert store.read(root, identifier)["revision"] == second["revision"]
 
 
+def test_independent_work_link_preserves_legacy_seal_and_survives_context_edit(
+    assignment,
+):
+    ledger, root, identifier, receipts = assignment
+    store = ledger.incarichi()
+    original = store.update(root, identifier, fields(receipts, "fusione-guidata"), "")
+    path = root / "Vera/engagements" / identifier / "incarico.json"
+    # Exercise a real v1 record, including its original seal and history bytes.
+    legacy = {
+        key: value
+        for key, value in original.items()
+        if key not in {"revision", "content_sha256", "work_links"}
+    }
+    legacy["schema_version"] = "vera.incarico.v1"
+    legacy = ledger._sealed(legacy)
+    path.write_text(json.dumps(legacy), encoding="utf-8")
+    before = preserved(root)
+    link = {
+        "workflow_id": "fusione-guidata",
+        "work_ref": "exact-merger",
+        "binding_identity": "a" * 64,
+        "label": "Fusione richiesta",
+    }
+    linked = store.update(
+        root,
+        identifier,
+        {**fields(receipts, "fusione-guidata"), "work_links": [link]},
+        legacy["content_sha256"],
+    )
+    edited = store.update(
+        root,
+        identifier,
+        {**fields(receipts, "fusione-guidata"), "continuation": "New note"},
+        linked["revision"],
+    )
+    assert edited["work_links"] == [link]
+    history = path.parent / "incarico-history" / f"{legacy['content_sha256']}.json"
+    assert ledger._validate_seal(json.loads(history.read_text()), label="old") == legacy
+    assert all(
+        preserved(root)[name] == value
+        for name, value in before.items()
+        if name != str(path.relative_to(root))
+    )
+    assert ledger.list_runs(root, identifier) == ()
+
+
+def test_work_link_cannot_point_to_a_different_assignment_pipeline(assignment):
+    ledger, root, identifier, receipts = assignment
+    with pytest.raises(ledger.LedgerError, match="owning workflow"):
+        ledger.incarichi().update(
+            root,
+            identifier,
+            {
+                **fields(receipts),
+                "work_links": [
+                    {
+                        "workflow_id": "fusione-guidata",
+                        "work_ref": "foreign-job",
+                        "binding_identity": "a" * 64,
+                        "label": "Different job",
+                    }
+                ],
+            },
+            "",
+        )
+
+
 def test_concurrent_chats_retain_one_winner_without_losing_the_original(assignment):
     ledger, root, identifier, receipts = assignment
     store = ledger.incarichi()
@@ -284,6 +351,75 @@ def publish_files(tmp_path, text="First revision"):
             }
         )
     return files
+
+
+def test_primary_document_is_explicit_and_old_receipts_remain_unchanged(
+    assignment, tmp_path
+):
+    ledger, root, eid, receipts = assignment
+    ledger.incarichi().update(root, eid, fields(receipts), "")
+    files = publish_files(tmp_path)
+    first = ledger.deliverables().publish(
+        root, eid, "opinion", "Original opinion", files, 0, "old-save"
+    )
+    before = preserved(root)
+    second = ledger.deliverables().publish(
+        root,
+        eid,
+        "opinion",
+        "Updated opinion",
+        files,
+        1,
+        "new-save",
+        primary_format="pdf",
+    )
+    assert second["issued"]["primary_format"] == "pdf"
+    assert {name: preserved(root)[name] for name in before} == before
+    entry = ledger.deliverables().entry(root, eid, "opinion")
+    assert entry["versions"][0] == first["issued"]
+    assert "primary_format" not in entry["versions"][0]
+    assert ledger.deliverables().publish(
+        root, eid, "opinion", "Original opinion", files, 0, "old-save"
+    )["reused"]
+    assert ledger.deliverables().publish(
+        root,
+        eid,
+        "opinion",
+        "Updated opinion",
+        files,
+        1,
+        "new-save",
+        primary_format="pdf",
+    )["reused"]
+    with pytest.raises(ledger.LedgerError, match="retry key"):
+        ledger.deliverables().publish(
+            root,
+            eid,
+            "opinion",
+            "Updated opinion",
+            files,
+            1,
+            "new-save",
+            primary_format="md",
+        )
+
+
+def test_unknown_primary_document_cannot_create_a_revision(assignment, tmp_path):
+    ledger, root, eid, receipts = assignment
+    ledger.incarichi().update(root, eid, fields(receipts), "")
+    before = preserved(root)
+    with pytest.raises(ledger.LedgerError, match="Primary document"):
+        ledger.deliverables().publish(
+            root,
+            eid,
+            "opinion",
+            "Opinion",
+            publish_files(tmp_path),
+            0,
+            "save",
+            primary_format="xlsx",
+        )
+    assert preserved(root) == before
 
 
 def test_current_result_groups_formats_and_retains_numbered_history(
@@ -694,3 +830,17 @@ def test_desktop_metadata_does_not_hide_issued_results(assignment, tmp_path):
     view = ledger.incarichi().overview(root, eid)
     assert view["deliverables"][0]["current_revision"] == 1
     assert view["deliverable_issues"] == []
+
+
+def test_invalid_origin_cannot_partially_bind_an_incarico(assignment):
+    ledger, root, eid, _ = assignment
+    before = preserved(root)
+    with pytest.raises(ledger.LedgerError):
+        ledger.incarichi().begin(
+            root,
+            eid,
+            "business-planning",
+            "Test",
+            {"host": "codex", "thread_id": "not-a-chat", "title": "Unknown", "url": ""},
+        )
+    assert preserved(root) == before

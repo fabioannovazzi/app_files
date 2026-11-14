@@ -147,7 +147,7 @@ def test_native_navigation_keeps_blocked_record_non_actionable(archive, monkeypa
     blocked = next(row for row in visible if "Unavailable run" in row["text"])
     healthy = next(row for row in visible if "Analysis" in row["text"])
     assert blocked["buttons"] == []
-    assert "Riprendi nella chat" in healthy["buttons"]
+    assert healthy["buttons"] == []
 
 
 def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works(

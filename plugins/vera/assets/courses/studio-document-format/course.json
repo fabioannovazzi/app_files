@@ -500,7 +500,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "c55cb4658db921be66c94d864b5dfcf225b9a5b3faceb8f28b03c6325dd0bce1"
+      "sha256": "5c7762866d9335b8f23101983e2a3d6111a00fdfed2f27a4a6d921f1eb3de969"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -510,7 +510,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "5a5d03f3192e5c6c29b6084b426461e10e560b7914dc6b856181e1fe25c1b742"
+      "sha256": "4644e7ada5603f49ec2a29107d98dce4e6b0f88e9eb2309cff12cb89b6e090dd"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -530,7 +530,7 @@
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
       "repository_path": "plugins/studio-archive/scripts/deliverables.py",
-      "sha256": "70b2c4bf19deecdc74b4e21de40d9a5ebfbddab0b06ad6b5b174995edce44a67"
+      "sha256": "d419ec257f7322da55253f862b0498f707c9f8755628358123d1c1a4478e4675"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -545,7 +545,7 @@
     {
       "path": "modules/studio-archive/scripts/incarico.py",
       "repository_path": "plugins/studio-archive/scripts/incarico.py",
-      "sha256": "2286364ae0b32e819e728243fb9e09c5133c5af8d8a8882b4aca8548917a2390"
+      "sha256": "d8ef343683f690d203e931bc4d5e15daac1c0da66febd0e92e72126568c91e7c"
     },
     {
       "path": "modules/studio-archive/scripts/input_verification.py",
@@ -560,7 +560,7 @@
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
-      "sha256": "172cd2c5f4acf3b20f8f0a122cc54f3be4b1b25eda0a3c1550c535ba2af75fd8"
+      "sha256": "ba8e7aeb3543b0843b812f814b660b231487c1299928253d11e331ce938a38b3"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
@@ -575,7 +575,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "ceda6ccb87b85e9cd2bd844b2fc5fb37bc4bb2fb4cbbb214de3001a9674a4bbe"
+      "sha256": "7912ae22158105396883a73cda747b2055e245365e9942b0802cc11202fab993"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -810,7 +810,7 @@
     {
       "path": "skills/studio-document-format/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-document-format/SKILL.md",
-      "sha256": "c13dfd2f08a26f560e82518cc69ecfffc199dd23a647c978c6320e51b2eb09d7"
+      "sha256": "380614a5a41b3c2ef532bcab4e53b82bd50646a54e883a17215e247ca7d6d07c"
     },
     {
       "path": "skills/studio-document-format/references/procedure.md",

@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "4865be6338d7debe648bfb68ae6bf0a95bcf58141a04ae4f82292c72d66e188d",
+      "sha256": "4d0b94d66d66f8d08b92f52d1cbbce0d8a67bddee8cd1a12c6bcadefbf3c5b4b",
       "languages": [
         "it",
         "en",
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "ae79fbf4f29f49ec42b5005b6334050e8e5fd0901974d63feacd97abb36760c6",
+      "sha256": "27e4be09b91b56b1482eca95966dfd8310c41a174ae5f4ffef3be6bd9279c4c6",
       "languages": [
         "it",
         "en",
@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "f8c8385d285d143db9a531830282d7ecadcc23c81367f82fc2c3c3b0a8bebf0e",
+      "sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "e7ee5d3ec831df68924920e9b8843050ec58c31e0bbdc58f5fbbef9a8fecac00",
+      "sha256": "da37881d41d43d01d51058026bfe195ee6e7fc075e91349e47ef315b05f1b7a6",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "96b9c1b30e6a7f2ab3e44d063f8f3eb13c4a9c2f43bbce78f02bb0f07e3ebd70",
+      "sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "b48673e917cf39d655e134703dc906f9fd5667f2be720c0505e9d5e16f8b96a2",
+      "sha256": "e908106f0f053cf8b1bd4df122decafeb311feefdba4a88cafb2c0e968c3cf69",
       "languages": [
         "it",
         "en",

@@ -1485,11 +1485,82 @@ def open_item_review(
     return json.loads(completed.stdout)
 
 
+def independent_work(workflow: str, work_ref: str) -> dict[str, Any]:
+    """Resolve an owned case and pin its identity without running its engine."""
+    import native_browser
+    import native_communication
+    import native_fusion
+    import native_practice_reviews
+    import native_transformation
+    import native_website
+
+    readers = {
+        "browser-automation": native_browser.configuration,
+        "comunicazione-professionale": native_communication.bindings,
+        "fusione-guidata": native_fusion.bindings,
+        "presenza-digitale-studio": native_website.bindings,
+        "trasformazione": native_transformation.bindings,
+        "contenzioso-tributario": native_practice_reviews.configuration,
+        "studio-document-format": native_practice_reviews.configuration,
+    }
+    if workflow not in readers:
+        raise ValueError("Select an existing independently bound specialist work")
+    _, rows = readers[workflow]()
+    row = next((item for item in rows if item["work_ref"] == work_ref), None)
+    if row is None:
+        raise PermissionError("Il lavoro richiesto non è disponibile.")
+    practice_kind = {
+        "contenzioso-tributario": "tax",
+        "studio-document-format": "format",
+    }.get(workflow)
+    if practice_kind and row.get("kind") != practice_kind:
+        raise ValueError("The saved practice belongs to a different workflow")
+    identity_fields = {
+        "fusione-guidata": ("case_dir", "operation_id"),
+        "trasformazione": ("case_dir", "case_id"),
+        "comunicazione-professionale": ("workspace", "workspace_id", "run_id"),
+        "presenza-digitale-studio": ("workspace", "workspace_id", "run_id"),
+        "contenzioso-tributario": ("kind", "run_dir"),
+        "studio-document-format": ("kind", "workspace", "review_id"),
+        "browser-automation": (
+            ("kind", "directory", "process_id")
+            if row.get("kind") == "process"
+            else (
+                "kind",
+                "directory",
+                "batch_id",
+                "client_root",
+                "client_id",
+                "engagement_id",
+            )
+        ),
+    }[workflow]
+    if any(key not in row for key in identity_fields):
+        raise ValueError("The specialist binding has no complete saved-case identity")
+    identity = {"workflow": workflow, **{key: row[key] for key in identity_fields}}
+    return {
+        "kind": "review_route",
+        "workflow": workflow,
+        "view": "task",
+        "work_ref": work_ref,
+        **(
+            {key: row[key] for key in ("client_id", "engagement_id")}
+            if workflow == "browser-automation" and row["kind"] == "batch"
+            else {}
+        ),
+        "binding_identity": hashlib.sha256(
+            json.dumps(identity, sort_keys=True, ensure_ascii=False).encode("utf-8")
+        ).hexdigest(),
+    }
+
+
 def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     if tool.startswith("vera_incarico_"):
         from native_incarichi import dispatch as incarico_dispatch
 
-        return incarico_dispatch(module_root("studio-archive"), tool, args)
+        return incarico_dispatch(
+            module_root("studio-archive"), tool, args, independent_work
+        )
     if tool.startswith("vera_workspace_practice_"):
         from types import SimpleNamespace
 
@@ -1552,30 +1623,9 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
             SimpleNamespace(atomic_json=atomic_json, write_lock=write_lock),
         )
     if tool == "vera_open_review" and args.get("workflow"):
-        # These five studio tools have their own operator-scoped bindings. A
-        # similarly named Archive run does not grant access to a pilot case.
-        import native_browser
-        import native_communication
-        import native_fusion
-        import native_transformation
-        import native_website
-
-        lookup = {
-            "browser-automation": native_browser.configuration,
-            "comunicazione-professionale": native_communication.bindings,
-            "fusione-guidata": native_fusion.bindings,
-            "presenza-digitale-studio": native_website.bindings,
-            "trasformazione": native_transformation.bindings,
-        }[args["workflow"]]
-        _, bindings = lookup()
-        if not any(row["work_ref"] == args["work_ref"] for row in bindings):
-            raise PermissionError("Il lavoro richiesto non è disponibile.")
-        return {
-            "kind": "review_route",
-            "workflow": args["workflow"],
-            "view": "task",
-            "work_ref": args["work_ref"],
-        }
+        route = independent_work(args["workflow"], args["work_ref"])
+        route.pop("binding_identity")
+        return route
     config = configuration()
     if tool == "vera_open_review" and not args.get("work_ref"):
         from native_archive_navigation import work_ref
