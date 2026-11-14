@@ -319,6 +319,8 @@ archive_core.refresh_archive(rebuild=True, state_dir=Path(sys.argv[2]))
             str(COMPONENT_ROOT / "scripts"),
             str(indexed_archive.state),
         ],
+        # A rebuild worker belongs to this configured chat, even outside Codex.
+        env={**os.environ, archive_core.SESSION_ENV: archive_core._session_id()},
         capture_output=True,
         text=True,
         timeout=30,
