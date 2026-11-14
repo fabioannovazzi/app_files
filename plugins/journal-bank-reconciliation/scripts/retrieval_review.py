@@ -26,8 +26,19 @@ LEGACY_IMPLEMENTATION = (
 )
 # Owned 0.1.627 checkpoint implementation; UTF-8 persistence preserves its protocol.
 UTF8_PREDECESSOR = "6f5e92fba434fe34a5cdb7d241c26d8f3de73ff29b3acdc1d70d496820948f3a"
-REPLAY_IMPLEMENTATIONS = (LEGACY_IMPLEMENTATION, UTF8_PREDECESSOR)
-PACKET_PROJECTION = 2
+# Keep shipped checkpoints and both local recovery builds replayable.
+FULL_HISTORY_PREDECESSOR = (
+    "b7d1e9cd267729ab661bfe19c12aa3fd4ebd658d607fff4c40633cfbb78e240f"
+)
+REPLAY_IMPLEMENTATIONS = (
+    LEGACY_IMPLEMENTATION,
+    UTF8_PREDECESSOR,
+    FULL_HISTORY_PREDECESSOR,
+    "94fb8ac0be8d6908415dd599a49bea49e364e7119767ad617e6d59bc8c9886b0",
+    "543a42bfd1a09fd406c1a6dec6bc226e6395c541aac152bece0b6658925ae72c",
+)
+PACKET_PROJECTION = 3
+RETRY_FOCUS_GROUPS = 5
 
 
 def extend_schema(schema: dict) -> dict:
@@ -116,7 +127,7 @@ def _packet(
     *,
     projection=PACKET_PROJECTION,
 ):
-    if projection not in {1, PACKET_PROJECTION}:
+    if projection not in {1, 2, PACKET_PROJECTION}:
         raise ValueError("Unsupported retained packet projection")
     selected = {
         s: set(session["anchors"][s]) | set(session["retain"][s])
@@ -208,6 +219,8 @@ def _packet(
             "search_count": session["search_count"],
             "omitted_search_count": session["search_count"]
             - len(session["recent_searches"]),
+            # Full prior search histories remain in replay evidence. The worker
+            # already has focused conclusions, current searches and source rows.
             "prior_investigations": [
                 {
                     "bank_ids": g["bank_ids"],
@@ -215,7 +228,7 @@ def _packet(
                     **g["retrieval_context"],
                 }
                 for g in relevant
-                if "retrieval_context" in g
+                if "retrieval_context" in g and projection < 3
             ],
             "round": session["round"],
             "parent_packet_sha256": session["parent"],
@@ -248,7 +261,17 @@ def _packet(
 
 
 def _initial_focus(
-    index, focus, groups, admitted, binding, relationship, stage, purpose, budget
+    index,
+    focus,
+    groups,
+    admitted,
+    binding,
+    relationship,
+    stage,
+    purpose,
+    budget,
+    *,
+    projection=PACKET_PROJECTION,
 ):
     """Fit a prefix of whole groups by exact bytes; the rest stays in the queue."""
     import semantic_review as semantic
@@ -266,6 +289,7 @@ def _initial_focus(
             stage,
             purpose,
             budget,
+            projection=projection,
         )
         prompt_bytes = len(bf.prompt(packet).encode())
         context_bytes = prompt_bytes + len(
@@ -398,6 +422,7 @@ def _reconstruct(
     completed = {"luna": set(), "sol": set()}
     session = None
     active_focus = None
+    reduced_sol_focus = False
     for attempt in attempts:
         directory = output / "bank-first-attempts" / attempt["directory"]
         if (
@@ -414,6 +439,11 @@ def _reconstruct(
                 or hashlib.sha256(artifact.read_bytes()).hexdigest() != expected_hash
             ):
                 raise ValueError("Retained native attempt evidence changed")
+        if attempt["status"] == "retry_smaller_focus":
+            session = None
+            active_focus = None
+            reduced_sol_focus = True
+            continue
         if attempt["status"] not in {"validated", "evidence_requested"}:
             continue
         directory = output / "bank-first-attempts" / attempt["directory"]
@@ -437,6 +467,8 @@ def _reconstruct(
             expected_focus = bf._next_focus(
                 list(index.rows["bank"].values()), groups, stage, completed[stage]
             )
+            if reduced_sol_focus and stage == "sol":
+                expected_focus = expected_focus[:RETRY_FOCUS_GROUPS]
             if packet["retrieval"].get("packet_projection", 1) >= 2:
                 expected_focus, session = _initial_focus(
                     index,
@@ -448,6 +480,7 @@ def _reconstruct(
                     stage,
                     purpose,
                     budget,
+                    projection=packet["retrieval"]["packet_projection"],
                 )
             else:
                 session = _initial(index, expected_focus, groups)
@@ -682,6 +715,19 @@ def _run_review(
             }
         )
         state["binding_sha256"] = binding
+    last_attempt = state["attempts"][-1] if state["attempts"] else {}
+    if (
+        last_attempt.get("stage") == "sol"
+        and last_attempt.get("error") == "Worker process exceeded its time limit"
+        and len(last_attempt.get("bank_ids", [])) > RETRY_FOCUS_GROUPS
+    ):
+        state["attempts"].append(
+            {"directory": last_attempt["directory"], "status": "retry_smaller_focus"}
+        )
+        pending_session = None
+    reduced_sol_focus = any(
+        a["status"] == "retry_smaller_focus" for a in state["attempts"]
+    )
     state["groups"], state["errors"] = groups, []
     bf._save(path, state)
     bf._write(output / "bank_first_admission.json", admitted)
@@ -690,6 +736,8 @@ def _run_review(
         if stopped:
             break
         while focus := bf._next_focus(bank, groups, stage, completed[stage]):
+            if reduced_sol_focus and stage == "sol":
+                focus = focus[:RETRY_FOCUS_GROUPS]
             if pending_session is not None:
                 session = pending_session
                 focus = session["focus"]
@@ -917,6 +965,9 @@ def _run_review(
         "retained_native_evidence": [],
     }
     for attempt in state["attempts"]:
+        if attempt["status"] == "retry_smaller_focus":
+            result["retained_native_evidence"].append({"attempt": attempt})
+            continue
         if attempt["status"] not in {"validated", "evidence_requested"}:
             continue
         d = root / attempt["directory"]
@@ -970,6 +1021,9 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
                 attempt = evidence["attempt"]
                 if Path(attempt["directory"]).name != attempt["directory"]:
                     raise ValueError("Retained path escapes run")
+                if attempt["status"] == "retry_smaller_focus":
+                    attempts.append(attempt)
+                    continue
                 d = root / "bank-first-attempts" / attempt["directory"]
                 d.mkdir(parents=True)
                 for key in ("packet", "schema", "response", "receipt"):

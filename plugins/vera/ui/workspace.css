@@ -113,6 +113,10 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 .bank-first-review article { border-top: 1px solid #e6ebf0; padding: .75rem 0; overflow-wrap: anywhere; }
 .bank-first-review details { margin: .75rem 0; }
 
+
+
+.archive-location { overflow-wrap: anywhere; }
+
 /* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
 /* Canonical Vera workflow theme. Derived from the Vouching review surface.
  * Run: python scripts/sync_vera_ui_theme.py after changing this file.
