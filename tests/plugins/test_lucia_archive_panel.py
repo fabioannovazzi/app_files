@@ -55,6 +55,7 @@ def call(panel, method, params=None, *, failed=False, panel_only=True):
         input=json.dumps(request) + "\n",
         capture_output=True,
         text=True,
+        encoding="utf-8",
         env=env,
         timeout=10,
         check=True,
@@ -121,7 +122,10 @@ def test_same_runtime_exposes_separate_panel_and_chat_tools(
 def test_changed_panel_bytes_get_a_new_resource_address(panel):
     original = call(panel, "resources/list")["resources"][0]["uri"]
     asset = panel / "assets/studio-archive.html"
-    asset.write_text(asset.read_text() + "\n<!-- changed view -->\n")
+    asset.write_text(
+        asset.read_text(encoding="utf-8") + "\n<!-- changed view -->\n",
+        encoding="utf-8",
+    )
 
     current = call(panel, "resources/list")["resources"][0]["uri"]
 

@@ -297,7 +297,7 @@ def reporting_runtime(tmp_path, monkeypatch, archive_script_imports):
     original_stamp = archive_report_receipt.stamp_report
 
     monkeypatch.setenv("VERA_REPORTING_STATE_DIR", str(tmp_path / "reporting-state"))
-    monkeypatch.setenv("CODEX_THREAD_ID", "test-session")
+    monkeypatch.setenv("CODEX_THREAD_ID", "00000000-0000-4000-8000-000000000001")
     monkeypatch.setenv(
         "VERA_STUDIO_ARCHIVE_SESSION_ID", str(tmp_path / "private-state")
     )

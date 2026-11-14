@@ -34,6 +34,9 @@ uses current main’s shared Archive rather than the unfinished Vera branch.
   generators refresh those records without importing Vera’s unfinished changes.
 - CI initially expected three Lucia HTML shells. The new Archive is the fourth;
   the projection regression now explicitly checks it is retained.
+- Windows CI exposed locale-default decoding in the new test harness. Its Node
+  subprocess output and HTML fixture edits now explicitly use UTF-8; production
+  already specifies UTF-8.
 - Local update-notification tests detect an unrelated Clara discrepancy: public
   manifest 0.1.248 versus installed curated 0.1.407. This release does not change
   published-version claims or Marketplace state.

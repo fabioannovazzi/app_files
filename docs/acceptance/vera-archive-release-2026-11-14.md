@@ -72,3 +72,8 @@ Marketplace upload, drafts, review submissions and publication are excluded.
 
 Final CI, deployment commit and public artifact hashes are recorded in the task's
 release evidence after they are observed; this document does not pre-claim them.
+
+CI fixture corrections retain production validation: the synthetic reporting
+session now uses a valid UUID for automatic chat association, and Lucia's panel
+fixture reads its Italian text explicitly as UTF-8 on Windows. Neither correction
+changes the validated package contents or accepted interface.
