@@ -37,7 +37,7 @@ if (typeof document !== "undefined") (() => {
     button.textContent = data.action === "new" ? copy.open : copy.resume;
     const supported = !!host?.hostCapabilities?.experimental?.["openai/message"];
     button.disabled = !supported || busy || sent;
-    document.getElementById("detail").textContent = supported ? copy.detail : copy.unavailable;
+    document.getElementById("detail").textContent = supported ? "" : copy.unavailable;
   }
   window.addEventListener("message", event => {
     if (event.source !== window.parent) return;

@@ -63,7 +63,11 @@
     "constraints-shared-macos-py312.txt",
     "scripts/_python_bootstrap.py",
     "scripts/build_voice_feedback_timeline.py",
-    "scripts/bounded_process.py"
+    "scripts/bounded_process.py",
+    "scripts/media_mcp.py",
+    "scripts/media_mcp.cjs",
+    "ui/media.html",
+    "skills/clara/references/operator-media.md"
   ],
   "model_context": {
     "classes": [
@@ -142,9 +146,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5eada923034a9038504e5bdffcfc11bf0330577c5297c1761c158376ce8e8f61"
+    "source_fingerprint": "570ec83585e5433edae6849007fb32f1082e6c53095bacbf081da32f396600e9"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -154,7 +158,12 @@
     "google-antigravity"
   ],
   "schema_version": 3,
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "local-operator-handoff",
+      "control": "Codex media selection and confirmation use the local MCP panel. Raw recording chunks remain in local app/tool transport; only session metadata, filename and output locations appear in structured model results. The worker extracts audio locally and invokes the existing authenticated service without source documents or case context. Selected host conversation processing still applies to any transcript subsequently read for the requested work."
+    }
+  ],
   "service_ids": [
     "hosted-voice",
     "managed-python-runtime",

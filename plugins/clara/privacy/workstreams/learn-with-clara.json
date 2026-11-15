@@ -17,7 +17,9 @@
     "marketplace_skill_instructions.json",
     ".mcp.json",
     "scripts/course_chat_bridge.py",
-    "scripts/course_chat_mcp.cjs"
+    "scripts/course_chat_mcp.cjs",
+    "vendor/modules/courseware/assets/chat.html",
+    "vendor/modules/courseware/assets/chat.js"
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/desktop_teaching",
@@ -75,7 +77,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-05",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "75c617f0f39c9c82594e2624cb5463cc12f60fc50027d10cd44d023188c8e67b"
+    "source_fingerprint": "9a7d6663f54d5477a042c9eaa4ed713b3c06897ddc0f915fa4e07e430559e86f"
   },
   "role": "internal_engine",
   "runtime_profiles": [

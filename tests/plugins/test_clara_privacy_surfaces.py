@@ -167,7 +167,11 @@ def test_clara_register_does_not_relabel_workflow_hygiene_as_security() -> None:
     assert [
         control["id"] for control in manifests["reporting-engine"]["security_controls"]
     ] == ["local-budget-preview"]
-    assert manifests["transcribe"]["security_controls"] == []
+    # Local media enforces selection integrity and prevents unconfirmed or
+    # duplicate transmission; behavioral regressions live in test_clara_media_mcp.
+    assert [
+        control["id"] for control in manifests["transcribe"]["security_controls"]
+    ] == ["local-operator-handoff"]
     assert all(
         control["id"] not in ceremonial_ids
         for manifest in [

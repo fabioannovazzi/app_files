@@ -24,7 +24,9 @@
   ],
   "governed_paths": [
     "scripts/local_courses.py",
-    "assets/courses"
+    "assets/courses",
+    "vendor/modules/courseware/assets/chat.html",
+    "vendor/modules/courseware/assets/chat.js"
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/courseware",
@@ -37,7 +39,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a8784df49c19763ef9aac4a62f2debdfc9e2ad280fed84d3015659676b80eaf4"
+    "source_fingerprint": "4d73c0789fb032c73038aaf153ad7e56bed5e1129a86c76c7743eaf931b4f604"
   },
   "runtime_profiles": [
     "openai-codex",

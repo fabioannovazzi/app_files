@@ -295,7 +295,7 @@
     {
       "path": "skills/deck-correction/SKILL.md",
       "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
-      "sha256": "5b682315f229ffc5e138060010f8ba93e97128bef5f9863b30891fc2a90de3f4"
+      "sha256": "740d00df9c63841e62fe728bd1e05f9fcaf7806c3de16075f716c3fc40458b3e"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -329,13 +329,13 @@
     },
     {
       "path": "vendor/modules/courseware/assets/chat.html",
-      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
+      "repository_path": "plugins/clara/vendor/modules/courseware/assets/chat.html",
+      "sha256": "2c25c5162a47ee7dba76f371b7239c1d58bde79a0f8e92207e0a586d95f2a344"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
-      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
+      "repository_path": "plugins/clara/vendor/modules/courseware/assets/chat.js",
+      "sha256": "514df7a9aa8d8f011ae748811a8e950303ec9801af8c040a2b5fb0305091032c"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
