@@ -27,8 +27,64 @@ from verified_execution import (  # noqa: E402
     release_execution_root,
 )
 
-__all__ = ["install", "main"]
+__all__ = ["install", "reconcile_archive_panel", "main"]
 LOGGER = logging.getLogger(__name__)
+
+
+def _mcp(arguments: list[str]) -> Any:
+    result = subprocess.run(
+        ["codex", "mcp", *arguments],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    return json.loads(result.stdout) if arguments == ["list", "--json"] else None
+
+
+def reconcile_archive_panel(root: Path, *, command: Callable = _mcp) -> list[str]:
+    """Remove a legacy manual panel only when the verified plugin replaces it."""
+    catalog_path = root / "mcp-catalog.json"
+    if not catalog_path.is_file():
+        return []
+    catalog = json.loads(catalog_path.read_text())
+    product = catalog["product"]
+    if product not in {"clara", "lucia"}:
+        return []
+    tools = [
+        tool for service in catalog["services"] for tool in service.get("tools", [])
+    ]
+    replacement = any(
+        tool["name"] == f"{product}_archive_open"
+        and {"type": "global"}
+        in tool.get("_meta", {}).get("openai/ui", {}).get("entrypoints", [])
+        for tool in tools
+    )
+    if not replacement:
+        return []
+    name = f"{product}ArchivePanel"
+    entries = [item for item in command(["list", "--json"]) if item["name"] == name]
+    if len(entries) != 1:
+        return []
+    transport = entries[0].get("transport", {})
+    args = transport.get("args", [])
+    if (
+        transport.get("type") != "stdio"
+        or len(args) != 1
+        or (transport.get("env") or {}).get(f"{product.upper()}_ARCHIVE_PANEL_ONLY")
+        != "1"
+    ):
+        return []
+    script = Path(args[0])
+    if not script.is_absolute() or script.name != "studio_archive_mcp.cjs":
+        return []
+    owner = script.parent.parent / ".codex-plugin/plugin.json"
+    if not owner.is_file() or json.loads(owner.read_text()).get("name") != product:
+        return []
+    command(["remove", name])
+    if any(item["name"] == name for item in command(["list", "--json"])):
+        raise ValueError(f"Redundant {name} registration remains after removal")
+    return [name]
 
 
 def _codex(arguments: list[str]) -> dict[str, Any]:
@@ -111,6 +167,7 @@ def install(
     expected_version: str,
     *,
     command: Callable = _codex,
+    mcp_command: Callable = _mcp,
     product: str = "vera",
 ) -> dict[str, Any]:
     """Validate before replacing registration, verify selection, roll back failures."""
@@ -214,11 +271,15 @@ def install(
             _collect_sources(
                 destination, {staged} | ({previous} if previous is not None else set())
             )
+            removed_panels = reconcile_archive_panel(
+                staged / f"plugins/{product}", command=mcp_command
+            )
             return {
                 "version": expected_version,
                 "package_sha256": digest,
                 "source": str(staged),
                 "installation": installed,
+                "removed_duplicate_panels": removed_panels,
                 "active_chat_acceptance": "requires a fresh chat",
             }
         finally:

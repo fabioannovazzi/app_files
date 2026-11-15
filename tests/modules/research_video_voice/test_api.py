@@ -126,8 +126,10 @@ def test_signed_in_account_is_accepted_without_research_video_allowlist(
     )
 
     assert page.status_code == 200
-    assert "available to every signed-in Mparanza account" in page_source
-    assert "Images, research sources" in page_source
+    assert "Sign in with your Mparanza account" in page_source
+    assert (
+        "Images and supporting research documents stay on your computer" in page_source
+    )
     assert response.status_code == 200
     assert response.headers["cache-control"] == "no-store"
     assert response.headers["content-type"] == "application/zip"
