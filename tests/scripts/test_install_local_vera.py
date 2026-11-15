@@ -104,6 +104,117 @@ class Host:
         return {"ok": True}
 
 
+def archive_registration(tmp_path, product="clara", *, global_entry=True):
+    source = distribution(tmp_path, product=product)
+    root = source / f"plugins/{product}"
+    (root / "mcp-catalog.json").write_text(
+        json.dumps(
+            {
+                "product": product,
+                "services": [
+                    {
+                        "tools": [
+                            {
+                                "name": f"{product}_archive_open",
+                                "_meta": {
+                                    "openai/ui": {
+                                        "entrypoints": (
+                                            [{"type": "global"}] if global_entry else []
+                                        )
+                                    }
+                                },
+                            }
+                        ]
+                    }
+                ],
+            }
+        )
+    )
+    write_index(root)
+    entry = {
+        "name": f"{product}ArchivePanel",
+        "transport": {
+            "type": "stdio",
+            "args": [str(root / "scripts/studio_archive_mcp.cjs")],
+            "env": {f"{product.upper()}_ARCHIVE_PANEL_ONLY": "1"},
+        },
+    }
+    return source, root, entry
+
+
+class McpHost:
+    def __init__(self, entry):
+        self.entries = [entry]
+        self.calls = []
+
+    def __call__(self, args):
+        self.calls.append(args)
+        if args == ["list", "--json"]:
+            return self.entries
+        assert args == ["remove", self.entries[0]["name"]]
+        self.entries = []
+
+
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_verified_install_removes_duplicate_manual_archive_panel(
+    tmp_path, monkeypatch, product
+):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    source, _, entry = archive_registration(tmp_path, product)
+    mcp = McpHost(entry)
+
+    result = installer().install(
+        source,
+        tmp_path / "sources",
+        "1",
+        command=Host(product=product),
+        mcp_command=mcp,
+        product=product,
+    )
+
+    assert result["removed_duplicate_panels"] == [f"{product}ArchivePanel"]
+    assert mcp.entries == []
+
+
+def test_thread_only_plugin_preserves_manual_global_panel(tmp_path):
+    _, root, entry = archive_registration(tmp_path, global_entry=False)
+    mcp = McpHost(entry)
+
+    removed = installer().reconcile_archive_panel(root, command=mcp)
+
+    assert removed == []
+    assert mcp.calls == []
+
+
+def test_unrelated_server_using_same_name_is_preserved(tmp_path):
+    _, root, entry = archive_registration(tmp_path)
+    entry["transport"]["args"] = [str(tmp_path / "custom/server.cjs")]
+    mcp = McpHost(entry)
+
+    removed = installer().reconcile_archive_panel(root, command=mcp)
+
+    assert removed == []
+    assert mcp.calls == [["list", "--json"]]
+
+
+def test_failed_install_never_removes_existing_panel(tmp_path, monkeypatch):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    source, _, entry = archive_registration(tmp_path)
+    mcp = McpHost(entry)
+
+    with pytest.raises(subprocess.CalledProcessError):
+        installer().install(
+            source,
+            tmp_path / "sources",
+            "1",
+            command=Host(fail=True, product="clara"),
+            mcp_command=mcp,
+            product="clara",
+        )
+
+    assert mcp.calls == []
+
+
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_install_stages_verified_source_before_switching_and_confirms_version(
     tmp_path, monkeypatch, product
