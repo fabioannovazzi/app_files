@@ -840,7 +840,16 @@ def _google_drive_token_path(state_dir: Path) -> Path:
 
 
 def _database_path(state_dir: Path) -> Path:
-    return state_dir / DATABASE_FILENAME
+    """Reuse the owner-private index for this exact archive across chats."""
+    config = _load_config(state_dir, validate_scope_roots=False)
+    directory = _profile_directory_for_root(state_dir, config.archive_root)
+    if directory is None:
+        return state_dir / DATABASE_FILENAME
+    import archive_search_cache
+
+    return archive_search_cache.database_path(
+        directory, state_dir, config.archive_root, SCHEMA_VERSION
+    )
 
 
 def _assert_private_file(path: Path, label: str) -> None:
@@ -1231,7 +1240,6 @@ def configure_archive(
     scope_cache = _remember_known_scopes(private_state, config)
     status = studio_archive_status(state_dir=private_state)
     status["scope_cache"] = scope_cache
-    status["index_requires_refresh"] = True
     return status
 
 
@@ -6679,6 +6687,22 @@ def _replace_document(
         )
 
 
+def _index_refresh_transaction(function: Callable[..., Any]) -> Callable[..., Any]:
+    """Serialize refresh writers across sessions using the same private index."""
+
+    @wraps(function)
+    def wrapped(*args: Any, **kwargs: Any) -> Any:
+        state = _state_dir(kwargs.get("state_dir"))
+        path = _database_path(state)
+        with preferences.file_lock(
+            path.parent / ".index-refresh.lock", label="search index"
+        ):
+            return function(*args, **kwargs)
+
+    return wrapped
+
+
+@_index_refresh_transaction
 def refresh_archive(
     *,
     rebuild: bool = False,

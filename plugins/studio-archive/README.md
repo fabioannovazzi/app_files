@@ -282,3 +282,15 @@ Reuse a session ID only to resume that same session. To start a new session,
 use fresh state, configure the approved root and run `recover-ledger`.
 Never copy the old config into a new session or work around a configuration
 change error by repeatedly reconfiguring the contested state.
+
+### Search continuity across chats
+
+The owner-private product profile keeps one SQLite search index per canonical
+archive root under `profile/archives/<root-hash>/archive.sqlite3`. New chats reuse
+it without refresh or extraction; chat configuration and active work remain
+isolated. On upgrade, the first access migrates a compatible legacy index with
+SQLite backup, preserving its refresh timestamp. Only the same product’s default
+sessions and matching archive-root/schema metadata are eligible. Explicit state
+directories without a selected profile remain isolated. Refresh writers are
+serialized; opening a result still verifies the live source hash. New or changed
+documents require incremental refresh for updated search coverage.

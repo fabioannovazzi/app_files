@@ -179,7 +179,7 @@ Choose the route before resolving any module:
 
 A fresh session reuses the last explicitly approved root from the owner-private
 profile after access revalidation. Existing sessions keep their own pinned root,
-run selection and index. Confirmed aliases persist privately per archive root;
+run selection. The private root-bound search index is reused across chats. Confirmed aliases persist privately per archive root;
 raw aliases are not returned in the safe client directory. If no approved root is
 available, say “the archive location is not connected”; do not say the client is
 unregistered or propose New client until the archive has been listed. Reuse an

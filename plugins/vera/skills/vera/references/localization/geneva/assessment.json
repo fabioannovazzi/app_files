@@ -205,7 +205,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "05f0998931b27b5fd1388daba116c8abdc6c67f55a90705aa8a07c0b9832ab85",
+  "catalogue_fingerprint": "6874cf41f5ca304c1d2b21eb3b635c8a0790e5f61d4a7402d204e530ae28237e",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2780,5 +2780,12 @@
     "version": "0.1.643",
     "previous_catalogue_fingerprint": "57d86766563b21da2de9860580d768f974606f984b761eb09bb56ea3d0ed57bf",
     "scope": "Final accepted Archive skill entrypoints preserved; manifest version updated after integration with current main. Existing jurisdiction judgments retained."
+  },
+  "archive_search_continuity_release_binding_20261115": {
+    "version": "0.1.644",
+    "scope": "Studio Archive reuses its owner-private root-bound text index across chats; configuration and run selection remain session-owned. No jurisdiction, professional workflow or source qualification changes. Existing localization judgments retained.",
+    "changed_entrypoints": [
+      "studio-archive"
+    ]
   }
 }
