@@ -13,6 +13,7 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 ## Validation and limits
 
 - Focused Archive, matter, playbook and update-notification regressions pass (54 passed, 2 skipped).
+- The wider Lucia/package/update-notification run covered 443 tests: 439 passed, two skipped and two initial failures. Both failures passed on targeted rerun after the corrections below (441 passing tests in total).
 - Codex and Cowork package source-parity checks pass, including local MCP startup checks.
 - Python formatting/import checks and whitespace checks pass.
 - CUA exercised the packaged resources through a clearly labelled synthetic local host. Real local MCP saves were used for instructions and matter decisions. Archive data and host navigation acknowledgements were synthetic.
