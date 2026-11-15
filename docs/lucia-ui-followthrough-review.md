@@ -19,7 +19,7 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 - CUA exercised the packaged resources through a clearly labelled synthetic local host. Real local MCP saves were used for instructions and matter decisions. Archive data and host navigation acknowledgements were synthetic.
 - Observed: save enables instruction use; a saved matter review offers continuation; clicking sends the exact saved locator/hash context; editing hides continuation. Archive document/chat clicks issue the expected file-open/link requests. The narrow instruction layout remains usable.
 - Native Codex application control was unavailable. Neither native document opening nor existing-chat navigation has been accepted on this host. The standalone Playwright browser regression was updated for the collapsed File/version section but was not run locally; CUA provided the browser interaction evidence.
-- Locally installed candidate: one enabled `lucia@mp-lucia` 0.1.254, all 553 packaged files match cache, seven existing local MCP launchers updated. The current chat exposes an older skill path, so installed fresh-chat acceptance is outstanding.
+- Locally installed candidate: `lucia@mp-lucia` 0.1.254 is installed and enabled in local configuration, all 553 packaged files match cache, and seven existing local MCP launchers were updated. The remote catalog also reports Marketplace 0.1.230 as enabled, while local configuration explicitly disables that registration. The current chat exposes an older skill path, so active selection and installed fresh-chat acceptance remain outstanding.
 
 ## Recovered validation failures
 
