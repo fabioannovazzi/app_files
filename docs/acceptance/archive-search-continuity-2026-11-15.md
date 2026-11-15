@@ -21,7 +21,14 @@ Validation:
 - 181 existing archive/component/concurrency/product-default tests passed.
 - New cache module coverage: 86% (subprocess coverage).
 - Enabled local Vera distribution updated through the supported installer to 0.1.644.
-- Real fresh-chat acceptance: pending final transcript verification.
+- Real fresh-chat acceptance passed in chat `01a1de66-5cf8-78b2-b9a1-19038b7e3e53`:
+  all three original Eutekne questions returned the pertinent PDF first and opened
+  with `source_verified=true`. Before and after: 20 documents, 88 chunks,
+  `last_refresh_at=2026-11-15T08:31:10+00:00`, `index_requires_refresh=false`.
+  No refresh/rebuild/configuration/extraction call occurred. Donation retrieval
+  ranked the rates page first; adjacent opened pages supplied the direct context.
+  The CLI could not query the remote catalogue or create PATH aliases, but local
+  enabled-version inspection and Archive MCP operations succeeded.
 
 Release checks also exposed stale generated course/package artifacts. These are
 reported independently from archive retrieval acceptance; no failed check is
