@@ -30,6 +30,12 @@ Validation:
   The CLI could not query the remote catalogue or create PATH aliases, but local
   enabled-version inspection and Archive MCP operations succeeded.
 
-Release checks also exposed stale generated course/package artifacts. These are
-reported independently from archive retrieval acceptance; no failed check is
-represented as a pass.
+Release checks initially exposed stale generated course/package artifacts and
+missing local upload ZIPs. The maintained generators rebuilt these. The complete
+product release builder then passed Codex, Cowork and Antigravity version alignment
+for Vera, Clara and Lucia, including packaged MCP startup checks. Focused ZIP/source
+parity and notification tests passed (19 passed, two environment-dependent skips),
+and four upload-instruction/helper preservation tests passed. The initial broad
+package run was interrupted after stale/missing-artifact failures; it is not claimed
+as a full-suite pass. Search implementation and instructions in the enabled Vera
+installation match the source fix byte-for-byte. No Marketplace publication occurred.
