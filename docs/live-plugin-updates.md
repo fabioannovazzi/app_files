@@ -39,6 +39,17 @@ uses supported `codex plugin` commands, verifies the enabled version, and restor
 the previous registration/install if its own switch fails. It keeps current and
 previous managed sources and does not publish to a public directory.
 
+The same installer accepts `--product clara` or `--product lucia`. After verifying
+the enabled installation, it removes the legacy manual `claraArchivePanel` or
+`luciaArchivePanel` registration only when the selected package advertises its
+own global Archive entry point and the manual entry points to that product's
+Archive panel script. This prevents two sidebar buttons for the same Archive.
+Custom servers and packages without a replacement global panel are preserved.
+Removal uses `codex mcp remove` and is checked against a fresh MCP inventory;
+the result records `removed_duplicate_panels`. Direct host UI/CLI installs do
+not run this reconciliation. Existing open windows may retain old entries until
+the host refreshes discovery.
+
 Codex's registry API has no transactional switch. Staging is atomic; registration
 is serialized and recoverable. Direct Codex UI/CLI updates do not participate in
 this lock. The runtime's independent snapshots protect running services from cache
