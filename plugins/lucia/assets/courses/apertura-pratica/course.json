@@ -194,7 +194,7 @@
     {
       "path": "scripts/matter_mcp.py",
       "repository_path": "plugins/lucia/scripts/matter_mcp.py",
-      "sha256": "46db246c53ac681a9c6c1ef0513c91b4db4386d99dbd987bf0ee9fc904caf177"
+      "sha256": "76a4b4eae44d13307dc9d7727bf9b29101b03bd02079bd3c5b4315cdd7f4dcdc"
     },
     {
       "path": "scripts/model_data_report.py",

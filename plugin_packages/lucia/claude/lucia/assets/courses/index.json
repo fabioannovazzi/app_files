@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "b41c0f599e589ab4fbb7c7fe883c6b2ea9aed454b86ff7917036c6bde6a64bf6",
+      "sha256": "8754f56a9812b03f26a470dbe802a609e0f2bcb84ffe0ff0b48401722563f49d",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
         "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
       },
-      "source_sha256": "4b990850d2808a214f23534aed15a8033c1cfcca2ff1c2940dc3f8d62f11f0bc"
+      "source_sha256": "f0482fd6ce3d12228af6ec59f447ee10bf3d1fd77ea6452799f3c2e9029185a9"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",

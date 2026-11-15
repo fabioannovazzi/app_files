@@ -14,7 +14,7 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 
 - Focused Archive, matter, playbook and update-notification regressions pass (54 passed, 2 skipped).
 - The wider Lucia/package/update-notification run covered 443 tests: 439 passed, two skipped and two initial failures. Both failures passed on targeted rerun after the corrections below (441 passing tests in total).
-- Codex and Cowork package source-parity checks pass, including local MCP startup checks.
+- Codex and Cowork package source-parity checks pass, including local MCP startup checks. The final full `build_product_release.py vera lucia clara` run passes course/privacy alignment and Codex, Cowork and Antigravity builds.
 - Python formatting/import checks and whitespace checks pass.
 - CUA exercised the packaged resources through a clearly labelled synthetic local host. Real local MCP saves were used for instructions and matter decisions. Archive data and host navigation acknowledgements were synthetic.
 - Observed: save enables instruction use; a saved matter review offers continuation; clicking sends the exact saved locator/hash context; editing hides continuation. Archive document/chat clicks issue the expected file-open/link requests. The narrow instruction layout remains usable.
@@ -27,5 +27,7 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 2. Cowork initially omitted the new UI-label asset. The builder now includes it; subsequent package startup and parity checks pass.
 3. A clean worktree lacked cross-product package prerequisites. Those packages were generated before repeating comparisons.
 4. The cross-product test expected two Vera-only reconciliation drivers inside Lucia despite their intentional exclusion by the existing builder. The test now excludes exactly those drivers and continues comparing the shared component bytes. Both the corrected Codex comparison and Cowork comparison pass.
+
+5. GitHub release alignment found one additional stale course source binding for `scripts/matter_mcp.py`. Regenerating the catalog corrected that exact binding; course-catalog and privacy-contract checks now pass. The installed package was refreshed and all 553 files verified again.
 
 No public deployment or Marketplace publication is claimed by this review.
