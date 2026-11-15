@@ -2689,6 +2689,8 @@ def publish_studio_incarico_result(
         ]
     )
     try:
+        # Read before publication so a metadata failure cannot disguise a saved result.
+        conversations = ledger.incarichi().read(folder, engagement_id)["conversations"]
         result = ledger.deliverables().publish(
             folder,
             engagement_id,
@@ -2701,7 +2703,19 @@ def publish_studio_incarico_result(
         )
     except ledger.LedgerError as exc:
         raise ArchiveError(str(exc)) from exc
-    return {"client_id": client_id, "engagement_id": engagement_id, **result}
+    return {
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        **result,
+        "chat_association_warning": (
+            None
+            if conversations
+            else "The result was saved, but this incarico has no associated chat. "
+            "Retrieve the user-visible chat identity from the host and repeat begin "
+            "with originating_conversation. Do not republish the documents. "
+            "If identity is unavailable, deliver the result and disclose the missing link."
+        ),
+    }
 
 
 @_readable_after_write

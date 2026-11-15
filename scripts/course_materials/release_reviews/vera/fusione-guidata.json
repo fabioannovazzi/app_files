@@ -16,6 +16,13 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_chat_link_source_binding_20261115": {
+    "current_course_sha256": "58f979a1895331fef6b7493ba3c79f9b237599b96dbb76d0f706098a8dc8ea00",
+    "previous_course_sha256": "c3a5f3de18796c16292d48c3d3c911ea96b62342cab45eb24e404e753bb514b2",
+    "reviewed_at": "2026-11-15",
+    "reviewer": "Codex /root",
+    "scope": "Compared full course against merged search release b792f9802: only source hashes changed. Archive begin distinguishes the current chat from older links and publication warns when no chat is saved. No lesson content, professional calculations, provider or network destinations changed. Historical editorial and learner judgments retained; fresh CI execution required."
+  },
   "archive_continuity_source_binding_review_20261111": {
     "baseline_commit": "55f8ff788a98a7364655c5a9340b88a18e3c99dc",
     "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
@@ -55,6 +62,13 @@
     "reviewer": "Codex /root - bounded source and authored-input review",
     "source_review": "Both authored JSON inputs now provide planned_date2026-12-01, previously hidden in the synthetic demo constructor. Five localized source dossiers explicitly distinguish it from2026-09-30 accounting date and from executed acts/legal deadlines. Native replay consumes the supplied date, preserving the existing technical reference case. No professional confirmation manufactured.",
     "validation": "Current source regressions passed. Fresh final-head teaching CI must bind the complete localized demo/practice matrix to this exact digest."
+  },
+  "combined_archive_release_source_binding_20261114": {
+    "authored_content_unchanged": true,
+    "course_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442",
+    "date": "2026-11-14",
+    "previous_course_sha256": "3908184f49cf750e44f677fe7418a8b53cfb8f2658f052de8502131af58688fe",
+    "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   },
   "combined_course_repair_source_binding_20261106": {
     "authored_content_unchanged": true,
@@ -141,7 +155,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "c3a5f3de18796c16292d48c3d3c911ea96b62342cab45eb24e404e753bb514b2",
+  "course_sha256": "58f979a1895331fef6b7493ba3c79f9b237599b96dbb76d0f706098a8dc8ea00",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
@@ -192,6 +206,13 @@
     "previous_course_sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
     "recorded_at": "2026-10-25T18:12:53.584180+00:00",
     "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "dynamic_archive_loader_source_binding_20261114": {
+    "authored_content_unchanged": true,
+    "course_sha256": "c3a5f3de18796c16292d48c3d3c911ea96b62342cab45eb24e404e753bb514b2",
+    "date": "2026-11-14",
+    "previous_course_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442",
+    "scope": "Source bindings updated after registering the dynamically loaded Archive modules in tutorial and merger adapters. Reproduced missing-module failures are covered by regressions for assignment binding and grouped publication. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   },
   "historical_review_identity_before_auxiliary_display_refresh_20261103": {
     "course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
@@ -692,6 +713,27 @@
     "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
     "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
   },
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
+    "changed_source_paths": [
+      "modules/fusione-guidata/vendor/modules/model_data_report.py",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/scripts/legal_documents.py",
+      "vendor/modules/scripts/legal_negotiation.py",
+      "vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/vera_journal_pdf/adapter.py",
+      "vendor/modules/vera_journal_pdf/recovery.py"
+    ],
+    "current_course_sha256": "3908184f49cf750e44f677fe7418a8b53cfb8f2658f052de8502131af58688fe",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "a9e064f11596259c036da01755732547e0694e0b17eb3039b54add9722b2b3a7",
+    "reviewed_at": "2026-11-13T23:11:25.949115+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
   "windows_archive_source_compatibility_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "9361a54e9",
@@ -745,40 +787,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "utf8_source_binding_review_20261114": {
-    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
-    "changed_source_paths": [
-      "modules/fusione-guidata/vendor/modules/model_data_report.py",
-      "vendor/modules/courseware/deck_view.py",
-      "vendor/modules/courseware/native.cjs",
-      "vendor/modules/courseware/preview.py",
-      "vendor/modules/scripts/legal_documents.py",
-      "vendor/modules/scripts/legal_negotiation.py",
-      "vendor/modules/vera_assurance/jurisdiction.py",
-      "vendor/modules/vera_journal_pdf/adapter.py",
-      "vendor/modules/vera_journal_pdf/recovery.py"
-    ],
-    "current_course_sha256": "3908184f49cf750e44f677fe7418a8b53cfb8f2658f052de8502131af58688fe",
-    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
-    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
-    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
-    "previous_course_sha256": "a9e064f11596259c036da01755732547e0694e0b17eb3039b54add9722b2b3a7",
-    "reviewed_at": "2026-11-13T23:11:25.949115+00:00",
-    "reviewer": "Codex /root - bounded source compatibility review"
-  },
-  "combined_archive_release_source_binding_20261114": {
-    "date": "2026-11-14",
-    "previous_course_sha256": "3908184f49cf750e44f677fe7418a8b53cfb8f2658f052de8502131af58688fe",
-    "course_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442",
-    "authored_content_unchanged": true,
-    "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
-  },
-  "dynamic_archive_loader_source_binding_20261114": {
-    "date": "2026-11-14",
-    "previous_course_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442",
-    "course_sha256": "c3a5f3de18796c16292d48c3d3c911ea96b62342cab45eb24e404e753bb514b2",
-    "authored_content_unchanged": true,
-    "scope": "Source bindings updated after registering the dynamically loaded Archive modules in tutorial and merger adapters. Reproduced missing-module failures are covered by regressions for assignment binding and grouped publication. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   }
 }

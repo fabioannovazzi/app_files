@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.252",
+  "version": "0.1.253",
   "services": [
     {
       "name": "luciaArchivePanel",
@@ -2723,7 +2723,7 @@
         {
           "name": "begin_studio_incarico",
           "title": "Bind work before execution",
-          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
+          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Always inspect conversation_link_status after begin. If origin_unknown, retrieve the current user-visible chat from the host reader and repeat begin with its identity; do not treat saved documents or older chats as proof of association. If identity cannot be recovered, continue delivery and disclose the missing link. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
           "inputSchema": {
             "type": "object",
             "properties": {

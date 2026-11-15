@@ -58,6 +58,13 @@ reader. Begin saves it with the assignment, preserving earlier links on retries.
 When supplied directly by the host, `CODEX_THREAD_ID` is captured automatically;
 the Archive session ID is never a chat ID. If the service cannot see host identity,
 pass the actual chat identity explicitly instead of leaving the link until later.
+Inspect `conversation_link_status` after begin. `origin_unknown` is unfinished
+chat association, even when earlier chats or documents are present. Retrieve the
+current user-visible chat with the host reader and repeat begin with its exact
+origin; do not ask the user for an identity the host can supply. Before reporting
+Archive completion, read the incarico and verify that this exact host/thread pair
+is saved. If the host cannot supply an identity, continue delivering the work and
+explicitly disclose the missing association; never invent a link.
 Do this in the parent chat before delegation, and pass the same origin, durable
 assignment identity and returned working directory to any delegated worker.
 An ephemeral worker must never replace the parent chat with its own execution ID. Generated drafts stay in that working

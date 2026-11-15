@@ -16,6 +16,13 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_chat_link_source_binding_20261115": {
+    "current_course_sha256": "05e4eee089a8353c209000ccbd54c34fa87aa6c311563f58fe9ec0b37383a080",
+    "previous_course_sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0",
+    "reviewed_at": "2026-11-15",
+    "reviewer": "Codex /root",
+    "scope": "Compared full course against merged search release b792f9802: only source hashes changed. Archive begin distinguishes the current chat from older links and publication warns when no chat is saved. No lesson content, professional calculations, provider or network destinations changed. Historical editorial and learner judgments retained; fresh CI execution required."
+  },
   "archive_concurrency_source_binding_review_20261017": {
     "authored_content_unchanged": true,
     "baseline_commit": "906fdb911d428eafdd6bc14bbfc2e0ee28178c09",
@@ -232,6 +239,13 @@
     "limits": "Other languages, native voice hardware, physical window layout and real learner understanding unverified; no install/deploy/publish.",
     "scope": "Italian Codex native local search, full raw source-open evidence, answer, actual clickable input sources, same-index practice update, save/reopen."
   },
+  "combined_archive_release_source_binding_20261114": {
+    "authored_content_unchanged": true,
+    "course_sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0",
+    "date": "2026-11-14",
+    "previous_course_sha256": "c4c20056db0e128f05bbefa7d0d3f0631c56c88b6eeb4cde7e890ec7f1ff7c51",
+    "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
+  },
   "combined_course_repair_source_binding_20261106": {
     "authored_content_unchanged": true,
     "changed_fields": [
@@ -378,7 +392,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0",
+  "course_sha256": "05e4eee089a8353c209000ccbd54c34fa87aa6c311563f58fe9ec0b37383a080",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
@@ -1170,6 +1184,31 @@
     "previous_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
     "scope": "Exact full authored course comparison against integrated parent5f356f1a2 confirms only reviewed Archive CLI source SHA differs. All original course, localized judgments and artifact reviews retained. Fresh exact-digest native CI required; no professional or installed-host acceptance."
   },
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "4203c0078^",
+    "changed_source_paths": [
+      "modules/studio-archive/scripts/archive_core.py",
+      "modules/studio-archive/scripts/reconcile_open_items.py",
+      "modules/studio-archive/vendor/modules/model_data_report.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
+      "skills/studio-archive/references/whatsapp-cowork.md",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/scripts/legal_documents.py",
+      "vendor/modules/scripts/legal_negotiation.py",
+      "vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/vera_journal_pdf/adapter.py",
+      "vendor/modules/vera_journal_pdf/recovery.py"
+    ],
+    "current_course_sha256": "c4c20056db0e128f05bbefa7d0d3f0631c56c88b6eeb4cde7e890ec7f1ff7c51",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved. Also reviewed the previously unbound main addition of the WhatsApp Cowork reference: it requires same-device native tools, verified one-to-one identity and explicit send authorization; the Archive lesson does not change or exercise that external route.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "ade7c1136e4000d25c2b7bf5b277e67ae5ca11a7a826dad88b57bc1ea215eeb8",
+    "reviewed_at": "2026-11-13T23:11:25.957873+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
   "valuation_cnc_integration": {
     "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253",
     "reviewed_at": "2026-09-29T23:43:34.624585+00:00",
@@ -1235,37 +1274,5 @@
     "new_visual_or_learner_acceptance": false,
     "previous_course_sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa",
     "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
-  },
-  "utf8_source_binding_review_20261114": {
-    "baseline_commit": "4203c0078^",
-    "changed_source_paths": [
-      "modules/studio-archive/scripts/archive_core.py",
-      "modules/studio-archive/scripts/reconcile_open_items.py",
-      "modules/studio-archive/vendor/modules/model_data_report.py",
-      "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
-      "skills/studio-archive/references/whatsapp-cowork.md",
-      "vendor/modules/courseware/deck_view.py",
-      "vendor/modules/courseware/native.cjs",
-      "vendor/modules/courseware/preview.py",
-      "vendor/modules/scripts/legal_documents.py",
-      "vendor/modules/scripts/legal_negotiation.py",
-      "vendor/modules/vera_assurance/jurisdiction.py",
-      "vendor/modules/vera_journal_pdf/adapter.py",
-      "vendor/modules/vera_journal_pdf/recovery.py"
-    ],
-    "current_course_sha256": "c4c20056db0e128f05bbefa7d0d3f0631c56c88b6eeb4cde7e890ec7f1ff7c51",
-    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
-    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved. Also reviewed the previously unbound main addition of the WhatsApp Cowork reference: it requires same-device native tools, verified one-to-one identity and explicit send authorization; the Archive lesson does not change or exercise that external route.",
-    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
-    "previous_course_sha256": "ade7c1136e4000d25c2b7bf5b277e67ae5ca11a7a826dad88b57bc1ea215eeb8",
-    "reviewed_at": "2026-11-13T23:11:25.957873+00:00",
-    "reviewer": "Codex /root - bounded source compatibility review"
-  },
-  "combined_archive_release_source_binding_20261114": {
-    "date": "2026-11-14",
-    "previous_course_sha256": "c4c20056db0e128f05bbefa7d0d3f0631c56c88b6eeb4cde7e890ec7f1ff7c51",
-    "course_sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0",
-    "authored_content_unchanged": true,
-    "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   }
 }

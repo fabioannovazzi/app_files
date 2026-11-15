@@ -401,7 +401,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "81a359284e2dc3d5a41a06c6132b6c4cfaa226bd8132a4bebc98b9d027864d78"
+      "sha256": "851fa9911f53e553bdb4d2b26c383274651a93959482ed9d7459fc3fea4a3647"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -441,7 +441,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/incarico.py",
-      "sha256": "db27089559c6527ee9dab7ae77a7d9d0713e1f19903c0c6b0c137ec2f8ab4f50"
+      "sha256": "43e5f0ec8adf7de3610e5186de6a04725fffc40a197716fd3e979c6e568e96b0"
     },
     {
       "path": "modules/studio-archive/scripts/input_verification.py",
@@ -1030,5 +1030,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "afcd74f0dfbc4c5104926c632999a5c199df58c8a2719e4dc27606906cf990f8"
+  "canonical_course_sha256": "d48ee67cb8bf24565ad05ac64fe3f9c197e87b4b3c9fc47dbd5877552a388d34"
 }
