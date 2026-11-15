@@ -32,4 +32,6 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 
 6. The accounting/reporting CI job caught an outdated matter-panel generator. Native continuation markup, behavior and labels now live in the generator sources. The builder reproduces the already-tested widget byte for byte, without changing the standalone page. The exact failing suite passes locally (254 tests), and course/privacy checks remain clean.
 
+7. A later central-theme check caught style ordering in the instructions source. Synchronizing the source reproduces the already-tested packaged HTML exactly. Theme checks and 114 theme regressions pass; the remaining workflow code-quality step passes, and 13 matter-core tests reach 82.45% coverage. The source-review fingerprint and affected Lucia packages were regenerated.
+
 No public deployment or Marketplace publication is claimed by this review.
