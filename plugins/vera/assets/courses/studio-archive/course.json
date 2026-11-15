@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "cb4dd7316d77bbf5d09d26a3c053a1cc6e1de7869951d4ff01c0d541654c59d0"
+      "sha256": "be6fa0bf59e5d70b6b51040bbfead9ceab4f9cacf9cf2315456d9523e8078b76"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/studio-archive/scripts/incarico.py",
       "repository_path": "plugins/studio-archive/scripts/incarico.py",
-      "sha256": "d8ef343683f690d203e931bc4d5e15daac1c0da66febd0e92e72126568c91e7c"
+      "sha256": "f7ead4d7de48da7f232c5468dc31266ab594eab0275d732c6aa3e2f42e2d3903"
     },
     {
       "path": "modules/studio-archive/scripts/input_verification.py",

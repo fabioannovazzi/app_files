@@ -202,6 +202,7 @@ def test_native_begin_publish_and_open_grouped_current_revision(
         "primary_format": "pdf",
     }
     published = native_call(env, "vera_incarico_publish_result", request)
+    assert "no associated chat" in published["chat_association_warning"]
     assert published["current_revision"] == 1
     assert native_call(env, "vera_incarico_publish_result", request)["reused"] is True
     view = native_call(env, "vera_incarico_read", scope)
@@ -307,6 +308,8 @@ def test_begin_captures_origin_before_work_preserving_other_chats(
         args["originating_conversation"] = parent
     first = native_call(selected_env, "vera_incarico_begin", args)
     assert first["conversation_linked"] is True
+    assert first["conversation_link_status"] == "linked"
+    assert first["conversation_link_action"] is None
     assert [item["thread_id"] for item in first["conversations"]] == [
         parent["thread_id"]
     ]
@@ -354,3 +357,47 @@ def test_begin_does_not_turn_archive_session_into_chat_identity(registry_workspa
     )
     assert result["conversations"] == []
     assert result["conversation_linked"] is False
+    assert result["conversation_link_status"] == "origin_unknown"
+    assert "repeat begin" in result["conversation_link_action"]
+
+
+def test_begin_without_origin_does_not_claim_an_older_chat_is_current(
+    registry_workspace,
+):
+    env, root, _, _, client_id, _ = registry_workspace
+    ledger = _load_customer_ledger()
+    eid = ledger.create_engagement(root / "Cliente Beta", client_id, "Resume chat")[
+        "engagement_id"
+    ]
+    args = {
+        "client_id": client_id,
+        "engagement_id": eid,
+        "workflow_id": "business-planning",
+        "purpose": "Resume",
+    }
+    origin = {
+        "host": "codex",
+        "thread_id": "11111111-1111-4111-8111-111111111111",
+        "title": "Original chat",
+        "url": "",
+    }
+    first = native_call(
+        env, "vera_incarico_begin", {**args, "originating_conversation": origin}
+    )
+    unknown = native_call(env, "vera_incarico_begin", args)
+    assert unknown["conversation_linked"] is False
+    assert unknown["conversation_link_status"] == "origin_unknown"
+    assert unknown["revision"] == first["revision"]
+    assert unknown["conversations"] == first["conversations"]
+    current = {**origin, "thread_id": "22222222-2222-4222-8222-222222222222"}
+    repaired = native_call(
+        env, "vera_incarico_begin", {**args, "originating_conversation": current}
+    )
+    assert repaired["conversation_link_status"] == "linked"
+    assert repaired["conversations"] == [origin, current]
+    assert (
+        native_call(
+            env, "vera_incarico_begin", {**args, "originating_conversation": current}
+        )["revision"]
+        == repaired["revision"]
+    )

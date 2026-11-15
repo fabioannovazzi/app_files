@@ -661,7 +661,20 @@ class Incarichi:
             **current,
             "working_directory": str(directory),
             "drafts_are_issued": False,
-            "conversation_linked": bool(current["conversations"]),
+            # Existing chats do not establish that this caller's chat is saved.
+            "conversation_linked": originating_conversation is not None,
+            "conversation_link_status": (
+                "linked" if originating_conversation is not None else "origin_unknown"
+            ),
+            "conversation_link_action": (
+                None
+                if originating_conversation is not None
+                else "The current chat association is unverified. Retrieve the actual "
+                "user-visible chat identity from the host and repeat begin with "
+                "originating_conversation; this preserves existing work and chats. "
+                "Do not infer success from older chat links. If identity is unavailable, "
+                "continue delivery and explicitly report the missing association."
+            ),
         }
 
     def update(

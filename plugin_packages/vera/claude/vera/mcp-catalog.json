@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.645",
+  "version": "0.1.646",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -9051,7 +9051,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.645",
+          "version": "0.1.646",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -9451,7 +9451,7 @@
         {
           "name": "vera_incarico_begin",
           "title": "Avvia il lavoro dell'incarico",
-          "description": "Before any engine execution or delegation, bind this assignment to its purpose and owning pipeline. Supply originating_conversation from the actual host chat identity and title; for delegated work pass the parent user-visible chat, never an ephemeral worker. The code saves this link during begin and preserves existing chats on retry. When the host supplies CODEX_THREAD_ID directly it is used automatically if no explicit origin is supplied. Returns a durable working directory for drafts. Reuses an existing matching binding, preserves results and conversations, and refuses unrelated pipelines. This does not execute the work or publish draft files.",
+          "description": "Before any engine execution or delegation, bind this assignment to its purpose and owning pipeline. Always inspect conversation_link_status after begin. If origin_unknown, retrieve the current user-visible chat from the host reader and repeat begin with its identity; do not treat saved documents or older chats as proof of association. If identity cannot be recovered, continue delivery and disclose the missing link. Supply originating_conversation from the actual host chat identity and title; for delegated work pass the parent user-visible chat, never an ephemeral worker. The code saves this link during begin and preserves existing chats on retry. When the host supplies CODEX_THREAD_ID directly it is used automatically if no explicit origin is supplied. Returns a durable working directory for drafts. Reuses an existing matching binding, preserves results and conversations, and refuses unrelated pipelines. This does not execute the work or publish draft files.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -36991,7 +36991,7 @@
         {
           "name": "begin_studio_incarico",
           "title": "Bind work before execution",
-          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
+          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Always inspect conversation_link_status after begin. If origin_unknown, retrieve the current user-visible chat from the host reader and repeat begin with its identity; do not treat saved documents or older chats as proof of association. If identity cannot be recovered, continue delivery and disclose the missing link. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
           "inputSchema": {
             "type": "object",
             "properties": {
