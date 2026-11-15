@@ -41,11 +41,11 @@ async function archive(name, args = {}) {
 }
 function render() {
   nav.replaceChildren(); main.replaceChildren();
-  if (selectedMatter) nav.append(button("← Pratiche", () => { selectedMatter = null; render(); }));
+  if (selectedMatter) nav.append(button("← Incarichi", () => { selectedMatter = null; render(); }));
   else if (selectedClient) nav.append(button("← Clienti", () => loadClients()));
   main.append(node("p", selectedClient?.display_name || "Clara", "eyebrow"), node("h1", selectedMatter?.label || selectedClient?.display_name || "Clienti e progetti"));
   if (!configured) { main.append(node("p", "Configura l’Archivio dello studio dalla chat di Clara.", "caption")); }
-  else if (selectedMatter) { main.append(node("p", "Apri la incarico in una nuova chat per consultarne i documenti o proseguire il lavoro.", "caption")); }
+  else if (selectedMatter) { main.append(node("p", "Apri l’incarico in una nuova chat per consultarne i documenti o proseguire il lavoro.", "caption")); }
   else {
     const rows = selectedClient ? matters : clients;
     const list = node("div", undefined, "works");
@@ -59,13 +59,13 @@ function render() {
         else section.append(button(title, () => selectedClient ? (selectedMatter = row, render()) : loadMatters(row), "archive-link"));
         list.append(section);
       }
-      if (!visible.length) list.append(node("p", rows.length ? "Nessun risultato in questa pagina." : selectedClient ? "Nessuna incarico per questo cliente." : "Nessun cliente registrato.", "empty"));
+      if (!visible.length) list.append(node("p", rows.length ? "Nessun risultato in questa pagina." : selectedClient ? "Nessun incarico per questo cliente." : "Nessun cliente registrato.", "empty"));
     }
     if (rows.length > 1) { const label = node("label", undefined, "search"), input = node("input"); input.type = "search"; label.append(node("span", "Cerca nella pagina corrente"), input); input.addEventListener("input", () => show(input.value)); main.append(label); }
     show(); main.append(list);
   }
   const actions = node("div", undefined, "actions");
-  const start = button(selectedMatter ? "Apri la incarico in una nuova chat" : selectedClient ? "Lavora con questo cliente in una nuova chat" : "Apri una nuova chat con Clara", openChat, "primary");
+  const start = button(selectedMatter ? "Apri l’incarico in una nuova chat" : selectedClient ? "Lavora con questo cliente in una nuova chat" : "Apri una nuova chat con Clara", openChat, "primary");
   start.disabled = loading || sending || !host?.hostCapabilities?.experimental?.["openai/message"];
   if (!host?.hostCapabilities?.experimental?.["openai/message"]) start.title = "Questo host non consente di aprire nuove chat dal pannello.";
   actions.append(start); main.append(actions);
@@ -97,7 +97,7 @@ async function openChat() {
   const selection = selectedClient ? {client_id:selectedClient.client_id, ...(selectedMatter ? {engagement_id:selectedMatter.engagement_id} : {})} : null;
   const text = selection
     ? "Usa Clara per lavorare nell’Archivio dello studio. Verifica la selezione con gli strumenti locali di Clara prima di usare le fonti. Se ho selezionato un incarico, riprendi il caso con clara_archive_case prima di chiedermi come proseguire. Riferimenti: " + JSON.stringify(selection)
-    : "Usa Clara. Vorrei iniziare a lavorare con l’Archivio dello studio. Mostrami come selezionare un cliente o una incarico.";
+    : "Usa Clara. Vorrei iniziare a lavorare con l’Archivio dello studio. Mostrami come selezionare un cliente o un incarico.";
   sending = true; render(); status.textContent = "Apertura della nuova chat…";
   try {
     const result = await request("ui/message", {role:"user", content:[{type:"text", text}], _meta:{"openai/message":{target:"new"}}});

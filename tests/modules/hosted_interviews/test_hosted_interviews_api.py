@@ -1605,6 +1605,7 @@ def test_event_audio_and_completion_are_saved_and_notify_recipients(
     assert f"/case-notes/api/voice/interviews/{token}/bundle" in sent[0][2]
     assert f"/case-notes/api/voice/interviews/{token}/review" in sent[0][2]
 
+    captured_output = _capture_output_template(monkeypatch)
     output_response = client.get(f"/case-notes/interview/{token}/output")
     output_template = Path("templates/hosted_interview_output.html").read_text(
         encoding="utf-8"
@@ -1613,11 +1614,11 @@ def test_event_audio_and_completion_are_saved_and_notify_recipients(
     assert output_response.status_code == 200
     assert '{{ copy["dialog_transcript"] }}' in output_template
     assert '{{ copy["quality_review"] }}' in output_template
-    assert '{{ copy["open_quality_review"] }}' in output_template
+    assert captured_output["context"]["review"]["summary"] == review["summary"]
     assert '{{ copy["transcript_source"] }}' in output_template
     assert '{{ copy["mic_transcript"] }}' in output_template
     assert '{{ copy["final_interviewee_transcript"] }}' in output_template
-    assert '{{ copy["open_json_bundle"] }}' in output_template
+    assert 'id="print-results"' in output_template
 
 
 def test_post_call_mic_transcription_replaces_live_interviewee_transcript(
