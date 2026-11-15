@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-11-14/independently-investigate-the-logic-of-vera/work/vera-release/plugins/vera",
-  "version": "0.1.643",
-  "captured_at": "2026-11-14T19:07:11.701025+00:00",
-  "catalogue_fingerprint": "05f0998931b27b5fd1388daba116c8abdc6c67f55a90705aa8a07c0b9832ab85",
-  "manifest_sha256": "97541f0e1993767fde5fb89442518abc216659e00a89999f0df240e41c05087f",
+  "root": "/Users/fabio/Documents/Codex/2026-11-15/i-t/work/archive-shared-search/plugins/vera",
+  "version": "0.1.645",
+  "captured_at": "2026-11-15T09:04:07.863634+00:00",
+  "catalogue_fingerprint": "563d28aa95ec02f381115204390081810703baf3ec8c6ae4569b0c23bfaff52d",
+  "manifest_sha256": "518222c84ee796802387eff084a0b8fdfbf543bdd8bf430e6308c98802233f60",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "15d1189f336198488126703d6a2156b4419277963402fddff59f18684ff13888"
+      "sha256": "0e1c34ebe66ae92b9a312d15c8b5d58b92005f4c44176b08406769227caf9741"
     },
     {
       "function_id": "studio-document-format",

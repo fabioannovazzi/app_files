@@ -191,7 +191,7 @@ work around contention. Session configuration ownership remains independent.
 
 A fresh session reuses the last explicitly approved root from the owner-private
 profile after access revalidation. Existing sessions keep their own pinned root,
-run selection and index. Confirmed aliases persist privately per archive root;
+run selection. The private root-bound search index is reused across chats. Confirmed aliases persist privately per archive root;
 raw aliases are not returned in the safe client directory. If no approved root is
 available, say “the archive location is not connected”; do not say the client is
 unregistered or propose New client until the archive has been listed. Reuse an
@@ -718,8 +718,9 @@ correct account.
 
 1. Call `studio_archive_status`. If not configured, configure it. If
    `index_requires_refresh` is true, refresh before searching.
-2. At the start of a substantive archive session, run the incremental refresh
-   unless the user explicitly wants the current snapshot only. Enable OCR only
+2. Reuse an existing current index without refreshing merely because this is a
+   new chat. Refresh when the index is missing, reports a scope change, a source
+   changed at open, or the user requests updated coverage. Enable OCR only
    when scans matter and the local OCR requirements are already installed.
    Refresh verifies every supported file by hash, re-extracts only changed
    content, removes deleted content, and reports scan issues.
@@ -1110,10 +1111,11 @@ stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a priv
 profile. The default profile is `~/.mparanza/vera-studio-archive/profile` for Vera
 or `~/.mparanza/lucia-studio-archive/profile` for Lucia, outside
 sources. It stores the approved root and root-specific private identity aliases,
-not shared indexes, active run selection, OAuth tokens or session configuration.
+and the root-bound search index, not active run selection, OAuth tokens or session configuration.
 Registry updates use short root-specific locks. A changed/unavailable root requires
-normal access recovery; never silently pick a different folder. No old-session
-scan or config copying is performed.
+normal access recovery; never silently pick a different folder. On first use, compatible legacy indexes from this product’s private default
+sessions may be migrated with SQLite backup after checking archive-root and schema
+metadata. No source extraction, session configuration copying or run adoption is performed.
 Never copy the old config into a new session or work around a configuration
 change error by repeatedly reconfiguring the contested state.
 
