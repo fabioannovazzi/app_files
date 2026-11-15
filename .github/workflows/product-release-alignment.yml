@@ -21,8 +21,9 @@ jobs:
     needs: product-archives
     name: Codex and Cowork release alignment
     runs-on: ubuntu-latest
-    # Finished archives now execute all six isolated Vera CLIs on each host build.
-    timeout-minutes: 30
+    # Full cross-host archive verification plus namespace tests exceeded 30 minutes
+    # on PR #1006; retain every check and allow the final suite to complete.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:

@@ -183,6 +183,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "saved-review-continuation",
+        "purpose": "Continue with the exact saved review in the active host chat",
+        "content": "The local review app receives the selected run directory, pending-decision SHA-256 and review-payload hash in app-only metadata. Only the explicit Continue in chat action sends those references and a fixed request to apply matching saved decisions and validate the result to the host model. It sends no decision body automatically; the model may subsequently read the selected saved review. Save alone neither applies decisions nor accepts an engagement. Unsaved edits hide the handoff. A host without messaging shows a copyable request. No new external service is introduced.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -225,9 +234,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "12859b4a9a668cc0e37a53fb7c9fe4ac2c2486e655cd59146a5b76889f76e4c0"
+    "source_fingerprint": "aa7901b83f0c6e3fbf770a820f32edc0a2980250068b471a2afbed76da87b755"
   },
   "role": "workflow",
   "runtime_profiles": [

@@ -37,6 +37,8 @@ readline.createInterface({input:process.stdin}).on('line', line => {
   if(m.method==='initialize') result={serverInfo:{name:'vera-studio-archive'},capabilities:{},instructions:'Archive Organization uses the complete projected inventory'};
   else if(m.method==='tools/list') result={tools:[{name:'studio_archive_status'}]};
   else if(process.env.TEST_ARCHIVE_ERROR) result={isError:true,content:[{type:'text',text:'private-path /secret'}]};
+  else if(m.params?.name==='get_studio_incarico') result={structuredContent:{purpose:'Synthetic assignment',documents:[{name:'Source.txt',reference:{input_id:'input-one'},secret:'not-projected'}],results:[],deliverables:[{versions:[{label:'Opinion',revision:2,primary_format:'docx',formats:[{name:'opinion.docx',format:'docx',reference:{entry_key:'opinion',revision:2,format:'docx'},available:true}]}]}],conversations:[{title:'Existing discussion',url:'codex://threads/synthetic',secret:'not-projected'}],document_issues:[]}};
+  else if(m.params?.name==='read_studio_incarico_document') result={structuredContent:{name:'Source.txt',path:'/synthetic/Source.txt',preview:JSON.stringify(m.params.arguments),secret:'not-projected'}};
   else result={structuredContent:{configured:true,clients:[{client_id:'c1',display_name:'Synthetic client',registration_status:'registered',email:'private@example.test'}],engagements:[{engagement_id:'e1',label:'Synthetic practice',status:'open',sources:['private-source']}]}};
   process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 });
@@ -108,7 +110,15 @@ def test_panel_resource_embeds_local_fonts(panel):
 @pytest.mark.parametrize(
     "panel_only,expected",
     [
-        (True, ["lucia_archive_open", "lucia_archive_list_matters"]),
+        (
+            True,
+            [
+                "lucia_archive_open",
+                "lucia_archive_list_matters",
+                "lucia_archive_read_matter",
+                "lucia_archive_read_document",
+            ],
+        ),
         (False, ["studio_archive_status"]),
     ],
 )
@@ -133,3 +143,58 @@ def test_changed_panel_bytes_get_a_new_resource_address(panel):
     assert (
         current == call(panel, "tools/list")["tools"][0]["_meta"]["ui"]["resourceUri"]
     )
+
+
+def test_matter_contents_and_chat_links_remain_app_only(panel):
+    result = call(
+        panel,
+        "tools/call",
+        {
+            "name": "lucia_archive_read_matter",
+            "arguments": {"client_id": "c1", "engagement_id": "e1"},
+        },
+    )
+    matter = result["_meta"]["archive"]["matter"]
+    assert matter["documents"][0]["reference"] == {"input_id": "input-one"}
+    assert matter["conversations"] == [
+        {"title": "Existing discussion", "url": "codex://threads/synthetic"}
+    ]
+    assert matter["deliverables"][0]["versions"][0]["formats"][0]["available"] is True
+    assert "not-projected" not in json.dumps(result)
+    assert "Source.txt" not in json.dumps(result["content"])
+
+
+def test_document_request_preserves_exact_scope_and_reference(panel):
+    selection = {
+        "client_id": "c1",
+        "engagement_id": "e1",
+        "reference": {"entry_key": "opinion", "revision": 2, "format": "docx"},
+    }
+    result = call(
+        panel,
+        "tools/call",
+        {"name": "lucia_archive_read_document", "arguments": selection},
+    )
+    document = result["_meta"]["archive"]["document"]
+    assert json.loads(document["preview"]) == selection
+    assert document["path"] == "/synthetic/Source.txt"
+    assert "/synthetic" not in json.dumps(result["content"])
+    assert "not-projected" not in json.dumps(result)
+
+
+def test_failed_document_verification_returns_no_path_or_preview(panel):
+    result = call(
+        panel,
+        "tools/call",
+        {
+            "name": "lucia_archive_read_document",
+            "arguments": {
+                "client_id": "c1",
+                "engagement_id": "e1",
+                "reference": {"input_id": "input-one"},
+            },
+        },
+        failed=True,
+    )
+    assert result["_meta"]["archive"] == {"error": "archive_unavailable"}
+    assert "secret" not in json.dumps(result)

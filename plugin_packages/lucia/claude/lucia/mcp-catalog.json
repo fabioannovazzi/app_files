@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.253",
+  "version": "0.1.254",
   "services": [
     {
       "name": "luciaArchivePanel",
@@ -50,7 +50,7 @@
           },
           "_meta": {
             "ui": {
-              "resourceUri": "ui://lucia/studio-archive-d9b3cabe959ab1d8.html",
+              "resourceUri": "ui://lucia/studio-archive-99ff861d920bd7ce.html",
               "visibility": [
                 "app",
                 "model"
@@ -94,11 +94,79 @@
               ]
             }
           }
+        },
+        {
+          "name": "lucia_archive_read_matter",
+          "description": "Read saved documents and existing chat links for the selected matter.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        },
+        {
+          "name": "lucia_archive_read_document",
+          "description": "Verify and open one saved document in the selected matter; no arbitrary paths.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reference": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "reference"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
         }
       ],
       "resources": [
         {
-          "uri": "ui://lucia/studio-archive-d9b3cabe959ab1d8.html",
+          "uri": "ui://lucia/studio-archive-99ff861d920bd7ce.html",
           "name": "Lucia · Archivio dello studio",
           "mimeType": "text/html;profile=mcp-app"
         }

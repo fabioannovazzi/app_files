@@ -1,0 +1,52 @@
+{
+  "it": {
+    "intro": "Definisci i controlli e le posizioni che Lucia userà nelle revisioni.",
+    "assignment": "Incarico",
+    "method": "Controlli e posizioni",
+    "deliverables": "Modello e risultati",
+    "advanced_method": "Domande e fonti",
+    "file_actions": "File e versioni",
+    "not_saved": "Non ancora salvato",
+    "save_first": "Salva le istruzioni per usarle nella chat."
+  },
+  "en": {
+    "intro": "Define the checks and positions Lucia will use in reviews.",
+    "assignment": "Assignment",
+    "method": "Checks and positions",
+    "deliverables": "Template and outputs",
+    "advanced_method": "Questions and sources",
+    "file_actions": "Files and versions",
+    "not_saved": "Not saved yet",
+    "save_first": "Save the instructions to use them in chat."
+  },
+  "fr": {
+    "intro": "Définissez les contrôles et les positions que Lucia utilisera lors des revues.",
+    "assignment": "Mission",
+    "method": "Contrôles et positions",
+    "deliverables": "Modèle et livrables",
+    "advanced_method": "Questions et sources",
+    "file_actions": "Fichiers et versions",
+    "not_saved": "Pas encore enregistré",
+    "save_first": "Enregistrez les instructions pour les utiliser dans la conversation."
+  },
+  "de": {
+    "intro": "Legen Sie Prüfungen und Positionen für Lucias Überprüfungen fest.",
+    "assignment": "Auftrag",
+    "method": "Prüfungen und Positionen",
+    "deliverables": "Vorlage und Ergebnisse",
+    "advanced_method": "Fragen und Quellen",
+    "file_actions": "Dateien und Versionen",
+    "not_saved": "Noch nicht gespeichert",
+    "save_first": "Speichern Sie die Anweisungen, um sie im Chat zu verwenden."
+  },
+  "es": {
+    "intro": "Define las comprobaciones y posiciones que Lucia usará en las revisiones.",
+    "assignment": "Encargo",
+    "method": "Revisiones y posiciones",
+    "deliverables": "Modelo y resultados",
+    "advanced_method": "Preguntas y fuentes",
+    "file_actions": "Archivos y versiones",
+    "not_saved": "Aún no guardado",
+    "save_first": "Guarda las instrucciones para usarlas en el chat."
+  }
+}

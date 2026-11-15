@@ -2,6 +2,7 @@
 const VOCABULARY=__LABELS__;
 let EDITABLE=false,appSession,saveAttempt,busy=false,dirty=false;
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let host=null,savedContext=null,handoffBusy=false,handoffSent=false;
 let review=null,reviewHash='',language='en',evidenceNames={},partyNames={};
 const base=location.pathname.replace(/\/$/,'');
 const words=()=>VOCABULARY[language]||VOCABULARY.en;
@@ -34,6 +35,8 @@ function valueHtml(value,key){
 }
 function render(value){
  dirty=false;appSession=value?.session;EDITABLE=!!appSession;
+ savedContext=value?.pending_review_status==='current' && value.run_dir && value.pending_sha256 ? {run_dir:value.run_dir, pending_sha256:value.pending_sha256, review_payload_sha256:value.review_payload_sha256} : null;
+ handoffSent=false;
  const payload=value?.review_payload||value?.review||value;
  if(!payload||!Array.isArray(payload.items)){document.querySelector('#items').innerHTML=`<p>${esc(t('no_payload'))}</p>`;return;}
  review=payload;reviewHash=value?.review_payload_sha256||'';language=VOCABULARY[payload.language]?payload.language:'en';document.documentElement.lang=language;
@@ -65,7 +68,33 @@ function render(value){
   }
  }
  document.querySelector('#save').disabled=false;
+ updateContinuation();
 }
+function handoffText(){
+ return "Usa Lucia per proseguire la pratica selezionata. Leggi la skill apertura-pratica e verifica che i file correnti corrispondano a questa revisione salvata: " + JSON.stringify(savedContext) + ". Applica soltanto le decisioni salvate corrispondenti, quindi valida e mostra il risultato e le questioni ancora aperte. Se i file sono cambiati, mostra le differenze prima di applicare. Non accettare l'incarico, firmare, inviare o depositare documenti.";
+}
+function updateContinuation(){
+ const ready=!!savedContext && !dirty;
+ document.querySelector('#next-step').hidden=!ready;
+ document.querySelector('#next-help').textContent=t('next_help');
+ const button=document.querySelector('#continue-review');button.textContent=t('continue_review');button.disabled=busy || handoffBusy || handoffSent;
+ const canSend=host?.hostCapabilities?.message?.text || host?.hostCapabilities?.experimental?.['openai/message'];
+ button.hidden=!canSend;
+ document.querySelector('#handoff-copy').hidden=!!canSend;
+ document.querySelector('#copy-help').textContent=t('copy_help');
+ document.querySelector('#handoff-text').value=ready?handoffText():'';
+}
+document.querySelector('#continue-review').addEventListener('click',async()=>{
+ if(!savedContext || dirty || busy || handoffBusy || handoffSent)return;
+ handoffBusy=true;updateContinuation();
+ try{
+  const params={role:'user',content:[{type:'text',text:handoffText()}]};
+  if(host?.hostCapabilities?.experimental?.['openai/message'])params._meta={'openai/message':{target:'active'}};
+  const result=await request('ui/message',params);if(result?.isError)throw new Error(t('saved_unavailable'));
+  handoffSent=true;document.querySelector('#status').textContent=t('handoff_sent');
+ }catch(error){document.querySelector('#status').textContent=error.message;}
+ finally{handoffBusy=false;updateContinuation();}
+});
 let nextRequest=0;
 const pendingRequests=new Map();
 function request(method,params){return new Promise((resolve,reject)=>{
@@ -88,7 +117,7 @@ document.querySelector('#save').addEventListener('click',async()=>{
  finally{busy=false;document.querySelectorAll('input,textarea,select,button').forEach(node=>node.disabled=false);}
 });
 document.querySelector('#toolbar').hidden=true;
-document.querySelector('main').addEventListener('input',()=>{if(!busy){saveAttempt=null;dirty=true;}});
+document.querySelector('main').addEventListener('input',()=>{if(!busy){saveAttempt=null;dirty=true;updateContinuation();}});
 window.addEventListener('message',event=>{
  if(event.source!==parent || event.data?.jsonrpc!=='2.0')return;
  const message=event.data,item=pendingRequests.get(message.id);
@@ -100,5 +129,5 @@ window.addEventListener('message',event=>{
  if(message.method==='ui/resource-teardown')parent.postMessage({jsonrpc:'2.0',id:message.id,result:{}},'*');
 });
 request('ui/initialize',{protocolVersion:'2026-01-26',appInfo:{name:'Lucia matter opening',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline','fullscreen']}})
-.then(()=>parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*'))
+.then(result=>{host=result;updateContinuation();parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*');})
 .catch(()=>{document.querySelector('#status').textContent=t('no_payload');});

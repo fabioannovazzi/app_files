@@ -1,0 +1,37 @@
+{
+  "en": {
+    "saved": "Decisions saved.",
+    "continue_review": "Continue in chat",
+    "next_help": "Continue in chat to apply this review and check the result. Saving does not accept the engagement.",
+    "copy_help": "Copy this request into your Lucia chat.",
+    "handoff_sent": "Request delivered to chat. Application and result still need verification."
+  },
+  "it": {
+    "saved": "Decisioni salvate.",
+    "continue_review": "Continua in chat",
+    "next_help": "Continua in chat per applicare questa revisione e controllare il risultato. Il salvataggio non accetta l’incarico.",
+    "copy_help": "Copia questa richiesta nella chat di Lucia.",
+    "handoff_sent": "Richiesta consegnata alla chat. Applicazione e risultato restano da verificare."
+  },
+  "fr": {
+    "saved": "Décisions enregistrées.",
+    "continue_review": "Continuer dans la conversation",
+    "next_help": "Continuez dans la conversation pour appliquer cette revue et vérifier le résultat. L’enregistrement ne vaut pas acceptation du mandat.",
+    "copy_help": "Copiez cette demande dans votre conversation avec Lucia.",
+    "handoff_sent": "Demande transmise. L’application et le résultat restent à vérifier."
+  },
+  "de": {
+    "saved": "Entscheidungen gespeichert.",
+    "continue_review": "Im Chat fortfahren",
+    "next_help": "Im Chat diese Prüfung anwenden und das Ergebnis kontrollieren. Speichern bedeutet keine Mandatsannahme.",
+    "copy_help": "Kopieren Sie diese Anfrage in Ihren Lucia-Chat.",
+    "handoff_sent": "Anfrage übermittelt. Anwendung und Ergebnis müssen noch geprüft werden."
+  },
+  "es": {
+    "saved": "Decisiones guardadas.",
+    "continue_review": "Continuar en el chat",
+    "next_help": "Continúa en el chat para aplicar esta revisión y comprobar el resultado. Guardar no acepta el encargo.",
+    "copy_help": "Copia esta solicitud en tu chat con Lucia.",
+    "handoff_sent": "Solicitud entregada. La aplicación y el resultado siguen pendientes de verificación."
+  }
+}

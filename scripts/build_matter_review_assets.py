@@ -24,15 +24,31 @@ def build() -> dict[Path, str]:
         "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
     )
     template = theme_html(template)
+    native_labels = json.loads(
+        (ROOT / "scripts/matter_native_review_labels.json").read_text()
+    )
+    native_vocabulary = {
+        language: {**words, **native_labels[language]}
+        for language, words in vocabulary.items()
+    }
     native_script = (ROOT / "scripts/matter_native_review.js").read_text()
     native_script = native_script.replace(
-        "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
+        "__LABELS__", json.dumps(native_vocabulary, ensure_ascii=True, indent=2)
     )
     native = (
         template.split("<script>", 1)[0]
         + "<script>"
         + native_script
         + "</script></body></html>\n"
+    )
+    continuation = (
+        '<section id="next-step" hidden><p id="next-help"></p>'
+        '<button id="continue-review" type="button"></button>'
+        '<label id="handoff-copy" hidden><span id="copy-help"></span>'
+        '<textarea id="handoff-text" readonly></textarea></label></section>'
+    )
+    native = native.replace(
+        '<div id="items"></div>', continuation + '<div id="items"></div>'
     )
     return {
         component

@@ -353,6 +353,16 @@ def test_lucia_and_vera_package_the_same_assurance_component_bytes(
             component=component,
         )
 
+    # Lucia deliberately excludes Vera-only reconciliation drivers.
+    if component == "studio-archive":
+        vera_only = {
+            "scripts/open_items_source_preflight.py",
+            "scripts/reconcile_open_items.py",
+        }
+        assert vera_only.isdisjoint(lucia_entries)
+        vera_entries = {
+            name: data for name, data in vera_entries.items() if name not in vera_only
+        }
     assert vera_entries
     handoffs = {
         "deep-research-validator": {

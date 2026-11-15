@@ -247,7 +247,17 @@ class MethodApp:
             )
             if path.is_file()
         )
-        labels = (ROOT / "scripts/legal_playbook_labels.json").read_text()
+        labels_by_language = json.loads(
+            (ROOT / "scripts/legal_playbook_labels.json").read_text()
+        )
+        ui_labels = json.loads((ROOT / "assets/method-ui-labels.json").read_text())
+        labels = json.dumps(
+            {
+                language: {**words, **ui_labels[language]}
+                for language, words in labels_by_language.items()
+            },
+            ensure_ascii=False,
+        )
         html = (
             (ROOT / "assets/playbook-editor.html")
             .read_text()

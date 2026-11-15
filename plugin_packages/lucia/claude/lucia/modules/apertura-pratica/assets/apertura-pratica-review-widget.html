@@ -216,7 +216,7 @@ h1{font-size:29px}
 </style></head><body><main>
 <header><div class="brand">LUCIA</div><h1 id="title"></h1><p id="intro"></p></header>
 <div class="toolbar" id="toolbar"><label><span id="reviewer-label"></span><input id="reviewer" autocomplete="name" maxlength="160" required></label><button id="save" disabled></button></div>
-<p id="status" role="status"></p><div id="items"></div>
+<p id="status" role="status"></p><section id="next-step" hidden><p id="next-help"></p><button id="continue-review" type="button"></button><label id="handoff-copy" hidden><span id="copy-help"></span><textarea id="handoff-text" readonly></textarea></label></section><div id="items"></div>
 </main><script>
 const VOCABULARY={
   "en": {
@@ -255,7 +255,7 @@ const VOCABULARY={
     "review_first": "To review",
     "no_payload": "No matter review is available.",
     "reviewer_required": "Enter the reviewer\u2019s name.",
-    "saved": "Decisions saved. Ask Lucia to apply this exact review after confirming it. The matter has not been opened.",
+    "saved": "Decisions saved.",
     "read_only": "Read the dossier here. Discuss decisions with Lucia; saving and applying them are separate steps.",
     "review_intro": "Start with the client and requested work. Review the facts and sources, then record the decisions needed before opening the matter. Saving alone does not accept the engagement.",
     "boundary": "This dossier supports lawyer review. It does not clear conflicts, accept an engagement or confirm a legal deadline.",
@@ -424,7 +424,11 @@ const VOCABULARY={
     "Matter evidence received or acquired": "Matter evidence received or acquired",
     "Research plans, authorities and validation": "Research plans, authorities and validation",
     "Draft and reviewed work product": "Draft and reviewed work product",
-    "Matter correspondence": "Matter correspondence"
+    "Matter correspondence": "Matter correspondence",
+    "continue_review": "Continue in chat",
+    "next_help": "Continue in chat to apply this review and check the result. Saving does not accept the engagement.",
+    "copy_help": "Copy this request into your Lucia chat.",
+    "handoff_sent": "Request delivered to chat. Application and result still need verification."
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -462,7 +466,7 @@ const VOCABULARY={
     "review_first": "Da rivedere",
     "no_payload": "Nessuna revisione della pratica disponibile.",
     "reviewer_required": "Indica il revisore.",
-    "saved": "Decisioni salvate. Dopo averle confermate, chiedi a Lucia di applicare questa revisione. La pratica non \u00e8 stata aperta.",
+    "saved": "Decisioni salvate.",
     "read_only": "Leggi qui il dossier. Discuti le decisioni con Lucia; salvataggio e applicazione sono passaggi distinti.",
     "review_intro": "Inizia dal cliente e dal lavoro richiesto. Rivedi fatti e fonti, poi registra le decisioni necessarie prima dell\u2019apertura. Il solo salvataggio non accetta l\u2019incarico.",
     "boundary": "Il dossier supporta la revisione dell\u2019avvocato. Non risolve i conflitti, non accetta l\u2019incarico e non conferma scadenze legali.",
@@ -631,7 +635,11 @@ const VOCABULARY={
     "Matter evidence received or acquired": "Documenti della pratica ricevuti o acquisiti",
     "Research plans, authorities and validation": "Piani di ricerca, fonti e verifiche",
     "Draft and reviewed work product": "Bozze ed elaborati riesaminati",
-    "Matter correspondence": "Corrispondenza della pratica"
+    "Matter correspondence": "Corrispondenza della pratica",
+    "continue_review": "Continua in chat",
+    "next_help": "Continua in chat per applicare questa revisione e controllare il risultato. Il salvataggio non accetta l\u2019incarico.",
+    "copy_help": "Copia questa richiesta nella chat di Lucia.",
+    "handoff_sent": "Richiesta consegnata alla chat. Applicazione e risultato restano da verificare."
   },
   "fr": {
     "page_title": "Pr\u00e9parer un dossier",
@@ -669,7 +677,7 @@ const VOCABULARY={
     "review_first": "\u00c0 revoir",
     "no_payload": "Aucune revue du dossier disponible.",
     "reviewer_required": "Indiquez le nom du r\u00e9viseur.",
-    "saved": "D\u00e9cisions enregistr\u00e9es. Apr\u00e8s confirmation, demandez \u00e0 Lucia d\u2019appliquer cette revue pr\u00e9cise. Le dossier n\u2019est pas ouvert.",
+    "saved": "D\u00e9cisions enregistr\u00e9es.",
     "read_only": "Lisez le dossier ici. Discutez des d\u00e9cisions avec Lucia ; leur enregistrement et leur application sont des \u00e9tapes distinctes.",
     "review_intro": "Commencez par le client et le travail demand\u00e9. Examinez faits et sources, puis enregistrez les d\u00e9cisions n\u00e9cessaires avant l\u2019ouverture. L\u2019enregistrement seul n\u2019accepte pas la mission.",
     "boundary": "Ce dossier pr\u00e9pare la revue de l\u2019avocat. Il ne l\u00e8ve pas les conflits, n\u2019accepte pas la mission et ne confirme pas de d\u00e9lai l\u00e9gal.",
@@ -838,7 +846,11 @@ const VOCABULARY={
     "Matter evidence received or acquired": "Documents du dossier re\u00e7us ou recueillis",
     "Research plans, authorities and validation": "Plans de recherche, sources et v\u00e9rifications",
     "Draft and reviewed work product": "Projets et documents r\u00e9vis\u00e9s",
-    "Matter correspondence": "Correspondance du dossier"
+    "Matter correspondence": "Correspondance du dossier",
+    "continue_review": "Continuer dans la conversation",
+    "next_help": "Continuez dans la conversation pour appliquer cette revue et v\u00e9rifier le r\u00e9sultat. L\u2019enregistrement ne vaut pas acceptation du mandat.",
+    "copy_help": "Copiez cette demande dans votre conversation avec Lucia.",
+    "handoff_sent": "Demande transmise. L\u2019application et le r\u00e9sultat restent \u00e0 v\u00e9rifier."
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -876,7 +888,7 @@ const VOCABULARY={
     "review_first": "Zu pr\u00fcfen",
     "no_payload": "Keine Aktenpr\u00fcfung verf\u00fcgbar.",
     "reviewer_required": "Namen des Pr\u00fcfers angeben.",
-    "saved": "Entscheidungen gespeichert. Nach Ihrer Best\u00e4tigung kann Lucia diese genaue Pr\u00fcfung anwenden. Die Angelegenheit wurde nicht er\u00f6ffnet.",
+    "saved": "Entscheidungen gespeichert.",
     "read_only": "Lesen Sie hier die Akte. Besprechen Sie Entscheidungen mit Lucia; Speichern und Anwenden sind getrennte Schritte.",
     "review_intro": "Beginnen Sie mit Mandant und angefragter Arbeit. Pr\u00fcfen Sie Angaben und Quellen und erfassen Sie die Entscheidungen vor der Er\u00f6ffnung. Speichern allein bedeutet keine Mandatsannahme.",
     "boundary": "Die Akte unterst\u00fctzt die anwaltliche Pr\u00fcfung. Sie kl\u00e4rt keine Konflikte, nimmt kein Mandat an und best\u00e4tigt keine rechtliche Frist.",
@@ -1045,7 +1057,11 @@ const VOCABULARY={
     "Matter evidence received or acquired": "Erhaltene oder beschaffte Aktenunterlagen",
     "Research plans, authorities and validation": "Recherchepl\u00e4ne, Quellen und Pr\u00fcfungen",
     "Draft and reviewed work product": "Entw\u00fcrfe und gepr\u00fcfte Arbeitsergebnisse",
-    "Matter correspondence": "Schriftverkehr zur Akte"
+    "Matter correspondence": "Schriftverkehr zur Akte",
+    "continue_review": "Im Chat fortfahren",
+    "next_help": "Im Chat diese Pr\u00fcfung anwenden und das Ergebnis kontrollieren. Speichern bedeutet keine Mandatsannahme.",
+    "copy_help": "Kopieren Sie diese Anfrage in Ihren Lucia-Chat.",
+    "handoff_sent": "Anfrage \u00fcbermittelt. Anwendung und Ergebnis m\u00fcssen noch gepr\u00fcft werden."
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -1083,7 +1099,7 @@ const VOCABULARY={
     "review_first": "Por revisar",
     "no_payload": "No hay revisi\u00f3n del expediente disponible.",
     "reviewer_required": "Indica el nombre del revisor.",
-    "saved": "Decisiones guardadas. Tras confirmarlas, pide a Lucia que aplique esta revisi\u00f3n concreta. El expediente no se ha abierto.",
+    "saved": "Decisiones guardadas.",
     "read_only": "Lee aqu\u00ed el expediente. Comenta las decisiones con Lucia; guardarlas y aplicarlas son pasos separados.",
     "review_intro": "Empieza por el cliente y el trabajo solicitado. Revisa hechos y fuentes y registra las decisiones previas a la apertura. Guardarlas no supone aceptar el encargo.",
     "boundary": "El expediente apoya la revisi\u00f3n del abogado. No acredita la ausencia de conflictos ni acepta el encargo ni confirma plazos legales.",
@@ -1252,11 +1268,16 @@ const VOCABULARY={
     "Matter evidence received or acquired": "Documentos del asunto recibidos u obtenidos",
     "Research plans, authorities and validation": "Planes de investigaci\u00f3n, fuentes y comprobaciones",
     "Draft and reviewed work product": "Borradores y documentos revisados",
-    "Matter correspondence": "Correspondencia del asunto"
+    "Matter correspondence": "Correspondencia del asunto",
+    "continue_review": "Continuar en el chat",
+    "next_help": "Contin\u00faa en el chat para aplicar esta revisi\u00f3n y comprobar el resultado. Guardar no acepta el encargo.",
+    "copy_help": "Copia esta solicitud en tu chat con Lucia.",
+    "handoff_sent": "Solicitud entregada. La aplicaci\u00f3n y el resultado siguen pendientes de verificaci\u00f3n."
   }
 };
 let EDITABLE=false,appSession,saveAttempt,busy=false,dirty=false;
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let host=null,savedContext=null,handoffBusy=false,handoffSent=false;
 let review=null,reviewHash='',language='en',evidenceNames={},partyNames={};
 const base=location.pathname.replace(/\/$/,'');
 const words=()=>VOCABULARY[language]||VOCABULARY.en;
@@ -1289,6 +1310,8 @@ function valueHtml(value,key){
 }
 function render(value){
  dirty=false;appSession=value?.session;EDITABLE=!!appSession;
+ savedContext=value?.pending_review_status==='current' && value.run_dir && value.pending_sha256 ? {run_dir:value.run_dir, pending_sha256:value.pending_sha256, review_payload_sha256:value.review_payload_sha256} : null;
+ handoffSent=false;
  const payload=value?.review_payload||value?.review||value;
  if(!payload||!Array.isArray(payload.items)){document.querySelector('#items').innerHTML=`<p>${esc(t('no_payload'))}</p>`;return;}
  review=payload;reviewHash=value?.review_payload_sha256||'';language=VOCABULARY[payload.language]?payload.language:'en';document.documentElement.lang=language;
@@ -1320,7 +1343,33 @@ function render(value){
   }
  }
  document.querySelector('#save').disabled=false;
+ updateContinuation();
 }
+function handoffText(){
+ return "Usa Lucia per proseguire la pratica selezionata. Leggi la skill apertura-pratica e verifica che i file correnti corrispondano a questa revisione salvata: " + JSON.stringify(savedContext) + ". Applica soltanto le decisioni salvate corrispondenti, quindi valida e mostra il risultato e le questioni ancora aperte. Se i file sono cambiati, mostra le differenze prima di applicare. Non accettare l'incarico, firmare, inviare o depositare documenti.";
+}
+function updateContinuation(){
+ const ready=!!savedContext && !dirty;
+ document.querySelector('#next-step').hidden=!ready;
+ document.querySelector('#next-help').textContent=t('next_help');
+ const button=document.querySelector('#continue-review');button.textContent=t('continue_review');button.disabled=busy || handoffBusy || handoffSent;
+ const canSend=host?.hostCapabilities?.message?.text || host?.hostCapabilities?.experimental?.['openai/message'];
+ button.hidden=!canSend;
+ document.querySelector('#handoff-copy').hidden=!!canSend;
+ document.querySelector('#copy-help').textContent=t('copy_help');
+ document.querySelector('#handoff-text').value=ready?handoffText():'';
+}
+document.querySelector('#continue-review').addEventListener('click',async()=>{
+ if(!savedContext || dirty || busy || handoffBusy || handoffSent)return;
+ handoffBusy=true;updateContinuation();
+ try{
+  const params={role:'user',content:[{type:'text',text:handoffText()}]};
+  if(host?.hostCapabilities?.experimental?.['openai/message'])params._meta={'openai/message':{target:'active'}};
+  const result=await request('ui/message',params);if(result?.isError)throw new Error(t('saved_unavailable'));
+  handoffSent=true;document.querySelector('#status').textContent=t('handoff_sent');
+ }catch(error){document.querySelector('#status').textContent=error.message;}
+ finally{handoffBusy=false;updateContinuation();}
+});
 let nextRequest=0;
 const pendingRequests=new Map();
 function request(method,params){return new Promise((resolve,reject)=>{
@@ -1343,7 +1392,7 @@ document.querySelector('#save').addEventListener('click',async()=>{
  finally{busy=false;document.querySelectorAll('input,textarea,select,button').forEach(node=>node.disabled=false);}
 });
 document.querySelector('#toolbar').hidden=true;
-document.querySelector('main').addEventListener('input',()=>{if(!busy){saveAttempt=null;dirty=true;}});
+document.querySelector('main').addEventListener('input',()=>{if(!busy){saveAttempt=null;dirty=true;updateContinuation();}});
 window.addEventListener('message',event=>{
  if(event.source!==parent || event.data?.jsonrpc!=='2.0')return;
  const message=event.data,item=pendingRequests.get(message.id);
@@ -1355,6 +1404,6 @@ window.addEventListener('message',event=>{
  if(message.method==='ui/resource-teardown')parent.postMessage({jsonrpc:'2.0',id:message.id,result:{}},'*');
 });
 request('ui/initialize',{protocolVersion:'2026-01-26',appInfo:{name:'Lucia matter opening',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline','fullscreen']}})
-.then(()=>parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*'))
+.then(result=>{host=result;updateContinuation();parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*');})
 .catch(()=>{document.querySelector('#status').textContent=t('no_payload');});
 </script></body></html>
