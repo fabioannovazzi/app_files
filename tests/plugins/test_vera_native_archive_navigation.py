@@ -928,3 +928,150 @@ def test_native_owned_archive_changed_bilancio_source_blocks_authorized_case_vie
         native_call(env, "vera_workspace_view", {"work_ref": run["work_ref"]})
 
     assert selected_run(env, binding)["inputs_valid"] is False
+
+
+def test_document_search_reuses_index_opens_verified_hit_and_keeps_scope(
+    registry_workspace,
+):
+    env, root, binding, _, other_id, _ = registry_workspace
+    source = Path(binding["client_root"]) / "credito.txt"
+    source.write_text(
+        "Il credito Transizione 5.0 e il contributo ISMEA: cumulo.", encoding="utf-8"
+    )
+    other = root / "Cliente Beta" / "credito-beta.txt"
+    other.write_text("Credito riservato al cliente Beta.", encoding="utf-8")
+    archive_cli(env, "refresh")
+    before = archive_cli(env, "status")
+    selection = {"client_id": binding["client_id"], "query": "credito"}
+    found = native_call(env, "vera_workspace_archive_search", selection)
+    hit = next(row for row in found["results"] if row["title"] == "credito.txt")
+    assert all("credito-beta" not in row["relative_path"] for row in found["results"])
+    opened = native_call(
+        env,
+        "vera_workspace_archive_source",
+        {**selection, "source_id": hit["source_id"]},
+    )
+    assert opened["source_verified"] is True
+    assert "ISMEA" in opened["fragments"][0]["text"]
+    whole = native_call(
+        env, "vera_workspace_archive_search", {"all_clients": True, "query": "credito"}
+    )
+    assert any(row["title"] == "credito-beta.txt" for row in whole["results"])
+    with pytest.raises(ValueError, match="scoped search"):
+        native_call(
+            env,
+            "vera_workspace_archive_source",
+            {"client_id": other_id, "query": "credito", "source_id": hit["source_id"]},
+        )
+    with pytest.raises(ValueError, match="explicitly search"):
+        native_call(env, "vera_workspace_archive_search", {"query": "credito"})
+    after = archive_cli(env, "status")
+    for key in (
+        "last_refresh_at",
+        "document_count",
+        "chunk_count",
+        "index_requires_refresh",
+    ):
+        assert before[key] == after[key]
+    source.write_text("Changed source bytes", encoding="utf-8")
+    with pytest.raises(ValueError, match="changed"):
+        native_call(
+            env,
+            "vera_workspace_archive_source",
+            {**selection, "source_id": hit["source_id"]},
+        )
+
+
+def test_archive_document_search_ui_typing_opening_and_stale_responses():
+    completed = subprocess.run(
+        [
+            NODE,
+            str(ROOT / "tests/plugins/archive_document_search_ui.cjs"),
+            str(ROOT / "plugins/vera/ui/workspace.js"),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=20,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert "Archive search UI behavior passed" in completed.stdout
+
+
+@pytest.mark.parametrize("new_session", [False, True])
+def test_search_recovers_added_scope_and_opens_original_hit(
+    registry_workspace, new_session
+):
+    env, root, binding, *_ = registry_workspace
+    source = Path(binding["client_root"]) / "credito.txt"
+    source.write_text("Credito ISMEA: documento originale.", encoding="utf-8")
+    archive_cli(env, "refresh")
+    added = root / "Nuovo cliente"
+    added.mkdir()
+    (added / "nuovo.txt").write_text("Credito: nuovo documento.", encoding="utf-8")
+    if new_session:
+        # Reproduce the screenshot: current configuration already knows the new
+        # scope, but the retained index fingerprint still describes the old set.
+        env = {
+            **env,
+            "VERA_STUDIO_ARCHIVE_SESSION_ID": "new-search-session",
+            "VERA_STUDIO_ARCHIVE_STATE_DIR": str(root.parent / "new-state"),
+            "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(root.parent / "shared-profile"),
+        }
+        # The explicit-state fixture does not use the shared cache. Preserve its
+        # old index as the new session's index before changing configuration.
+        import shutil
+
+        state = Path(env["VERA_STUDIO_ARCHIVE_STATE_DIR"])
+        state.mkdir(mode=0o700)
+        shutil.copyfile(
+            root.parent / "private-state/archive.sqlite3", state / "archive.sqlite3"
+        )
+        (state / "archive.sqlite3").chmod(0o600)
+        archive_cli(env, "configure", "--archive-root", str(root))
+    before = source.read_bytes()
+
+    found = native_call(
+        env, "vera_workspace_archive_search", {"all_clients": True, "query": "credito"}
+    )
+
+    assert {hit["title"] for hit in found["results"]} == {"credito.txt", "nuovo.txt"}
+    assert found["index_requires_refresh"] is False
+    hit = next(hit for hit in found["results"] if hit["title"] == "credito.txt")
+    opened = native_call(
+        env,
+        "vera_workspace_archive_source",
+        {"all_clients": True, "query": "credito", "source_id": hit["source_id"]},
+    )
+    assert opened["source_verified"] is True
+    assert source.read_bytes() == before
+
+
+def test_search_builds_missing_index_without_manual_refresh(registry_workspace):
+    env, _, binding, *_ = registry_workspace
+    source = Path(binding["client_root"]) / "credito.txt"
+    source.write_text("Credito ISMEA: primo indice.", encoding="utf-8")
+
+    found = native_call(
+        env,
+        "vera_workspace_archive_search",
+        {"client_id": binding["client_id"], "query": "credito"},
+    )
+
+    assert [hit["title"] for hit in found["results"]] == ["credito.txt"]
+    assert found["index_requires_refresh"] is False
+
+
+def test_unknown_client_does_not_trigger_indexing(registry_workspace):
+    env, *_ = registry_workspace
+    before = archive_cli(env, "status")
+
+    with pytest.raises(ValueError, match="not registered"):
+        native_call(
+            env,
+            "vera_workspace_archive_search",
+            {"client_id": "client_000000000000000000000000", "query": "credito"},
+        )
+
+    after = archive_cli(env, "status")
+    assert after["last_refresh_at"] == before["last_refresh_at"] is None
