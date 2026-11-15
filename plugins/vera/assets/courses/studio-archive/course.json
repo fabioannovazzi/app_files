@@ -55,7 +55,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_search_cache.py",
       "repository_path": "plugins/studio-archive/scripts/archive_search_cache.py",
-      "sha256": "cfc85707489c41ffbab7450572d207b620b57431c6cb4a0de2b3403dd73ac38b"
+      "sha256": "571dfbe0c9907c2c65a32fc30efdd55fd0f559cb32ad926e4bc82a4dc0ed497c"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",

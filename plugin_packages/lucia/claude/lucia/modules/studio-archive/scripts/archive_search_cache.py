@@ -66,15 +66,16 @@ def database_path(directory: Path, state: Path, root: Path, schema: str) -> Path
             )
         return target
     with _MUTEX:
-        for parent in (directory, directory.parent):
+        # mkdir(parents=True) applies its mode only to the leaf. Create each
+        # private profile level explicitly, including a newly selected profile.
+        for parent in (directory.parent.parent, directory.parent, directory):
             if parent.is_symlink():
                 raise ValueError(
                     "Archive search storage cannot contain symbolic links."
                 )
-        directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        if os.name == "posix":
-            directory.parent.chmod(0o700)
-            directory.chmod(0o700)
+            parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+            if os.name == "posix":
+                parent.chmod(0o700)
         with preferences.file_lock(
             directory / ".index-migration.lock", label="search migration"
         ):

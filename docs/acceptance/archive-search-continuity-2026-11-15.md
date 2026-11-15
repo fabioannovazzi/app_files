@@ -20,8 +20,8 @@ Validation:
   concurrent refresh.
 - 181 existing archive/component/concurrency/product-default tests passed.
 - New cache module coverage: 86% (subprocess coverage).
-- Enabled local Vera distribution updated through the supported installer to 0.1.644.
-- Real fresh-chat acceptance passed in chat `01a1de66-5cf8-78b2-b9a1-19038b7e3e53`:
+- Enabled local Vera distribution updated through the supported installer to 0.1.645.
+- Real fresh-chat acceptance passed in final chat `01a1de76-0ec1-7c42-8162-49512616d2f2`:
   all three original Eutekne questions returned the pertinent PDF first and opened
   with `source_verified=true`. Before and after: 20 documents, 88 chunks,
   `last_refresh_at=2026-11-15T08:31:10+00:00`, `index_requires_refresh=false`.
@@ -39,3 +39,12 @@ and four upload-instruction/helper preservation tests passed. The initial broad
 package run was interrupted after stale/missing-artifact failures; it is not claimed
 as a full-suite pass. Search implementation and instructions in the enabled Vera
 installation match the source fix byte-for-byte. No Marketplace publication occurred.
+
+The expanded recovery run initially found four failures: a newly selected private
+profile inherited broad parent-directory creation permissions. Version 0.1.645
+creates each private profile level explicitly with owner-only permissions. The
+corrected run passed 477 tests (three optional skips), including those four cases
+and the eight cross-process search regressions. The final fresh-chat acceptance
+above exercised the installed 0.1.645 independently of the earlier 0.1.644 test.
+Final package parity, upload-preservation and notification checks: 23 passed, two
+environment-dependent skips. The complete release build passed again for 0.1.645.
