@@ -1,0 +1,750 @@
+#!/usr/bin/env python3
+"""Command-line interface for Vera Studio Archive."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import os
+import sqlite3
+import sys
+from contextlib import ExitStack
+from pathlib import Path
+from typing import Any
+
+# Check before importing the worker and its dependencies so an unsupported
+# interpreter reports the launch error instead of failing on a newer API.
+if sys.implementation.name != "cpython" or sys.version_info[:2] != (3, 12):
+    logging.error("Studio Archive requires CPython 3.12; use its managed launcher.")
+    sys.stdout.write(
+        json.dumps(
+            {
+                "error": {
+                    "code": "unsupported_python_runtime",
+                    "message": (
+                        "Studio Archive requires CPython 3.12; running "
+                        f"{sys.implementation.name} {sys.version.split()[0]} at "
+                        f"{sys.executable}. Launch through "
+                        "scripts/managed_python_runtime.py --module studio-archive "
+                        "run scripts/studio_archive.py."
+                    ),
+                }
+            }
+        )
+        + "\n"
+    )
+    raise SystemExit(1)
+
+from archive_core import (
+    CLIENT_WORKFLOW_IDS,
+    VERA_CLIENT_WORKFLOW_IDS,
+    ArchiveError,
+    authorize_studio_google_drive,
+    begin_studio_incarico,
+    bind_studio_client_google_drive,
+    cancel_studio_client_workflow,
+    check_studio_import_sources,
+    checkpoint_studio_client_workflow,
+    close_studio_client_engagement,
+    complete_studio_client_workflow,
+    configure_archive,
+    copy_studio_client_source_folder,
+    create_studio_client,
+    create_studio_client_engagement,
+    diagnose_archive_access,
+    fail_studio_client_workflow,
+    finalize_studio_client_workflow,
+    get_studio_archive_organization_inventory,
+    get_studio_client_folder,
+    get_studio_incarico,
+    import_studio_client_document,
+    list_studio_client_engagements,
+    list_studio_clients,
+    map_studio_legacy_incarichi,
+    match_studio_email_client,
+    open_archive_source,
+    open_studio_archive_organization_item,
+    plan_gmail_client_search,
+    prepare_studio_client_workflow,
+    publish_studio_incarico_result,
+    read_studio_incarico_document,
+    read_studio_run_artifact,
+    recover_studio_client_ledger,
+    refresh_archive,
+    report_studio_client_retention,
+    resolve_studio_client_identity,
+    restore_studio_client_workflow,
+    reuse_studio_incarico_result,
+    search_archive,
+    set_studio_client_identity,
+    setup_archive_with_folder_picker,
+    snapshot_studio_client_folder,
+    snapshot_studio_client_google_drive,
+    start_check_entries_from_sample,
+    start_studio_client_workflow,
+    studio_archive_status,
+    studio_google_drive_status,
+    update_studio_incarico,
+    use_studio_run_context,
+    verify_studio_client_inputs,
+    verify_studio_run_report,
+    write_studio_run_artifact,
+)
+from archive_error_reporting import record_error
+
+__all__ = ["main"]
+
+
+def _emit(payload: dict[str, Any]) -> None:
+    # JSON escapes preserve every decoded value on ASCII/legacy Windows pipes.
+    sys.stdout.write(json.dumps(payload, ensure_ascii=True, sort_keys=True) + "\n")
+
+
+def _parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--context",
+        type=Path,
+        help="Verified saved context; use before the command when Archive lookup is unavailable",
+    )
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    subparsers.add_parser("record-error", help=argparse.SUPPRESS)
+
+    subparsers.add_parser("setup")
+
+    configure = subparsers.add_parser("configure")
+    configure.add_argument("--archive-root", type=Path, required=True)
+    configure.add_argument("--make-studio-default", action="store_true")
+    configure.add_argument(
+        "--host-folder-access-approved",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
+
+    diagnose_access = subparsers.add_parser("diagnose-access")
+    diagnose_access.add_argument("--archive-root", type=Path, required=True)
+    diagnose_access.add_argument(
+        "--host-folder-access-approved",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
+
+    subparsers.add_parser("status")
+    subparsers.add_parser("clients")
+
+    resolve_client = subparsers.add_parser("resolve-client")
+    resolve_client.add_argument(
+        "--identity-kind",
+        choices=["email_address", "legal_name", "tax_identifier"],
+        required=True,
+    )
+    resolve_client.add_argument("--identity-value", required=True)
+
+    client_folder = subparsers.add_parser("client-folder")
+    client_folder.add_argument("--client-id", required=True)
+
+    create_client = subparsers.add_parser("create-client")
+    create_client.add_argument("--legal-name", required=True)
+    create_client.add_argument("--general-workspace", action="store_true")
+    create_client.add_argument("--email-address", action="append", default=[])
+    create_client.add_argument("--tax-identifier", action="append", default=[])
+
+    create_engagement = subparsers.add_parser("create-engagement")
+    create_engagement.add_argument("--client-id", required=True)
+    create_engagement.add_argument("--engagement-label", required=True)
+    create_engagement.add_argument("--idempotency-key")
+
+    check_sources = subparsers.add_parser("check-import-sources")
+    check_sources.add_argument(
+        "--source-path", type=Path, action="append", required=True
+    )
+    check_sources.add_argument("--expected-sha256", action="append")
+
+    import_document = subparsers.add_parser("import-document")
+    import_document.add_argument("--client-id", required=True)
+    import_document.add_argument("--source-path", type=Path, required=True)
+    import_document.add_argument(
+        "--role", choices=["journal", "source", "support"], required=True
+    )
+    import_document.add_argument("--engagement-id", required=True)
+    import_document.add_argument("--expected-sha256")
+
+    copy_folder = subparsers.add_parser("copy-client-source-folder")
+    copy_folder.add_argument("--client-id", required=True)
+    copy_folder.add_argument("--engagement-id", required=True)
+    copy_folder.add_argument("--source-path", type=Path, required=True)
+    copy_folder.add_argument("--destination-name")
+    copy_folder.add_argument("--copy-authorized", action="store_true", required=True)
+
+    engagements = subparsers.add_parser("engagements")
+    engagements.add_argument("--client-id", required=True)
+
+    verification = subparsers.add_parser("verify-inputs")
+    verification.add_argument("--client-id", required=True)
+    verification.add_argument("--engagement-id", required=True)
+    verification.add_argument("--input-id", action="append", required=True)
+    verification.add_argument("--expected-receipts-json")
+    verification.add_argument("--require-exact-input-set", action="store_true")
+
+    snapshot_folder = subparsers.add_parser("snapshot-client-folder")
+    snapshot_folder.add_argument("--client-id", required=True)
+    snapshot_folder.add_argument("--engagement-id", required=True)
+
+    authorize_drive = subparsers.add_parser("authorize-google-drive")
+    authorize_drive.add_argument("--client-secrets", type=Path, required=True)
+
+    subparsers.add_parser("google-drive-status")
+
+    bind_drive = subparsers.add_parser("bind-google-drive")
+    bind_drive.add_argument("--client-id", required=True)
+    bind_drive.add_argument("--folder-id", required=True)
+
+    snapshot_drive = subparsers.add_parser("snapshot-google-drive")
+    snapshot_drive.add_argument("--client-id", required=True)
+    snapshot_drive.add_argument("--engagement-id", required=True)
+
+    inventory = subparsers.add_parser("archive-organization-inventory")
+    inventory.add_argument("--client-id", required=True)
+    inventory.add_argument("--engagement-id", required=True)
+    inventory.add_argument("--snapshot-input-id", required=True)
+
+    open_item = subparsers.add_parser("open-archive-organization-item")
+    open_item.add_argument("--client-id", required=True)
+    open_item.add_argument("--engagement-id", required=True)
+    open_item.add_argument("--snapshot-input-id", required=True)
+    open_item.add_argument("--item-ref", required=True)
+
+    incarico = subparsers.add_parser("incarico")
+    incarico.add_argument("--client-id", required=True)
+    incarico.add_argument("--engagement-id", required=True)
+    incarico.add_argument(
+        "--fields-json", help="Complete assignment fields; omit for read-only"
+    )
+    incarico.add_argument("--expected-revision", default="")
+    map_legacy = subparsers.add_parser("map-legacy-incarichi")
+    for flag in ("client-id", "engagement-id", "targets-json"):
+        map_legacy.add_argument("--" + flag, required=True)
+    open_incarico = subparsers.add_parser("open-incarico-document")
+    for flag in ("client-id", "engagement-id", "reference-json"):
+        open_incarico.add_argument("--" + flag, required=True)
+    begin_incarico = subparsers.add_parser("begin-incarico")
+    for flag in ("client-id", "engagement-id", "workflow-id", "purpose"):
+        begin_incarico.add_argument("--" + flag, required=True)
+    begin_incarico.add_argument("--originating-conversation-json")
+    publish_result = subparsers.add_parser("publish-incarico-result")
+    for flag in (
+        "client-id",
+        "engagement-id",
+        "entry-key",
+        "label",
+        "files-json",
+        "idempotency-key",
+    ):
+        publish_result.add_argument("--" + flag, required=True)
+    publish_result.add_argument("--expected-revision", type=int, required=True)
+    publish_result.add_argument("--primary-format")
+    reuse_result = subparsers.add_parser("reuse-incarico-result")
+    for flag in ("client-id", "engagement-id", "origin-json"):
+        reuse_result.add_argument("--" + flag, required=True)
+    reuse_result.add_argument(
+        "--role", choices=["source", "support", "journal"], required=True
+    )
+
+    prepare_workflow = subparsers.add_parser("prepare-workflow")
+    prepare_workflow.add_argument("--engagement-id", required=True)
+    prepare_workflow.add_argument(
+        "--workflow-id",
+        choices=list(
+            CLIENT_WORKFLOW_IDS
+            if os.environ.get("LUCIA_ASSURANCE_HOST") == "1"
+            else VERA_CLIENT_WORKFLOW_IDS
+        ),
+        required=True,
+    )
+
+    check_entries_handoff = subparsers.add_parser("start-check-entries-from-sample")
+    check_entries_handoff.add_argument("--client-id", required=True)
+    check_entries_handoff.add_argument("--engagement-id", required=True)
+    check_entries_handoff.add_argument("--sample-run-id", required=True)
+    check_entries_handoff.add_argument("--source-engagement-id")
+    check_entries_handoff.add_argument(
+        "--support-input-id", action="append", default=[]
+    )
+    check_entries_handoff.add_argument("--label")
+    check_entries_handoff.add_argument("--purpose")
+    check_entries_handoff.add_argument("--idempotency-key")
+    check_entries_handoff.add_argument("--new-run", action="store_true")
+    prepare_workflow.add_argument("--input-id", action="append", default=[])
+    prepare_workflow.add_argument(
+        "--upstream-artifact",
+        action="append",
+        default=[],
+        help="Exact upstream reference formatted run_id:artifact_id:role.",
+    )
+    prepare_workflow.add_argument("--label")
+    prepare_workflow.add_argument("--purpose")
+    prepare_workflow.add_argument(
+        "--idempotency-key",
+        help="Stable request key; use a different key for each intentionally separate run.",
+    )
+    prepare_workflow.add_argument(
+        "--new-run",
+        action="store_true",
+        help="Create the explicit-new namespace; retries with the same key remain idempotent.",
+    )
+
+    for command in (
+        "start-workflow",
+        "cancel-workflow",
+        "complete-workflow",
+        "verify-run-report",
+        "checkpoint-workflow",
+        "restore-workflow",
+    ):
+        lifecycle = subparsers.add_parser(command)
+        lifecycle.add_argument("--client-id", required=True)
+        lifecycle.add_argument("--engagement-id", required=True)
+        lifecycle.add_argument("--run-id", required=True)
+        if command == "restore-workflow":
+            lifecycle.add_argument("--destination", required=True)
+
+    write_artifact = subparsers.add_parser("write-run-artifact")
+    write_artifact.add_argument("--client-id", required=True)
+    write_artifact.add_argument("--engagement-id", required=True)
+    write_artifact.add_argument("--run-id", required=True)
+    write_artifact.add_argument("--name", required=True)
+    artifact_content = write_artifact.add_mutually_exclusive_group(required=True)
+    artifact_content.add_argument("--content")
+    artifact_content.add_argument("--content-stdin", action="store_true")
+
+    read_artifact = subparsers.add_parser("read-run-artifact")
+    read_artifact.add_argument("--client-id", required=True)
+    read_artifact.add_argument("--engagement-id", required=True)
+    read_artifact.add_argument("--run-id", required=True)
+    read_artifact.add_argument("--path", required=True)
+    read_artifact.add_argument("--offset", type=int, default=0)
+    read_artifact.add_argument("--limit", type=int)
+    read_artifact.add_argument("--column", type=int, action="append")
+
+    fail_workflow = subparsers.add_parser("fail-workflow")
+    fail_workflow.add_argument("--client-id", required=True)
+    fail_workflow.add_argument("--engagement-id", required=True)
+    fail_workflow.add_argument("--run-id", required=True)
+    fail_workflow.add_argument("--reason", required=True)
+
+    finalize_workflow = subparsers.add_parser("finalize-workflow")
+    finalize_workflow.add_argument("--client-id", required=True)
+    finalize_workflow.add_argument("--engagement-id", required=True)
+    finalize_workflow.add_argument("--run-id", required=True)
+    artifact_source = finalize_workflow.add_mutually_exclusive_group()
+    artifact_source.add_argument(
+        "--artifacts-json",
+        help="Omit to list this run’s physical output paths before declaring them.",
+    )
+    artifact_source.add_argument(
+        "--artifacts-stdin",
+        action="store_true",
+        help="Read artifact declarations from standard input without command-line size limits.",
+    )
+    finalize_workflow.add_argument("--expected-declaration-sha256")
+
+    close_engagement = subparsers.add_parser("close-engagement")
+    close_engagement.add_argument("--client-id", required=True)
+    close_engagement.add_argument("--engagement-id", required=True)
+
+    subparsers.add_parser("recover-ledger")
+
+    retention = subparsers.add_parser("retention-report")
+    retention.add_argument("--client-id", required=True)
+    retention.add_argument("--older-than-days", type=int)
+
+    configure_client = subparsers.add_parser("configure-client")
+    configure_client.add_argument("--general-workspace", action="store_true")
+    configure_client.add_argument("--scope-id", required=True)
+    configure_client.add_argument("--email-address", action="append", default=[])
+    configure_client.add_argument("--legal-name", action="append", default=[])
+    configure_client.add_argument("--tax-identifier", action="append", default=[])
+    configure_client.add_argument("--replace-orphaned-scope-id")
+
+    refresh = subparsers.add_parser("refresh")
+    refresh.add_argument("--rebuild", action="store_true")
+    refresh.add_argument("--enable-ocr", action="store_true")
+    refresh.add_argument(
+        "--ocr-language", choices=("it", "fr", "de", "en", "es"), default="it"
+    )
+
+    search = subparsers.add_parser("search")
+    search.add_argument("--query", required=True)
+    search.add_argument("--scope-id", required=True)
+    search.add_argument("--limit", type=int, default=10)
+
+    open_source = subparsers.add_parser("open")
+    open_source.add_argument("--source-id", required=True)
+    open_source.add_argument("--context-chunks", type=int, default=0)
+
+    plan_gmail = subparsers.add_parser("plan-gmail")
+    plan_gmail.add_argument("--scope-id", required=True)
+    plan_gmail.add_argument("--topic")
+    plan_gmail.add_argument("--after")
+    plan_gmail.add_argument("--before")
+
+    match_email = subparsers.add_parser("match-email")
+    match_email.add_argument("--header-address", action="append", required=True)
+    match_email.add_argument("--headers-complete", action="store_true")
+    match_email.add_argument("--expected-scope-id")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Execute one Studio Archive operation and emit structured JSON."""
+
+    args = _parser().parse_args(argv)
+    with ExitStack() as stack:
+        return _execute(args, stack)
+
+
+def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
+    try:
+        stack.enter_context(use_studio_run_context(args.context))
+        if args.command == "record-error":
+            envelope = json.load(sys.stdin)
+            result = {
+                "recorded": record_error(
+                    envelope["arguments"], envelope["payload"], channel="mcp"
+                )
+            }
+        elif args.command == "setup":
+            result = setup_archive_with_folder_picker()
+        elif args.command == "configure":
+            result = configure_archive(
+                args.archive_root,
+                host_access_approved=args.host_folder_access_approved,
+                make_studio_default=args.make_studio_default,
+            )
+        elif args.command == "diagnose-access":
+            result = diagnose_archive_access(
+                args.archive_root,
+                host_access_approved=args.host_folder_access_approved,
+            )
+        elif args.command == "status":
+            result = studio_archive_status()
+        elif args.command == "clients":
+            result = list_studio_clients()
+        elif args.command == "resolve-client":
+            result = resolve_studio_client_identity(
+                args.identity_kind,
+                args.identity_value,
+            )
+        elif args.command == "client-folder":
+            result = get_studio_client_folder(args.client_id)
+        elif args.command == "check-import-sources":
+            result = check_studio_import_sources(
+                args.source_path, expected_sha256=args.expected_sha256
+            )
+        elif args.command == "create-client":
+            result = create_studio_client(
+                args.legal_name,
+                general_workspace=args.general_workspace,
+                email_addresses=args.email_address,
+                tax_identifiers=args.tax_identifier,
+            )
+        elif args.command == "create-engagement":
+            result = create_studio_client_engagement(
+                args.client_id,
+                args.engagement_label,
+                idempotency_key=args.idempotency_key,
+            )
+        elif args.command == "copy-client-source-folder":
+            result = copy_studio_client_source_folder(
+                args.client_id,
+                args.engagement_id,
+                args.source_path,
+                copy_authorized=args.copy_authorized,
+                destination_name=args.destination_name,
+            )
+        elif args.command == "import-document":
+            result = import_studio_client_document(
+                args.client_id,
+                args.source_path,
+                args.role,
+                engagement_id=args.engagement_id,
+                expected_sha256=args.expected_sha256,
+            )
+        elif args.command == "engagements":
+            result = list_studio_client_engagements(args.client_id)
+        elif args.command == "verify-inputs":
+            result = verify_studio_client_inputs(
+                args.client_id,
+                args.engagement_id,
+                args.input_id,
+                expected_receipts=(
+                    json.loads(args.expected_receipts_json)
+                    if args.expected_receipts_json is not None
+                    else None
+                ),
+                require_exact_input_set=args.require_exact_input_set,
+            )
+        elif args.command == "snapshot-client-folder":
+            result = snapshot_studio_client_folder(
+                args.client_id,
+                args.engagement_id,
+            )
+        elif args.command == "authorize-google-drive":
+            result = authorize_studio_google_drive(args.client_secrets)
+        elif args.command == "google-drive-status":
+            result = studio_google_drive_status()
+        elif args.command == "bind-google-drive":
+            result = bind_studio_client_google_drive(
+                args.client_id,
+                args.folder_id,
+            )
+        elif args.command == "snapshot-google-drive":
+            result = snapshot_studio_client_google_drive(
+                args.client_id,
+                args.engagement_id,
+            )
+        elif args.command == "archive-organization-inventory":
+            result = get_studio_archive_organization_inventory(
+                args.client_id,
+                args.engagement_id,
+                args.snapshot_input_id,
+            )
+        elif args.command == "open-archive-organization-item":
+            result = open_studio_archive_organization_item(
+                args.client_id,
+                args.engagement_id,
+                args.snapshot_input_id,
+                args.item_ref,
+            )
+        elif args.command == "map-legacy-incarichi":
+            result = map_studio_legacy_incarichi(
+                args.client_id, args.engagement_id, json.loads(args.targets_json)
+            )
+        elif args.command == "open-incarico-document":
+            result = read_studio_incarico_document(
+                args.client_id, args.engagement_id, json.loads(args.reference_json)
+            )
+        elif args.command == "begin-incarico":
+            result = begin_studio_incarico(
+                args.client_id,
+                args.engagement_id,
+                args.workflow_id,
+                args.purpose,
+                originating_conversation=(
+                    json.loads(args.originating_conversation_json)
+                    if args.originating_conversation_json
+                    else None
+                ),
+            )
+        elif args.command == "publish-incarico-result":
+            result = publish_studio_incarico_result(
+                args.client_id,
+                args.engagement_id,
+                args.entry_key,
+                args.label,
+                json.loads(args.files_json),
+                args.expected_revision,
+                args.idempotency_key,
+                primary_format=args.primary_format,
+            )
+        elif args.command == "reuse-incarico-result":
+            result = reuse_studio_incarico_result(
+                args.client_id,
+                args.engagement_id,
+                json.loads(args.origin_json),
+                args.role,
+            )
+        elif args.command == "incarico":
+            if args.fields_json is None:
+                result = get_studio_incarico(args.client_id, args.engagement_id)
+            else:
+                fields = json.loads(args.fields_json)
+                if not isinstance(fields, dict):
+                    raise ArchiveError("Assignment fields must be an object")
+                result = update_studio_incarico(
+                    args.client_id, args.engagement_id, fields, args.expected_revision
+                )
+        elif args.command == "prepare-workflow":
+            upstream_artifacts = []
+            for raw_reference in args.upstream_artifact:
+                parts = raw_reference.split(":", maxsplit=2)
+                if len(parts) != 3:
+                    raise ArchiveError(
+                        "Upstream artifact must be run_id:artifact_id:role."
+                    )
+                origin = parts[0].split("/", maxsplit=1)
+                upstream_artifacts.append(
+                    {
+                        **({"engagement_id": origin[0]} if len(origin) == 2 else {}),
+                        "run_id": origin[-1],
+                        "artifact_id": parts[1],
+                        "role": parts[2],
+                    }
+                )
+            result = prepare_studio_client_workflow(
+                args.engagement_id,
+                args.workflow_id,
+                input_ids=args.input_id,
+                upstream_artifacts=upstream_artifacts,
+                label=args.label,
+                purpose=args.purpose,
+                idempotency_key=args.idempotency_key,
+                new_run=args.new_run,
+            )
+        elif args.command == "verify-run-report":
+            result = verify_studio_run_report(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "write-run-artifact":
+            content = sys.stdin.read(65537) if args.content_stdin else args.content
+            result = write_studio_run_artifact(
+                args.client_id, args.engagement_id, args.run_id, args.name, content
+            )
+        elif args.command == "read-run-artifact":
+            result = read_studio_run_artifact(
+                args.client_id,
+                args.engagement_id,
+                args.run_id,
+                args.path,
+                offset=args.offset,
+                limit=args.limit,
+                columns=args.column,
+            )
+        elif args.command == "start-workflow":
+            result = start_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "checkpoint-workflow":
+            result = checkpoint_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "restore-workflow":
+            result = restore_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id, args.destination
+            )
+        elif args.command == "start-check-entries-from-sample":
+            result = start_check_entries_from_sample(
+                args.client_id,
+                args.engagement_id,
+                args.sample_run_id,
+                support_input_ids=args.support_input_id,
+                source_engagement_id=args.source_engagement_id,
+                label=args.label,
+                purpose=args.purpose,
+                idempotency_key=args.idempotency_key,
+                new_run=args.new_run,
+            )
+        elif args.command == "fail-workflow":
+            result = fail_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id, args.reason
+            )
+        elif args.command == "cancel-workflow":
+            result = cancel_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "finalize-workflow":
+            artifact_payload = None
+            if args.artifacts_json is not None:
+                artifact_payload = json.loads(args.artifacts_json)
+            elif args.artifacts_stdin:
+                artifact_payload = json.load(sys.stdin)
+            if (
+                args.artifacts_json is not None or args.artifacts_stdin
+            ) and not isinstance(artifact_payload, list):
+                raise ArchiveError("Artifact declarations must contain a JSON array.")
+            result = finalize_studio_client_workflow(
+                args.client_id,
+                args.engagement_id,
+                args.run_id,
+                artifact_payload,
+                expected_declaration_sha256=args.expected_declaration_sha256,
+            )
+        elif args.command == "complete-workflow":
+            result = complete_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "close-engagement":
+            result = close_studio_client_engagement(args.client_id, args.engagement_id)
+        elif args.command == "recover-ledger":
+            result = recover_studio_client_ledger()
+        elif args.command == "retention-report":
+            result = report_studio_client_retention(
+                args.client_id, older_than_days=args.older_than_days
+            )
+        elif args.command == "configure-client":
+            result = set_studio_client_identity(
+                args.scope_id,
+                general_workspace=args.general_workspace,
+                email_addresses=args.email_address,
+                legal_names=args.legal_name,
+                tax_identifiers=args.tax_identifier,
+                replace_orphaned_scope_id=args.replace_orphaned_scope_id,
+            )
+        elif args.command == "refresh":
+            result = refresh_archive(
+                rebuild=args.rebuild,
+                enable_ocr=args.enable_ocr,
+                ocr_language=args.ocr_language,
+            )
+        elif args.command == "search":
+            result = search_archive(
+                args.query,
+                scope_id=args.scope_id,
+                limit=args.limit,
+            )
+        elif args.command == "open":
+            result = open_archive_source(
+                args.source_id,
+                context_chunks=args.context_chunks,
+            )
+        elif args.command == "plan-gmail":
+            result = plan_gmail_client_search(
+                args.scope_id,
+                topic=args.topic,
+                after=args.after,
+                before=args.before,
+            )
+        else:
+            result = match_studio_email_client(
+                args.header_address,
+                headers_complete=args.headers_complete,
+                expected_scope_id=args.expected_scope_id,
+            )
+    except (ArchiveError, OSError, ValueError, sqlite3.Error) as exc:
+        # Keep the exception alive for the source-bound collector and retain
+        # its traceback locally; the JSON response remains the caller's result.
+        logging.exception("Studio Archive operation failed")
+        error = {
+            "code": getattr(exc, "code", "archive_operation_failed"),
+            "message": str(exc),
+        }
+        details = getattr(exc, "details", None)
+        if isinstance(details, dict):
+            error["details"] = details
+        payload = {"error": error}
+        if (
+            args.command != "record-error"
+            and os.environ.get("VERA_STUDIO_ARCHIVE_MCP") != "1"
+        ):
+            try:
+                record_error(vars(args), payload, channel="cli")
+            except (OSError, ValueError, sqlite3.Error):
+                logging.exception("Studio Archive error recording failed")
+                payload["reporting"] = {
+                    "status": "unavailable",
+                    "code": "archive_reporting_failed",
+                    "measurement_gap": True,
+                    "retry_action": "retry_reporting_only",
+                }
+        _emit(payload)
+        return 1
+    _emit(result)
+    return (
+        1 if args.command == "verify-inputs" and result["verified"] is not True else 0
+    )
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

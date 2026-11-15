@@ -14,6 +14,8 @@ their bounded purpose matches the requested contribution.
 
 ## Professional workflows
 
+- `studio-archive`: select a registered client and engagement, then create or
+  resume its existing advisory case with saved workpapers and privacy reports.
 - `advisory-brief-planner`: turn a natural advisory assignment into the
   reviewable `advisory_contract.json` assignment and generation-handoff
   contract, then route execution to the existing Clara workflow that retains

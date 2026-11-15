@@ -19,7 +19,8 @@
   },
   "infrastructure": [
     "learn-with-clara",
-    "privacy-surface-review"
+    "privacy-surface-review",
+    "studio-archive"
   ],
   "instrumented_from_version": "0.1.298",
   "instrumented_version_released_on": "2026-10-18"

@@ -691,6 +691,7 @@ CLARA_COWORK_INCLUDED_SKILLS = frozenset(
         "html-deck",
         "reporting-engine",
         "research-video",
+        "studio-archive",
     }
 )
 CLARA_COWORK_OMITTED_SKILLS = frozenset(
@@ -3156,6 +3157,12 @@ def _clara_package_entries(
     entries["mcp-services.json"] = project_claude_mcp(
         source_entries["mcp-services.json"]
     )
+    # The Codex directory app depends on its MCP resource host. Cowork retains
+    # the same Archive/case Python helpers through the documented CLI fallback.
+    services = json.loads(entries["mcp-services.json"])
+    for name in ("claraStudioArchive", "claraArchivePanel"):
+        services["mcpServers"].pop(name, None)
+    entries["mcp-services.json"] = (json.dumps(services, indent=2) + "\n").encode()
     _overlay_cowork_agents(entries, plugin="clara")
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     components = builder.embedded_plugin_names(ROOT / "plugins" / "clara")

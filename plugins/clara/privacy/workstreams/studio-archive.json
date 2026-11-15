@@ -1,0 +1,55 @@
+{
+  "schema_version": 3,
+  "workstream": "studio-archive",
+  "display_name": "Clara Studio Archive",
+  "role": "internal_engine",
+  "governed_paths": [
+    "scripts/clara_studio_archive.py",
+    "scripts/studio_archive_mcp.cjs",
+    "assets/studio-archive.html",
+    "skills/studio-archive/SKILL.md",
+    "mcp-services.json",
+    "components.json"
+  ],
+  "governed_repository_paths": [
+    "plugins/studio-archive/scripts/archive_core.py",
+    "plugins/studio-archive/scripts/client_ledger.py",
+    "plugins/studio-archive/mcp/server.cjs"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-archive-case",
+        "purpose": "Recover the selected client engagement and advisory workspace",
+        "content": "Safe directory labels and stable client/engagement IDs; selected case path and manifest including client, project, objective, audience and language. Panel labels are app-only metadata; its chat handoff sends selected IDs. Subsequent agent reads of case briefs, workpapers or selected imported evidence enter model context. The adapter does not return source documents automatically.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [],
+  "service_ids": [
+    "managed-python-runtime",
+    "operational-incidents",
+    "workflow-usage"
+  ],
+  "public_explanations": {},
+  "review": {
+    "reviewed_at": "2026-11-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "15e607ab03a920e7b72ed2f934923cf5078438c19bcfdaa774cc05ce09a4cfaa"
+  }
+}

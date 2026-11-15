@@ -146,9 +146,14 @@ def test_product_package_preserves_tools_behind_one_shared_entry(product, host):
     assert set(servers) == {product}
     assert servers[product]["command"] == "node"
     assert servers[product]["args"][0].endswith("/scripts/on_demand_mcp.cjs")
-    assert set(services) == set(source) - (
-        {"courseChats"} if host == "cowork" else set()
-    )
+    omitted = {"courseChats"} if host == "cowork" else set()
+    if (product, host) == ("clara", "cowork"):
+        omitted |= {"claraStudioArchive", "claraArchivePanel"}
+        assert "scripts/clara_studio_archive.py" in entries
+        assert "modules/studio-archive/scripts/archive_core.py" in entries
+        assert "modules/studio-archive/scripts/client_ledger.py" in entries
+        assert b"CLI fallback" in entries["skills/mparanza-studio-archive/SKILL.md"]
+    assert set(services) == set(source) - omitted
     assert catalog["product"] == product
     assert {service["name"] for service in catalog["services"]} == set(services)
     assert all(service["tools"] for service in catalog["services"])

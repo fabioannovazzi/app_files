@@ -1,0 +1,1198 @@
+"use strict";
+
+const fs = require("node:fs");
+const path = require("node:path");
+
+function isPlainObject(value) {
+  return value != null && typeof value === "object" && !Array.isArray(value);
+}
+
+// BEGIN EMBEDDABLE REVIEW OUTPUT TRANSACTION
+const GENERATED_REVIEW_TRANSACTION_LIMITS = {
+  maxEntryCount: 20_000,
+  maxFileBytes: 128 * 1024 * 1024,
+  maxTotalBytes: 512 * 1024 * 1024,
+};
+
+let generatedReviewWriteCounter = 0;
+const GENERATED_REVIEW_TRANSACTION_ERROR_KIND = Symbol(
+  "generated-review-transaction-error-kind",
+);
+const GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR = Symbol(
+  "generated-review-transaction-operation-error",
+);
+
+function generatedReviewCreateTempDirectory(prefix) {
+  // Windows mkdtemp needs an extended-length path for deep client folders.
+  // Keep the ordinary spelling for identity comparisons and persisted receipts.
+  const created = fs.mkdtempSync(path.toNamespacedPath(prefix));
+  return path.join(path.dirname(prefix), path.basename(created));
+}
+
+function generatedReviewPathEntryStat(targetPath) {
+  try {
+    return fs.lstatSync(targetPath);
+  } catch (error) {
+    if (error?.code === "ENOENT") return null;
+    throw error;
+  }
+}
+
+function generatedReviewPathEntryExists(targetPath) {
+  return generatedReviewPathEntryStat(targetPath) !== null;
+}
+
+function generatedReviewRemoveExactPath(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return;
+  if (entry.isDirectory() && !entry.isSymbolicLink()) {
+    fs.rmSync(targetPath, {
+      recursive: true,
+      force: true,
+      maxRetries: 3,
+      retryDelay: 25,
+    });
+    return;
+  }
+  fs.unlinkSync(targetPath);
+}
+
+function generatedReviewDirectoryIdentity(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+    throw new Error("Review transaction root must be a real directory.");
+  }
+  return { dev: entry.dev, ino: entry.ino };
+}
+
+function generatedReviewIdentityMatches(entry, identity) {
+  return (
+    entry != null &&
+    entry.isDirectory() &&
+    !entry.isSymbolicLink() &&
+    entry.dev === identity.dev &&
+    entry.ino === identity.ino
+  );
+}
+
+function generatedReviewTrackedRootsWithinParent(outputParent, identity) {
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  const matches = [];
+  for (const name of fs.readdirSync(outputParent).sort()) {
+    const candidate = path.join(outputParent, name);
+    const entry = generatedReviewPathEntryStat(candidate);
+    if (generatedReviewIdentityMatches(entry, identity)) {
+      matches.push(candidate);
+    }
+  }
+  return matches;
+}
+
+function generatedReviewRemoveTrackedRootWithinParent(
+  outputParent,
+  expectedPath,
+  identity,
+) {
+  const matches = generatedReviewTrackedRootsWithinParent(
+    outputParent,
+    identity,
+  );
+  const expected = path.resolve(expectedPath);
+  const relocated = matches.some(
+    (candidate) => path.resolve(candidate) !== expected,
+  );
+  for (const candidate of matches) {
+    generatedReviewRemoveExactPath(candidate);
+  }
+  if (
+    generatedReviewTrackedRootsWithinParent(outputParent, identity).length
+  ) {
+    throw new Error("Review transaction root cleanup did not close.");
+  }
+  return { found: matches.length > 0, relocated };
+}
+
+function generatedReviewValidateRealDirectoryAncestors(targetDir) {
+  const resolved = path.resolve(targetDir);
+  const parsed = path.parse(resolved);
+  let current = parsed.root;
+  for (const component of resolved
+    .slice(parsed.root.length)
+    .split(path.sep)
+    .filter(Boolean)) {
+    current = path.join(current, component);
+    const entry = generatedReviewPathEntryStat(current);
+    if (!entry || !entry.isDirectory() || entry.isSymbolicLink()) {
+      throw new Error("Review output parent must be a real directory.");
+    }
+  }
+}
+
+function generatedReviewCanonicalRelativePath(value) {
+  if (
+    typeof value !== "string" ||
+    value !== value.trim() ||
+    !value ||
+    /[\u0000-\u001f\u007f\\]/.test(value) ||
+    path.posix.isAbsolute(value)
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  const normalized = path.posix.normalize(value);
+  if (
+    normalized !== value ||
+    normalized === "." ||
+    normalized === ".." ||
+    normalized.startsWith("../")
+  ) {
+    throw new Error("Review transaction received an invalid output path.");
+  }
+  return normalized;
+}
+
+function generatedReviewAbsolutePath(root, relativePath) {
+  const canonical = generatedReviewCanonicalRelativePath(relativePath);
+  return path.join(root, ...canonical.split("/"));
+}
+
+function generatedReviewCaptureDirectoryImage(outputDir) {
+  const rootEntry = generatedReviewPathEntryStat(outputDir);
+  if (!rootEntry || !rootEntry.isDirectory() || rootEntry.isSymbolicLink()) {
+    throw new Error("Review output must be a real directory.");
+  }
+  const directories = [];
+  const files = [];
+  let entryCount = 0;
+  let totalBytes = 0;
+  const pending = [outputDir];
+  while (pending.length) {
+    const current = pending.pop();
+    for (const name of fs.readdirSync(current).sort()) {
+      entryCount += 1;
+      if (entryCount > GENERATED_REVIEW_TRANSACTION_LIMITS.maxEntryCount) {
+        throw new Error("Review output exceeds the transaction entry limit.");
+      }
+      const candidate = path.join(current, name);
+      const observed = generatedReviewPathEntryStat(candidate);
+      if (!observed || observed.isSymbolicLink()) {
+        throw new Error("Review output contains an unsafe filesystem entry.");
+      }
+      const relativePath = path
+        .relative(outputDir, candidate)
+        .split(path.sep)
+        .join("/");
+      generatedReviewCanonicalRelativePath(relativePath);
+      if (observed.isDirectory()) {
+        directories.push({
+          path: relativePath,
+          mode: observed.mode & 0o7777,
+        });
+        pending.push(candidate);
+        continue;
+      }
+      if (
+        !observed.isFile() ||
+        observed.nlink !== 1 ||
+        observed.size > GENERATED_REVIEW_TRANSACTION_LIMITS.maxFileBytes
+      ) {
+        throw new Error("Review output contains an unsupported file.");
+      }
+      totalBytes += observed.size;
+      if (totalBytes > GENERATED_REVIEW_TRANSACTION_LIMITS.maxTotalBytes) {
+        throw new Error("Review output exceeds the transaction byte limit.");
+      }
+      const noFollow = fs.constants.O_NOFOLLOW || 0;
+      let descriptor;
+      try {
+        descriptor = fs.openSync(candidate, fs.constants.O_RDONLY | noFollow);
+        const before = fs.fstatSync(descriptor);
+        const payload = fs.readFileSync(descriptor);
+        const after = fs.fstatSync(descriptor);
+        if (
+          !before.isFile() ||
+          before.nlink !== 1 ||
+          before.dev !== observed.dev ||
+          before.ino !== observed.ino ||
+          before.dev !== after.dev ||
+          before.ino !== after.ino ||
+          before.size !== after.size ||
+          before.mtimeMs !== after.mtimeMs ||
+          payload.length !== after.size
+        ) {
+          throw new Error("Review output changed during transaction capture.");
+        }
+        files.push({
+          path: relativePath,
+          mode: after.mode & 0o7777,
+          payload,
+        });
+      } finally {
+        if (descriptor !== undefined) fs.closeSync(descriptor);
+      }
+    }
+  }
+  directories.sort((left, right) => left.path.localeCompare(right.path));
+  files.sort((left, right) => left.path.localeCompare(right.path));
+  return {
+    rootMode: rootEntry.mode & 0o7777,
+    directories,
+    files,
+  };
+}
+
+function generatedReviewImagesEqual(left, right) {
+  if (left == null || right == null) return left === right;
+  if (
+    left.rootMode !== right.rootMode ||
+    left.directories.length !== right.directories.length ||
+    left.files.length !== right.files.length
+  ) {
+    return false;
+  }
+  for (let index = 0; index < left.directories.length; index += 1) {
+    const leftEntry = left.directories[index];
+    const rightEntry = right.directories[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode
+    ) {
+      return false;
+    }
+  }
+  for (let index = 0; index < left.files.length; index += 1) {
+    const leftEntry = left.files[index];
+    const rightEntry = right.files[index];
+    if (
+      leftEntry.path !== rightEntry.path ||
+      leftEntry.mode !== rightEntry.mode ||
+      !leftEntry.payload.equals(rightEntry.payload)
+    ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function generatedReviewMaterializeDirectoryImage(targetDir, image) {
+  if (generatedReviewPathEntryExists(targetDir)) {
+    throw new Error("Review transaction target already exists.");
+  }
+  fs.mkdirSync(targetDir, { mode: 0o700 });
+  // A new output has no previous permission image to restore. Preserve the
+  // mode actually created by this filesystem (Windows cannot set POSIX bits).
+  const effectiveImage = image || {
+    rootMode: fs.lstatSync(targetDir).mode & 0o7777,
+    directories: [],
+    files: [],
+  };
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      left.path.split("/").length - right.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.mkdirSync(generatedReviewAbsolutePath(targetDir, directory.path), {
+      mode: 0o700,
+    });
+  }
+  for (const file of effectiveImage.files) {
+    const target = generatedReviewAbsolutePath(targetDir, file.path);
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(target));
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    const descriptor = fs.openSync(
+      target,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      0o600,
+    );
+    try {
+      fs.writeFileSync(descriptor, file.payload);
+      fs.fsyncSync(descriptor);
+    } finally {
+      fs.closeSync(descriptor);
+    }
+    fs.chmodSync(target, file.mode);
+  }
+  for (const directory of [...effectiveImage.directories].sort(
+    (left, right) =>
+      right.path.split("/").length - left.path.split("/").length ||
+      left.path.localeCompare(right.path),
+  )) {
+    fs.chmodSync(
+      generatedReviewAbsolutePath(targetDir, directory.path),
+      directory.mode,
+    );
+  }
+  fs.chmodSync(targetDir, effectiveImage.rootMode);
+  const replay = generatedReviewCaptureDirectoryImage(targetDir);
+  if (!generatedReviewImagesEqual(effectiveImage, replay)) {
+    throw new Error("Review transaction materialization did not replay.");
+  }
+}
+
+function generatedReviewWritableLeafSignature(targetPath) {
+  const entry = generatedReviewPathEntryStat(targetPath);
+  if (!entry) return null;
+  if (entry.isSymbolicLink() || !entry.isFile() || entry.nlink !== 1) {
+    throw new Error("Review output contains an unsafe writable file.");
+  }
+  return [
+    entry.dev,
+    entry.ino,
+    entry.size,
+    entry.mtimeMs,
+    entry.mode,
+  ].join(":");
+}
+
+function generatedReviewAtomicWriteFileSync(
+  targetPath,
+  payload,
+  encoding = null,
+) {
+  generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+  const initialSignature = generatedReviewWritableLeafSignature(targetPath);
+  const targetEntry = generatedReviewPathEntryStat(targetPath);
+  const targetMode = targetEntry ? targetEntry.mode & 0o7777 : 0o644;
+  generatedReviewWriteCounter += 1;
+  const tempPath = path.join(
+    path.dirname(targetPath),
+    `.${path.basename(targetPath)}.generated-review-write-${process.pid}-${generatedReviewWriteCounter}`,
+  );
+  let descriptor;
+  let tempExists = false;
+  try {
+    const noFollow = fs.constants.O_NOFOLLOW || 0;
+    descriptor = fs.openSync(
+      tempPath,
+      fs.constants.O_WRONLY |
+        fs.constants.O_CREAT |
+        fs.constants.O_EXCL |
+        noFollow,
+      targetMode,
+    );
+    tempExists = true;
+    fs.writeFileSync(
+      descriptor,
+      payload,
+      encoding ? { encoding } : undefined,
+    );
+    fs.fchmodSync(descriptor, targetMode);
+    fs.fsyncSync(descriptor);
+    fs.closeSync(descriptor);
+    descriptor = undefined;
+    if (
+      generatedReviewWritableLeafSignature(targetPath) !== initialSignature
+    ) {
+      throw new Error("Review output changed during an atomic write.");
+    }
+    generatedReviewValidateRealDirectoryAncestors(path.dirname(targetPath));
+    fs.renameSync(tempPath, targetPath);
+    tempExists = false;
+  } finally {
+    if (descriptor !== undefined) fs.closeSync(descriptor);
+    if (tempExists) {
+      try {
+        fs.unlinkSync(tempPath);
+      } catch (error) {
+        if (error?.code !== "ENOENT") throw error;
+      }
+    }
+  }
+}
+
+function generatedReviewImageEntryMaps(image) {
+  const directoryModes = new Map();
+  const files = new Map();
+  if (!image) {
+    return {
+      rootMode: 0o755,
+      directoryModes,
+      files,
+    };
+  }
+  for (const entry of image.directories) {
+    directoryModes.set(entry.path, entry.mode);
+  }
+  for (const entry of image.files) {
+    files.set(entry.path, entry);
+  }
+  return {
+    rootMode: image.rootMode,
+    directoryModes,
+    files,
+  };
+}
+
+function generatedReviewAuthorizedPathSet(paths) {
+  if (!Array.isArray(paths)) {
+    throw new Error("Review transaction requires an authorized write set.");
+  }
+  const authorized = new Set();
+  for (const value of paths) {
+    authorized.add(generatedReviewCanonicalRelativePath(value));
+  }
+  return authorized;
+}
+
+function generatedReviewDirectoryIsAuthorized(relativePath, authorized) {
+  if (authorized.has(relativePath)) return true;
+  const prefix = `${relativePath}/`;
+  return Array.from(authorized).some((entry) => entry.startsWith(prefix));
+}
+
+function generatedReviewValidateAuthorizedChanges(
+  beforeImage,
+  afterImage,
+  authorizedWritePaths,
+) {
+  const authorized = generatedReviewAuthorizedPathSet(authorizedWritePaths);
+  const before = generatedReviewImageEntryMaps(beforeImage);
+  const after = generatedReviewImageEntryMaps(afterImage);
+  if (before.rootMode !== after.rootMode) {
+    throw new Error("Review transaction changed the output directory mode.");
+  }
+  const directoryPaths = new Set([
+    ...before.directoryModes.keys(),
+    ...after.directoryModes.keys(),
+  ]);
+  for (const relativePath of directoryPaths) {
+    const beforeMode = before.directoryModes.get(relativePath);
+    const afterMode = after.directoryModes.get(relativePath);
+    if (beforeMode === afterMode) continue;
+    if (
+      beforeMode != null ||
+      afterMode == null ||
+      !generatedReviewDirectoryIsAuthorized(relativePath, authorized)
+    ) {
+      throw new Error("Review transaction changed an unauthorized directory.");
+    }
+  }
+  const filePaths = new Set([...before.files.keys(), ...after.files.keys()]);
+  for (const relativePath of filePaths) {
+    const beforeEntry = before.files.get(relativePath);
+    const afterEntry = after.files.get(relativePath);
+    const unchanged =
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode === afterEntry.mode &&
+      beforeEntry.payload.equals(afterEntry.payload);
+    if (unchanged) continue;
+    if (!authorized.has(relativePath)) {
+      throw new Error("Review transaction changed an unauthorized file.");
+    }
+    if (
+      beforeEntry != null &&
+      afterEntry != null &&
+      beforeEntry.mode !== afterEntry.mode
+    ) {
+      throw new Error("Review transaction changed an artifact mode.");
+    }
+  }
+  return authorized;
+}
+
+function generatedReviewTransactionEnvelope(result, authorizedWritePaths) {
+  return { result, authorizedWritePaths };
+}
+
+function generatedReviewArgsForWorkingOutput(inputArgs, workingOutputDir) {
+  const runIntake = isPlainObject(inputArgs.run_intake)
+    ? { ...inputArgs.run_intake, output_dir: workingOutputDir }
+    : { output_dir: workingOutputDir };
+  return { ...inputArgs, run_intake: runIntake };
+}
+
+function generatedReviewRewriteOutputPaths(
+  value,
+  workingOutputDir,
+  canonicalOutputDir,
+) {
+  if (Array.isArray(value)) {
+    return value.map((entry) =>
+      generatedReviewRewriteOutputPaths(
+        entry,
+        workingOutputDir,
+        canonicalOutputDir,
+      ),
+    );
+  }
+  if (value != null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, entry]) => [
+        key,
+        generatedReviewRewriteOutputPaths(
+          entry,
+          workingOutputDir,
+          canonicalOutputDir,
+        ),
+      ]),
+    );
+  }
+  if (typeof value !== "string") return value;
+  if (value === workingOutputDir) return canonicalOutputDir;
+  const prefix = `${workingOutputDir}${path.sep}`;
+  if (!value.startsWith(prefix)) return value;
+  return path.join(canonicalOutputDir, value.slice(prefix.length));
+}
+
+function generatedReviewCollectApplicationWritePaths(result) {
+  const paths = new Set([
+    "ui_decisions.json",
+    "applied_decisions.json",
+    "final_artifacts.json",
+    "run_intake.json",
+    "review_handoff.md",
+  ]);
+  function add(value) {
+    if (Array.isArray(value)) {
+      for (const entry of value) add(entry);
+      return;
+    }
+    if (typeof value !== "string" || !value) return;
+    paths.add(generatedReviewCanonicalRelativePath(value));
+  }
+  const applied = isPlainObject(result?.applied_decisions)
+    ? result.applied_decisions
+    : {};
+  const finalArtifacts = isPlainObject(result?.final_artifacts)
+    ? result.final_artifacts
+    : {};
+  const application = isPlainObject(finalArtifacts.review_application)
+    ? finalArtifacts.review_application
+    : {};
+  for (const source of [result, applied, application]) {
+    for (const fieldName of [
+      "revision_paths",
+      "target_update_paths",
+      "structured_update_paths",
+      "native_regeneration_paths",
+      "native_regenerated_paths",
+      "downstream_regenerated_paths",
+      "original_backup_paths",
+      "backup_paths",
+    ]) {
+      add(source?.[fieldName]);
+    }
+  }
+  for (const effect of Array.isArray(applied.effects) ? applied.effects : []) {
+    if (!isPlainObject(effect)) continue;
+    for (const fieldName of [
+      "revision_artifact",
+      "original_artifact_backup",
+      "derived_native_regeneration_paths",
+      "native_regenerated_paths",
+    ]) {
+      add(effect[fieldName]);
+    }
+  }
+  return Array.from(paths);
+}
+
+function generatedReviewWorkflowTransactionOptions(kind, inputArgs) {
+  if (typeof workflowReviewTransactionOptions !== "function") return {};
+  const options = workflowReviewTransactionOptions(kind, inputArgs);
+  if (options == null) return {};
+  if (!isPlainObject(options)) {
+    throw new Error("Workflow review transaction options must be an object.");
+  }
+  return options;
+}
+
+function generatedReviewRestoreFromTrustedImage(
+  outputDir,
+  trustedImage,
+  outputParent,
+) {
+  // Recovery is deliberately created only after the untrusted operation has
+  // returned. It never depends on a transaction tree that the operation knew.
+  const recoveryRoot = generatedReviewCreateTempDirectory(
+    path.join(outputParent, ".generated-review-recovery-"),
+  );
+  fs.chmodSync(recoveryRoot, 0o700);
+  const recoveryIdentity =
+    generatedReviewDirectoryIdentity(recoveryRoot);
+  const recoveryOutput = path.join(recoveryRoot, "output");
+  let restored = false;
+  try {
+    if (trustedImage) {
+      generatedReviewMaterializeDirectoryImage(
+        recoveryOutput,
+        trustedImage,
+      );
+      const recoveryReplay =
+        generatedReviewCaptureDirectoryImage(recoveryOutput);
+      if (!generatedReviewImagesEqual(trustedImage, recoveryReplay)) {
+        throw new Error("Review output recovery did not replay.");
+      }
+    }
+    generatedReviewRemoveExactPath(outputDir);
+    if (trustedImage) {
+      if (generatedReviewPathEntryExists(outputDir)) {
+        throw new Error("Review output changed during recovery.");
+      }
+      fs.renameSync(recoveryOutput, outputDir);
+      const canonicalReplay =
+        generatedReviewCaptureDirectoryImage(outputDir);
+      if (!generatedReviewImagesEqual(trustedImage, canonicalReplay)) {
+        throw new Error("Review output recovery did not close.");
+      }
+    } else if (generatedReviewPathEntryExists(outputDir)) {
+      throw new Error("Review output recovery did not restore absence.");
+    }
+    restored = true;
+  } finally {
+    // A failed rename may leave the only usable original in this tree.
+    // Retain recovery evidence until canonical restoration is verified.
+    if (restored) {
+      const cleanup = generatedReviewRemoveTrackedRootWithinParent(
+        outputParent,
+        recoveryRoot,
+        recoveryIdentity,
+      );
+      if (!cleanup.found || cleanup.relocated) {
+        throw new Error("Review output recovery root changed.");
+      }
+    }
+  }
+  if (!restored) {
+    throw new Error("Review output recovery did not close.");
+  }
+}
+
+function generatedReviewCanonicalMatchesTrusted(outputDir, trustedImage) {
+  if (!trustedImage) {
+    return !generatedReviewPathEntryExists(outputDir);
+  }
+  try {
+    return generatedReviewImagesEqual(
+      trustedImage,
+      generatedReviewCaptureDirectoryImage(outputDir),
+    );
+  } catch {
+    return false;
+  }
+}
+
+// Exact bytes and modes, rather than semantic judgment, determine recovery ownership.
+function generatedReviewImageDigest(image) {
+  const digest = require("node:crypto").createHash("sha256");
+  if (image === null) return digest.update("absent").digest("hex");
+  digest.update(JSON.stringify({
+    rootMode: image.rootMode,
+    directories: image.directories,
+    files: image.files.map(({ path, mode, payload }) => ({
+      path, mode, size: payload.length,
+      sha256: require("node:crypto").createHash("sha256").update(payload).digest("hex"),
+    })),
+  }));
+  return digest.digest("hex");
+}
+
+function generatedReviewWithOutputClaim(outputDir, operation) {
+  if (!outputDir) return operation();
+  const output = path.resolve(outputDir);
+  if (output === path.parse(output).root) {
+    throw new Error("Review output transaction rejected the output path.");
+  }
+  const parent = path.dirname(output);
+  generatedReviewValidateRealDirectoryAncestors(parent);
+  const hash = value => require("node:crypto").createHash("sha256").update(value).digest("hex");
+  const prefix = `.generated-review-owner-${hash(path.basename(output))}-`;
+  const host = hash(require("node:os").hostname());
+  // Publish the complete owner identity in one atomic mkdir. Every contender
+  // publishes before scanning and abstains if ANY other live owner exists.
+  // There is no priority rule that could let a later owner overtake an earlier
+  // scan, and no mutable shared lock pathname to race during stale recovery.
+  const claim = generatedReviewCreateTempDirectory(path.join(parent, `${prefix}${host}-${process.pid}-`));
+  const identity = generatedReviewDirectoryIdentity(claim);
+  try {
+    for (const name of fs.readdirSync(parent)) {
+      if (!name.startsWith(prefix) || name === path.basename(claim)) continue;
+      const match = /^([a-f0-9]{64})-([1-9][0-9]*)-[A-Za-z0-9]+$/.exec(name.slice(prefix.length));
+      const other = path.join(parent, name);
+      const entry = generatedReviewPathEntryStat(other);
+      if (!entry) continue;
+      if (!match || !entry.isDirectory() || entry.isSymbolicLink()) {
+        throw new Error("Review output ownership evidence is invalid; retained unchanged.");
+      }
+      if (match[1] !== host) {
+        throw new Error("Review output transaction has an owner on another host; retry there.");
+      }
+      let alive = true;
+      try { process.kill(Number(match[2]), 0); }
+      catch (error) { if (error.code === "ESRCH") alive = false; else throw error; }
+      if (alive) throw new Error("Review output transaction is already active; retry after it finishes.");
+      // Dead owners never block retry. Remove only an empty ownership marker;
+      // all transaction, commit and recovery evidence is handled separately.
+      try { fs.rmdirSync(other); }
+      catch (error) { if (error.code !== "ENOENT" && error.code !== "ENOTEMPTY") throw error; }
+    }
+    return operation();
+  } finally {
+    if (generatedReviewIdentityMatches(generatedReviewPathEntryStat(claim), identity)) {
+      fs.rmdirSync(claim);
+    }
+  }
+}
+
+function generatedReviewRecoverInterruptedOutput(outputDir) {
+  return generatedReviewWithOutputClaim(outputDir, () =>
+    generatedReviewRecoverInterruptedOutputUnlocked(outputDir));
+}
+
+function generatedReviewRecoverInterruptedOutputUnlocked(outputDir) {
+  const output = path.resolve(outputDir);
+  const parent = path.dirname(output);
+  generatedReviewValidateRealDirectoryAncestors(parent);
+  const pending = [];
+  for (const name of fs.readdirSync(parent)) {
+    if (!name.startsWith(".generated-review-commit-")) continue;
+    const root = path.join(parent, name);
+    const entry = generatedReviewPathEntryStat(root);
+    if (!entry?.isDirectory() || entry.isSymbolicLink()) continue;
+    const receiptPath = path.join(root, "recovery.json");
+    const receiptEntry = generatedReviewPathEntryStat(receiptPath);
+    if (!receiptEntry) continue; // No canonical change is allowed before this receipt.
+    if (!receiptEntry.isFile() || receiptEntry.nlink !== 1 || receiptEntry.size > 8192) {
+      throw new Error("Review recovery receipt is unsafe; retained files were preserved.");
+    }
+    const receipt = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+    if (receipt.output !== path.basename(output)) continue;
+    if (
+      receipt.schema !== "review-output-recovery.v1" ||
+      !generatedReviewIdentityMatches(generatedReviewPathEntryStat(parent), receipt.parentIdentity) ||
+      receipt.host !== require("node:os").hostname() ||
+      !Number.isSafeInteger(receipt.pid) || receipt.pid < 0 ||
+      !/^[a-f0-9]{64}$/.test(receipt.original) ||
+      !/^[a-f0-9]{64}$/.test(receipt.candidate) ||
+      !generatedReviewIdentityMatches(entry, receipt.identity)
+    ) {
+      throw new Error("Review recovery identity is invalid; retained files were preserved.");
+    }
+    const claim = /^\.generated-review-commit-recover-(\d+)-/.exec(name);
+    const owner = claim ? Number(claim[1]) : receipt.pid;
+    if (owner !== 0) {
+      try {
+        process.kill(owner, 0);
+        throw new Error("Another review commit is still active.");
+      } catch (error) {
+        if (error.code !== "ESRCH") throw error;
+      }
+    }
+    pending.push({ root, receipt });
+  }
+  if (pending.length > 1) {
+    throw new Error("Multiple interrupted review commits require reconciliation.");
+  }
+  for (const { root: previousRoot, receipt } of pending) {
+    // Renaming claims this exact retained tree atomically. The PID in its name
+    // also makes an interrupted recovery discoverable without a write window.
+    const root = path.join(parent, `.generated-review-commit-recover-${process.pid}-${require("node:crypto").randomUUID()}`);
+    fs.renameSync(previousRoot, root);
+    try {
+      const current = generatedReviewPathEntryExists(output)
+        ? generatedReviewCaptureDirectoryImage(output) : null;
+      const currentDigest = generatedReviewImageDigest(current);
+      const backup = path.join(root, "trusted-backup");
+      const original = generatedReviewPathEntryExists(backup)
+        ? generatedReviewCaptureDirectoryImage(backup) : null;
+      const originalDigest = generatedReviewImageDigest(original);
+      if (currentDigest !== receipt.original) {
+        if (originalDigest !== receipt.original ||
+            (current !== null && currentDigest !== receipt.candidate)) {
+          throw new Error("Interrupted review files changed; retained files were preserved.");
+        }
+        // Keep an already-published revision as evidence before restoring its predecessor.
+        const savedCandidate = path.join(root, "recovered-candidate");
+        if (current && !generatedReviewPathEntryExists(savedCandidate)) {
+          generatedReviewMaterializeDirectoryImage(savedCandidate, current);
+        }
+        generatedReviewRestoreFromTrustedImage(output, original, parent);
+      }
+      // Retain crash evidence, but do not mistake it for a pending commit on the next retry.
+      const retained = path.join(parent, path.basename(root).replace(".generated-review-commit-", ".generated-review-retained-"));
+      if (generatedReviewPathEntryExists(retained)) {
+        throw new Error("Review recovery evidence destination already exists.");
+      }
+      fs.renameSync(root, retained);
+    } catch (error) {
+      if (!generatedReviewPathEntryExists(previousRoot)) fs.renameSync(root, previousRoot);
+      throw error;
+    }
+  }
+}
+
+function generatedReviewRunOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  if (!outputDir) {
+    const envelope = operation({
+      workingOutputDir: null,
+      canonicalOutputDir: null,
+      trustedImage: null,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    return envelope.result;
+  }
+  const resolvedOutputDir = path.resolve(outputDir);
+  if (resolvedOutputDir === path.parse(resolvedOutputDir).root) {
+    throw new Error("Review output transaction rejected the output path.");
+  }
+  const outputParent = path.dirname(resolvedOutputDir);
+  generatedReviewValidateRealDirectoryAncestors(outputParent);
+  generatedReviewRecoverInterruptedOutputUnlocked(resolvedOutputDir);
+  const outputExisted = generatedReviewPathEntryExists(resolvedOutputDir);
+  const trustedImage = outputExisted
+    ? generatedReviewCaptureDirectoryImage(resolvedOutputDir)
+    : null;
+  let transactionRoot = null;
+  let transactionIdentity = null;
+  let workingOutputDir = null;
+  let commitRoot = null;
+  let commitIdentity = null;
+  let canonicalDetached = false;
+  let committed = false;
+  try {
+    transactionRoot = generatedReviewCreateTempDirectory(
+      path.join(outputParent, ".generated-review-transaction-"),
+    );
+    fs.chmodSync(transactionRoot, 0o700);
+    transactionIdentity =
+      generatedReviewDirectoryIdentity(transactionRoot);
+    workingOutputDir = path.join(transactionRoot, "working");
+    generatedReviewMaterializeDirectoryImage(
+      workingOutputDir,
+      trustedImage,
+    );
+    const workingBaseline = trustedImage ||
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction start.");
+    }
+    const envelope = operation({
+      workingOutputDir,
+      canonicalOutputDir: resolvedOutputDir,
+      trustedImage,
+    });
+    if (
+      !isPlainObject(envelope) ||
+      !Object.hasOwn(envelope, "result") ||
+      !Array.isArray(envelope.authorizedWritePaths)
+    ) {
+      throw new Error("Review transaction operation returned an invalid result.");
+    }
+    const workingImage =
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
+    const authorized = generatedReviewValidateAuthorizedChanges(
+      workingBaseline,
+      workingImage,
+      envelope.authorizedWritePaths,
+    );
+    if (typeof options.validateWholeTree === "function") {
+      options.validateWholeTree({
+        canonicalOutputDir: resolvedOutputDir,
+        workingOutputDir,
+        trustedImage,
+        workingImage,
+        authorizedWritePaths: authorized,
+        result: envelope.result,
+      });
+    }
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed during the transaction.");
+    }
+
+    // The validated working tree is now held in parent memory. Close the
+    // child-visible tree before creating any commit or recovery material.
+    const transactionCleanup =
+      generatedReviewRemoveTrackedRootWithinParent(
+        outputParent,
+        transactionRoot,
+        transactionIdentity,
+      );
+    transactionIdentity = null;
+    if (!transactionCleanup.found || transactionCleanup.relocated) {
+      throw new Error("Review transaction root changed.");
+    }
+
+    commitRoot = generatedReviewCreateTempDirectory(
+      path.join(outputParent, ".generated-review-commit-"),
+    );
+    fs.chmodSync(commitRoot, 0o700);
+    commitIdentity = generatedReviewDirectoryIdentity(commitRoot);
+    const commitCandidate = path.join(commitRoot, "candidate");
+    const commitBackup = path.join(commitRoot, "trusted-backup");
+    generatedReviewMaterializeDirectoryImage(
+      commitCandidate,
+      workingImage,
+    );
+    if (
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    generatedReviewAtomicWriteFileSync(
+      path.join(commitRoot, "recovery.json"),
+      JSON.stringify({
+        schema: "review-output-recovery.v1",
+        output: path.basename(resolvedOutputDir),
+        parent: outputParent,
+        parentIdentity: generatedReviewDirectoryIdentity(outputParent),
+        host: require("node:os").hostname(),
+        pid: process.pid,
+        identity: commitIdentity,
+        original: generatedReviewImageDigest(trustedImage),
+        candidate: generatedReviewImageDigest(workingImage),
+      }),
+      "utf8",
+    );
+    if (outputExisted) {
+      fs.renameSync(resolvedOutputDir, commitBackup);
+      canonicalDetached = true;
+    } else if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed before transaction commit.");
+    }
+    if (generatedReviewPathEntryExists(resolvedOutputDir)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    fs.renameSync(commitCandidate, resolvedOutputDir);
+    committed = true;
+    const committedImage =
+      generatedReviewCaptureDirectoryImage(resolvedOutputDir);
+    if (!generatedReviewImagesEqual(workingImage, committedImage)) {
+      throw new Error("Review output changed during transaction commit.");
+    }
+    const commitCleanup = generatedReviewRemoveTrackedRootWithinParent(
+      outputParent,
+      commitRoot,
+      commitIdentity,
+    );
+    commitIdentity = null;
+    if (!commitCleanup.found || commitCleanup.relocated) {
+      throw new Error("Review transaction commit root changed.");
+    }
+    return envelope.result;
+  } catch (operationError) {
+    let rollbackFailed = false;
+    if (
+      canonicalDetached ||
+      committed ||
+      !generatedReviewCanonicalMatchesTrusted(
+        resolvedOutputDir,
+        trustedImage,
+      )
+    ) {
+      try {
+        generatedReviewRestoreFromTrustedImage(
+          resolvedOutputDir,
+          trustedImage,
+          outputParent,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    for (const [trackedPath, trackedIdentity] of [
+      [transactionRoot, transactionIdentity],
+      [commitRoot, commitIdentity],
+    ]) {
+      // Preserve the detached original and candidate when recovery failed.
+      if (rollbackFailed) break;
+      if (!trackedPath || !trackedIdentity) continue;
+      try {
+        generatedReviewRemoveTrackedRootWithinParent(
+          outputParent,
+          trackedPath,
+          trackedIdentity,
+        );
+      } catch {
+        rollbackFailed = true;
+      }
+    }
+    if (rollbackFailed) {
+      // A handled failure no longer owns the retained commit; allow a retry
+      // in this same server process once the filesystem is available again.
+      try {
+        const receiptPath = path.join(commitRoot, "recovery.json");
+        if (generatedReviewIdentityMatches(generatedReviewPathEntryStat(commitRoot), commitIdentity)) {
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+          generatedReviewAtomicWriteFileSync(receiptPath, JSON.stringify({ ...receipt, pid: 0 }), "utf8");
+        }
+      } catch {
+        // Preserve all evidence even if recording release of ownership fails.
+      }
+      const rollbackError = new Error(
+        options.rollbackFailureMessage ||
+          "Review output transaction could not be restored safely.",
+      );
+      rollbackError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "rollback";
+      throw rollbackError;
+    }
+    const transactionError = new Error(
+      options.failureMessage || "Review output transaction failed safely.",
+    );
+    transactionError[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] = "operation";
+    transactionError[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR] =
+      operationError;
+    throw transactionError;
+  }
+}
+
+function generatedReviewMappedOperationFailure(error, options, fallback) {
+  if (
+    error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] !== "operation" ||
+    typeof options.mapOperationError !== "function"
+  ) {
+    return fallback;
+  }
+  try {
+    const candidate = options.mapOperationError(
+      error[GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR],
+    );
+    if (
+      typeof candidate !== "string" ||
+      !candidate ||
+      candidate.length > 512 ||
+      /[\\/\u0000-\u001f\u007f]/.test(candidate) ||
+      /Traceback|\bFile\s+["']|file:|~[\\/]/i.test(candidate)
+    ) {
+      return fallback;
+    }
+    return candidate;
+  } catch {
+    return fallback;
+  }
+}
+
+function withGeneratedReviewOutputTransaction(
+  outputDir,
+  operation,
+  options = {},
+) {
+  return generatedReviewWithOutputClaim(outputDir, () => {
+    const failureMessage =
+      options.failureMessage || "Review output transaction failed safely.";
+    const rollbackFailureMessage =
+      options.rollbackFailureMessage ||
+      "Review output transaction could not be restored safely.";
+    try {
+      return generatedReviewRunOutputTransaction(outputDir, operation, {
+        ...options,
+        failureMessage,
+        rollbackFailureMessage,
+      });
+    } catch (error) {
+      const rollbackFailed =
+        error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] === "rollback";
+      const publicMessage = rollbackFailed
+        ? rollbackFailureMessage
+        : generatedReviewMappedOperationFailure(
+            error,
+            options,
+            failureMessage,
+          );
+      throw new Error(publicMessage);
+    }
+  });
+}
+
+// Limitation: this is a bounded transaction contract, not an OS sandbox.
+// Same-identity code can copy or move data outside the output parent and a
+// hostile background descendant can mutate canonical output after return.
+// The parent restores canonical bytes/modes from memory and removes a renamed
+// transaction sibling by inode inside the bounded output parent; deleting
+// arbitrary external copies requires an OS sandbox or a separate identity.
+// END EMBEDDABLE REVIEW OUTPUT TRANSACTION
+
+function archiveReportingPaths(outputDir, expectedWorkflowIds) {
+  const names = [
+    "model_data_report.json", "model_data_report.md",
+    "model_data_receipt_request.json", "model_data_receipt.json",
+    "model_data_receipt.html",
+  ];
+  const root = path.resolve(outputDir);
+  const present = names.filter((name) => generatedReviewPathEntryExists(path.join(root, name)));
+  if (!present.length) return [];
+  if (!present.includes("model_data_report.json") || !present.includes("model_data_report.md")) {
+    process.stderr.write("Archive report pair is incomplete; reporting remains separate from professional outputs.\n");
+  }
+  const bytes = (file) => {
+    const entry = fs.lstatSync(file);
+    if (!entry.isFile() || entry.isSymbolicLink() || entry.nlink !== 1) {
+      throw new Error("Archive reporting sidecars must be ordinary single-link files");
+    }
+    return fs.readFileSync(file);
+  };
+  for (const name of present) bytes(path.join(root, name));
+  let canonicalRoot = root;
+  if (path.basename(root) === "working" && path.basename(path.dirname(root)).startsWith(".generated-review-transaction-")) {
+    canonicalRoot = path.join(path.dirname(path.dirname(root)), "outputs");
+    for (const name of present) {
+      if (!bytes(path.join(root, name)).equals(bytes(path.join(canonicalRoot, name)))) {
+        throw new Error("Review transaction changed Archive reporting sidecars");
+      }
+    }
+  }
+  generatedReviewValidateRealDirectoryAncestors(canonicalRoot);
+  const context = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "context.json")));
+  const run = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "run.json")));
+  if (
+    context.schema_version !== "vera.client_workflow_context.v2" ||
+    context.output_relative_path !== "outputs" || path.basename(canonicalRoot) !== "outputs" ||
+    !expectedWorkflowIds.includes(context.workflow_id) ||
+    context.workflow_id !== run.workflow_id || context.run_id !== run.run_id
+  ) {
+    throw new Error("Archive reporting sidecars belong to another run");
+  }
+  let report = null;
+  try {
+    if (present.includes("model_data_report.json")) {
+      report = JSON.parse(bytes(path.join(root, "model_data_report.json")));
+    }
+  } catch (error) {
+    if (!(error instanceof SyntaxError) && typeof error.code !== "string") throw error;
+  }
+  if (!isPlainObject(report) || ![3, 4].includes(report.schema_version) || report.product !== "vera" ||
+      report.workflow_id !== context.workflow_id || report.run_id !== context.run_id) {
+    process.stderr.write("Archive reporting remains unverified; its saved files are separate from professional outputs.\n");
+  }
+  return present;
+}
+
+module.exports = {
+  archiveReportingPaths,
+  GENERATED_REVIEW_TRANSACTION_LIMITS,
+  generatedReviewArgsForWorkingOutput,
+  generatedReviewAtomicWriteFileSync,
+  generatedReviewCaptureDirectoryImage,
+  generatedReviewCollectApplicationWritePaths,
+  generatedReviewPathEntryExists,
+  generatedReviewPathEntryStat,
+  generatedReviewRewriteOutputPaths,
+  generatedReviewRecoverInterruptedOutput,
+  generatedReviewTransactionEnvelope,
+  withGeneratedReviewOutputTransaction,
+};

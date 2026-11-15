@@ -413,3 +413,11 @@ copy proprietary source material into a public query. No communication,
 publication, upload, or hosted-service use is implied by this workflow.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
+
+## Resume a client engagement
+
+When the assignment belongs to a Studio Archive client/engagement, follow
+`../studio-archive/SKILL.md` and resolve `clara_archive_case` before choosing a
+case directory. Reuse its returned case_dir for all existing case helpers.
+Do not initialize a second folder in a fresh chat. An existing standalone case
+can be bound explicitly without moving or replacing its files.

@@ -12,6 +12,13 @@
     "scatter-bubble-analysis",
     "set-overlap-analysis",
     "statement-analysis",
-    "variance-analysis"
-  ]
+    "variance-analysis",
+    "studio-archive"
+  ],
+  "workflow_roles": {
+    "studio-archive": {
+      "kind": "internal_runtime",
+      "supports": []
+    }
+  }
 }

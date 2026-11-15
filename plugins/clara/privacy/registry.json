@@ -480,6 +480,20 @@
           ]
         }
       ]
+    },
+    "studio-archive": {
+      "source": "product",
+      "role": "internal_engine",
+      "skills": [
+        "studio-archive"
+      ],
+      "components": [
+        "studio-archive"
+      ],
+      "workflow_ids": [
+        "studio-archive"
+      ],
+      "public_pages": []
     }
   },
   "services": [

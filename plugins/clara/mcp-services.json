@@ -26,6 +26,26 @@
       "args": [
         "./scripts/report_mcp.cjs"
       ]
+    },
+    "claraStudioArchive": {
+      "title": "Clara · Archivio dello studio",
+      "command": "node",
+      "cwd": ".",
+      "args": [
+        "./scripts/studio_archive_mcp.cjs"
+      ],
+      "env": {}
+    },
+    "claraArchivePanel": {
+      "title": "Clara · Archivio dello studio",
+      "command": "node",
+      "cwd": ".",
+      "args": [
+        "./scripts/studio_archive_mcp.cjs"
+      ],
+      "env": {
+        "CLARA_ARCHIVE_PANEL_ONLY": "1"
+      }
     }
   }
 }

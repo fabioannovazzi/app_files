@@ -121,7 +121,7 @@ def retire_product_interfaces(
         if name.endswith(".html"):
             allowed = {"vendor/modules/courseware/assets/chat.html"}
             allowed |= (
-                {"ui/report.html"}
+                {"ui/report.html", "assets/studio-archive.html"}
                 if product == "clara"
                 else {
                     "assets/playbook-editor.html",

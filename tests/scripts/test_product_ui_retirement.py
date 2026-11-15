@@ -38,7 +38,7 @@ def test_retirement_is_product_scoped_and_unknown_html_requires_classification(
         retire_product_interfaces(entries, prefix, product)
 
 
-@pytest.mark.parametrize("product,html_count", [("clara", 29), ("lucia", 4)])
+@pytest.mark.parametrize("product,html_count", [("clara", 30), ("lucia", 4)])
 def test_real_product_projection_preserves_deliverables_and_new_native_shells(
     monkeypatch, tmp_path, product, html_count
 ):
@@ -58,6 +58,7 @@ def test_real_product_projection_preserves_deliverables_and_new_native_shells(
     ]
     assert all(prefix + path not in entries for path in retired)
     if product == "clara":
+        assert "assets/studio-archive.html" in html
         assert (
             len([name for name in html if name.startswith("skills/html-deck/assets/")])
             == 27

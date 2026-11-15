@@ -589,3 +589,10 @@ The user controls voice and window setup; verify actual native capabilities.
 Never transmit interview, profile, teaching results or feedback to Mparanza,
 even after completion. No Claude Cowork teaching is provided.
 <!-- CLARA_OPENAI_ONBOARDING_END -->
+
+## Registered clients and saved engagements
+
+For Studio Archive, registered clients, or resuming a saved client engagement,
+follow `../studio-archive/SKILL.md`. Use `clara_archive_open` for the local
+client directory when callable, or the equivalent directory tools in chat.
+Resolve the engagement's `clara_archive_case` before continuing advisory work.
