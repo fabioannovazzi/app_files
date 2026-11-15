@@ -34,4 +34,6 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 
 7. A later central-theme check caught style ordering in the instructions source. Synchronizing the source reproduces the already-tested packaged HTML exactly. Theme checks and 114 theme regressions pass; the remaining workflow code-quality step passes, and 13 matter-core tests reach 82.45% coverage. The source-review fingerprint and affected Lucia packages were regenerated.
 
+8. Release-alignment CI reached its 30-minute job timeout after package verification passed, during the final namespace suite (job 132943668948, 20:17:12–20:47:27 UTC). Its limit is now 60 minutes; every validation step and assertion is retained unchanged. The final namespace suite passes locally: 62 tests, 98.77% coverage.
+
 No public deployment or Marketplace publication is claimed by this review.
