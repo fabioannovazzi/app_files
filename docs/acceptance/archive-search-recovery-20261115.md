@@ -11,7 +11,7 @@ Observed validation:
 - Archive component and concurrency suites passed.
 - JavaScript syntax, changed navigation mypy/Bandit, formatting and import checks passed.
 - Codex ZIP source parity passed.
-- Installed through scripts/install_local_vera.py as vera@mp-vera 0.1.648, package 30636e231f6013d1d808e79489378ab293c29fcba8d81b7537a560fef3e66b91.
+- Installed through scripts/install_local_vera.py as vera@mp-vera 0.1.648, package 6de0cc293163cb704dde299f87078f3d8e21ec9d027f5f188a78620b97bbbfc3.
 - A fresh installed local MCP process searched the real archive for `credito`, returned six results with index_requires_refresh=false, and opened `2026-07-06 - Cumulo Transizione 5.0 e contributo ISMEA.pdf` with source_verified=true and ISMEA in its passage.
 
 Blocks and recovery:
@@ -23,3 +23,7 @@ Blocks and recovery:
 Privacy outcome: reviewed the new local indexing and app-only result boundary and refreshed dependent source contracts. The operation introduces no model call or external recipient. App metadata contains excerpts; host UI inspection can expose visible text to the host model. No professional pipeline run was created, and no per-run privacy-report delivery was demonstrated by this navigation repair.
 
 No Marketplace upload or publication, merge, or server deployment was performed.
+
+Final installed-process verification repeated on package `6de0cc293163cb704dde299f87078f3d8e21ec9d027f5f188a78620b97bbbfc3`: six results, refresh_required=false, zero scan issues, zero document issues, source_verified=true, and the expected ISMEA passage. The UI/fresh-chat limit remains open; this was a fresh MCP process, not a new host conversation.
+
+Additional release observations: the normal release pipeline required rebuilding three course source-hash records and their dependent onboarding privacy binding after the shared Archive edit. The integrated Clara baseline was 0.1.424, so the final source candidate is 0.1.425 (not the earlier temporary 0.1.423); Lucia is 0.1.254. Neither was installed on this host. The GitHub connector refused PR creation (403); the authenticated CLI created draft PR #1005. Automatic approval review initially refused broad cleanup of generated copies; every generated file was subsequently byte-compared with this task's completed package before the narrower cleanup was accepted. No user source or other task work was discarded.
