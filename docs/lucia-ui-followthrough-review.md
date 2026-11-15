@@ -30,4 +30,6 @@ All three surfaces remain local MCP Apps. Archive document data stays in app met
 
 5. GitHub release alignment found one additional stale course source binding for `scripts/matter_mcp.py`. Regenerating the catalog corrected that exact binding; course-catalog and privacy-contract checks now pass. The installed package was refreshed and all 553 files verified again.
 
+6. The accounting/reporting CI job caught an outdated matter-panel generator. Native continuation markup, behavior and labels now live in the generator sources. The builder reproduces the already-tested widget byte for byte, without changing the standalone page. The exact failing suite passes locally (254 tests), and course/privacy checks remain clean.
+
 No public deployment or Marketplace publication is claimed by this review.
