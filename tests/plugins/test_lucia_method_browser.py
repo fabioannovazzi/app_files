@@ -153,6 +153,7 @@ def test_method_native_resource_saves_and_reopens_without_downloads(tmp_path, wi
             expect(app.get_by_label("Nome del procedimento", exact=True)).to_have_value(
                 first["name"]
             )
+            app.get_by_text("File e versioni", exact=True).click()
             app.get_by_role("button", name="Crea una copia", exact=True).click()
             app.get_by_label("Nome del procedimento", exact=True).fill(
                 "Secondo metodo sintetico"

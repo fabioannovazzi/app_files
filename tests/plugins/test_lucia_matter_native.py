@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -104,3 +105,22 @@ def test_native_matter_rejects_unknown_authority_and_has_no_browser_transport(tm
     assert "ui/initialize" in html
     assert "connect-src 'none'" in html
     assert app.tools[1]["_meta"]["ui"]["visibility"] == ["app"]
+
+
+def test_saved_review_handoff_identifies_exact_pending_bytes(tmp_path):
+    root = prepared(tmp_path)
+    app = MatterApp()
+    opened = app.open(str(root))["_meta"]["matter"]
+    assert opened["pending_sha256"] == "absent"
+
+    saved = app.save(submission(opened))["_meta"]["matter"]
+
+    assert saved["run_dir"] == str(root.resolve())
+    assert (
+        saved["pending_sha256"]
+        == hashlib.sha256(
+            (root / "pending_review_decisions.json").read_bytes()
+        ).hexdigest()
+    )
+    assert saved["pending_review_status"] == "current"
+    assert not (root / "applied_decisions.json").exists()

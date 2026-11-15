@@ -222,7 +222,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "a69bb44c76a87a2042957f0da2820d913a79bb5989f4247217dfeb9f68ab0e6a",
+  "course_sha256": "4b990850d2808a214f23534aed15a8033c1cfcca2ff1c2940dc3f8d62f11f0bc",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "1a36de6eab0fc5fcc531976f4ab7c2b049d98103191b0ee61a694767beb7546d",
@@ -1178,5 +1178,11 @@
     "course_sha256": "a69bb44c76a87a2042957f0da2820d913a79bb5989f4247217dfeb9f68ab0e6a",
     "authored_content_unchanged": true,
     "scope": "Source bindings updated after registering the dynamically loaded Archive modules in tutorial and merger adapters. Reproduced missing-module failures are covered by regressions for assignment binding and grouped publication. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
+  },
+  "lucia_ui_continuation_review_20261115": {
+    "previous_course_sha256": "a69bb44c76a87a2042957f0da2820d913a79bb5989f4247217dfeb9f68ab0e6a",
+    "course_sha256": "4b990850d2808a214f23534aed15a8033c1cfcca2ff1c2940dc3f8d62f11f0bc",
+    "reviewer": "Codex /root",
+    "scope": "Reviewed the saved-decision handoff UI change. Course teaching text and input files are unchanged. Saved decisions remain pending until an explicit continuation; the handoff identifies the selected run and exact pending bytes. No learner or native-chat acceptance is asserted."
   }
 }

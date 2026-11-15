@@ -128,6 +128,8 @@ class MatterApp:
             "_meta": {
                 "matter": {
                     "session": session,
+                    "run_dir": str(root),
+                    "pending_sha256": _stamp(root / "pending_review_decisions.json"),
                     "review": review,
                     "review_payload_sha256": review_payload_hash(review),
                     "pending_review": pending,

@@ -15,6 +15,9 @@ main{max-width:1180px;margin:0 auto;padding:52px 24px 100px}.intro{max-width:820
 #destination{overflow-wrap:anywhere}
 @media(max-width:760px){main{padding:34px 20px 70px}.masthead{padding:16px 20px}.work{display:block}.nav{position:static;display:flex;flex-wrap:wrap;gap:10px 22px;margin-bottom:24px}.nav p{display:none}.intro p{font-size:17px}.toolbar{gap:8px}.toolbar button{flex-grow:1}.language>span{display:none}h1{letter-spacing:-.8px}section{padding-top:23px}}
 
+
+.work{display:block;max-width:850px;margin-top:24px}.options{border-top:1px solid var(--line);padding:16px 0}.options>summary{cursor:pointer;font-weight:600;padding:6px 0}.options[open]>summary{margin-bottom:20px}.intro p{max-width:65ch}:root h1{font-size:clamp(25px,3vw,34px)}.toolbar{margin-top:20px}
+
 /* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
 /* Canonical Vera workflow theme. Derived from the Vouching review surface.
  * Run: python scripts/sync_vera_ui_theme.py after changing this file.
@@ -183,13 +186,12 @@ main{max-width:1180px;margin:0 auto;padding:52px 24px 100px}.intro{max-width:820
 <main hidden>
 
 <div class="intro"><div class="eyebrow" data-label="eyebrow"></div><h1 data-label="title"></h1><p data-label="intro"></p></div>
-<div class="toolbar"><button type="button" id="export" class="primary" data-label="export"></button><button type="button" id="use" data-label="use" disabled></button><button type="button" id="import" data-label="import"></button><button type="button" id="duplicate" data-label="duplicate"></button><button type="button" id="reset" data-label="reset" hidden></button><input id="file" type="file" accept=".json,application/json" hidden></div>
-<div id="state" class="state"></div><p id="destination" class="help"></p><div id="message" class="message" role="status" aria-live="polite"></div>
-<div class="work"><nav class="nav" aria-label="Sezioni / Sections"><a href="#assignment" data-label="assignment"></a><a href="#method" data-label="method"></a><a href="#deliverables" data-label="deliverables"></a><p data-label="local_note"></p></nav>
-<div>
-<section id="assignment"><h2 data-label="assignment"></h2><p class="section-note" data-label="assignment_note"></p><div id="identity-fields"></div><fieldset id="workflows" class="radio-list"><legend data-label="workflow"></legend></fieldset></section>
-<section id="method"><h2 data-label="method"></h2><p class="section-note" data-label="method_note"></p><div id="method-fields"></div></section>
-<section id="deliverables"><h2 data-label="deliverables"></h2><p class="section-note" data-label="deliverables_note"></p><div id="template-field"></div><fieldset class="formats" id="formats"><legend data-label="outputs"></legend></fieldset><label class="choice"><input type="checkbox" id="tracked"><span data-label="tracked_changes"></span></label><p class="help" data-label="tracked_help"></p><div id="identity" class="identity"></div></section>
+<div class="toolbar"><button type="button" id="export" class="primary" data-label="export"></button><button type="button" id="use" data-label="use" disabled></button><button type="button" id="reset" data-label="reset" hidden></button><input id="file" type="file" accept=".json,application/json" hidden></div>
+<div id="state" class="state"></div><p id="use-help" class="help"></p><div id="message" class="message" role="status" aria-live="polite"></div>
+<div class="work"><div>
+<section id="assignment"><h2 data-label="assignment"></h2><p class="section-note" data-label="assignment_note"></p><div id="identity-fields"></div><details class="options"><summary id="workflow-summary"></summary><fieldset id="workflows" class="radio-list"><legend data-label="workflow"></legend></fieldset></details></section>
+<section id="method"><h2 data-label="method"></h2><p class="section-note" data-label="method_note"></p><div id="method-fields"></div><details class="options"><summary data-label="advanced_method"></summary><div id="advanced-fields"></div></details></section>
+<details id="deliverables" class="options"><summary data-label="deliverables"></summary><p class="section-note" data-label="deliverables_note"></p><div id="template-field"></div><fieldset class="formats" id="formats"><legend data-label="outputs"></legend></fieldset><label class="choice"><input type="checkbox" id="tracked"><span data-label="tracked_changes"></span></label><p class="help" data-label="tracked_help"></p><div id="identity" class="identity"></div></details><details class="options"><summary data-label="file_actions"></summary><div class="toolbar"><button type="button" id="import" data-label="import"></button><button type="button" id="duplicate" data-label="duplicate"></button></div><p id="destination" class="help"></p></details>
 <section class="privacy"><h2 data-label="privacy_title"></h2><p data-label="privacy"></p></section>
 </div></div>
 <noscript>Abilitare JavaScript per modificare ed esportare le istruzioni. / Enable JavaScript to edit and export these instructions.</noscript>
@@ -210,12 +212,16 @@ const message = (text, error=false) => { byId('message').textContent = text; byI
 function changed() { saveAttempt = null; dirty = JSON.stringify(value) !== JSON.stringify(baseline); updateState(); message(''); }
 function updateState() {
   byId('destination').textContent = t('save_location') + ': ' + destination;
-  byId('state').textContent = t(dirty ? 'unsaved' : 'saved') + ' · ' + t('version') + ' ' + value.version;
+  byId('state').textContent = t(dirty ? 'unsaved' : !selectedPath ? 'not_saved' : 'saved') + ' · ' + t('version') + ' ' + value.version;
   byId('reset').hidden = !dirty;
   byId('identity').textContent = value.derived_from ? t('derived') + ' · ' + t('version') + ' ' + value.derived_from.version : '';
   document.querySelectorAll('button, input, textarea, select').forEach(input => input.disabled = busy);
   byId('use').disabled = busy || dirty || !selectedPath || handedOff || !(host?.hostCapabilities?.message?.text || host?.hostCapabilities?.experimental?.['openai/message']);
   byId('use').title = host?.hostCapabilities?.message?.text || host?.hostCapabilities?.experimental?.['openai/message'] ? '' : t('use_unavailable');
+  byId('use-help').textContent = dirty || !selectedPath ? t('save_first') : byId('use').title;
+  byId('workflow-summary').textContent = t('workflow') + ': ' + t('workflows')[value.workflow];
+  byId('export').classList.toggle('primary',dirty || !selectedPath);
+  byId('use').classList.toggle('primary',!dirty && !!selectedPath);
   byId('tracked').disabled = !value.outputs.includes('docx');
   byId('tracked').checked = value.tracked_changes;
 }
@@ -234,9 +240,9 @@ function draw() {
   document.documentElement.lang=value.language;document.title='Lucia · '+t('title');
   document.querySelectorAll('[data-label]').forEach(node=>node.textContent=t(node.dataset.label));
   byId('language').value=value.language;
-  for(const id of ['identity-fields','method-fields','template-field']) byId(id).replaceChildren();
+  for(const id of ['identity-fields','method-fields','advanced-fields','template-field']) byId(id).replaceChildren();
   field('identity-fields','name');field('identity-fields','purpose',3);
-  field('method-fields','columns',5,true);field('method-fields','questions',4,true);field('method-fields','firm_positions',7);field('method-fields','source_requirements',4,true);field('template-field','template_name');
+  field('method-fields','columns',5,true);field('advanced-fields','questions',4,true);field('method-fields','firm_positions',7);field('advanced-fields','source_requirements',4,true);field('template-field','template_name');
   const choices=byId('workflows'); choices.querySelectorAll('label').forEach(node=>node.remove());
   workflows.forEach(workflow=>{const label=document.createElement('label');label.className='choice';const input=document.createElement('input');input.type='radio';input.name='workflow';input.value=workflow;input.checked=value.workflow===workflow;input.addEventListener('change',()=>{value.workflow=workflow;changed();});const text=document.createElement('span');text.textContent=t('workflows')[workflow];label.append(input,text);choices.append(label);});
   const formats=byId('formats');formats.querySelectorAll('label').forEach(node=>node.remove());
