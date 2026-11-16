@@ -133,7 +133,7 @@
     "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6ff3f6bea12fc545786254012fb748b424c62cb891787afb7a3e20fe2b69d520"
+    "source_fingerprint": "9619479a7b2d19704d7080f6e5c76fa66f0da96dd5a458d1e213f22b086f39f4"
   },
   "governed_repository_paths": [
     "plugins/clara/scripts/public_http.py",

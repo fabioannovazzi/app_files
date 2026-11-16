@@ -8,6 +8,7 @@ const readline = require("node:readline");
 const { spawn, spawnSync } = require("node:child_process");
 
 const { randomUUID } = require("node:crypto");
+process.env.CLARA_ARCHIVE_HOST = "1";
 process.env.VERA_STUDIO_ARCHIVE_SESSION_ID ||= process.env.CODEX_THREAD_ID || randomUUID();
 const pluginRoot = path.resolve(__dirname, "..");
 const packagedRoot = path.join(pluginRoot, "modules", "studio-archive");

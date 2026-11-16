@@ -35,11 +35,27 @@
           "openai-chatgpt",
           "google-antigravity"
         ]
+      },
+      {
+        "id": "shared-studio-directory",
+        "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed paths and receipts remain unchanged.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
       }
     ]
   },
   "external_boundaries": [],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "shared-root-product-workspaces",
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. New engagements use Vera, Lucia or Clara directories; readers resolve exact engagement IDs across these directories, reject duplicate identities and verify existing seals and client ownership. Technical client identity remains at Vera/client.json. Separate legacy archive roots are not moved or merged automatically."
+    }
+  ],
   "service_ids": [
     "managed-python-runtime",
     "operational-incidents",
@@ -50,6 +66,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d6ba452aa1b601625fdabddf3f66d1ad29d811f4b75c72636ac23e4c679f1e06"
+    "source_fingerprint": "a06c40eb21a4d4f678e0f04b67ac891403890011eb3b439046b4d490c606d3b8"
   }
 }

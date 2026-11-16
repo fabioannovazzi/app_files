@@ -280,6 +280,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "shared-studio-directory",
+        "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed paths and receipts remain unchanged.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -287,7 +296,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e1466cc51dd7c373d5346cb66c29849e0258d3482714b486afb529a10e2a0493"
+    "source_fingerprint": "b60f9cec8b8b8fa70623e4c4cca470d130d7a2cf31faea4a48ade5b482be9d42"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -419,6 +428,10 @@
     {
       "id": "versioned-incarico-preservation",
       "control": "Assignment edits use exact revision comparison and retain metadata history. Grouped formats are copied and hash-verified before one atomic revision-directory publication; exact retry keys recover the same revision without rolling back a newer issue. Reuse validates explicit origin and selected format bytes. Existing imported receipts and sealed run headers remain unchanged. Chat associations use actual host identity, never filename or recency inference; Codex links must match the stored UUID. The shared run checkpoint also retains the selected assignment metadata, sources, working files and issued history when available, independently of the archive destination. Recovery failures remain separate from delivery. No automatic deletion or new external transmission is added."
+    },
+    {
+      "id": "shared-root-product-workspaces",
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. New engagements use Vera, Lucia or Clara directories; readers resolve exact engagement IDs across these directories, reject duplicate identities and verify existing seals and client ownership. Technical client identity remains at Vera/client.json. Separate legacy archive roots are not moved or merged automatically."
     }
   ],
   "workstream": "studio-archive",

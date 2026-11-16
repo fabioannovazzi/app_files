@@ -42,7 +42,7 @@ Never write run outputs inside this Git workspace, `static/shared`,
 `protected_downloads`, or any GitHub Pages/static-site folder unless the task is
 explicitly plugin packaging/release. Every local Vera run writes only inside
 the selected customer folder at
-`Vera/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
+`<Product>/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
 only its rebuildable search index, local configuration, and optional private
 contact metadata in the machine-local state directory, normally
 `~/.mparanza/vera-studio-archive/sessions/<session-key>` for Vera or
@@ -138,7 +138,7 @@ Immediate child directories become exact search scopes; supported root-level
 files receive their own root scope. Two separately authorized intake actions
 may write: New Client creates one safely derived top-level folder, and document
 import copies one user-selected regular file into that customer's
-`Vera/engagements/<engagement-id>/inputs/<input-id>` subtree. Neither action
+`<Product>/engagements/<engagement-id>/inputs/<input-id>` subtree. Neither action
 renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
@@ -290,7 +290,7 @@ temporary bytes. It never persists a Drive content cache.
 The selected customer folder is the source of truth for Vera's durable client,
 engagement, input, run, lifecycle, and artifact records in Codex. Folder names
 are labels; `Vera/client.json` carries the stable `client_...` identity, and
-each `Vera/engagements/<engagement-id>/engagement.json` carries one stable
+each `<Product>/engagements/<engagement-id>/engagement.json` carries one stable
 `eng_...` identity. The adjacent `.vera-engagement.lock` has one technical
 purpose: serialize simultaneous ledger mutations across local processes. It
 contains no case data and is not a workflow output. These records survive an
@@ -1087,12 +1087,21 @@ automatically.
 
 ### Session state ownership
 
-State now defaults to a private session subdirectory under
-`~/.mparanza/vera-studio-archive/sessions/` for Vera or
-`~/.mparanza/lucia-studio-archive/sessions/` for Lucia. Their default roots and
-private profiles remain separate even when both products use the same host chat.
-Use Lucia's maintained entrypoints to select its namespace. Never move archive
-contents or adopt another product's saved location during setup.
+Vera, Lucia and Clara use one studio archive root and one client directory.
+New engagements live in `Client/Vera/engagements`, `Client/Lucia/engagements`
+or `Client/Clara/engagements`, according to the owning product. All three can
+list and reopen saved engagements by their exact identity, including legacy
+Lucia/Clara work stored under `Vera/`. Never rename these sealed directories.
+The shared portable client identity and readable navigation retain their existing
+`Vera/client.json` and `Vera/APRI ARCHIVIO.html` locations; those technical paths
+do not make the client or the archive exclusive to Vera.
+
+Default session state remains separate under `~/.mparanza/<product>-studio-archive/sessions/`.
+All three products reuse the existing shared `~/.mparanza/vera-studio-archive/profile`
+for the approved root, private aliases and root-bound index. Choosing the permanent
+archive in any product sets the shared default for fresh sessions. Explicit test
+state/profile overrides remain isolated. Previously separate archive contents
+are not moved or merged automatically.
 The session key is
 `VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
 process identity as the fallback. The MCP server supplies a stable session ID
@@ -1108,8 +1117,7 @@ Reuse a session ID only to resume that same session. A fresh default session
 revalidates the owner-private profile's approved root and creates its own config;
 run `recover-ledger` when ledger verification is needed. Explicit state directories
 stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a private
-profile. The default profile is `~/.mparanza/vera-studio-archive/profile` for Vera
-or `~/.mparanza/lucia-studio-archive/profile` for Lucia, outside
+profile. The common default profile is `~/.mparanza/vera-studio-archive/profile`, outside
 sources. It stores the approved root and root-specific private identity aliases,
 and the root-bound search index, not active run selection, OAuth tokens or session configuration.
 Registry updates use short root-specific locks. A changed/unavailable root requires

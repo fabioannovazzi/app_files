@@ -405,6 +405,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "shared-studio-directory",
+        "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed paths and receipts remain unchanged.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -412,7 +421,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "cabc3ee1b1dfd9497c58b37d0c8200c647130caa9735714bd23313e2d9cf0f1b"
+    "source_fingerprint": "36067d4ef565036e88c5e2b00be0cceccdf830a0a08da8dbca2bc23fe581d904"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -548,6 +557,10 @@
     {
       "id": "versioned-incarico-preservation",
       "control": "Assignment edits use exact revision comparison and retain metadata history. Grouped formats are copied and hash-verified before one atomic revision-directory publication; exact retry keys recover the same revision without rolling back a newer issue. Reuse validates explicit origin and selected format bytes. Existing imported receipts and sealed run headers remain unchanged. Chat associations use actual host identity, never filename or recency inference; Codex links must match the stored UUID. The shared run checkpoint also retains the selected assignment metadata, sources, working files and issued history when available, independently of the archive destination. Recovery failures remain separate from delivery. No automatic deletion or new external transmission is added. Optional saved-work links retain workflow, label, opaque work reference and a case-identity digest. Version 2 assignment records preserve unchanged version 1 seals and history. Metadata edits that omit links preserve the existing links. These references do not grant access or move case files; reopening requires the originating specialist service and its current permissions. Begin can retain an actual originating chat identity in the same metadata revision as the workflow binding. CODEX_THREAD_ID is used only when provided; explicit parent chat identity takes precedence for delegated work. Existing chat associations are merged by host and thread ID, and retries preserve the saved revision. No session ID is promoted to a chat identity and no transcript is copied."
+    },
+    {
+      "id": "shared-root-product-workspaces",
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. New engagements use Vera, Lucia or Clara directories; readers resolve exact engagement IDs across these directories, reject duplicate identities and verify existing seals and client ownership. Technical client identity remains at Vera/client.json. Separate legacy archive roots are not moved or merged automatically."
     }
   ],
   "workstream": "studio-archive",
