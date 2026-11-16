@@ -2,7 +2,6 @@
 "use strict";
 
 const fs = require("node:fs");
-const { createHash } = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawn, spawnSync } = require("node:child_process");
@@ -58,54 +57,14 @@ const child = spawn(process.execPath, [serverPath, "--stdio"], {
   stdio: ["pipe", "pipe", "inherit"],
 });
 const listRequests = new Set();
-const panelRequests = new Map();
 const panelOnly = process.env.CLARA_ARCHIVE_PANEL_ONLY === "1";
-// A changed view must not reuse a retained global-sidebar resource.
-const panelRevision = createHash("sha256")
-  .update(fs.readFileSync(path.join(pluginRoot, "assets", "studio-archive.html")))
-  .digest("hex").slice(0, 16);
-const panelUri = `ui://clara/studio-archive-${panelRevision}.html`;
-const panelMime = "text/html;profile=mcp-app";
 const panelIcon = {
   src: "data:image/svg+xml;base64," + fs.readFileSync(path.join(pluginRoot, "assets", "icon.svg")).toString("base64"),
   mimeType: "image/svg+xml",
   sizes: ["24x24"],
 };
-const panelResource = { uri: panelUri, name: "Clara · Archivio dello studio", mimeType: panelMime };
-const panelTools = [
-  {
-    name: "clara_archive_open",
-    title: panelResource.name,
-    icons: [panelIcon],
-    description: "Open Clara’s local Studio Archive directory in Claude.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-    annotations: { readOnlyHint: true },
-    _meta: {
-      ui: { resourceUri: panelUri, visibility: ["app", "model"] },
-      "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
-    },
-  },
-  {
-    name: "clara_archive_list_matters",
-    description: "List the matter labels for one selected registered client inside the Archive panel.",
-    inputSchema: { type: "object", properties: { client_id: { type: "string", minLength: 1 } }, required: ["client_id"], additionalProperties: false },
-    annotations: { readOnlyHint: true },
-    _meta: { ui: { visibility: ["app"] } },
-  },
-];
-
-function panelResult(name, result) {
-  const data = result?.structuredContent;
-  if (result?.isError || !data) {
-    return { content: [{ type: "text", text: "Il pannello mostra lo stato dell’archivio di Clara." }], _meta: { archive: { error: "archive_unavailable" } } };
-  }
-  const archive = name === "clara_archive_open"
-    ? { configured: data.configured, clients: (data.clients ?? [])
-        .filter(row => row.product_has_work !== false)
-        .map(({ client_id, display_name, registration_status }) => ({ client_id, display_name, registration_status })) }
-    : { engagements: (data.engagements ?? []).map(({ engagement_id, label, status }) => ({ engagement_id, label, status })) };
-  return { content: [{ type: "text", text: "Archivio di Clara pronto nel pannello." }], _meta: { archive } };
-}
+const panel = require(path.join(componentRoot, "mcp/archive_panel.cjs"))({product:"clara",pluginRoot,componentRoot,icon:panelIcon});
+const panelResource=panel.resource, panelUri=panelResource.uri, panelTools=panel.tools;
 
 function send(payload) {
   process.stdout.write(`${JSON.stringify(payload)}\n`);
@@ -128,12 +87,6 @@ childLines.on("line", (line) => {
     message = JSON.parse(line);
   } catch {
     process.stderr.write("Clara Studio Archive returned invalid JSON.\n");
-    return;
-  }
-  const panelRequest = panelRequests.get(message.id);
-  if (panelRequest) {
-    panelRequests.delete(message.id);
-    send({ jsonrpc: "2.0", id: message.id, result: panelResult(panelRequest, message.result) });
     return;
   }
   if (listRequests.delete(message.id)) {
@@ -169,16 +122,7 @@ clientLines.on("line", (line) => {
     return;
   }
   if (panelOnly && message.method === "resources/read" && message.params?.uri === panelUri) {
-    const text = fs.readFileSync(path.join(pluginRoot, "assets", "studio-archive.html"), "utf8")
-      .replace("__FONT__", fs.readFileSync(path.join(pluginRoot, "assets", "InstrumentSans-Regular.ttf")).toString("base64"))
-      .replace("__FONT_BOLD__", fs.readFileSync(path.join(pluginRoot, "assets", "InstrumentSans-SemiBold.ttf")).toString("base64"));
-    send({ jsonrpc: "2.0", id: message.id, result: { contents: [{
-      uri: panelUri, mimeType: panelMime, text,
-      _meta: {
-        ui: { prefersBorder: false, csp: { connectDomains: [], resourceDomains: [] } },
-        "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["fullscreen"] },
-      },
-    }] } });
+    send({jsonrpc:"2.0",id:message.id,result:panel.read()});
     return;
   }
   if (message.method === "tools/list") {
@@ -190,17 +134,8 @@ clientLines.on("line", (line) => {
     if (!panelOnly && toolName === caseTool.name) {
       send({jsonrpc:"2.0", id:message.id, result:caseResult(message.params.arguments || {})}); return;
     }
-    if (toolName === "clara_archive_open" || toolName === "clara_archive_list_matters") {
-      const clientId = message.params.arguments?.client_id;
-      if (toolName === "clara_archive_list_matters" && (typeof clientId !== "string" || !clientId.trim())) {
-        send({ jsonrpc: "2.0", id: message.id, error: { code: -32602, message: "Select a registered client." } });
-        return;
-      }
-      panelRequests.set(message.id, toolName);
-      const params = toolName === "clara_archive_open"
-        ? { name: "list_studio_archive_clients", arguments: {} }
-        : { name: "list_studio_client_engagements", arguments: { client_id: clientId } };
-      child.stdin.write(JSON.stringify({ ...message, params }) + "\n");
+    if (panelTools.some(tool=>tool.name===toolName)) {
+      send({jsonrpc:"2.0",id:message.id,result:panel.call(toolName,message.params.arguments ?? {})});
       return;
     }
     if (panelOnly || typeof toolName !== "string" || excluded.has(toolName) || toolName.startsWith("clara_assurance_")) {

@@ -53,3 +53,7 @@ Lucia's public experience and deliverables are in Italian.
 The shared root and project directory do not share engagements. Show, search and
 resume only this product’s work, documents, results and chat links. Reuse a shared
 project when creating new work without adopting another product’s engagement.
+
+The native Archive uses the same interface as Vera and Clara: document search,
+saved documents, exact revision history and existing linked chats. It does not
+create a new chat. Searches and document reads remain scoped to Lucia’s projects.

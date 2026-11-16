@@ -56,9 +56,9 @@
     "plugins/vera/scripts/native_scissione_bridge.py",
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.html",
+    "plugins/studio-archive/assets/archive.html",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/InstrumentSans-Regular.ttf",
     "plugins/vera/scripts/native_scissione_authoring.py",
     "plugins/vera/scripts/native_aml_authoring.py",
@@ -120,7 +120,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4a55de22d4f00241247b6546319da575d7107188d193d1d43faa60b21ae1647b"
+    "source_fingerprint": "fdef4ebd8ee61b24776bcf99ca537a112ef7ecc3c054e82d4c764e7a10779058"
   },
   "role": "workflow",
   "runtime_profiles": [

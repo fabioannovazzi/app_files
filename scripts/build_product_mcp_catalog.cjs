@@ -18,7 +18,7 @@ function projectVeraReview(service, config, routes) {
   const component = config.args?.at(-1);
   const allowed = companionSurfaces[service.name];
   const isComponent = Object.hasOwn(routes, component);
-  const unwanted = uri => typeof uri === "string" && uri.startsWith("ui://") && uri !== allowed;
+  const unwanted = uri => typeof uri === "string" && uri.startsWith("ui://") && uri !== allowed && !(service.name === "veraNativeWorkspace" && /^ui:\/\/vera\/workspace-[a-f0-9]{16}\.html$/.test(uri));
   // Standalone component editors are not Vera entry points. An entirely new
   // service needs an explicit product decision before it can show another UI.
   if (!isComponent && [...service.resources, ...(service.resourceTemplates || [])]

@@ -28,6 +28,26 @@
   },
   "sources": [
     {
+      "path": "modules/studio-archive/assets/archive-host.js",
+      "repository_path": "plugins/studio-archive/assets/archive-host.js",
+      "sha256": "f1bd5c4dadf3bbfb4d71a5721eafc5e927987d145383718ff382c371f65cf035"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive-ui.js",
+      "repository_path": "plugins/studio-archive/assets/archive-ui.js",
+      "sha256": "be2266910bc3a79f7e58ea6994a86e86ff1cc14dc3b4a755f344f0b86cb438da"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.css",
+      "repository_path": "plugins/studio-archive/assets/archive.css",
+      "sha256": "770033c02655269c7ed9c66fb954f6f2194a1e589a01a140d887b95a0aa4468c"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.html",
+      "repository_path": "plugins/studio-archive/assets/archive.html",
+      "sha256": "59cba905ef3676949c133c38efc43bebe05d8b49bc5fcbc3ee746ef8c73228d2"
+    },
+    {
       "path": "modules/studio-archive/assets/icon.svg",
       "repository_path": "plugins/studio-archive/assets/icon.svg",
       "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
@@ -40,12 +60,17 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "83dec5a51dfc2421fb812d674888ff39023e306c24fe3c6dfb82c95f84e09f3c"
+      "sha256": "860b803c53003c4708782f4ba352806b1e180e18839f2c7302cfec4cf4a8b42b"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/archive_error_reporting.py",
       "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_panel.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_panel.py",
+      "sha256": "7d47ac02833e3986f6708c9e490372cf7be111cda7b84664b6a2e0767dcacb68"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",

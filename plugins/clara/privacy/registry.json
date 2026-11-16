@@ -641,6 +641,12 @@
           ".codex-plugin/plugin.json",
           "mcp",
           "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/services/on-demand-mcp.json": [
+          "modules/studio-archive/mcp/archive_panel.cjs"
+        ],
+        "privacy/workstreams/studio-archive.json": [
+          "modules/studio-archive/mcp/archive_panel.cjs"
         ]
       }
     },

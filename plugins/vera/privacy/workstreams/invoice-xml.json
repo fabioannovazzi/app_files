@@ -49,9 +49,9 @@
     "plugins/vera/scripts/native_invoice_bridge.py",
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.html",
+    "plugins/studio-archive/assets/archive.html",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/InstrumentSans-Regular.ttf",
     "plugins/vera/skills/invoice-xml/SKILL.md",
     "plugins/vera/skills/vera/references/native-workspace.md",
@@ -127,7 +127,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "ecd209ee96f1d7b099f598f8e8357f83fe4f2a1e45294c97f426dfe44bea9fe7"
+    "source_fingerprint": "0f5471edb7627169322601190b856b1fb6ac571b5524a6c6e01f3db0eca8a38a"
   },
   "role": "workflow",
   "runtime_profiles": [

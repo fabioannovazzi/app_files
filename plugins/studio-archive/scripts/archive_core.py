@@ -7230,6 +7230,7 @@ def search_archive(
     scope_id: str,
     limit: int = 10,
     state_dir: Path | None = None,
+    allowed_scope_ids: set[str] | None = None,
 ) -> dict[str, Any]:
     """Search one exact configured scope, or ``all`` when explicitly requested."""
 
@@ -7253,6 +7254,11 @@ def search_archive(
     expression = _fts_query(query)
     connection = _connect(private_state, readonly=True)
     connection.create_function("product_source_visible", 1, _product_source_visible)
+    connection.create_function(
+        "panel_scope_visible",
+        1,
+        lambda scope: allowed_scope_ids is None or scope in allowed_scope_ids,
+    )
     try:
         if _metadata_get(connection, "config_fingerprint") != _config_fingerprint(
             config
@@ -7287,6 +7293,7 @@ def search_archive(
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
                       AND product_source_visible(d.relative_path)
+                      AND panel_scope_visible(d.scope_id)
                 ), ranked AS (
                     SELECT
                         *,
@@ -7329,6 +7336,7 @@ def search_archive(
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
                       AND product_source_visible(d.relative_path)
+                      AND panel_scope_visible(d.scope_id)
                       AND d.scope_id = ?
                 ), ranked AS (
                     SELECT

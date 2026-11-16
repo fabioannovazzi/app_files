@@ -37,8 +37,8 @@
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.html",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/custom_select.js"
   ],
   "governed_shared_paths": [
@@ -80,7 +80,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8b3a3ea4264eaf3972a0892dfeb33a2cf70368dd5faf5eaa0ef7e32e42f39f94"
+    "source_fingerprint": "0b804879a05d0c29731cbc0c7cf89e6e1d2429e0311610e4c641c188c12ad54c"
   },
   "role": "workflow",
   "runtime_profiles": [

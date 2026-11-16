@@ -949,6 +949,19 @@
         "ui/workspace.js"
       ],
       "on_violation": "Reject unknown clients and changed source bytes; propagate refresh failures without changing scope or pretending search is complete."
+    },
+    {
+      "id": "shared-product-archive-ui",
+      "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response.",
+      "implemented_by": [
+        "modules/studio-archive/assets/archive.html",
+        "modules/studio-archive/assets/archive.css",
+        "modules/studio-archive/assets/archive-ui.js",
+        "modules/studio-archive/assets/archive-host.js",
+        "modules/studio-archive/mcp/archive_panel.cjs",
+        "modules/studio-archive/scripts/archive_panel.py"
+      ],
+      "on_violation": "Reject an invalid or foreign selection; retain saved documents and receipts."
     }
   ],
   "governed_paths": [
@@ -1126,7 +1139,13 @@
     "scripts/native_posting_review.py",
     "skills/vera/references/posting-review.md",
     "scripts/native_incarichi.py",
-    "skills/vera/references/work-continuity.md"
+    "skills/vera/references/work-continuity.md",
+    "modules/studio-archive/assets/archive.html",
+    "modules/studio-archive/assets/archive.css",
+    "modules/studio-archive/assets/archive-ui.js",
+    "modules/studio-archive/assets/archive-host.js",
+    "modules/studio-archive/mcp/archive_panel.cjs",
+    "modules/studio-archive/scripts/archive_panel.py"
   ],
   "external_boundaries": [
     {
@@ -1173,7 +1192,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "fec0b621ed5325e9e9f9a4483efe653b19b1cc89fa3695761309866111a69b27",
+    "source_fingerprint": "fb82aab10981f9a3ba35988f9900d87283df43c49ea3874effdcc9d29ca2c793",
     "reviewed_at": "2026-11-14"
   },
   "governed_repository_paths": [

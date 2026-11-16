@@ -50,8 +50,8 @@
     "plugins/vera/ui/custom_select.js",
     "plugins/vera/ui/open-items-intake.js",
     "plugins/vera/ui/review-routes.json",
-    "plugins/vera/ui/workspace.css",
-    "plugins/vera/ui/workspace.html",
+    "plugins/studio-archive/assets/archive.css",
+    "plugins/studio-archive/assets/archive.html",
     "plugins/vera/ui/workspace.js",
     "plugins/journal-bank-reconciliation/scripts/evidence_retrieval.py",
     "plugins/journal-bank-reconciliation/scripts/retrieval_review.py"
@@ -194,7 +194,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5253b5ff3305cd4d014f890e97502ad42a2cd5964e4207a28374216b16ab36d1"
+    "source_fingerprint": "6638d4337282743f866ac1c737ebd762a9062965d33ef899c0a8f423f53ea010"
   },
   "role": "workflow",
   "runtime_profiles": [

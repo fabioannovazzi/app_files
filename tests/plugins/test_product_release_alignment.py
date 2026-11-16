@@ -274,3 +274,23 @@ def test_rejects_archive_without_product_manifest(tmp_path) -> None:
 
     with pytest.raises(ValueError, match="expected one clara manifest"):
         release.verify_versions(tmp_path, ("clara",))
+
+
+def test_all_products_ship_the_same_archive_ui():
+    root = SCRIPT.parents[1]
+    shared = ("archive.html", "archive.css", "archive-ui.js", "archive-host.js")
+    copies = []
+    for product in release.PRODUCTS:
+        with ZipFile(
+            root / "plugin_packages" / product / f"{product}-plugin.zip"
+        ) as package:
+            prefix = f"{product}-codex-plugin/plugins/{product}/"
+            copies.append(
+                {
+                    name: package.read(prefix + "modules/studio-archive/assets/" + name)
+                    for name in shared
+                }
+            )
+            assert prefix + "assets/studio-archive.html" not in package.namelist()
+            assert prefix + "ui/workspace.html" not in package.namelist()
+    assert copies[0] == copies[1] == copies[2]

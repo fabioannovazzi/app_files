@@ -13,6 +13,7 @@ __all__ = ["retire_browser_interfaces"]
 APP_HTML = frozenset(
     {
         "ui/workspace.html",
+        "modules/studio-archive/assets/archive.html",
         "ui/studio-work.html",
         "ui/research-sources.html",
         "modules/browser-automation/ui/agenzia.html",

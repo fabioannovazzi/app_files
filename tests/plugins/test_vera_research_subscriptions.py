@@ -355,7 +355,7 @@ def test_shipped_archives_execute_the_subscription_cli_and_render_the_panel(
         "ui/research-sources.js",
         "ui/research-sources.css",
         "ui/custom_select.js",
-        "ui/workspace.css",
+        "modules/studio-archive/assets/archive.css",
         "ui/InstrumentSans-Regular.ttf",
         "ui/InstrumentSans-SemiBold.ttf",
     ]

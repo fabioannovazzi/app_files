@@ -57,7 +57,7 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
     """Compile the latest theme into product host resources before integrity hashes."""
     theme = THEME_PATH.read_text(encoding="utf-8")
     css_resources = {
-        "ui/workspace.css",
+        "modules/studio-archive/assets/archive.css",
         "ui/research-sources.css",
         "modules/browser-automation/ui/agenzia.css",
         "modules/bilancio-xbrl-it/ui/workspace.css",
@@ -85,6 +85,12 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
         if not name.startswith(prefix):
             continue
         relative = name.removeprefix(prefix)
+        if relative == "modules/studio-archive/assets/archive.css":
+            original_resources[relative] = entries[name]
+            entries[name] = theme_css(
+                entries[name].decode("utf-8"), theme=vera_identity_theme()
+            ).encode()
+            continue
         # Saved specialist cases verify their producer's files byte for byte.
         # Only Agenzia serves a component UI directly in the Vera MCP catalog.
         if (

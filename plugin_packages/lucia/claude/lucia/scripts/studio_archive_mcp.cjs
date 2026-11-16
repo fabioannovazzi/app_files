@@ -2,11 +2,11 @@
 "use strict";
 
 const fs = require("node:fs");
-const { createHash } = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawn } = require("node:child_process");
 
+process.env.VERA_STUDIO_ARCHIVE_SESSION_ID ||= process.env.CODEX_THREAD_ID || require("node:crypto").randomUUID();
 const pluginRoot = path.resolve(__dirname, "..");
 const packagedRoot = path.join(pluginRoot, "modules", "studio-archive");
 const sourceRoot = path.resolve(pluginRoot, "..", "studio-archive");
@@ -38,78 +38,14 @@ const child = spawn(process.execPath, [serverPath, "--stdio"], {
   stdio: ["pipe", "pipe", "inherit"],
 });
 const listRequests = new Set();
-const panelRequests = new Map();
 const panelOnly = process.env.LUCIA_ARCHIVE_PANEL_ONLY === "1";
-// A changed view must not reuse a retained global-sidebar resource.
-const panelRevision = createHash("sha256")
-  .update(fs.readFileSync(path.join(pluginRoot, "assets", "studio-archive.html")))
-  .digest("hex").slice(0, 16);
-const panelUri = `ui://lucia/studio-archive-${panelRevision}.html`;
-const panelMime = "text/html;profile=mcp-app";
 const panelIcon = {
   src: "data:image/svg+xml;base64," + fs.readFileSync(path.join(pluginRoot, "assets", "icon.svg")).toString("base64"),
   mimeType: "image/svg+xml",
   sizes: ["24x24"],
 };
-const panelResource = { uri: panelUri, name: "Lucia · Archivio dello studio", mimeType: panelMime };
-const panelTools = [
-  {
-    name: "lucia_archive_open",
-    title: panelResource.name,
-    icons: [panelIcon],
-    description: "Open Lucia’s local Studio Archive directory in Codex.",
-    inputSchema: { type: "object", properties: {}, additionalProperties: false },
-    annotations: { readOnlyHint: true },
-    _meta: {
-      ui: { resourceUri: panelUri, visibility: ["app", "model"] },
-      "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] },
-    },
-  },
-  {
-    name: "lucia_archive_list_matters",
-    description: "List the matter labels for one selected registered client inside the Archive panel.",
-    inputSchema: { type: "object", properties: { client_id: { type: "string", minLength: 1 } }, required: ["client_id"], additionalProperties: false },
-    annotations: { readOnlyHint: true },
-    _meta: { ui: { visibility: ["app"] } },
-  },
-];
-
-const scope = { client_id: {type:"string", minLength:1}, engagement_id: {type:"string", minLength:1} };
-for (const [name, description, properties] of [
-  ["lucia_archive_read_matter", "Read saved documents and existing chat links for the selected matter.", scope],
-  ["lucia_archive_read_document", "Verify and open one saved document in the selected matter; no arbitrary paths.", {...scope, reference:{type:"object"}}],
-]) panelTools.push({name, description, inputSchema:{type:"object",properties,required:Object.keys(properties),additionalProperties:false}, annotations:{readOnlyHint:true}, _meta:{ui:{visibility:["app"]}}});
-
-function panelResult(name, result) {
-  const data = result?.structuredContent;
-  if (result?.isError || !data) {
-    return { content: [{ type: "text", text: "Il pannello mostra lo stato dell’archivio di Lucia." }], _meta: { archive: { error: "archive_unavailable" } } };
-  }
-  let archive;
-  if (name === "lucia_archive_open") archive = { configured: data.configured, clients: (data.clients ?? [])
-        .filter(row => row.product_has_work !== false)
-    .map(({client_id, display_name, registration_status}) => ({client_id, display_name, registration_status})) };
-  else if (name === "lucia_archive_list_matters") archive = { engagements: (data.engagements ?? [])
-    .map(({engagement_id, label, status}) => ({engagement_id, label, status})) };
-  else if (name === "lucia_archive_read_document") {
-    const {name, path, preview} = data;
-    archive = {document:{name, path, preview}};
-  } else {
-    const document = ({name, label, reference, available}) => ({name, label, reference, available});
-    archive = {matter:{
-      purpose:data.purpose,
-      documents:(data.documents ?? []).map(document),
-      results:(data.results ?? []).map(document),
-      deliverables:(data.deliverables ?? []).map(entry => ({versions:entry.versions.map(version => ({
-        label:version.label, revision:version.revision, primary_format:version.primary_format,
-        formats:version.formats.map(file => ({...document(file), format:file.format})),
-      }))})),
-      conversations:(data.conversations ?? []).map(({title,url}) => ({title,url})),
-      has_issues:!!(data.document_issues?.length || data.deliverable_issues?.length),
-    }};
-  }
-  return { content: [{ type: "text", text: "Archivio di Lucia pronto nel pannello." }], _meta: { archive } };
-}
+const panel = require(path.join(componentRoot, "mcp/archive_panel.cjs"))({product:"lucia",pluginRoot,componentRoot,icon:panelIcon});
+const panelResource=panel.resource, panelUri=panelResource.uri, panelTools=panel.tools;
 
 function send(payload) {
   process.stdout.write(`${JSON.stringify(payload)}\n`);
@@ -132,12 +68,6 @@ childLines.on("line", (line) => {
     message = JSON.parse(line);
   } catch {
     process.stderr.write("Lucia Studio Archive returned invalid JSON.\n");
-    return;
-  }
-  const panelRequest = panelRequests.get(message.id);
-  if (panelRequest) {
-    panelRequests.delete(message.id);
-    send({ jsonrpc: "2.0", id: message.id, result: panelResult(panelRequest, message.result) });
     return;
   }
   if (listRequests.delete(message.id)) {
@@ -173,16 +103,7 @@ clientLines.on("line", (line) => {
     return;
   }
   if (panelOnly && message.method === "resources/read" && message.params?.uri === panelUri) {
-    const text = fs.readFileSync(path.join(pluginRoot, "assets", "studio-archive.html"), "utf8")
-      .replace("__FONT__", fs.readFileSync(path.join(pluginRoot, "assets", "InstrumentSans-Regular.ttf")).toString("base64"))
-      .replace("__FONT_BOLD__", fs.readFileSync(path.join(pluginRoot, "assets", "InstrumentSans-SemiBold.ttf")).toString("base64"));
-    send({ jsonrpc: "2.0", id: message.id, result: { contents: [{
-      uri: panelUri, mimeType: panelMime, text,
-      _meta: {
-        ui: { prefersBorder: false, csp: { connectDomains: [], resourceDomains: [] } },
-        "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["fullscreen"] },
-      },
-    }] } });
+    send({jsonrpc:"2.0",id:message.id,result:panel.read()});
     return;
   }
   if (message.method === "tools/list") {
@@ -191,24 +112,8 @@ clientLines.on("line", (line) => {
   if (message.method === "tools/call") {
     const toolName = message.params?.name;
     const workflowId = message.params?.arguments?.workflow_id;
-    if (panelTools.some(tool => tool.name === toolName)) {
-      const args = message.params.arguments ?? {};
-      const definition = panelTools.find(tool => tool.name === toolName).inputSchema;
-      if (Object.keys(args).some(key => !Object.hasOwn(definition.properties, key)) ||
-          (definition.required ?? []).some(key => key === "reference"
-            ? !args[key] || typeof args[key] !== "object" || Array.isArray(args[key])
-            : typeof args[key] !== "string" || !args[key].trim())) {
-        send({jsonrpc:"2.0", id:message.id, error:{code:-32602, message:"Select an exact registered client, matter and document."}});
-        return;
-      }
-      const targets = {
-        lucia_archive_open:"list_studio_archive_clients",
-        lucia_archive_list_matters:"list_studio_client_engagements",
-        lucia_archive_read_matter:"get_studio_incarico",
-        lucia_archive_read_document:"read_studio_incarico_document",
-      };
-      panelRequests.set(message.id, toolName);
-      child.stdin.write(JSON.stringify({...message, params:{name:targets[toolName], arguments:args}}) + "\n");
+    if (panelTools.some(tool=>tool.name===toolName)) {
+      send({jsonrpc:"2.0",id:message.id,result:panel.call(toolName,message.params.arguments ?? {})});
       return;
     }
     if (panelOnly || typeof toolName !== "string" || excluded.has(toolName) || toolName.startsWith("lucia_assurance_")) {

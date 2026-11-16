@@ -987,7 +987,7 @@ def test_archive_document_search_ui_typing_opening_and_stale_responses():
         [
             NODE,
             str(ROOT / "tests/plugins/archive_document_search_ui.cjs"),
-            str(ROOT / "plugins/vera/ui/workspace.js"),
+            str(ROOT / "plugins/studio-archive/assets/archive-ui.js"),
         ],
         capture_output=True,
         text=True,
@@ -1008,6 +1008,8 @@ def test_search_recovers_added_scope_and_opens_original_hit(
     archive_cli(env, "refresh")
     added = root / "Nuovo cliente"
     added.mkdir()
+    (added / "vera").mkdir()
+    (added / "vera/marker.txt").write_text("Product work")
     (added / "nuovo.txt").write_text("Credito: nuovo documento.", encoding="utf-8")
     if new_session:
         # Reproduce the screenshot: current configuration already knows the new

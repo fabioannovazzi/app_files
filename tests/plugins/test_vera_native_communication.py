@@ -248,7 +248,7 @@ def test_communication_six_routes_app_only_private_projection_and_shared_resourc
         """
 const tools=service.handle({jsonrpc:'2.0',id:1,method:'tools/list'}).result.tools.filter(tool=>tool.name.startsWith('vera_workspace_communication_'));
 const response=call('vera_workspace_communication_setup',{work_ref:'communication-fictional'});
-const resource=service.handle({jsonrpc:'2.0',id:1,method:'resources/read',params:{uri:'ui://vera/workspace-v1.html'}}).result;
+const resource=service.handle({jsonrpc:'2.0',id:1,method:'resources/read',params:{uri:service.handle({method:'resources/list',id:99}).result.resources[0].uri}}).result;
 const result={tools,response,has_component:resource.contents[0].text.includes('VeraCommunication')};
 """,
     )

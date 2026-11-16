@@ -21,7 +21,10 @@ const SIDEBAR_ICONS = ["light", "dark"].map(theme => ({
   src: `data:image/svg+xml;base64,${fs.readFileSync(path.join(ROOT, "assets", `sidebar-${theme}.svg`)).toString("base64")}`,
   mimeType: "image/svg+xml", sizes: ["any"], theme,
 }));
-const URI = "ui://vera/workspace-v1.html";
+const archiveAssets = path.join(fs.existsSync(path.join(ROOT,"modules/studio-archive")) ? path.join(ROOT,"modules/studio-archive") : path.join(ROOT,"../studio-archive"),"assets");
+const archiveRevision = createHash("sha256");
+for(const file of ["archive.html","archive.css","archive-ui.js"]) archiveRevision.update(fs.readFileSync(path.join(archiveAssets,file)));
+const URI = `ui://vera/workspace-${archiveRevision.digest("hex").slice(0,16)}.html`;
 const MIME = "text/html;profile=mcp-app";
 const secret = randomBytes(32);
 const string = { type: "string", minLength: 1, maxLength: 200 };
@@ -786,10 +789,11 @@ function resource() {
   const directory = path.join(ROOT, "ui");
   const managementCopyPath = fs.existsSync(path.join(ROOT, "modules/management-control-pack/assets/management-report-copy.json")) ? path.join(ROOT, "modules/management-control-pack/assets/management-report-copy.json") : path.join(ROOT, "../management-control-pack/assets/management-report-copy.json");
   const managementCopy = JSON.parse(fs.readFileSync(managementCopyPath, "utf8")).it;
-  const html = fs.readFileSync(path.join(directory, "workspace.html"), "utf8")
-    .replace("/*__CSS__*/", fs.readFileSync(path.join(directory, "workspace.css"), "utf8"))
+  const html = fs.readFileSync(path.join(archiveAssets, "archive.html"), "utf8")
+    .replaceAll("__PRODUCT__", "Vera")
+    .replace("/*__CSS__*/", fs.readFileSync(path.join(archiveAssets, "archive.css"), "utf8"))
     .replace("/*__SELECT_JS__*/", fs.readFileSync(path.join(directory, "custom_select.js"), "utf8"))
-    .replace("/*__JS__*/", () => "globalThis.VeraReviewRoutes = " + JSON.stringify(reviewRoutes) + ";\n" + "globalThis.VeraManagementCopy = " + JSON.stringify(managementCopy).replaceAll("<", "\\u003c") + ";\n" + fs.readFileSync(path.join(directory, "management-results.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "practice-reviews.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "model-data-report.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "browser.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "fusion.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "rating.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "transformation.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "website.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "communication.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "bandi-contributions.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box-authoring.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "open-items-intake.js"), "utf8") + "\n" + fs.readFileSync((fs.existsSync(path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js")) ? path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js") : path.join(ROOT, "../bilancio-xbrl-it/ui/area-review.js")), "utf8") + "\n" + fs.readFileSync(path.join(directory, "workspace.js"), "utf8"))
+    .replace("/*__JS__*/", () => fs.readFileSync(path.join(archiveAssets,"archive-ui.js"),"utf8") + "\n" + "globalThis.VeraReviewRoutes = " + JSON.stringify(reviewRoutes) + ";\n" + "globalThis.VeraManagementCopy = " + JSON.stringify(managementCopy).replaceAll("<", "\\u003c") + ";\n" + fs.readFileSync(path.join(directory, "management-results.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "practice-reviews.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "model-data-report.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "browser.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "fusion.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "rating.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "transformation.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "website.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "communication.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "bandi-contributions.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box-authoring.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "open-items-intake.js"), "utf8") + "\n" + fs.readFileSync((fs.existsSync(path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js")) ? path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js") : path.join(ROOT, "../bilancio-xbrl-it/ui/area-review.js")), "utf8") + "\n" + fs.readFileSync(path.join(directory, "workspace.js"), "utf8"))
     .replace("__FONT__", fs.readFileSync(path.join(directory, "InstrumentSans-Regular.ttf")).toString("base64"))
     .replace("__FONT_BOLD__", fs.readFileSync(path.join(directory, "InstrumentSans-SemiBold.ttf")).toString("base64"));
   return { contents: [{ uri: URI, mimeType: MIME, text: html, _meta: {

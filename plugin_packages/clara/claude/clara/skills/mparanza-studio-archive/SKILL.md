@@ -56,8 +56,9 @@ An inaccessible archive or incomplete directory is not evidence that a client
 is absent. Do not create duplicate clients or guess a replacement root.
 
 Open `clara_archive_open` for the local directory panel when available. The
-panel lists clients and engagements and hands the selection to a chat; browsing
-never creates an engagement or runs an analysis. Missing panel support does not
+panel uses the same interface as Vera and Lucia: search the product’s archive,
+open saved documents and their exact revisions, and follow existing linked chats.
+It does not create new chats, engagements or analyses. Missing panel support does not
 block the equivalent chat tools.
 
 For an existing client, call `list_studio_client_engagements`. Reuse the selected

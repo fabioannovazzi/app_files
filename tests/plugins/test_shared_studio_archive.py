@@ -553,3 +553,34 @@ def test_readable_navigation_stays_in_own_product_area(
     assert page.is_file()
     assert "Own product work" in page.read_text()
     assert "Synthetic engagement" not in page.read_text()
+
+
+def test_panel_scope_filter_precedes_ranking_and_limit(archive_core, tmp_path):
+    case = client_case.__wrapped__(tmp_path, archive_core)
+    (case.client_root / "own.txt").write_text("scopedneedle own")
+    other = case.client_root.parent / "Other product project"
+    other.mkdir()
+    for index in range(25):
+        (other / f"foreign-{index}.txt").write_text(f"scopedneedle {index}")
+    archive_core.refresh_archive(state_dir=case.state_dir)
+    scope = archive_core.get_studio_client_folder(
+        case.client_id, state_dir=case.state_dir
+    )["client_folder"]["scope_id"]
+    found = archive_core.search_archive(
+        "scopedneedle",
+        scope_id="all",
+        limit=1,
+        state_dir=case.state_dir,
+        allowed_scope_ids={scope},
+    )
+    assert len(found["results"]) == 1
+    assert found["results"][0]["relative_path"].endswith("/own.txt")
+    assert (
+        archive_core.search_archive(
+            "scopedneedle",
+            scope_id="all",
+            state_dir=case.state_dir,
+            allowed_scope_ids=set(),
+        )["results"]
+        == []
+    )

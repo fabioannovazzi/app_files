@@ -11,7 +11,7 @@
     "ui/InstrumentSans-Regular.ttf",
     "skills/research-subscriptions",
     "skills/vera/references/research-subscriptions.md",
-    "ui/workspace.css",
+    "modules/studio-archive/assets/archive.css",
     "ui/custom_select.js",
     "scripts/research-sources.cjs"
   ],
@@ -35,6 +35,6 @@
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "824ad5ca6adaea77f67a57aab9e601d32aaf7a85cea0d43556ffcac358655517"
+    "source_fingerprint": "641f6dc0f156547000185b8861d847283309088f98b19219181596fb31a769b5"
   }
 }

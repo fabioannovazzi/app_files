@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "6ff2df3932c125b31a13465244036fab026e1d1079ba58d5174c8bd2e7c7ecf1",
+      "sha256": "ba44e3bd937d5cdf625fc3e8f65173709a453c117bda253bdbb672b69c3b0663",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "0e2f034ae75de7fe85ec65d6ba18d4869a39a921f9d54c2009735a27838cd392",
+      "sha256": "1fa6ba90764939b7e8bdd9cc0f37905bdf036ee34d4459518c730cd0e0f7695f",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "83b4c05660bfbb94a6bfce420665699b096a4ca8991ed2d9deff36d42c0774bc",
+      "sha256": "87948a06b3bde03d706e332c2b0dc925abcd95b94ce4321a6ab44e2bc8b85a59",
       "languages": [
         "it",
         "en",

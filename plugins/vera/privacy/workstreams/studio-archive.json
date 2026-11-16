@@ -160,7 +160,13 @@
     "mcp",
     ".mcp.json",
     "requirements.txt",
-    "requirements-ocr.txt"
+    "requirements-ocr.txt",
+    "assets/archive.html",
+    "assets/archive.css",
+    "assets/archive-ui.js",
+    "assets/archive-host.js",
+    "mcp/archive_panel.cjs",
+    "scripts/archive_panel.py"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",
@@ -173,8 +179,8 @@
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.html",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/skills/studio-archive/SKILL.md",
     "plugins/vera/skills/vera/references/native-workspace.md",
     "plugins/vera/scripts/native_archive_imports.py",
@@ -421,7 +427,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "9726b93f23a1b252b6c20b89f65fc852974bfe625fe4ffca5903f02777dcb885"
+    "source_fingerprint": "3185b225010392c5f28d4e7b2f166536986227c16e810f5f54b36c62febec795"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -561,6 +567,10 @@
     {
       "id": "shared-root-product-workspaces",
       "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. Every project has vera, lucia and clara directories. The local layout normalizer preflights projects, rejects redirected or case-colliding directories, normalizes legacy folder casing and creates missing areas without rewriting retained evidence. Readers resolve historical path casing and exact engagement IDs, reject duplicate identities and verify seals and client ownership. Shared identity remains at vera/client.json. Separate legacy archive roots are not merged automatically."
+    },
+    {
+      "id": "shared-product-archive-ui",
+      "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response."
     }
   ],
   "workstream": "studio-archive",

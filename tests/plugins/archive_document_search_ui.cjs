@@ -14,7 +14,8 @@ const calls=[], timers=new Map();let seq=0,resolveOld;
 const hit={title:'Cumulo Transizione 5.0 e contributo ISMEA.pdf',client_label:'Eutekne',source_id:'src_example',locator_kind:'page',locator_value:'1',snippet:'Il [[credito]] Transizione 5.0'};
 const context={node,document:{createTextNode:text=>node('#text',text)},catalogue:{client_id:'client_eutekne',client_label:'Eutekne'},button:(text,action)=>{const b=node('button',text);b.listeners.click=action;return b;},setTimeout:fn=>{timers.set(++seq,fn);return seq;},clearTimeout:id=>timers.delete(id),call:async(name,args)=>{calls.push({name,args});if(args.query==='old')return new Promise(resolve=>resolveOld=resolve);if(args.query==='failure')throw Error('Source unavailable');return name.endsWith('_source')?{source_verified:true,fragments:[{locator_kind:'page',locator_value:'1',text:'Il credito è discusso con ISMEA.'}],limitations:[]}:{results:args.query==='empty'?[]:[hit]};}};
 const source=fs.readFileSync(process.argv[2],'utf8');
-vm.runInNewContext(source.slice(source.indexOf('  function archiveDocumentSearch('),source.indexOf('  function renderCatalogue()'))+';this.mount=archiveDocumentSearch;',context);
+vm.runInNewContext(source,context);
+context.mount=context.StudioArchiveUI({...context,getCatalogue:()=>context.catalogue}).archiveDocumentSearch;
 const parent=node('main'),listing=node('div');context.mount(parent,listing);
 const input=walk(parent).find(e=>e.tagName==='input');
 async function type(value){input.value=value;input.listeners.input();for(const [id,fn]of [...timers]){timers.delete(id);fn();}await new Promise(resolve=>setImmediate(resolve));}

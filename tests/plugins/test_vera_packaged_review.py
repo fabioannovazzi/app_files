@@ -17,7 +17,7 @@ def test_codex_package_exposes_one_pipeline_editor_and_only_distinct_companion_t
     archive = (
         Path(__file__).resolve().parents[2] / "plugin_packages/vera/vera-plugin.zip"
     )
-    review = "ui://vera/workspace-v1.html"
+    review = None
     expected = {
         "veraNativeWorkspace": review,
         "courseChats": "ui://vera/course-chats-v1.html",
@@ -30,6 +30,11 @@ def test_codex_package_exposes_one_pipeline_editor_and_only_distinct_companion_t
             package.read("vera-codex-plugin/plugins/vera/mcp-catalog.json")
         )
     services = catalog["services"]
+    review = next(
+        service for service in services if service["name"] == "veraNativeWorkspace"
+    )["resources"][0]["uri"]
+    assert re.fullmatch(r"ui://vera/workspace-[a-f0-9]{16}\.html", review)
+    expected["veraNativeWorkspace"] = review
     urls = [
         (service["name"], entry["uri"])
         for service in services

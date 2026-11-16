@@ -37,8 +37,8 @@
     "plugins/vera/skills/vera/references/native-workspace.md",
     "plugins/vera/scripts/native_sales_plan_authoring.py",
     "plugins/vera/ui/custom_select.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.html",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/scripts/native_sales_plan_queries.py"
   ],
   "governed_shared_paths": [
@@ -96,7 +96,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "aeecb0433c637d2463de91c8c27bf987c39474cce2e5a803bb78bb84bba188f1"
+    "source_fingerprint": "a3d68faf44dabfa07cb3b57f4a21976d8c32a10f4a45aebafda262b437581a41"
   },
   "role": "workflow",
   "runtime_profiles": [

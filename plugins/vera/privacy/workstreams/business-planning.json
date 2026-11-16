@@ -73,8 +73,8 @@
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.html",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/custom_select.js",
     "plugins/vera/scripts/native_business_planning_review.py",
     "plugins/vera/scripts/native_business_planning_authoring.py",
@@ -161,7 +161,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "dbb889fc3db674f0f37f6e72f2ae2629f31a1cf7171f16363d8369f48a7ec6f1"
+    "source_fingerprint": "7b9bdf6dd2707a2a2183f3e69d7ca711a6527169a8ad14e7a529e73e0e51cee6"
   },
   "role": "workflow",
   "runtime_profiles": [
