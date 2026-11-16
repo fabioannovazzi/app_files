@@ -83,6 +83,7 @@ def test_fdd_success_is_deterministic_and_delivers_complete_receipts(
         "scripts/validate_case_contracts.py",
         "modules/vera_assurance/__init__.py",
         "modules/vera_assurance/contracts.py",
+        "modules/vera_assurance/archive_paths.py",
         "modules/vera_assurance/decisions.py",
         "modules/vera_assurance/envelope.py",
         "modules/vera_assurance/money.py",
