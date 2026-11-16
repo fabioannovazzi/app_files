@@ -409,6 +409,58 @@
       parent.append(work);
     }
   }
+  function archiveDocumentSearch(parent, listing) {
+    const scope = catalogue.client_id ? {client_id:catalogue.client_id} : {all_clients:true};
+    const area=node("section",undefined,"archive-search"), label=node("label",undefined,"search"), input=node("input");
+    input.type="search";
+    label.append(node("span", catalogue.client_id ? "Cerca nei documenti di " + catalogue.client_label : "Cerca nei documenti dell’archivio"),input);
+    const results=node("div"); results.setAttribute("aria-live","polite");
+    area.append(label,results);parent.append(area);
+    let timer, generation=0;
+    const current = id => id===generation && area.isConnected;
+    function highlighted(text, term) {
+      const paragraph=node("p");paragraph.style.whiteSpace="pre-wrap";
+      const content=String(text).replaceAll("[[", "").replaceAll("]]", "");
+      const lower=content.toLocaleLowerCase(), needle=term.toLocaleLowerCase();let start=0,index;
+      while(needle && (index=lower.indexOf(needle,start))>=0){paragraph.append(document.createTextNode(content.slice(start,index)),node("mark",content.slice(index,index+needle.length)));start=index+needle.length;}
+      paragraph.append(document.createTextNode(content.slice(start)));return paragraph;
+    }
+    async function perform(id, term) {
+      try {
+        const found=await call("vera_workspace_archive_search",{...scope,query:term});
+        if(!current(id))return;
+        results.replaceChildren(node("h2","Risultati nei documenti"));
+        if(!found.results.length)results.append(node("p","Nessun documento trovato.","empty"));
+        if(found.results.length===20)results.append(node("p","Primi 20 documenti. Aggiungi parole per restringere la ricerca.","caption"));
+        if(found.scan_issue_count || found.document_issue_count || found.index_requires_refresh)results.append(node("p","La ricerca copre i documenti già indicizzati. Alcune fonti richiedono verifica o aggiornamento.","notice"));
+        for(const hit of found.results){
+          const row=node("article",undefined,"work-row"), detail=node("div");
+          row.append(node("p",hit.client_label,"eyebrow"),node("h3",hit.title),node("p",hit.locator_kind==="page" ? "Pagina " + hit.locator_value : hit.locator_value,"caption"),highlighted(hit.snippet,term));
+          row.append(button("Apri passaggio",async()=>{
+            detail.replaceChildren(node("p","Verifica del documento…"));
+            try{
+              const opened=await call("vera_workspace_archive_source",{...scope,query:term,source_id:hit.source_id});
+              if(!current(id))return;
+              if(opened.source_verified!==true)throw new Error("Il documento non è stato verificato.");
+              detail.replaceChildren(node("p","Documento verificato","caption"));
+              for(const fragment of opened.fragments){
+                detail.append(node("h4",fragment.locator_kind==="page" ? "Pagina " + fragment.locator_value : fragment.locator_value),highlighted(fragment.text,term));
+              }
+              for(const limitation of opened.limitations||[])detail.append(node("p",limitation,"notice"));
+              detail.tabIndex=-1;detail.focus();
+            }catch(error){if(current(id))detail.replaceChildren(node("p",error.message,"notice"));}
+          }),detail);results.append(row);
+        }
+      }catch(error){if(current(id))results.replaceChildren(node("p","Ricerca non disponibile: " + error.message,"notice"));}
+    }
+    input.addEventListener("input",()=>{
+      clearTimeout(timer);const id=++generation,term=input.value.trim();
+      listing.hidden=Boolean(term);results.replaceChildren();
+      if(!term)return;
+      results.append(node("p","Ricerca nei documenti…"));
+      timer=setTimeout(()=>{if(current(id))perform(id,term);},300);
+    });
+  }
   function renderCatalogue() {
     const { nav, main } = shell();
     const archive = catalogue.mode === "studio-archive";
@@ -469,7 +521,8 @@
       }).catch(() => { /* Hosts may keep the usable view inline. */ });
     });
     const records = archive && catalogue.level !== "runs" ? (catalogue.clients || catalogue.engagements || []) : catalogue.works;
-    if (records.length > 1) search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows);
+    if (archive) { query=""; archiveDocumentSearch(main,list); }
+    else if (records.length > 1) search(main, "Cerca cliente, incarico o funzione", rows);
     else query = "";
     main.insertBefore(list,main.querySelector(".incarico-results"));
     function rows() {

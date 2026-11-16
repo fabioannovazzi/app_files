@@ -1657,6 +1657,13 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
             set_work_visibility,
         )
 
+        if tool in {"vera_workspace_archive_search", "vera_workspace_archive_source"}:
+            from native_archive_navigation import document_search
+
+            return document_search(
+                module_root("studio-archive"), args, opening=tool.endswith("_source")
+            )
+
         if tool == "vera_workspace_archive_work_visibility":
             return set_work_visibility(module_root("studio-archive"), args, atomic_json)
 

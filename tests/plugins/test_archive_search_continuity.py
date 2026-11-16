@@ -26,6 +26,8 @@ if operation in ('seed', 'legacy'):
     result = a.refresh_archive()
 elif operation == 'refresh':
     result = a.refresh_archive()
+elif operation == 'ensure':
+    result = a.refresh_archive(only_if_required=True)
 else:
     def forbidden(*args, **kwargs):
         raise AssertionError('Fresh search must not refresh, discover or extract files')
@@ -139,3 +141,23 @@ def test_concurrent_refreshes_keep_a_searchable_index(tmp_path, studio):
         )
     assert all(r["unchanged_files"] == 1 for r in results)
     assert call(tmp_path, "fresh-chat", "search", studio)["opened"]["source_verified"]
+
+
+def test_concurrent_recovery_refreshes_stale_shared_index_once(tmp_path, studio):
+    call(tmp_path, "original-chat", "seed", studio)
+    added = studio / "New client"
+    added.mkdir()
+    (added / "new.txt").write_text("New client source", encoding="utf-8")
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(
+            pool.map(
+                lambda n: call(tmp_path, f"recover-{n}", "ensure", studio), range(4)
+            )
+        )
+
+    assert sum(result.get("status") == "refreshed" for result in results) == 1
+    assert sum(result.get("refreshed") is False for result in results) == 3
+    assert call(tmp_path, "after-recovery", "search", studio)["opened"][
+        "source_verified"
+    ]

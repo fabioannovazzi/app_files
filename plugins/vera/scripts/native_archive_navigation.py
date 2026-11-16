@@ -26,6 +26,47 @@ def archive_module(root: Path) -> Any:
     return archive_core
 
 
+def document_search(
+    root: Path, args: dict[str, Any], *, opening: bool = False
+) -> dict[str, Any]:
+    """Repair stale indexing, then search and verify the selected client scope."""
+    core = archive_module(root)
+    directory = core.list_studio_clients()
+    if not directory["configured"]:
+        raise ValueError("La cartella dell’archivio non è collegata.")
+    client_id = args.get("client_id")
+    scope_id = "all"
+    if client_id:
+        selected = next(
+            (row for row in directory["clients"] if row["client_id"] == client_id), None
+        )
+        if selected is None:
+            raise PermissionError("Client is not registered in this archive session")
+        scope_id = core.get_studio_client_folder(client_id)["client_folder"]["scope_id"]
+    elif args.get("all_clients") is not True:
+        raise ValueError("Select a client or explicitly search the whole archive")
+    # Exact freshness metadata is a mechanical cache check, not relevance judgment.
+    # Validate the requested client before any indexing; never broaden its scope.
+    status = core.studio_archive_status()
+    if status["index_requires_refresh"]:
+        core.refresh_archive(only_if_required=True)
+        directory = core.list_studio_clients()
+        if client_id:
+            scope_id = core.get_studio_client_folder(client_id)["client_folder"][
+                "scope_id"
+            ]
+    result = core.search_archive(args["query"], scope_id=scope_id, limit=20)
+    if opening:
+        if not any(hit["source_id"] == args["source_id"] for hit in result["results"]):
+            raise PermissionError("Source is not a result of this scoped search")
+        return core.open_archive_source(args["source_id"], context_chunks=1)
+    labels = {row["scope_id"]: row["display_name"] for row in directory["clients"]}
+    for hit in result["results"]:
+        hit["client_label"] = labels.get(hit["scope_id"], "Archivio")
+        hit["title"] = Path(hit["relative_path"]).name
+    return result
+
+
 def page(rows: list[dict[str, Any]], args: dict[str, Any]) -> dict[str, Any]:
     """Bound presentation only; selection and scope remain explicit."""
     offset = args.get("offset", 0)
