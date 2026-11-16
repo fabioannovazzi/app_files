@@ -136,6 +136,7 @@ FDD_IMPLEMENTATION_FILES = (
     _vendor_module_path("registry.py"),
     _vendor_assurance_path("__init__.py"),
     _vendor_assurance_path("contracts.py"),
+    _vendor_assurance_path("archive_paths.py"),
     _vendor_assurance_path("decisions.py"),
     _vendor_assurance_path("envelope.py"),
     _vendor_assurance_path("money.py"),

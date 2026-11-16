@@ -501,7 +501,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "b65eb8035d5956396e0e8a4ddedee778283b84ff5520e07d041118b46c6cbae1",
+      "sha256": "60f759f818d29ed7f0bba13d0221159df23f5084da0a38984ecb6714cb4decd3",
       "languages": [
         "it",
         "en",
@@ -526,7 +526,7 @@
         "de": "Lernen, eine konkrete Analyse anzufordern, Daten bereitzustellen, Entscheidungen zu prüfen und nachvollziehbare Finanzergebnisse zu nutzen.",
         "es": "Aprender a solicitar un análisis concreto, aportar datos, revisar decisiones y utilizar resultados financieros comprobables."
       },
-      "source_sha256": "d78542ff887bdf7b042d5b7f74ab1ac4f969a0b12e29de7e780386844bc87d01"
+      "source_sha256": "7fcf00fddefec5d5873896513e39c67d040a69d2bf60754e8b4122888fc28d99"
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",

@@ -217,7 +217,7 @@ def test_native_begin_publish_and_open_grouped_current_revision(
     )
     assert document["preview"] == "Synthetic grouped format test"
     html = next(
-        (root / "Cliente Beta/Vera/Pratiche").glob("*New*/Indice.html")
+        (root / "Cliente Beta/vera/Pratiche").glob("*New*/Indice.html")
     ).read_text()
     assert html.index("<h2>Conversazioni</h2>") < html.index("<h2>Documenti</h2>")
     assert "Risultati salvati" not in html and "Documenti acquisiti" not in html

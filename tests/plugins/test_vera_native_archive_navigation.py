@@ -580,7 +580,7 @@ def test_native_archive_refresh_retains_source_and_customer_ledger_bytes(
         "Cliente Beta",
         "Studio client",
     }
-    assert {path.parts[1] for path in navigation_files} == {"Vera"}
+    assert {path.parts[1] for path in navigation_files} == {"vera"}
     assert selected_run(env, binding)["run_id"] == binding["run_id"]
 
 

@@ -482,7 +482,7 @@
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "d78542ff887bdf7b042d5b7f74ab1ac4f969a0b12e29de7e780386844bc87d01",
+      "sha256": "7fcf00fddefec5d5873896513e39c67d040a69d2bf60754e8b4122888fc28d99",
       "languages": [
         "it",
         "en",

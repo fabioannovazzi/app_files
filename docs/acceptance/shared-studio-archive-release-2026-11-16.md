@@ -15,3 +15,5 @@ The final lowercase-layout regression suite passed 585 tests (four platform/runt
 The final full release build passed for Vera 0.1.649, Clara 0.1.426 and Lucia 0.1.255 across Codex, Cowork and Antigravity, including packaged MCP startup and exact version alignment.
 
 An additional optional private-pilot test run passed 115 cases and failed five private rollout-builder cases because that separate builder omits sidebar assets (and its helper dependency closure is incomplete). These failures concern the private pilot harness, not the public distributions whose startup and packaged checks passed. The private builder was not changed to mask those failures; it is not native-host acceptance evidence.
+
+The new resolver is also included in the financial-analysis implementation fingerprints (50 regression tests passed). The final navigation assertions require literal lowercase paths on case-sensitive filesystems; 32 targeted navigation/assignment tests passed after correcting the historical uppercase expectations exposed by CI.
