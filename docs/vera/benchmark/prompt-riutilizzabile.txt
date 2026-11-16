@@ -1,0 +1,14 @@
+Esegui una valutazione delle risposte originali di Vera applicando integralmente il documento allegato «metodologia-benchmark-vera-v1.md», versione 1.0 del 16 novembre 2026.
+
+Perimetro: [indicare casi, posizione delle risposte di Vera e dei riferimenti, e destinazione del rapporto].
+
+Assumi corrette le risposte di riferimento e non valutarne le citazioni. Non rigenerare i pareri. Usa esattamente questi tre indicatori nell'ordine seguente:
+1. Punti di contenuto soddisfatti / tutti i punti richiesti.
+2. Degli stessi punti, quelli soddisfatti con almeno una citazione pertinente verificata / lo stesso totale dei punti richiesti.
+3. Singole relazioni fonte–affermazione supportate / tutte le relazioni citate da Vera.
+
+Nessuna distinzione essenziale/non essenziale. Ogni punto pesa uguale. I totali sono rapporti tra somme dei numeratori e somme dei denominatori, NON medie delle percentuali dei casi. Mostra conteggi esatti e percentuali intere, senza decimali. Non aggiungere indicatori o punteggi compositi.
+
+Completa i controlli delle fonti di Vera, senza attribuirle citazioni trovate soltanto dal valutatore. Non convertire controlli sospesi in giudizi negativi o positivi senza evidenza. Se materiale necessario è irrecuperabile, segnala il blocco senza dichiarare conclusa la verifica.
+
+Spiega i tre indicatori all'inizio. Produci un rapporto e registri ricalcolabili dei punti, della copertura e delle relazioni fonte–affermazione, con passi, motivazioni e riscontri. Verifica denominatori, deduplicazione, arrotondamenti e completezza. Mantieni gli originali e la cronologia delle revisioni; spiega eventuali modifiche dei giudizi. Non usare i risultati di precedenti benchmark come obiettivi da raggiungere.
