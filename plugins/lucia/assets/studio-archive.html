@@ -10,6 +10,7 @@
 :root{color-scheme:light;font:16px "Instrument Sans",sans-serif;color:#1f2421;background:#fff;--accent:#194b70;--line:#e8eae7;--muted:#596671}
 *{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{padding:9px 13px;min-height:40px;border:1px solid var(--line);background:#fff;color:var(--accent);cursor:pointer}button:hover{border-color:var(--accent);background:#eff5f9}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 .top{display:flex;align-items:center;gap:20px;padding:14px clamp(18px,3vw,40px);border-bottom:1px solid var(--line)}.brand{font-size:32px;font-weight:600;letter-spacing:-2px;color:var(--accent)}.top button{margin-left:auto}.shell{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:70vh}.rail{padding:24px 18px;border-right:1px solid var(--line)}.rail nav{display:grid;gap:8px;margin-top:22px}.rail button{text-align:left;border-color:transparent}.main{padding:25px clamp(18px,3vw,40px);min-width:0}h1{font-size:clamp(25px,3vw,37px);line-height:1.15;letter-spacing:-.8px;margin:10px 0 16px}h2{font-size:22px;line-height:1.25;margin:10px 0 18px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0}p{line-height:1.5}.caption,.empty{color:var(--muted);max-width:65ch}.works{max-width:1000px}.work-row{border-top:1px solid var(--line);padding:20px 0}.archive-link{display:block;border:0;border-radius:0;background:none;padding:.15rem 0;margin:0;color:var(--accent);font-size:1rem;text-align:left;overflow-wrap:anywhere}.archive-link:hover{background:none;text-decoration:underline}.search{display:grid;gap:7px;max-width:470px;font-size:14px;margin:18px 0}.search input{width:100%;padding:10px 12px;border:1px solid var(--line)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.primary{background:var(--accent);border-color:var(--accent);color:#fff}.primary:hover{background:#123650;color:#fff}#status{margin:0;padding:12px clamp(18px,3vw,40px);max-width:1100px;color:var(--muted);font-size:14px}#status:empty,[hidden]{display:none!important}
+.document-preview{white-space:pre-wrap;overflow-wrap:anywhere;max-width:80ch}.works{margin-bottom:28px}summary{cursor:pointer;padding:12px 0}input[readonly]{max-width:100%;width:650px;padding:10px}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.rail{border-right:0;border-bottom:1px solid var(--line);padding:12px 18px}.rail>.eyebrow,.rail>h2{display:none}.rail nav{display:flex;flex-wrap:wrap;margin:0}.main{padding-top:20px}.top{gap:13px}.top>span:nth-child(2){font-size:14px}}
 </style>
 </head>
@@ -22,9 +23,9 @@
 const main = document.getElementById("main"), nav = document.getElementById("nav"), status = document.getElementById("status"), refresh = document.getElementById("refresh");
 const pending = new Map();
 let sequence = 0, generation = 0, host, sending = false, loading = false;
-let clients = [], matters = [], selectedClient = null, selectedMatter = null, configured = false;
+let clients = [], matters = [], selectedClient = null, selectedMatter = null, configured = false, matterDetail = null;
 function node(tag, text, className) { const element = document.createElement(tag); if (text !== undefined) element.textContent = text; if (className) element.className = className; return element; }
-function button(text, action, className) { const element = node("button", text, className); element.addEventListener("click", action); return element; }
+function button(text, action, className) { const element = node("button", text, className); element.addEventListener("click", () => Promise.resolve().then(action).catch(error => { status.textContent = error.message; })); return element; }
 function request(method, params) {
   const id = ++sequence;
   return new Promise((resolve, reject) => {
@@ -41,11 +42,11 @@ async function archive(name, args = {}) {
 }
 function render() {
   nav.replaceChildren(); main.replaceChildren();
-  if (selectedMatter) nav.append(button("← Pratiche", () => { selectedMatter = null; render(); }));
+  if (selectedMatter) nav.append(button("← Pratiche", () => { ++generation; loading = false; selectedMatter = null; matterDetail = null; render(); }));
   else if (selectedClient) nav.append(button("← Clienti", () => loadClients()));
   main.append(node("p", selectedClient?.display_name || "Lucia", "eyebrow"), node("h1", selectedMatter?.label || selectedClient?.display_name || "Clienti e progetti"));
   if (!configured) { main.append(node("p", "Configura l’Archivio dello studio dalla chat di Lucia.", "caption")); }
-  else if (selectedMatter) { main.append(node("p", "Apri la pratica in una nuova chat per consultarne i documenti o proseguire il lavoro.", "caption")); }
+  else if (selectedMatter) { renderMatter(); }
   else {
     const rows = selectedClient ? matters : clients;
     const list = node("div", undefined, "works");
@@ -56,7 +57,7 @@ function render() {
         const section = node("section", undefined, "work-row"), title = row.display_name || row.label;
         const blocked = selectedClient ? row.status === "blocked" : row.registration_status !== "registered" || !row.client_id;
         if (blocked) section.append(node("h2", title), node("p", "Record non disponibile. Verifica la registrazione nella chat di Lucia; i documenti sono conservati.", "caption"));
-        else section.append(button(title, () => selectedClient ? (selectedMatter = row, render()) : loadMatters(row), "archive-link"));
+        else section.append(button(title, () => selectedClient ? loadMatter(row) : loadMatters(row), "archive-link"));
         list.append(section);
       }
       if (!visible.length) list.append(node("p", rows.length ? "Nessun risultato in questa pagina." : selectedClient ? "Nessuna pratica per questo cliente." : "Nessun cliente registrato.", "empty"));
@@ -68,11 +69,12 @@ function render() {
   const start = button(selectedMatter ? "Apri la pratica in una nuova chat" : selectedClient ? "Lavora con questo cliente in una nuova chat" : "Apri una nuova chat con Lucia", openChat, "primary");
   start.disabled = loading || sending || !host?.hostCapabilities?.experimental?.["openai/message"];
   if (!host?.hostCapabilities?.experimental?.["openai/message"]) start.title = "Questo host non consente di aprire nuove chat dal pannello.";
+  if (selectedMatter) start.className = "";
   actions.append(start); main.append(actions);
 }
 async function loadClients(initial) {
   const current = ++generation;
-  loading = true; selectedClient = null; selectedMatter = null; clients = []; matters = []; render();
+  loading = true; selectedClient = null; selectedMatter = null; matterDetail = null; clients = []; matters = []; render();
   status.textContent = "Caricamento clienti…";
   try {
     const result = initial ?? await archive("lucia_archive_open");
@@ -84,13 +86,79 @@ async function loadClients(initial) {
 }
 async function loadMatters(client) {
   const current = ++generation;
-  loading = true; selectedClient = client; selectedMatter = null; matters = []; render(); status.textContent = "Caricamento pratiche…";
+  loading = true; selectedClient = client; selectedMatter = null; matterDetail = null; matters = []; render(); status.textContent = "Caricamento pratiche…";
   try {
     const result = await archive("lucia_archive_list_matters", {client_id:client.client_id});
     if (current !== generation) return;
     matters = result.engagements ?? []; status.textContent = "";
   } catch (error) { if (current === generation) status.textContent = error.message; }
   finally { if (current === generation) { loading = false; render(); } }
+}
+function renderMatter() {
+  if (!matterDetail) { main.append(node("p", loading ? "Caricamento documenti e chat…" : "Riprova con Aggiorna per leggere la pratica.", "caption")); return; }
+  if (matterDetail.purpose) main.append(node("p", matterDetail.purpose, "caption"));
+  const documents = node("section", undefined, "works"); documents.append(node("h2", "Documenti"));
+  const seen = new Set();
+  function documentRow(parent, label, file) {
+    seen.add(JSON.stringify(file.reference));
+    const row = node("div", undefined, "work-row");
+    const link = button(label || file.name, () => openDocument(file.reference), "archive-link");
+    link.disabled = file.available === false; row.append(link);
+    if (link.disabled) row.append(node("p", "File non disponibile. Il riferimento è conservato.", "caption"));
+    parent.append(row);
+  }
+  for (const entry of matterDetail.deliverables) {
+    const latest = entry.versions.at(-1);
+    if (!latest?.formats.length) continue;
+    const primary = latest.formats.find(file => file.format === latest.primary_format) || latest.formats[0];
+    documentRow(documents, latest.label, primary);
+    const other = node("details"); other.append(node("summary", "Altri formati e versioni"));
+    for (const version of [...entry.versions].reverse()) for (const file of version.formats) {
+      if (version === latest && file === primary) continue;
+      documentRow(other, `${version.label} · revisione ${version.revision} · ${file.format}`, file);
+    }
+    if (other.children.length > 1) documents.append(other);
+  }
+  for (const file of [...matterDetail.results, ...matterDetail.documents]) {
+    if (!seen.has(JSON.stringify(file.reference))) documentRow(documents, file.label || file.name, file);
+  }
+  if (!seen.size) documents.append(node("p", "Nessun documento salvato.", "caption"));
+  if (matterDetail.has_issues) documents.append(node("p", "Alcuni file richiedono verifica; gli altri restano disponibili.", "caption"));
+  main.append(documents);
+  const chats = node("section", undefined, "works"); chats.append(node("h2", "Chat associate"));
+  for (const chat of matterDetail.conversations) {
+    if (!chat.url) { chats.append(node("p", `${chat.title} · collegamento non disponibile`, "caption")); continue; }
+    chats.append(button(chat.title, async () => {
+      try { const result = await request("ui/open-link", {url:chat.url}); if (result?.isError) throw new Error(); }
+      catch { throw new Error("Questa chat non è accessibile. I documenti restano disponibili; puoi proseguire in una nuova chat."); }
+    }, "archive-link"));
+  }
+  if (!matterDetail.conversations.length) chats.append(node("p", "Nessuna chat associata. Puoi proseguire in una nuova chat.", "caption"));
+  main.append(chats);
+}
+async function loadMatter(matter) {
+  const current = ++generation, clientId = selectedClient.client_id;
+  loading = true; selectedMatter = matter; matterDetail = null; render(); status.textContent = "";
+  try {
+    const result = await archive("lucia_archive_read_matter", {client_id:clientId, engagement_id:matter.engagement_id});
+    if (current === generation) matterDetail = result.matter;
+  } catch (error) { if (current === generation) status.textContent = error.message; }
+  finally { if (current === generation) { loading = false; render(); } }
+}
+async function openDocument(reference) {
+  const current = generation;
+  const result = await archive("lucia_archive_read_document", {client_id:selectedClient.client_id, engagement_id:selectedMatter.engagement_id, reference});
+  if (current !== generation) return;
+  const file = result.document;
+  if (host?.hostCapabilities?.experimental?.["openai/files"]) {
+    const opened = await request("openai/files/open", {path:file.path});
+    if (opened?.isError) throw new Error("Il documento non è stato aperto. Riprova o apri la copia salvata dalla chat.");
+    return;
+  }
+  main.replaceChildren(button("← Documenti e chat", render), node("h1", file.name));
+  if (file.preview !== null && file.preview !== undefined) main.append(node("pre", file.preview, "document-preview"));
+  main.append(node("p", "Questo host non apre file locali. Usa il percorso della copia verificata:", "caption"));
+  const location = node("input"); location.readOnly = true; location.value = file.path; location.setAttribute("aria-label", "Percorso del documento"); main.append(location);
 }
 async function openChat() {
   if (sending || loading) return;
@@ -106,7 +174,7 @@ async function openChat() {
   } catch (error) { status.textContent = error.message; }
   finally { sending = false; render(); }
 }
-refresh.addEventListener("click", () => selectedClient ? loadMatters(selectedClient) : loadClients());
+refresh.addEventListener("click", () => selectedMatter ? loadMatter(selectedMatter) : selectedClient ? loadMatters(selectedClient) : loadClients());
 window.addEventListener("message", event => {
   if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
   const message = event.data, entry = pending.get(message.id);

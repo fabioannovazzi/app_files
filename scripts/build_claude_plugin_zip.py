@@ -3362,6 +3362,7 @@ def _lucia_package_entries(
     for asset in (
         "assets/playbook-editor.html",
         "assets/playbook-nda.json",
+        "assets/method-ui-labels.json",
         "assets/studio-archive.html",
         "assets/InstrumentSans-Regular.ttf",
         "assets/InstrumentSans-SemiBold.ttf",
