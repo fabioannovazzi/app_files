@@ -1077,9 +1077,9 @@ def _run_organization_teaching_case(
     )
     assert snapshot["file_count"] == expected_count
     assert all(
-        not row["relative_path"].startswith("Vera/") for row in snapshot["files"]
+        not row["relative_path"].startswith("vera/") for row in snapshot["files"]
     )
-    assert Path(run["tutorial_case_path"]).parent == case / "Vera"
+    assert Path(run["tutorial_case_path"]).parent == case / "vera"
     monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     import archive_core
 
@@ -1383,7 +1383,7 @@ def test_studio_teaching_prepares_private_project_for_current_specialist(
     assert "context_path" not in result
     assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
     assert Path(result["output_dir"]).is_relative_to(store.root)
-    assert not (Path(result["directory"]) / "Vera").exists()
+    assert not (Path(result["directory"]) / "vera").exists()
 
 
 def test_question_teaching_starts_preparation_with_bound_original_inputs(

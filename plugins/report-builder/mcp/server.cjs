@@ -40,6 +40,7 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
 const REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS = [
   "__init__.py",
   "contracts.py",
+  "archive_paths.py",
   "jurisdiction.py",
   "decisions.py",
   "envelope.py",

@@ -40,8 +40,9 @@ also describes other products: use its client, engagement, file, search,
 snapshot, and run lifecycle instructions for Lucia. Journal sampling, invoice
 checks, and verification of Vera’s selective reporting receipts are outside
 Lucia’s Archive. Use the common studio root and client directory shared with Vera
-and Clara. New Lucia engagements go under `Lucia/`; reopen legacy `Vera/`
-engagements at their saved paths without renaming or resealing them.
+and Clara. Every project has lowercase `vera/`, `lucia/` and `clara/` folders. New Lucia
+engagements go under `lucia/`. The layout normalizer changes legacy folder casing
+without rewriting sealed evidence; readers resolve retained historical paths.
 
 For CLI fallback, use Lucia’s `scripts/lucia_studio_archive.py` at the product
 root with the same arguments as the component guide. It applies Lucia’s workflow

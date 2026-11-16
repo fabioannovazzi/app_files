@@ -155,7 +155,7 @@ def test_invalid_literal_draft_authority_or_shape_cannot_create_source(
     )
     assert result["isError"] is True
     assert not list(
-        (folder / "Vera").glob(
+        (folder / "vera").glob(
             "engagements/*/.native-imports/*/upload-*/original-note.json"
         )
     )
@@ -252,7 +252,7 @@ def test_altered_captured_original_refuses_import_and_new_run_preparation(
         env, program(client, engagement, STORE + BEGIN + "const result={setup,begun};")
     )
     original = next(
-        (folder / "Vera").glob(
+        (folder / "vera").glob(
             "engagements/*/.native-imports/*/upload-*/original-note.json"
         )
     )
@@ -430,7 +430,7 @@ def test_literal_draft_linked_file_or_owner_directory_refuses_scope_escape(
     env, folder, client, engagement = import_workspace
     rpc_program(env, program(client, engagement, STORE + "const result=stored;"))
     draft = next(
-        (folder / "Vera").glob("engagements/*/.native-imports/*/note-draft.json")
+        (folder / "vera").glob("engagements/*/.native-imports/*/note-draft.json")
     )
     if link == "hardlink":
         (tmp_path / "linked-note.json").hardlink_to(draft)

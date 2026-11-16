@@ -765,7 +765,7 @@ def test_journal_import_rejects_source_from_another_client_scope(
         (
             indexed_archive.root
             / "Rossi"
-            / "Vera"
+            / "vera"
             / "engagements"
             / engagement_id
             / "inputs"

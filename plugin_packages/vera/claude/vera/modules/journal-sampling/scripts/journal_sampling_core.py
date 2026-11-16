@@ -208,6 +208,7 @@ IMPLEMENTATION_PLUGIN_FILES = (
 ASSURANCE_IMPLEMENTATION_FILES = (
     ("__init__.py", "implementation.vera_assurance_init"),
     ("contracts.py", "implementation.vera_assurance_contracts"),
+    ("archive_paths.py", "implementation.vera_assurance_archive_paths"),
     ("jurisdiction.py", "implementation.vera_assurance_jurisdiction"),
     ("decisions.py", "implementation.vera_assurance_decisions"),
     ("envelope.py", "implementation.vera_assurance_envelope"),
@@ -466,7 +467,7 @@ def _current_journal_context(
         direct = candidate / "context.json"
         if direct.is_file() and not direct.is_symlink():
             candidates.append(direct)
-        if candidate.name == "Vera":
+        if candidate.name.casefold() in {"vera", "lucia", "clara"}:
             candidates.append(
                 candidate
                 / "engagements"

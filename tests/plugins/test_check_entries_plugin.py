@@ -1890,7 +1890,7 @@ def test_managed_journal_to_check_review_survives_customer_folder_rename(
     renamed_client_root = current_context.parents[5]
     managed_output_files = [
         artifact
-        for output_root in renamed_client_root.glob("Vera/engagements/*/runs/*/outputs")
+        for output_root in renamed_client_root.glob("vera/engagements/*/runs/*/outputs")
         for artifact in output_root.rglob("*")
         if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}
     ]

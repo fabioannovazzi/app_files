@@ -284,7 +284,7 @@
       {
         "id": "shared-studio-directory",
         "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
-        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed paths and receipts remain unchanged.",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -296,7 +296,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "90f1fdf1068782998804b5e67171144392c1406d50045a70ecba94ddb589e108"
+    "source_fingerprint": "42575925655ed5fcf2b4b0e1fafb778cc8f1106b213b2e489069cd9b5f004b39"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -431,7 +431,7 @@
     },
     {
       "id": "shared-root-product-workspaces",
-      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. New engagements use Vera, Lucia or Clara directories; readers resolve exact engagement IDs across these directories, reject duplicate identities and verify existing seals and client ownership. Technical client identity remains at Vera/client.json. Separate legacy archive roots are not moved or merged automatically."
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. Every project has vera, lucia and clara directories. The local layout normalizer preflights projects, rejects redirected or case-colliding directories, normalizes legacy folder casing and creates missing areas without rewriting retained evidence. Readers resolve historical path casing and exact engagement IDs, reject duplicate identities and verify seals and client ownership. Shared identity remains at vera/client.json. Separate legacy archive roots are not merged automatically."
     }
   ],
   "workstream": "studio-archive",

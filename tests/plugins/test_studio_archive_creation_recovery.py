@@ -93,7 +93,7 @@ def test_fresh_cli_recovers_committed_request_after_worker_exit(case, operation)
         check=False,
     )
     assert interrupted.returncode == 37, interrupted.stderr
-    collection = root / "Vera/engagements"
+    collection = root / "vera/engagements"
     if operation == "create":
         target = next(path for path in collection.glob("eng_*") if path.name != eid)
         retained = (target / "engagement.json").read_bytes()
@@ -190,7 +190,7 @@ def test_repeated_engagement_request_reuses_the_committed_identity(case):
     arguments = {"state_dir": state, "idempotency_key": "same-admitted-request"}
     first = core.create_studio_client_engagement(cid, "Requested work", **arguments)
     eid = first["engagement"]["engagement_id"]
-    evidence = root / "Vera/engagements" / eid / "inputs/retained-note.txt"
+    evidence = root / "vera/engagements" / eid / "inputs/retained-note.txt"
     evidence.write_text("Work retained after the response was lost")
 
     repeated = core.create_studio_client_engagement(cid, "Requested work", **arguments)
@@ -198,7 +198,7 @@ def test_repeated_engagement_request_reuses_the_committed_identity(case):
     assert repeated["engagement"]["engagement_id"] == eid
     assert repeated["source_archive_mutated"] is False
     assert evidence.read_text() == "Work retained after the response was lost"
-    assert len(list((root / "Vera/engagements").glob("eng_*"))) == 2
+    assert len(list((root / "vera/engagements").glob("eng_*"))) == 2
 
 
 @pytest.mark.parametrize("interruption", ["before_manifest", "after_manifest"])
@@ -224,8 +224,8 @@ def test_interrupted_engagement_creation_resumes_its_original_request(
                 idempotency_key="interrupted-request",
                 state_dir=state,
             )
-    pending = set((root / "Vera/engagements").glob("eng_*")) - {
-        root / "Vera/engagements" / prior
+    pending = set((root / "vera/engagements").glob("eng_*")) - {
+        root / "vera/engagements" / prior
     }
     assert len(pending) == 1
 
@@ -234,9 +234,9 @@ def test_interrupted_engagement_creation_resumes_its_original_request(
     )
 
     assert pending == {
-        root / "Vera/engagements" / recovered["engagement"]["engagement_id"]
+        root / "vera/engagements" / recovered["engagement"]["engagement_id"]
     }
-    assert len(list((root / "Vera/engagements").glob("eng_*"))) == 2
+    assert len(list((root / "vera/engagements").glob("eng_*"))) == 2
 
 
 def test_creation_request_key_cannot_silently_select_a_different_matter(case):
@@ -246,7 +246,7 @@ def test_creation_request_key_cannot_silently_select_a_different_matter(case):
     )
     path = (
         root
-        / "Vera/engagements"
+        / "vera/engagements"
         / created["engagement"]["engagement_id"]
         / "engagement.json"
     )
@@ -273,7 +273,7 @@ def test_concurrent_retries_allocate_one_engagement(case):
 
     assert first["engagement"] == second["engagement"]
     assert sorted([first["created"], second["created"]]) == [False, True]
-    assert len(list((root / "Vera/engagements").glob("eng_*"))) == 2
+    assert len(list((root / "vera/engagements").glob("eng_*"))) == 2
 
 
 @pytest.mark.parametrize("new_run", [False, True])
@@ -302,7 +302,7 @@ def test_preparation_retry_uses_admitted_copies_after_original_receipt_loss(
 
     assert replayed["run"]["run_id"] == rid
     assert replayed["run"]["status"] == "running"
-    assert len(list((root / "Vera/engagements" / eid / "runs").glob("run_*"))) == 1
+    assert len(list((root / "vera/engagements" / eid / "runs").glob("run_*"))) == 1
 
 
 def test_preparation_request_key_cannot_select_other_inputs(case):

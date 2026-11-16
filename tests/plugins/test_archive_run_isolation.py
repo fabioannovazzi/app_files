@@ -93,7 +93,7 @@ def test_recovery_reports_partial_state_without_rewriting_bad_manifest(archive):
     assert result["run_count"] == 1
     assert result["blocked_runs"][0]["run_id"] == first["run"]["run_id"]
     assert path.read_bytes() == before
-    page = next((client / "Vera/Pratiche").glob("*/Indice.html")).read_text(
+    page = next((client / "vera/Pratiche").glob("*/Indice.html")).read_text(
         encoding="utf-8"
     )
     assert first["run"]["run_id"] in page
@@ -250,7 +250,7 @@ def test_linked_original_snapshot_does_not_reopen_admitted_input_gate(
     archive, tmp_path
 ):
     core, client, cid, eid, first, second, state, path = archive
-    source = client / "Vera/engagements" / eid / "inputs"
+    source = client / "vera/engagements" / eid / "inputs"
     outside = tmp_path / "Outside source bytes"
     source.rename(outside)
     source.symlink_to(outside, target_is_directory=True)

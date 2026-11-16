@@ -213,6 +213,11 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     ),
     (
         "assurance_implementation",
+        "archive_paths.py",
+        "implementation.vera_assurance_archive_paths",
+    ),
+    (
+        "assurance_implementation",
         "jurisdiction.py",
         "implementation.vera_assurance_jurisdiction",
     ),
@@ -852,7 +857,11 @@ def _validated_client_check_stage(
                 "diagnostics, and sampled CSV from one Journal Sampling run."
             )
         upstream_output_root = (
-            Path("Vera")
+            Path(
+                Path(
+                    next(iter(binding_by_artifact_id.values()))["source_relative_path"]
+                ).parts[0]
+            )
             / "engagements"
             / upstream["engagement_id"]
             / "runs"
@@ -1606,7 +1615,7 @@ def _current_upstream_journal_context(
         direct = candidate / "context.json"
         if direct.is_file() and not direct.is_symlink():
             candidates.append(direct)
-        if candidate.name == "Vera":
+        if candidate.name.casefold() in {"vera", "lucia", "clara"}:
             candidates.append(
                 candidate
                 / "engagements"
@@ -1703,7 +1712,7 @@ def _run_journal_sampling_replay(
         (
             candidate
             for candidate in normalized_resolved.parents
-            if candidate.name == "Vera"
+            if candidate.name.casefold() in {"vera", "lucia", "clara"}
         ),
         None,
     )

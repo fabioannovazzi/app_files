@@ -176,7 +176,7 @@ def test_sari_followup_uses_verified_sources_despite_unrelated_damaged_records(
     env, binding, output, _ = owned_sari
     damaged = (
         Path(binding["client_root"])
-        / "Vera/engagements"
+        / "vera/engagements"
         / binding["engagement_id"]
         / collection
         / record_name

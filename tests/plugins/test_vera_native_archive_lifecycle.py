@@ -199,7 +199,7 @@ const result = {{inputs, directory, prepare, create}};
     assert result["directory"]["can_create_engagement"] is False
     assert result["prepare"]["isError"] is True
     assert result["create"]["isError"] is True
-    assert not (root / "Cliente Beta/Vera/.native-workspace").exists()
+    assert not (root / "Cliente Beta/vera/.native-workspace").exists()
 
 
 def test_native_preparation_cross_client_engagement_refuses_before_receipt_read(
@@ -332,7 +332,7 @@ def test_native_create_interrupted_outcome_retains_intent_and_refuses_duplicate(
         )
 
     assert len(core.ledger.list_engagements(folder, binding["client_id"])) == before + 1
-    receipt = next((folder / "Vera/.native-workspace").glob("engagement-*.json"))
+    receipt = next((folder / "vera/.native-workspace").glob("engagement-*.json"))
     assert "engagement" not in json.loads(receipt.read_bytes())
     assert receipt.stat().st_mode & 0o777 == 0o600
 
@@ -379,7 +379,7 @@ def test_native_preparation_changed_displayed_scope_refuses_without_new_run(
         receipt = core.ledger.list_inputs(folder, engagement_id)[0]
         source = (
             folder
-            / "Vera/engagements"
+            / "vera/engagements"
             / engagement_id
             / "inputs"
             / receipt["input_id"]

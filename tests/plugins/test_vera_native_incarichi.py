@@ -253,7 +253,7 @@ def test_native_publication_reuses_legacy_output_without_rewriting_its_receipt(
     imported = ledger.import_document(folder, cid, eid, source, "support")["receipt"]
     before = {
         str(p): p.read_bytes()
-        for p in (folder / "Vera/engagements" / eid).rglob("*")
+        for p in (folder / "vera/engagements" / eid).rglob("*")
         if p.is_file()
     }
     request = {

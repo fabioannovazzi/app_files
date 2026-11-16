@@ -39,7 +39,7 @@
       {
         "id": "shared-studio-directory",
         "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
-        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed paths and receipts remain unchanged.",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -53,7 +53,7 @@
   "security_controls": [
     {
       "id": "shared-root-product-workspaces",
-      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. New engagements use Vera, Lucia or Clara directories; readers resolve exact engagement IDs across these directories, reject duplicate identities and verify existing seals and client ownership. Technical client identity remains at Vera/client.json. Separate legacy archive roots are not moved or merged automatically."
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. Every project has vera, lucia and clara directories. The local layout normalizer preflights projects, rejects redirected or case-colliding directories, normalizes legacy folder casing and creates missing areas without rewriting retained evidence. Readers resolve historical path casing and exact engagement IDs, reject duplicate identities and verify seals and client ownership. Shared identity remains at vera/client.json. Separate legacy archive roots are not merged automatically."
     }
   ],
   "service_ids": [
@@ -66,6 +66,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cfb560c6f193f3037c386742940fb2646fa34be43c87353810386c1bffcf88c9"
+    "source_fingerprint": "22a613854d1398d2fc02aa6066982f9f6ccdc85f07440e12d34ea37ccc16f9f3"
   }
 }

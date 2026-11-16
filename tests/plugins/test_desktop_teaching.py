@@ -724,7 +724,7 @@ def test_lucia_website_prepares_project_without_a_false_ledger_context(tmp_path)
     assert "context_path" not in result
     assert Path(result["inputs"][0]["path"]).read_bytes() == source.read_bytes()
     assert Path(result["output_dir"]).is_relative_to(store.root)
-    assert not (Path(result["directory"]) / "Vera").exists()
+    assert not (Path(result["directory"]) / "vera").exists()
 
 
 def test_lucia_question_tutorial_starts_a_context_accepted_by_planner(tmp_path):

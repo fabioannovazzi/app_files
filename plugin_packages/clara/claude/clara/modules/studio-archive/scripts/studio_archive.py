@@ -63,6 +63,7 @@ from archive_core import (
     list_studio_clients,
     map_studio_legacy_incarichi,
     match_studio_email_client,
+    normalize_studio_archive_layout,
     open_archive_source,
     open_studio_archive_organization_item,
     plan_gmail_client_search,
@@ -133,6 +134,7 @@ def _parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("status")
     subparsers.add_parser("clients")
+    subparsers.add_parser("normalize-project-layout")
 
     resolve_client = subparsers.add_parser("resolve-client")
     resolve_client.add_argument(
@@ -430,6 +432,8 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
             )
         elif args.command == "status":
             result = studio_archive_status()
+        elif args.command == "normalize-project-layout":
+            result = normalize_studio_archive_layout()
         elif args.command == "clients":
             result = list_studio_clients()
         elif args.command == "resolve-client":

@@ -105,6 +105,7 @@ __all__ = [
     "verify_studio_client_inputs",
     "list_studio_client_identities",
     "list_studio_clients",
+    "normalize_studio_archive_layout",
     "match_studio_email_client",
     "open_archive_source",
     "open_studio_archive_organization_item",
@@ -2007,6 +2008,26 @@ def _client_directory_record(
     }
 
 
+def normalize_studio_archive_layout(*, state_dir: Path | None = None) -> dict[str, Any]:
+    """Normalize every visible project in the configured shared Archive."""
+    config = _load_config(_state_dir(state_dir), validate_scope_roots=False)
+    projects = sorted(
+        path
+        for path in config.archive_root.iterdir()
+        if not path.name.startswith(".") and (path.is_dir() or path.is_symlink())
+    )
+    # Preflight the whole Archive before changing any project's folder names.
+    for project in projects:
+        ledger._layout().plan_project_layout(project)
+    for project in projects:
+        ledger.ensure_project_layout(project)
+    return {
+        "status": "normalized",
+        "project_count": len(projects),
+        "product_directories": list(ledger.PRODUCT_DIRECTORIES),
+    }
+
+
 def list_studio_clients(
     *,
     state_dir: Path | None = None,
@@ -3504,13 +3525,15 @@ def open_studio_archive_organization_item(
             "temporary_content_deleted": True,
         }
 
-    source = _resolve_source_file(client_root, relative_path)
+    source = _resolve_source_file(client_root, relative_path, project_relative=True)
     if _sha256_file(source) != str(expected["sha256"]):
         raise SourceChangedError(
             "Local archive source changed after the selected snapshot."
         )
     extraction = _extract_document(source, enable_ocr=False)
-    current_source = _resolve_source_file(client_root, relative_path)
+    current_source = _resolve_source_file(
+        client_root, relative_path, project_relative=True
+    )
     if current_source != source or _sha256_file(current_source) != str(
         expected["sha256"]
     ):
@@ -4234,7 +4257,7 @@ def import_studio_client_document(
         foreign_scope = any(
             _path_is_within(resolved_source, root) for root in archive_roots
         ) or any(
-            (parent / ledger.LEDGER_DIRECTORY / "client.json").exists()
+            ledger._client_manifest_path(parent).exists()
             for parent in resolved_source.parents
         )
         if foreign_scope and not _path_is_within(resolved_source, client_root):
@@ -5887,7 +5910,7 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
         except (OSError, ValueError, ledger.LedgerError):
             return False
         return True
-    if not parts or parts[0] not in ledger.PRODUCT_DIRECTORIES:
+    if not parts or parts[0].casefold() not in ledger.PRODUCT_DIRECTORIES:
         return False
     if (
         len(parts) >= 6
@@ -5994,7 +6017,9 @@ def _discover_files(
     return discovered, issues
 
 
-def _resolve_source_file(root: Path, relative_path: str) -> Path:
+def _resolve_source_file(
+    root: Path, relative_path: str, *, project_relative: bool = False
+) -> Path:
     """Resolve one indexed regular file without following symbolic links."""
 
     relative = Path(relative_path)
@@ -6005,8 +6030,12 @@ def _resolve_source_file(root: Path, relative_path: str) -> Path:
     ):
         raise ArchiveError("Indexed source path is not normalized and relative.")
     candidate = root
-    for part in relative.parts:
-        candidate /= part
+    product_index = 0 if project_relative else 1
+    for index, part in enumerate(relative.parts):
+        if index == product_index and part.casefold() in ledger.PRODUCT_DIRECTORIES:
+            candidate = ledger._product_root(candidate, part)
+        else:
+            candidate /= part
         if candidate.is_symlink():
             raise ArchiveError("Indexed source path contains a symbolic link.")
     try:

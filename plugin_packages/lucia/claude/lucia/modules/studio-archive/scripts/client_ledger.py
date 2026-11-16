@@ -81,8 +81,8 @@ __all__ = [
 
 
 # The existing portable client identity stays shared and byte-for-byte intact.
-LEDGER_DIRECTORY = "Vera"
-PRODUCT_DIRECTORIES = ("Vera", "Lucia", "Clara")
+LEDGER_DIRECTORY = "vera"
+PRODUCT_DIRECTORIES = ("vera", "lucia", "clara")
 
 
 @cache
@@ -101,6 +101,47 @@ def _archive_preferences() -> Any:
 def product_directory() -> str:
     """Use the shared product selection for new work only."""
     return _archive_preferences().product_directory()
+
+
+@cache
+def _layout() -> Any:
+    component = Path(__file__).resolve().parents[1]
+    for base in (
+        component / "vendor/modules",
+        component.parent / "_shared/vendor/modules",
+    ):
+        path = base / "vera_assurance/archive_paths.py"
+        if path.is_file():
+            spec = importlib.util.spec_from_file_location("ledger_archive_paths", path)
+            if spec is not None and spec.loader is not None:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                return module
+    raise LedgerError("Archive layout resolver is unavailable")
+
+
+def _product_root(root: Path, product: str) -> Path:
+    try:
+        return _layout().product_root(root, product)
+    except ValueError as exc:
+        raise LedgerError(str(exc)) from exc
+
+
+def _archive_path(root: Path, relative: str | Path) -> Path:
+    try:
+        return _layout().archive_path(root, relative)
+    except ValueError as exc:
+        raise LedgerError(str(exc)) from exc
+
+
+def ensure_project_layout(root: Path) -> dict[str, str]:
+    """Create the exact three product areas and normalize legacy folder casing."""
+    root = _ordinary_directory(root, label="client folder")
+    with _ledger_file_lock(root / ".project-layout.lock"):
+        try:
+            return _layout().ensure_project_layout(root)
+        except ValueError as exc:
+            raise LedgerError(str(exc)) from exc
 
 
 CLIENT_MANIFEST_SCHEMA = "vera.customer_folder.v1"
@@ -531,18 +572,16 @@ def _validate_seal(payload: Mapping[str, Any], *, label: str) -> dict[str, Any]:
 
 
 def _client_manifest_path(client_root: Path) -> Path:
-    return client_root / LEDGER_DIRECTORY / "client.json"
+    return _product_root(client_root, LEDGER_DIRECTORY) / "client.json"
 
 
 def _engagements_root(client_root: Path) -> Path:
-    return client_root / product_directory() / "engagements"
+    return _product_root(client_root, product_directory()) / "engagements"
 
 
 def _prepare_engagements_root(client_root: Path) -> Path:
     """Create a product area only after verifying its parent is not a symlink."""
-    _ordinary_directory(
-        client_root / product_directory(), label="product directory", create=True
-    )
+    ensure_project_layout(client_root)
     return _ordinary_directory(
         _engagements_root(client_root), label="engagement ledger directory", create=True
     )
@@ -551,11 +590,11 @@ def _prepare_engagements_root(client_root: Path) -> Path:
 def _engagement_root(client_root: Path, engagement_id: str) -> Path:
     _identifier(engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE)
     matches = []
-    for product in PRODUCT_DIRECTORIES:
-        parent = client_root / product / "engagements"
+    for parent in _engagement_collections(client_root):
         candidate = parent / engagement_id
         if candidate.exists() or candidate.is_symlink():
-            _ordinary_directory(client_root / product, label="product directory")
+            _ordinary_directory(parent.parent, label="product directory")
+            _product_root(client_root, parent.parent.name)
             _ordinary_directory(parent, label="engagement collection")
             matches.append(candidate)
     if len(matches) > 1:
@@ -577,7 +616,8 @@ def create_client_manifest(
 
     client_id = _identifier(client_id, label="client_id", pattern=_CLIENT_ID_RE)
     root = _ordinary_directory(client_root, label="client folder")
-    ledger_root = root / LEDGER_DIRECTORY
+    ensure_project_layout(root)
+    ledger_root = _product_root(root, LEDGER_DIRECTORY)
     _ordinary_directory(ledger_root, label="Vera ledger directory", create=True)
     path = _client_manifest_path(root)
     if path.exists() or path.is_symlink():
@@ -605,7 +645,9 @@ def load_client_manifest(client_root: Path) -> dict[str, Any]:
     """Load and validate one portable customer-folder identity."""
 
     root = _ordinary_directory(client_root, label="client folder")
-    _ordinary_directory(root / LEDGER_DIRECTORY, label="Vera ledger directory")
+    _ordinary_directory(
+        _product_root(root, LEDGER_DIRECTORY), label="client ledger directory"
+    )
     payload = _validate_seal(
         _read_json(_client_manifest_path(root), label="client manifest"),
         label="client manifest",
@@ -835,7 +877,7 @@ def ensure_engagement(
     engagement_id = "eng_" + identity[:24]
     request_sha = _canonical_json_sha256({"identity": identity, "label": label})
     _prepare_engagements_root(root)
-    requests = root / LEDGER_DIRECTORY / ".engagement-requests"
+    requests = _product_root(root, LEDGER_DIRECTORY) / ".engagement-requests"
     requests.mkdir(mode=0o700, exist_ok=True)
     _ordinary_directory(requests, label="engagement creation requests")
     intent_path = requests / f"{engagement_id}.json"
@@ -856,16 +898,18 @@ def ensure_engagement(
                 raise LedgerError(
                     "Creation key belongs to a different engagement request."
                 )
-            directory = intent.get("product_directory", LEDGER_DIRECTORY)
+            directory = intent.get("product_directory", LEDGER_DIRECTORY).casefold()
             if directory not in PRODUCT_DIRECTORIES:
                 raise LedgerError("Creation request has an unknown product directory.")
-            expected_target = root / directory / "engagements" / engagement_id
+            expected_target = (
+                _product_root(root, directory) / "engagements" / engagement_id
+            )
             if target.exists() and target != expected_target:
                 raise LedgerError(
                     "Engagement directory differs from its creation request."
                 )
             _ordinary_directory(
-                root / directory, label="product directory", create=True
+                _product_root(root, directory), label="product directory", create=True
             )
             _ordinary_directory(
                 expected_target.parent, label="engagement collection", create=True
@@ -1012,13 +1056,12 @@ def _inspect_collection(
 
 def _engagement_collections(root: Path) -> list[Path]:
     """Discover all existing product areas without creating or moving records."""
-    return [
-        root / product / "engagements"
-        for product in PRODUCT_DIRECTORIES
-        if product == LEDGER_DIRECTORY
-        or (root / product).exists()
-        or (root / product).is_symlink()
+    areas = [
+        path for path in root.iterdir() if path.name.casefold() in PRODUCT_DIRECTORIES
     ]
+    if not any(path.name.casefold() == LEDGER_DIRECTORY for path in areas):
+        areas.append(root / LEDGER_DIRECTORY)
+    return [area / "engagements" for area in sorted(areas)]
 
 
 def inspect_engagements(client_root: Path, client_id: str) -> dict[str, Any]:
@@ -1495,7 +1538,10 @@ def snapshot_client_folder(
             directory.iterdir(), key=lambda item: (item.name.casefold(), item.name)
         ):
             relative = entry.relative_to(root).as_posix()
-            if entry.relative_to(root).parts[0] in PRODUCT_DIRECTORIES:
+            if (
+                entry.name == ".project-layout.lock"
+                or entry.relative_to(root).parts[0].casefold() in PRODUCT_DIRECTORIES
+            ):
                 continue
             observed = entry.lstat()
             if entry.is_symlink():
@@ -1980,7 +2026,10 @@ def _validate_context(
     payload: Mapping[str, Any], run: Mapping[str, Any], directory: str
 ) -> dict[str, Any]:
     normalized = _validate_seal(payload, label="run context")
-    expected = _sealed(_context_content(run, directory))
+    retained = Path(str(payload.get("run_relative_path", ""))).parts
+    if not retained or retained[0].casefold() != directory.casefold():
+        raise LedgerError("Run context belongs to another product directory")
+    expected = _sealed(_context_content(run, retained[0]))
     if normalized != expected:
         raise LedgerError("Run context does not match its run manifest.")
     return normalized
@@ -2094,7 +2143,7 @@ def load_run(
         # The sealed run input manifest is the retained admission decision.
         # Originals and upstream receipts were verified before these execution
         # copies were made. Their later availability cannot reopen that gate.
-        source = root / binding["source_relative_path"]
+        source = _archive_path(root, binding["source_relative_path"])
         execution = _contained_input_path(
             run_root, run_root / binding["execution_relative_path"]
         )
@@ -2641,7 +2690,7 @@ def prepare_run(
             (run_root / "inputs").mkdir(mode=0o700)
             (run_root / "outputs").mkdir(mode=0o700)
             for binding in bindings:
-                source = root / binding["source_relative_path"]
+                source = _archive_path(root, binding["source_relative_path"])
                 destination = run_root / binding["execution_relative_path"]
                 destination_parent = run_root
                 for part in destination.parent.relative_to(run_root).parts:
@@ -2667,7 +2716,7 @@ def prepare_run(
             provenance = run_root / "source-receipts"
             provenance.mkdir(mode=0o700)
             for binding in bindings:
-                receipt_path = root / binding["receipt_relative_path"]
+                receipt_path = _archive_path(root, binding["receipt_relative_path"])
                 receipt = _validate_seal(
                     _read_json(receipt_path, label="admitted source receipt"),
                     label="admitted source receipt",
@@ -2751,7 +2800,7 @@ def retry_reporting(
     registry = Registry(
         None
         if os.environ.get("VERA_REPORTING_STATE_DIR")
-        else client_root / LEDGER_DIRECTORY / "reporting"
+        else _product_root(client_root, LEDGER_DIRECTORY) / "reporting"
     )
     if not registry.path.is_file():
         return

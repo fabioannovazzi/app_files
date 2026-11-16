@@ -82,7 +82,7 @@ ledger.prepare_run(Path(sys.argv[2]), sys.argv[3], sys.argv[4],
         check=False,
     )
     assert exited.returncode == 95, exited.stderr
-    runs = root / "Vera/engagements" / eid / "runs"
+    runs = root / "vera/engagements" / eid / "runs"
     evidence = runs.parent / "run-preparation-evidence"
     retained = {p: p.read_bytes() for p in evidence.rglob("*") if p.is_file()}
 
@@ -121,7 +121,7 @@ def test_nonfinite_json_in_sibling_client_is_reported_without_hiding_healthy_cli
     other = studio / "Damaged sibling"
     other.mkdir()
     core.ledger.create_client_manifest(other, "client_" + "d" * 24)
-    manifest = other / "Vera/client.json"
+    manifest = other / "vera/client.json"
     payload = json.loads(manifest.read_text())
     payload["created_at"] = "INVALID_NUMBER"
     damaged = json.dumps(payload).replace('"INVALID_NUMBER"', invalid_number)
@@ -144,7 +144,7 @@ def test_damaged_unrelated_client_does_not_prevent_selected_continuation(case):
             "client_root"
         ]
     )
-    manifest = other_root / "Vera/client.json"
+    manifest = other_root / "vera/client.json"
     manifest.write_bytes(b"{}")
 
     selected = core.get_studio_client_folder(cid, state_dir=state)
@@ -475,7 +475,7 @@ def test_malformed_run_status_does_not_hide_healthy_sibling(case, status):
 
 def test_exact_identity_lookup_reports_unavailable_client_record(case):
     core, studio, state, root, cid, eid, input_id = case
-    (root / "Vera/client.json").write_bytes(b"{}")
+    (root / "vera/client.json").write_bytes(b"{}")
 
     result = core.resolve_studio_client_identity(
         "legal_name", "Synthetic healthy client", state_dir=state
@@ -726,7 +726,7 @@ def test_fresh_session_uses_known_folders_when_root_listing_is_unavailable(
     core, studio, state, root, cid, eid, input_id = case
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(state.parent / "profile"))
     core.configure_archive(studio, state_dir=state, make_studio_default=True)
-    retained = (root / "Vera/client.json").read_bytes()
+    retained = (root / "vera/client.json").read_bytes()
     original = Path.iterdir
 
     def unavailable(path):
@@ -743,7 +743,7 @@ def test_fresh_session_uses_known_folders_when_root_listing_is_unavailable(
     assert result["client_folder"]["client_root"] == str(root)
     assert result["directory_complete"] is False
     assert result["directory_issues"][0]["known_scopes_only"] is True
-    assert (root / "Vera/client.json").read_bytes() == retained
+    assert (root / "vera/client.json").read_bytes() == retained
 
 
 def test_saved_folder_location_cannot_authorize_a_changed_client_identity(
@@ -755,8 +755,8 @@ def test_saved_folder_location_cannot_authorize_a_changed_client_identity(
     replacement = tmp_path / "Replacement"
     replacement.mkdir()
     core.ledger.create_client_manifest(replacement, "client_" + "f" * 24)
-    changed = (replacement / "Vera/client.json").read_bytes()
-    (root / "Vera/client.json").write_bytes(changed)
+    changed = (replacement / "vera/client.json").read_bytes()
+    (root / "vera/client.json").write_bytes(changed)
     original = Path.iterdir
 
     def unavailable(path):
@@ -772,7 +772,7 @@ def test_saved_folder_location_cannot_authorize_a_changed_client_identity(
     ):
         core.get_studio_client_folder(cid, state_dir=state.parent / "new-session")
 
-    assert (root / "Vera/client.json").read_bytes() == changed
+    assert (root / "vera/client.json").read_bytes() == changed
 
 
 def test_invalid_saved_location_is_preserved_and_cannot_escape_selected_archive(
@@ -831,7 +831,7 @@ def test_unreadable_unrelated_folder_does_not_block_selected_preparation(
     else:
         other.mkdir()
     original = Path.lstat
-    original_manifest = (root / "Vera/client.json").read_bytes()
+    original_manifest = (root / "vera/client.json").read_bytes()
 
     def unavailable(path, *args, **kwargs):
         if path == other:
@@ -849,7 +849,7 @@ def test_unreadable_unrelated_folder_does_not_block_selected_preparation(
     assert result["directory_complete"] is False
     assert result["blocked_clients"][0]["issue_code"] == "scope_metadata_unavailable"
     assert result["blocked_clients"][0]["relative_dir"] == other.name
-    assert (root / "Vera/client.json").read_bytes() == original_manifest
+    assert (root / "vera/client.json").read_bytes() == original_manifest
 
 
 def test_unreadable_scope_is_shown_beside_healthy_client_and_stays_unselectable(
@@ -940,7 +940,7 @@ def test_damaged_engagement_does_not_hide_valid_engagement(case):
     other = core.create_studio_client_engagement(
         cid, "Damaged sibling", state_dir=state
     )["engagement"]["engagement_id"]
-    manifest = root / "Vera/engagements" / other / "engagement.json"
+    manifest = root / "vera/engagements" / other / "engagement.json"
     manifest.write_bytes(b"{}")
 
     result = core.list_studio_client_engagements(cid, state_dir=state)
@@ -958,7 +958,7 @@ def test_damaged_unselected_input_does_not_hide_valid_work(case, tmp_path):
     other = core.import_studio_client_document(
         cid, source, "source", engagement_id=eid, state_dir=state
     )["input_id"]
-    receipt = root / "Vera/engagements" / eid / "inputs" / other / "receipt.json"
+    receipt = root / "vera/engagements" / eid / "inputs" / other / "receipt.json"
     receipt.write_bytes(b"{}")
 
     result = core.list_studio_client_engagements(cid, state_dir=state)
@@ -983,7 +983,7 @@ def test_damaged_unselected_input_does_not_hide_valid_work(case, tmp_path):
 
 def test_incidental_collection_file_does_not_hide_existing_engagement(case):
     core, studio, state, root, cid, eid, input_id = case
-    incidental = root / "Vera/engagements/.DS_Store"
+    incidental = root / "vera/engagements/.DS_Store"
     incidental.write_bytes(b"synthetic finder metadata")
 
     result = core.list_studio_client_engagements(cid, state_dir=state)
@@ -996,7 +996,7 @@ def test_incidental_collection_file_does_not_hide_existing_engagement(case):
 def test_recovery_after_unrelated_folder_change_does_not_require_index(case):
     core, studio, state, root, cid, eid, input_id = case
     (studio / "Unrelated new folder").mkdir()
-    manifest = root / "Vera/client.json"
+    manifest = root / "vera/client.json"
     before = manifest.read_bytes()
 
     result = core.recover_studio_client_ledger(state_dir=state)
@@ -1040,7 +1040,7 @@ def test_linked_ledger_parent_cannot_redirect_selected_import(
     case, tmp_path, linked_level
 ):
     core, studio, state, root, cid, eid, input_id = case
-    ledger = root / "Vera"
+    ledger = root / "vera"
     engagement = ledger / "engagements" / eid
     paths = {
         "ledger": ledger,
@@ -1069,7 +1069,7 @@ def test_linked_ledger_parent_cannot_redirect_selected_import(
 def test_engagement_manifest_from_another_directory_is_not_adopted(case):
     core, studio, state, root, cid, eid, input_id = case
     other = core.ledger.create_engagement(root, cid, "Independent engagement")
-    directory = root / "Vera/engagements"
+    directory = root / "vera/engagements"
     target = directory / eid / "engagement.json"
     target.write_bytes(
         (directory / other["engagement_id"] / "engagement.json").read_bytes()
@@ -1147,7 +1147,7 @@ def test_missing_sibling_collection_does_not_hide_healthy_engagement(case, colle
     other = core.create_studio_client_engagement(
         cid, "Unavailable collection", state_dir=state
     )["engagement"]["engagement_id"]
-    missing = root / "Vera/engagements" / other / collection
+    missing = root / "vera/engagements" / other / collection
     missing.rmdir()
 
     result = core.list_studio_client_engagements(cid, state_dir=state)
@@ -1166,7 +1166,7 @@ def test_native_run_inventory_reports_missing_collection_as_incomplete(
     monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
     import native_archive_navigation as navigation
 
-    missing = root / "Vera/engagements" / eid / "runs"
+    missing = root / "vera/engagements" / eid / "runs"
     missing.rmdir()
 
     result = navigation.catalogue(

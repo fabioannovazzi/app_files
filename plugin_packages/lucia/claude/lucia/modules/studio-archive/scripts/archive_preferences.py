@@ -30,10 +30,10 @@ _HELD = local()
 def product_directory() -> str:
     """Select the owning product, independently from the shared archive location."""
     if os.environ.get("LUCIA_ASSURANCE_HOST") == "1":
-        return "Lucia"
+        return "lucia"
     if os.environ.get("CLARA_ARCHIVE_HOST") == "1":
-        return "Clara"
-    return "Vera"
+        return "clara"
+    return "vera"
 
 
 def default_state_directory() -> Path:

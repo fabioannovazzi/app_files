@@ -58,6 +58,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/semantic_worker_policy.json"),
     ("plugin", "scripts/windows_worker_process.py"),
     ("shared_assurance", "__init__.py"),
+    ("shared_assurance", "archive_paths.py"),
     ("shared_assurance", "contracts.py"),
     ("shared_assurance", "decisions.py"),
     ("shared_assurance", "envelope.py"),

@@ -198,7 +198,7 @@ def test_explicit_engagement_and_import_are_persisted_in_customer_folder(
 ) -> None:
     receipt = client_case.imported["input_receipt"]
     engagement_root = (
-        client_case.client_root / "Vera" / "engagements" / client_case.engagement_id
+        client_case.client_root / "vera" / "engagements" / client_case.engagement_id
     )
 
     assert client_case.imported["status"] == "imported"
@@ -209,9 +209,9 @@ def test_explicit_engagement_and_import_are_persisted_in_customer_folder(
         client_case.source.read_bytes()
     )
     assert receipt["relative_path"].startswith(
-        f"Vera/engagements/{client_case.engagement_id}/inputs/{receipt['input_id']}/"
+        f"vera/engagements/{client_case.engagement_id}/inputs/{receipt['input_id']}/"
     )
-    assert (client_case.client_root / "Vera" / "client.json").is_file()
+    assert (client_case.client_root / "vera" / "client.json").is_file()
     assert (engagement_root / "engagement.json").is_file()
     assert (engagement_root / ".vera-engagement.lock").read_bytes() == (
         b"Vera engagement mutation lock\n"
@@ -219,7 +219,7 @@ def test_explicit_engagement_and_import_are_persisted_in_customer_folder(
     assert (engagement_root / "inputs" / receipt["input_id"] / "receipt.json").is_file()
     serialized = "\n".join(
         path.read_text(encoding="utf-8")
-        for path in sorted((client_case.client_root / "Vera").rglob("*.json"))
+        for path in sorted((client_case.client_root / "vera").rglob("*.json"))
     )
     assert str(client_case.client_root) not in serialized
     assert "01234567890" not in serialized
@@ -1551,7 +1551,7 @@ def test_unreceipted_entry_is_reported_without_hiding_verified_inputs(
 ) -> None:
     inputs_root = (
         client_case.client_root
-        / "Vera"
+        / "vera"
         / "engagements"
         / client_case.engagement_id
         / "inputs"

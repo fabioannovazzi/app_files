@@ -37,7 +37,7 @@ Session configuration and ChatGPT history remain separate.
 They are not the operational source of truth. Search and indexing never modify
 existing source documents. After an explicit client choice, intake may create
 one derived top-level customer folder, create durable engagements, and copy
-selected source, journal, or support files into that folder's `Vera/` subtree;
+selected source, journal, or support files into that folder's `vera/` subtree;
 originals are preserved and existing files are never overwritten.
 
 ## Portable customer-folder workflow
@@ -94,7 +94,7 @@ The explicit flow is:
    cancellations instead of treating partial folders as results.
 
 A later chat reads this ledger instead of relying on chat history.
-`recover-ledger` rebuilds machine-local pointers from `Vera/client.json` and
+`recover-ledger` rebuilds machine-local pointers from `vera/client.json` and
 verifies the ledger.
 A folder rename retains the same client identity. The retention report is
 non-destructive; closing an engagement requires every active run to be
@@ -248,7 +248,7 @@ available paths. Consuming workflows reject unbound inputs and outputs outside
 the exact run.
 
 After a customer-folder rename, refresh and run `recover-ledger` when a full
-verification is useful. The stable `client_id` in `Vera/client.json` lets Vera
+verification is useful. The stable `client_id` in `vera/client.json` lets Vera
 adopt the new path without guessing from the folder label.
 
 Set `VERA_STUDIO_ARCHIVE_STATE_DIR` to an absolute private directory only when
@@ -261,14 +261,17 @@ appropriate backup policy.
 
 ### Session state ownership
 
-Vera, Lucia and Clara use one studio archive root and one client directory.
-New engagements live in `Client/Vera/engagements`, `Client/Lucia/engagements`
-or `Client/Clara/engagements`, according to the owning product. All three can
-list and reopen saved engagements by their exact identity, including legacy
-Lucia/Clara work stored under `Vera/`. Never rename these sealed directories.
-The shared portable client identity and readable navigation retain their existing
-`Vera/client.json` and `Vera/APRI ARCHIVIO.html` locations; those technical paths
-do not make the client or the archive exclusive to Vera.
+Vera, Lucia and Clara use one studio archive root and one project directory.
+Every existing and new project has all three lowercase folders: `vera/`,
+`lucia/` and `clara/`, including empty product areas. New engagements live in
+`Project/<product>/engagements`. All three products can list and reopen saved
+engagements by exact identity. The shared client identity and readable navigation
+live at `vera/client.json` and `vera/APRI ARCHIVIO.html`.
+Use `normalize-project-layout` to normalize existing projects in the configured
+Archive. It preflights all projects, preserves file bytes and sealed records,
+renames legacy product-folder casing, and creates missing product areas.
+Readers resolve historical uppercase paths to the actual lowercase folders;
+do not edit or reseal historical records to change their path spelling.
 
 The approved root, private aliases and index are shared on the same computer via
 `~/.mparanza/vera-studio-archive/profile`. Session state remains product-specific.

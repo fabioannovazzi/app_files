@@ -369,13 +369,13 @@ def test_archive_destination_conflict_keeps_work_deliverable_and_other_client_un
     target = tmp_path / "Other client"
     target.mkdir()
     work.ledger.create_client_manifest(target, "client_" + "b" * 24)
-    original = (target / "Vera/client.json").read_bytes()
+    original = (target / "vera/client.json").read_bytes()
 
     result = work.archive_work(Path(prepared["work_folder"]), target)
 
     assert result["archive"]["status"] == "pending"
     assert result["processing"]["status"] == "result_ready"
-    assert (target / "Vera/client.json").read_bytes() == original
+    assert (target / "vera/client.json").read_bytes() == original
     assert not list(target.rglob("result.md"))
 
 
@@ -537,14 +537,14 @@ def test_archiving_one_job_does_not_copy_unselected_sibling_work(work, tmp_path)
     sibling = work.ledger.create_engagement(
         root, prepared["run"]["client_id"], "Unselected work"
     )
-    secret = root / "Vera/engagements" / sibling["engagement_id"] / "unselected.txt"
+    secret = root / "vera/engagements" / sibling["engagement_id"] / "unselected.txt"
     secret.write_text("Outside this archival request")
     target = tmp_path / "Selected archive copy"
 
     archived = work.archive_work(root, target)
 
     assert archived["archive"]["status"] == "saved"
-    assert not (target / "Vera/engagements" / sibling["engagement_id"]).exists()
+    assert not (target / "vera/engagements" / sibling["engagement_id"]).exists()
     assert secret.read_text() == "Outside this archival request"
 
 

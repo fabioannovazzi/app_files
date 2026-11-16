@@ -166,7 +166,7 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
     """Render a relocatable view from verified records, keeping exact IDs and bytes."""
     root = ledger._ordinary_directory(root, label="client folder")
     client = ledger.load_client_manifest(root)
-    vera = root / "Vera"
+    vera = ledger._product_root(root, "vera")
     view = vera / "Pratiche"
     _directory(view, ledger)
     # Reuse the platform process-lock implementation with a separate client lock.

@@ -152,6 +152,7 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "shared_implementation",
     "__init__.py",
   ],
+  ["implementation.shared.vera_assurance.archive_paths_py", "shared_implementation", "archive_paths.py"],
   [
     "implementation.shared.vera_assurance.contracts_py",
     "shared_implementation",

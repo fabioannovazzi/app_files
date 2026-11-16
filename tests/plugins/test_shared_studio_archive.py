@@ -60,7 +60,7 @@ def test_each_product_creates_work_under_same_client(
     archive_core, tmp_path, monkeypatch
 ):
     case = client_case.__wrapped__(tmp_path, archive_core)
-    identity = (case.client_root / "Vera/client.json").read_bytes()
+    identity = (case.client_root / "vera/client.json").read_bytes()
     select_product(monkeypatch, "Lucia")
     lucia = archive_core.create_studio_client_engagement(
         case.client_id, "Legal synthetic", state_dir=case.state_dir
@@ -71,13 +71,13 @@ def test_each_product_creates_work_under_same_client(
     )["engagement"]
     assert (
         case.client_root
-        / "Lucia/engagements"
+        / "lucia/engagements"
         / lucia["engagement_id"]
         / "engagement.json"
     ).is_file()
     assert (
         case.client_root
-        / "Clara/engagements"
+        / "clara/engagements"
         / clara["engagement_id"]
         / "engagement.json"
     ).is_file()
@@ -89,7 +89,7 @@ def test_each_product_creates_work_under_same_client(
         lucia["engagement_id"],
         clara["engagement_id"],
     }
-    assert (case.client_root / "Vera/client.json").read_bytes() == identity
+    assert (case.client_root / "vera/client.json").read_bytes() == identity
 
 
 @pytest.mark.parametrize("product", ["Vera", "Lucia", "Clara"])
@@ -100,7 +100,10 @@ def test_product_run_context_loads_and_reopens_from_other_product(
     case = client_case.__wrapped__(tmp_path, archive_core)
     prepared = _prepare_run(archive_core, case, idempotency_key="shared-product")
     context = prepared["client_engagement"]
-    assert Path(context["output_dir"]).relative_to(case.client_root).parts[0] == product
+    assert (
+        Path(context["output_dir"]).relative_to(case.client_root).parts[0]
+        == product.lower()
+    )
     run_id = context["run_id"]
     context_path = Path(prepared["client_engagement_path"])
     original = context_path.read_bytes()
@@ -127,8 +130,8 @@ def test_duplicate_engagement_across_products_is_not_silently_selected(
 
     case = client_case.__wrapped__(tmp_path, archive_core)
     shutil.copytree(
-        case.client_root / "Vera/engagements" / case.engagement_id,
-        case.client_root / "Lucia/engagements" / case.engagement_id,
+        case.client_root / "vera/engagements" / case.engagement_id,
+        case.client_root / "lucia/engagements" / case.engagement_id,
     )
     with pytest.raises(archive_core.ledger.LedgerError, match="more than one product"):
         archive_core.ledger.load_engagement_manifest(
@@ -158,14 +161,16 @@ def test_creation_retry_from_other_product_reuses_same_engagement(
         repeated["engagement"]["engagement_id"] == first["engagement"]["engagement_id"]
     )
     assert not (
-        case.client_root / "Lucia/engagements" / first["engagement"]["engagement_id"]
+        case.client_root / "lucia/engagements" / first["engagement"]["engagement_id"]
     ).exists()
 
 
 def test_product_symlink_cannot_redirect_engagement_reader(archive_core, tmp_path):
     case = client_case.__wrapped__(tmp_path, archive_core)
-    (case.client_root / "Lucia").symlink_to(
-        case.client_root / "Vera", target_is_directory=True
+    (case.client_root / "lucia/engagements").rmdir()
+    (case.client_root / "lucia").rmdir()
+    (case.client_root / "lucia").symlink_to(
+        case.client_root / "vera", target_is_directory=True
     )
     with pytest.raises(archive_core.ledger.LedgerError, match="real directory"):
         archive_core.ledger.load_engagement_manifest(
@@ -177,7 +182,9 @@ def test_product_symlink_cannot_redirect_new_work(archive_core, tmp_path, monkey
     case = client_case.__wrapped__(tmp_path, archive_core)
     outside = tmp_path / "outside"
     outside.mkdir()
-    (case.client_root / "Lucia").symlink_to(outside, target_is_directory=True)
+    (case.client_root / "lucia/engagements").rmdir()
+    (case.client_root / "lucia").rmdir()
+    (case.client_root / "lucia").symlink_to(outside, target_is_directory=True)
     select_product(monkeypatch, "Lucia")
     with pytest.raises(archive_core.ArchiveError, match="real directory"):
         archive_core.create_studio_client_engagement(
@@ -233,9 +240,165 @@ def test_product_symlink_blocks_collection_enumeration(archive_core, tmp_path):
     case = client_case.__wrapped__(tmp_path, archive_core)
     outside = tmp_path / "outside"
     (outside / "engagements" / "private-name").mkdir(parents=True)
-    (case.client_root / "Lucia").symlink_to(outside, target_is_directory=True)
+    (case.client_root / "lucia/engagements").rmdir()
+    (case.client_root / "lucia").rmdir()
+    (case.client_root / "lucia").symlink_to(outside, target_is_directory=True)
     result = archive_core.ledger.inspect_engagements(case.client_root, case.client_id)
     assert "private-name" not in str(result)
     assert "unavailable_collection" in str(result)
     with pytest.raises(archive_core.ledger.LedgerError, match="real directory"):
         archive_core.ledger.list_engagements(case.client_root, case.client_id)
+
+
+def test_all_three_empty_product_folders_exist_for_new_project(archive_core, tmp_path):
+    root = tmp_path / "new-project"
+    root.mkdir()
+    archive_core.ledger.create_client_manifest(root, "client_" + "a" * 24)
+    assert {p.name for p in root.iterdir() if p.is_dir()} == {"vera", "lucia", "clara"}
+
+
+@pytest.mark.parametrize("started", [False, True])
+def test_legacy_uppercase_project_migrates_without_rewriting_evidence(
+    archive_core, tmp_path, monkeypatch, started
+):
+    ledger = archive_core.ledger
+    # Reproduce the previously shipped writer's uppercase directories, then use
+    # the current readers and migration against its sealed on-disk records.
+    with monkeypatch.context() as old:
+        old.setattr(
+            ledger, "_product_root", lambda root, product: root / product.title()
+        )
+        old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        case = client_case.__wrapped__(tmp_path, archive_core)
+        prepared = _prepare_run(archive_core, case, idempotency_key="legacy-layout")
+        rid = prepared["run"]["run_id"]
+        if started:
+            archive_core.start_studio_client_workflow(
+                case.client_id, case.engagement_id, rid, state_dir=case.state_dir
+            )
+    retained = {
+        p.relative_to(case.client_root).as_posix(): p.read_bytes()
+        for p in case.client_root.rglob("*")
+        if p.is_file()
+    }
+    result = archive_core.normalize_studio_archive_layout(state_dir=case.state_dir)
+    assert result["project_count"] == 1
+    assert {p.name for p in case.client_root.iterdir() if p.is_dir()} >= {
+        "vera",
+        "lucia",
+        "clara",
+    }
+    for relative, content in retained.items():
+        assert ledger._archive_path(case.client_root, relative).read_bytes() == content
+    loaded = ledger.load_run(case.client_root, case.engagement_id, rid)
+    assert loaded["run"]["status"] == ("running" if started else "prepared")
+    if not started:
+        archive_core.start_studio_client_workflow(
+            case.client_id, case.engagement_id, rid, state_dir=case.state_dir
+        )
+    from vera_assurance import load_client_engagement_context_file
+
+    path = ledger._archive_path(
+        case.client_root,
+        Path(prepared["client_engagement_path"]).relative_to(case.client_root),
+    )
+    context = load_client_engagement_context_file(
+        path,
+        expected_workflow_id="financial-analysis",
+        output_dir=path.parent / "outputs",
+    )
+    assert context["run_id"] == rid
+    assert context["run_relative_path"].startswith("Vera/")
+    assert (
+        archive_core.normalize_studio_archive_layout(state_dir=case.state_dir) == result
+    )
+
+
+def test_archive_migration_preflights_all_projects_before_any_rename(
+    archive_core, tmp_path
+):
+    root = tmp_path / "studio"
+    (root / "first/Vera").mkdir(parents=True)
+    (root / "second").mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (root / "second/Lucia").symlink_to(outside, target_is_directory=True)
+    state = tmp_path / "state"
+    archive_core.configure_archive(root, state_dir=state)
+    with pytest.raises(ValueError, match="real directory"):
+        archive_core.normalize_studio_archive_layout(state_dir=state)
+    assert [p.name for p in (root / "first").iterdir()] == ["Vera"]
+    assert list(outside.iterdir()) == []
+
+
+def test_case_collisions_preserve_both_directories(archive_core, tmp_path):
+    root = tmp_path / "project"
+    (root / "Vera").mkdir(parents=True)
+    if (root / "vera").exists():
+        pytest.skip("Filesystem is case insensitive")
+    (root / "vera").mkdir()
+    with pytest.raises(archive_core.ledger.LedgerError, match="differ only by case"):
+        archive_core.ledger.ensure_project_layout(root)
+    assert {p.name for p in root.iterdir() if p.is_dir()} == {"Vera", "vera"}
+
+
+def test_legacy_checkpoint_restores_into_lowercase_project(
+    archive_core, tmp_path, monkeypatch
+):
+    ledger = archive_core.ledger
+    with monkeypatch.context() as old:
+        old.setattr(
+            ledger, "_product_root", lambda root, product: root / product.title()
+        )
+        old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        case = client_case.__wrapped__(tmp_path, archive_core)
+        prepared = _prepare_run(archive_core, case, idempotency_key="legacy-recovery")
+        rid = prepared["run"]["run_id"]
+        archive_core.start_studio_client_workflow(
+            case.client_id, case.engagement_id, rid, state_dir=case.state_dir
+        )
+        context_bytes = Path(prepared["client_engagement_path"]).read_bytes()
+        archive_core.checkpoint_studio_client_workflow(
+            case.client_id, case.engagement_id, rid, state_dir=case.state_dir
+        )
+    destination = tmp_path / "restored"
+    restored = archive_core.restore_studio_client_workflow(
+        case.client_id, case.engagement_id, rid, destination, state_dir=case.state_dir
+    )
+    assert {p.name for p in destination.iterdir() if p.is_dir()} >= {
+        "vera",
+        "lucia",
+        "clara",
+    }
+    context = Path(restored["client_engagement_path"])
+    assert context.read_bytes() == context_bytes
+    assert context.relative_to(destination).parts[0] == "vera"
+    assert (
+        Path(restored["client_engagement"]["input_bindings"][0]["path"]).read_bytes()
+        == case.source.read_bytes()
+    )
+
+
+def test_saved_search_citation_opens_after_folder_normalization(
+    archive_core, tmp_path, monkeypatch
+):
+    ledger = archive_core.ledger
+    with monkeypatch.context() as old:
+        old.setattr(
+            ledger, "_product_root", lambda root, product: root / product.title()
+        )
+        old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        case = client_case.__wrapped__(tmp_path, archive_core)
+    archive_core.refresh_archive(state_dir=case.state_dir)
+    found = archive_core.search_archive(
+        "ZeccaLedgerMarker", scope_id=case.scope_id, state_dir=case.state_dir
+    )
+    source_id = found["results"][0]["source_id"]
+    archive_core.normalize_studio_archive_layout(state_dir=case.state_dir)
+    assert "ZeccaLedgerMarker" in str(
+        archive_core.open_archive_source(source_id, state_dir=case.state_dir)
+    )
+    archive_core.refresh_archive(state_dir=case.state_dir)
+    assert "ZeccaLedgerMarker" in str(
+        archive_core.open_archive_source(source_id, state_dir=case.state_dir)
+    )

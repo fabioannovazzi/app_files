@@ -1311,7 +1311,7 @@ jobs:
           tests/plugins/test_vera_studio_archive_gmail_routing.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
-          --cov=vera_assurance.recovery --cov=work_folder --cov-report=term-missing --cov-fail-under=80
+          --cov=vera_assurance.recovery --cov=vera_assurance.archive_paths --cov=work_folder --cov-report=term-missing --cov-fail-under=80
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -1334,7 +1334,7 @@ jobs:
           python -m isort --check-only plugins/studio-archive/scripts/work_folder.py tests/plugins/test_archive_independent_work.py tests/plugins/test_archive_optional_services.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/work_folder.py
           python -m bandit -q -ll plugins/studio-archive/scripts/work_folder.py
-          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
-          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py
-          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py
+          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/_shared/vendor/modules/vera_assurance/archive_paths.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/_shared/vendor/modules/vera_assurance/archive_paths.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/_shared/vendor/modules/vera_assurance/archive_paths.py plugins/vera/scripts/standalone_work.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/_shared/vendor/modules/vera_assurance/archive_paths.py plugins/vera/scripts/standalone_work.py

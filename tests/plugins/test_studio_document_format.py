@@ -745,7 +745,7 @@ def test_course_reuse_creates_a_real_separate_financial_client_run(
     context_path = Path(reuse["client_engagement_path"])
     context = json.loads(context_path.read_text())
     assert context["workflow_id"] == "report-builder"
-    assert not (workspace / "Vera/client.json").exists()
+    assert not (workspace / "vera/client.json").exists()
     assert Path(reuse["client_root"]).is_relative_to(output)
     sources = list(Path(reuse["input_dir"]).glob("**/*.csv"))
     assert len(sources) == 1

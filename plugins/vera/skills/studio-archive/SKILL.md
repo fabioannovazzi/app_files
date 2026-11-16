@@ -66,7 +66,7 @@ engagement IDs after a later import failure; do not duplicate them.
 
 For a user-authorized external folder delivery into a selected client's working
 area, use the component's `copy_studio_client_source_folder` operation. It
-preserves the tree outside `Vera/` for Archive Organization and retains a copy
+preserves the tree outside `vera/` for Archive Organization and retains a copy
 receipt. Single-document engagement imports remain a separate route; they are
 not a substitute for the working-folder delivery. Reuse the selected client,
 engagement and explicit copy authority; do not ask again for settled choices.
@@ -92,7 +92,7 @@ than register it again. Previously known folder locations can support recovery
 when root listing is unavailable, but do not replace current identity validation.
 
 For local archive delivery, show the generated `readable_archive.index_path`
-(`Vera/APRI ARCHIVIO.html`) and the dated, named folders under `Vera/Pratiche/`.
+(`vera/APRI ARCHIVIO.html`) and the dated, named folders under `vera/Pratiche/`.
 These are portable, rebuildable navigation pages, not a replacement for the
 exact `engagements/` ledger. A completed execution does not imply professional
 approval. Check the returned readable-view status before claiming navigation

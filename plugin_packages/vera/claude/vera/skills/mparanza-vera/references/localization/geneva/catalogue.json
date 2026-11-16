@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-archive-search-recovery/plugins/vera",
   "version": "0.1.649",
-  "captured_at": "2026-11-16T11:34:08.722648+00:00",
-  "catalogue_fingerprint": "81f4cc2891651a7d5639c06892df31e62b55ac9282e00939caa2b0b974f870af",
+  "captured_at": "2026-11-16T13:25:46.354048+00:00",
+  "catalogue_fingerprint": "6b86d48c2d8177fd83f35afbc0017a2339f343798b9a237438e75886e8ec349b",
   "manifest_sha256": "bb8ffeb49e7d377f2f89459c63029ba5751b6365e567383456093d7577690e09",
   "entries": [
     {
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "0e1c34ebe66ae92b9a312d15c8b5d58b92005f4c44176b08406769227caf9741"
+      "sha256": "1b00ec23287d71c4141051047a1c0c84eb63309d2e0f5dafafe958310c19bb0c"
     },
     {
       "function_id": "studio-document-format",
