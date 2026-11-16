@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "courseChats": {
-      "title": "Clara · Corsi",
+      "title": "Clara \u00b7 Corsi",
       "description": "Open or resume the paired working chat for local courses.",
       "cwd": ".",
       "command": "node",
@@ -10,7 +10,7 @@
       ]
     },
     "claraIncidentHost": {
-      "title": "Clara · Identità tecnica locale",
+      "title": "Clara \u00b7 Identit\u00e0 tecnica locale",
       "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",
       "cwd": ".",
       "command": "node",
@@ -19,7 +19,7 @@
       ]
     },
     "claraReports": {
-      "title": "Clara · Budget e previsioni",
+      "title": "Clara \u00b7 Budget e previsioni",
       "description": "Apri il report interattivo verificato nel pannello locale.",
       "cwd": ".",
       "command": "node",
@@ -28,7 +28,7 @@
       ]
     },
     "claraStudioArchive": {
-      "title": "Clara · Archivio dello studio",
+      "title": "Clara \u00b7 Archivio dello studio",
       "command": "node",
       "cwd": ".",
       "args": [
@@ -37,7 +37,7 @@
       "env": {}
     },
     "claraArchivePanel": {
-      "title": "Clara · Archivio dello studio",
+      "title": "Clara \u00b7 Archivio dello studio",
       "command": "node",
       "cwd": ".",
       "args": [
@@ -46,6 +46,15 @@
       "env": {
         "CLARA_ARCHIVE_PANEL_ONLY": "1"
       }
+    },
+    "claraMedia": {
+      "title": "Clara \u00b7 Audio and narration",
+      "description": "Select recordings and continue media work in the current chat. Files stay local until processing is confirmed.",
+      "command": "node",
+      "cwd": ".",
+      "args": [
+        "./scripts/media_mcp.cjs"
+      ]
     }
   }
 }

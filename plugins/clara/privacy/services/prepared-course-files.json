@@ -24,7 +24,9 @@
   ],
   "governed_paths": [
     "scripts/local_courses.py",
-    "assets/courses"
+    "assets/courses",
+    "vendor/modules/courseware/assets/chat.html",
+    "vendor/modules/courseware/assets/chat.js"
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/courseware",

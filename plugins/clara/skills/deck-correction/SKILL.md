@@ -2,6 +2,15 @@
 name: deck-correction
 description: "Correct, revise, or rebuild an existing PPTX or Clara HTML deck from spoken feedback, a call transcript, screen recording, review notes, or partner comments. Use when the user says record feedback on this deck or when the requested outcome is a changed deck rather than only a transcript: open Clara Voice Capture when needed, interpret every requested change, preserve untouched content, require a reviewable understanding and approval checkpoint for PPTX work, apply changes to a copy, render, verify, and inspect the final audience-facing deck. Do not use for transcription alone or for creating a new deck without revision feedback."
 ---
+
+## Codex operator UI precedence
+
+For local Codex operation, follow `../clara/references/operator-media.md`.
+Use the local `clara_media_open` panel and persisted native handoff instead of
+the browser upload/download instructions below. Those remain fallback engine
+documentation for hosts without this panel. Preserve the existing approval,
+import, interpretation and final-output validation contracts.
+
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 

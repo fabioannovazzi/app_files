@@ -30,7 +30,7 @@ class ReportApp:
         self.tools = []
         for operation, field, title in [
             ("open", "report", "Budget e previsioni"),
-            ("refresh", "session", "Aggiorna il report"),
+            ("refresh", "session", "Verifica il report"),
         ]:
             self.tools.append(
                 {

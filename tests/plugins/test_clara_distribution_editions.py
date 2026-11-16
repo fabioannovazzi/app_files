@@ -43,6 +43,8 @@ def test_reduced_inventory_exposes_only_implemented_local_workflows(candidate) -
     assert not list(installed.rglob(".mcp.json"))
     assert not list(installed.rglob("mcp.json"))
     assert not (installed / "assets/courses").exists()
+    assert not (installed / "ui/media.html").exists()
+    assert not (installed / "scripts/media_mcp.py").exists()
     assert json.loads((installed / "components.json").read_text())["plugins"] == []
     for path in (installed / ".codex-plugin/plugin.json", installed / "plugin.json"):
         metadata = json.loads(path.read_text())
@@ -81,6 +83,8 @@ def test_full_projection_still_keeps_native_tools_and_all_workflows() -> None:
     assert ".mcp.json" in entries and "mcp.json" in entries
     assert "skills/reporting-engine/SKILL.md" in entries
     assert "skills/learn-with-clara/SKILL.md" in entries
+    assert "ui/media.html" in entries
+    assert "scripts/media_mcp.py" in entries
     assert b"clara_report_open" in entries["skills/reporting-engine/SKILL.md"]
 
 

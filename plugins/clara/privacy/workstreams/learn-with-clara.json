@@ -17,7 +17,9 @@
     "marketplace_skill_instructions.json",
     ".mcp.json",
     "scripts/course_chat_bridge.py",
-    "scripts/course_chat_mcp.cjs"
+    "scripts/course_chat_mcp.cjs",
+    "vendor/modules/courseware/assets/chat.html",
+    "vendor/modules/courseware/assets/chat.js"
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/desktop_teaching",

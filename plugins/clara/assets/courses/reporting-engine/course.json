@@ -259,7 +259,7 @@
     {
       "path": "scripts/report_mcp.py",
       "repository_path": "plugins/clara/scripts/report_mcp.py",
-      "sha256": "2f602685fdc76252f309a5e2da3b89d5b57a5480619d88963b3cc63b275a021a"
+      "sha256": "1b0e5745963eef1054f88e576b3981a188d618de80a70542ebf7f0f6e3eb198e"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -284,7 +284,7 @@
     {
       "path": "ui/report.html",
       "repository_path": "plugins/clara/ui/report.html",
-      "sha256": "ca5413dce2df94d4004c47c18c3a9a37034ce2d71c55118c851814c8e65b451d"
+      "sha256": "06e59ccec44a882d5dfaccc94a2a1163792e0e491550e1e5ae2fa4f460ea4618"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -318,13 +318,13 @@
     },
     {
       "path": "vendor/modules/courseware/assets/chat.html",
-      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
+      "repository_path": "plugins/clara/vendor/modules/courseware/assets/chat.html",
+      "sha256": "2c25c5162a47ee7dba76f371b7239c1d58bde79a0f8e92207e0a586d95f2a344"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
-      "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
+      "repository_path": "plugins/clara/vendor/modules/courseware/assets/chat.js",
+      "sha256": "514df7a9aa8d8f011ae748811a8e950303ec9801af8c040a2b5fb0305091032c"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",

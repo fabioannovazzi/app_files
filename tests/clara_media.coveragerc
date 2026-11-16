@@ -1,0 +1,5 @@
+[run]
+include = */plugins/clara/scripts/media_mcp.py
+[report]
+show_missing = True
+fail_under = 80

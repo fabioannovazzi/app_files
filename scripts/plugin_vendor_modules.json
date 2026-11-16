@@ -236,6 +236,15 @@
       "module_roots": [
         "desktop_teaching",
         "courseware"
+      ],
+      "overlays": [
+        {
+          "source_root": "plugins/clara/vendor/modules",
+          "module_roots": [
+            "courseware/assets/chat.html",
+            "courseware/assets/chat.js"
+          ]
+        }
       ]
     },
     "lucia": {

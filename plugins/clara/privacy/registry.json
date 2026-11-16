@@ -600,7 +600,11 @@
         "privacy/workstreams/clara.json": [
           ".codex-plugin/plugin.json",
           "hooks/cowork-hooks.json",
-          "skills/mparanza-clara/references/cowork-runtime.md"
+          "scripts/media_mcp.cjs",
+          "scripts/media_mcp.py",
+          "skills/mparanza-clara/references/cowork-runtime.md",
+          "skills/mparanza-clara/references/operator-media.md",
+          "ui/media.html"
         ],
         "privacy/workstreams/learn-with-clara.json": [
           "assets/onboarding",
@@ -627,7 +631,11 @@
           "skills/mparanza-clara/references/cowork-runtime.md"
         ],
         "privacy/workstreams/research-video.json": [
-          "skills/mparanza-research-video/agents/openai.yaml"
+          "scripts/media_mcp.cjs",
+          "scripts/media_mcp.py",
+          "skills/mparanza-clara/references/operator-media.md",
+          "skills/mparanza-research-video/agents/openai.yaml",
+          "ui/media.html"
         ],
         "privacy/workstreams/variance-analysis.json": [
           ".codex-plugin/plugin.json",

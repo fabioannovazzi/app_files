@@ -198,7 +198,9 @@ def test_native_report_keeps_period_controls_and_rejects_stale_refresh(tmp_path,
             report.write_text(report.read_text().replace("120 EUR", "999 EUR"))
             stamp()
             app.get_by_role(
-                "button", name="Aggiorna" if language == "it" else "Refresh", exact=True
+                "button",
+                name="Verifica report" if language == "it" else "Check report",
+                exact=True,
             ).click()
             expect(app.get_by_role("status")).to_contain_text(
                 "Impossibile verificare"

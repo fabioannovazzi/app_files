@@ -61,7 +61,7 @@
     },
     {
       "id": "archive-panel-projection",
-      "control": "The Archive panel returns client/matter labels, document names and exact references, issued versions, and saved chat links only in app-only _meta.archive. Model-visible tool content remains a generic status. Opening a selected document uses the maintained scoped reader and integrity verification, then returns its path and optional bounded text preview only to the app. The app asks the host to open that file or a stored chat link; it does not send document contents as a model message. A new-chat action sends selected client/matter IDs with a fixed request. Private identity mappings and raw worker errors are not projected. The HTML uses embedded local fonts and textContent. Separately authorized host screen/DOM inspection can still expose visible information; app-only is not host-wide invisibility.",
+      "control": "The local Archive wrapper serves the same runtime in chat and panel-only modes. The panel returns client/practice labels, stable IDs and registration/status fields only in app-only _meta.archive; model-visible tool content is a generic status. Private identities, source documents and raw worker errors are not projected. The HTML uses local embedded fonts, no external resources, and textContent for stored labels. Only an explicit new-chat button sends the selected stable client and optional engagement IDs with a fixed user request through the host ui/message capability. No document content is read or sent by browsing. The host may expose UI through separately authorized screen or DOM inspection; app-only metadata is not a promise of host-wide invisibility. Backend failures render a retryable error without marking the opening tool as an unusable app.",
       "implemented_by": [
         "scripts/studio_archive_mcp.cjs",
         "assets/studio-archive.html"
@@ -86,9 +86,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-15",
+    "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "6879e4e3769398bd33280a8d685b862ef5f0b5e13e15c01dac104582ad67526a"
+    "source_fingerprint": "ca40bdab9b3a54ddeb6487f22662724d4e5ede003e697cc53d84e6410bf593fb"
   }
 }

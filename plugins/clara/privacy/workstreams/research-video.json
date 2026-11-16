@@ -23,7 +23,11 @@
     "scripts/artifact_publication.py",
     "scripts/case_store.py",
     "scripts/media_publication.py",
-    "scripts/render_attempt.py"
+    "scripts/render_attempt.py",
+    "scripts/media_mcp.py",
+    "scripts/media_mcp.cjs",
+    "ui/media.html",
+    "skills/clara/references/operator-media.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -120,6 +124,10 @@
     {
       "id": "hosted-voice-artifact-binding",
       "control": "The local attachment step requires the Mparanza hosted source, fixed provider policy, exact request, approval, language and scene order; rejects unsafe or undeclared ZIP entries; converts returned WAV files to normalized PCM; and binds their SHA-256, metadata and duration to the run."
+    },
+    {
+      "id": "local-operator-handoff",
+      "control": "Codex media selection and confirmation use the local MCP panel. Raw recording chunks remain in local app/tool transport; only session metadata, filename and output locations appear in structured model results. The worker extracts audio locally and invokes the existing authenticated service without source documents or case context. Selected host conversation processing still applies to any transcript subsequently read for the requested work."
     }
   ],
   "service_ids": [
@@ -157,9 +165,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a17bee1b553bfc8ec9538f3b8f850b35b9cc6042df66af3571877c626a189f5b"
+    "source_fingerprint": "89dc3f60df9aa682cc37038ee593b747f5ce073228a9089ed6c955722051f0de"
   }
 }
