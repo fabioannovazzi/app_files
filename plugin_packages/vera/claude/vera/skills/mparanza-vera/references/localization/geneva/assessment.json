@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "6b86d48c2d8177fd83f35afbc0017a2339f343798b9a237438e75886e8ec349b",
+  "catalogue_fingerprint": "172bc1c98decd6cf1f3af0e7cc398e22506f1b00d78c2b15c5141828278e1484",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2807,6 +2807,19 @@
     "previous_catalogue_fingerprint": "81f4cc2891651a7d5639c06892df31e62b55ac9282e00939caa2b0b974f870af",
     "version": "0.1.649",
     "scope": "Studio Archive paths use lowercase product folders for existing and new projects. No professional workflow or jurisdiction assessment changed.",
+    "changed_entrypoints": [
+      "studio-archive"
+    ]
+  },
+  "tutorial_lowercase_fix_20261116": {
+    "version": "0.1.650",
+    "previous_catalogue_fingerprint": "6b86d48c2d8177fd83f35afbc0017a2339f343798b9a237438e75886e8ec349b",
+    "scope": "Tutorial metadata uses the existing lowercase Archive area. No skill entrypoint bytes or professional jurisdiction judgments changed."
+  },
+  "separate_product_work_20261116": {
+    "version": "0.1.650",
+    "previous_catalogue_fingerprint": "23009280636b7c195fa17290097893780b505be313aa5c60dd60b7793e9de299",
+    "scope": "Shared root and client directory; engagements, documents, search and saved links stay within the selected product. No jurisdiction judgment changed.",
     "changed_entrypoints": [
       "studio-archive"
     ]

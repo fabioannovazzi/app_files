@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-archive-search-recovery/plugins/vera",
-  "version": "0.1.649",
-  "captured_at": "2026-11-16T13:25:46.354048+00:00",
-  "catalogue_fingerprint": "6b86d48c2d8177fd83f35afbc0017a2339f343798b9a237438e75886e8ec349b",
-  "manifest_sha256": "bb8ffeb49e7d377f2f89459c63029ba5751b6365e567383456093d7577690e09",
+  "root": "/Users/fabio/Documents/Codex/2026-11-16/lucia-0254-native-acceptance/work/shared-studio-archive/plugins/vera",
+  "version": "0.1.650",
+  "captured_at": "2026-11-16T17:13:29.280176+00:00",
+  "catalogue_fingerprint": "172bc1c98decd6cf1f3af0e7cc398e22506f1b00d78c2b15c5141828278e1484",
+  "manifest_sha256": "cba4d45b2456032ccc39596888efc74624fcbf8c54058fbdd98022730ff61ab6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "1b00ec23287d71c4141051047a1c0c84eb63309d2e0f5dafafe958310c19bb0c"
+      "sha256": "7dc3765ffcace024c52c29c0fb0cb24fc0609cea80548641585cf4d554fc9e33"
     },
     {
       "function_id": "studio-document-format",

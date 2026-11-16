@@ -49,3 +49,7 @@ root with the same arguments as the component guide. It applies Lucia’s workfl
 list and retains the same client, engagement, receipts and lifecycle.
 
 Lucia's public experience and deliverables are in Italian.
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.

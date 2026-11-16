@@ -101,6 +101,7 @@ function panelResult(name, result) {
   }
   const archive = name === "clara_archive_open"
     ? { configured: data.configured, clients: (data.clients ?? [])
+        .filter(row => row.product_has_work !== false)
         .map(({ client_id, display_name, registration_status }) => ({ client_id, display_name, registration_status })) }
     : { engagements: (data.engagements ?? []).map(({ engagement_id, label, status }) => ({ engagement_id, label, status })) };
   return { content: [{ type: "text", text: "Archivio di Clara pronto nel pannello." }], _meta: { archive } };

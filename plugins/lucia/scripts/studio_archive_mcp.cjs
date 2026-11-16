@@ -87,6 +87,7 @@ function panelResult(name, result) {
   }
   let archive;
   if (name === "lucia_archive_open") archive = { configured: data.configured, clients: (data.clients ?? [])
+        .filter(row => row.product_has_work !== false)
     .map(({client_id, display_name, registration_status}) => ({client_id, display_name, registration_status})) };
   else if (name === "lucia_archive_list_matters") archive = { engagements: (data.engagements ?? [])
     .map(({engagement_id, label, status}) => ({engagement_id, label, status})) };

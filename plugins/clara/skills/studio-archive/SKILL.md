@@ -110,3 +110,7 @@ unavailable. Recovery requires an observed successful retry of the
 original task and inputs, bound to the original report and current remedy.
 Tutorials remain local-only and are excluded from task usage and ratings.
 <!-- MPARANZA_REPORTING_END -->
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.

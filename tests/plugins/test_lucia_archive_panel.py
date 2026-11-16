@@ -39,7 +39,7 @@ readline.createInterface({input:process.stdin}).on('line', line => {
   else if(process.env.TEST_ARCHIVE_ERROR) result={isError:true,content:[{type:'text',text:'private-path /secret'}]};
   else if(m.params?.name==='get_studio_incarico') result={structuredContent:{purpose:'Synthetic assignment',documents:[{name:'Source.txt',reference:{input_id:'input-one'},secret:'not-projected'}],results:[],deliverables:[{versions:[{label:'Opinion',revision:2,primary_format:'docx',formats:[{name:'opinion.docx',format:'docx',reference:{entry_key:'opinion',revision:2,format:'docx'},available:true}]}]}],conversations:[{title:'Existing discussion',url:'codex://threads/synthetic',secret:'not-projected'}],document_issues:[]}};
   else if(m.params?.name==='read_studio_incarico_document') result={structuredContent:{name:'Source.txt',path:'/synthetic/Source.txt',preview:JSON.stringify(m.params.arguments),secret:'not-projected'}};
-  else result={structuredContent:{configured:true,clients:[{client_id:'c1',display_name:'Synthetic client',registration_status:'registered',email:'private@example.test'}],engagements:[{engagement_id:'e1',label:'Synthetic practice',status:'open',sources:['private-source']}]}};
+  else result={structuredContent:{configured:true,clients:[{client_id:'c1',display_name:'Synthetic client',registration_status:'registered',product_has_work:true,email:'private@example.test'},{client_id:'foreign',display_name:'Other product only',registration_status:'registered',product_has_work:false}],engagements:[{engagement_id:'e1',label:'Synthetic practice',status:'open',sources:['private-source']}]}};
   process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,result})+'\\n');
 });
 """
@@ -72,8 +72,15 @@ def test_panel_read_failure_keeps_resource_renderable_without_private_error(pane
     assert "secret" not in json.dumps(result)
 
 
-def test_panel_clients_are_only_in_private_metadata(panel):
-    result = call(panel, "tools/call", {"name": "lucia_archive_open"})
+@pytest.mark.parametrize("product", ["lucia", "clara"])
+def test_panel_clients_are_only_in_private_metadata(panel, monkeypatch, product):
+    if product == "clara":
+        shutil.copyfile(
+            ROOT / "plugins/clara/scripts/studio_archive_mcp.cjs",
+            panel / "scripts/studio_archive_mcp.cjs",
+        )
+        monkeypatch.setenv("CLARA_ARCHIVE_PANEL_ONLY", "1")
+    result = call(panel, "tools/call", {"name": f"{product}_archive_open"})
     assert result["_meta"]["archive"]["clients"] == [
         {
             "client_id": "c1",

@@ -321,6 +321,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
                 )
             }
             for row in clients["clients"]
+            if row.get("product_has_work", True)
         ]
         result = page(rows, args)
         return {**base, **result, "clients": result["rows"]}

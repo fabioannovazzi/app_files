@@ -12,6 +12,8 @@ ROOT = Path(__file__).resolve().parents[2]
 
 @pytest.fixture
 def setup_case(tmp_path, monkeypatch):
+    monkeypatch.setenv("CLARA_ARCHIVE_HOST", "1")
+    monkeypatch.delenv("LUCIA_ASSURANCE_HOST", raising=False)
     monkeypatch.syspath_prepend(str(ROOT / "plugins/clara/scripts"))
     module = importlib.import_module("clara_studio_archive")
     state = tmp_path / "state"
@@ -185,3 +187,31 @@ def test_closed_engagement_does_not_create_new_active_case(setup_case):
     module.archive.close_studio_client_engagement(cid, eid, state_dir=state)
     with pytest.raises(ValueError, match="open engagement"):
         module.open_case(cid, eid, objective="New work", state_dir=state)
+
+
+def test_legacy_clara_binding_survives_move_to_clara_area(setup_case, monkeypatch):
+    module, state, cid, eid = setup_case
+    root = Path(
+        module.archive.get_studio_client_folder(cid, state_dir=state)["client_folder"][
+            "client_root"
+        ]
+    )
+    (root / "clara/engagements" / eid).rename(root / "vera/engagements" / eid)
+    monkeypatch.delenv("CLARA_ARCHIVE_HOST", raising=False)
+    monkeypatch.delenv("LUCIA_ASSURANCE_HOST", raising=False)
+    created = module.open_case(cid, eid, objective="Legacy synthetic", state_dir=state)
+    case = Path(created["case_dir"])
+    engagement = case.parent
+    root = engagement.parents[2]
+    before = {
+        str(p.relative_to(engagement)): p.read_bytes()
+        for p in engagement.rglob("*")
+        if p.is_file()
+    }
+    target = root / "clara/engagements" / eid
+    engagement.rename(target)
+    monkeypatch.setenv("CLARA_ARCHIVE_HOST", "1")
+    result = module.open_case(cid, eid, state_dir=state)
+    assert result["status"] == "resumed"
+    assert Path(result["case_dir"]) == target / "clara-case"
+    assert all((target / name).read_bytes() == value for name, value in before.items())

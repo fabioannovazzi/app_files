@@ -234,7 +234,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "f59442bd67a290b687f9d49ad4ff543046f7a25d7529c67061ba8e19cffb3f1f"
+      "sha256": "83dec5a51dfc2421fb812d674888ff39023e306c24fe3c6dfb82c95f84e09f3c"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -264,7 +264,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "4440bf27b08b69b10febd8412be9424381ee18a65fc915d3ead79e46751b08a6"
+      "sha256": "8225565769b5721f59f02cbe2189863f7361d25b14e223fc88fe10091fc6ad95"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
@@ -299,7 +299,7 @@
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
-      "sha256": "7748bfd579013b78cefeb312f5d551a3a00db0d80779cbf70182dbaee39ca57f"
+      "sha256": "ffcfcaf6aafbf6dd568759c39da5551e496cf54caf279c3f3c2c93ae85180529"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",

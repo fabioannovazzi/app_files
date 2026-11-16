@@ -559,7 +559,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "8ce4ca3d9f4571c4951d453cb4d751bfe0164628c0b6fd99d40ec20bc251584a",
+      "sha256": "39549f01376d5a59c7288e7286ba30afafb29244997247e362b77fe08b8dcd1b",
       "languages": [
         "it",
         "en",
@@ -584,7 +584,7 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "63352e8073df8a6bb9b5232fba6362c0f39fc68cd5db001e5cb5e4a2e2d7de50"
+      "source_sha256": "705ca369450f42c564b176de647375ae457ed1c714b6d35a3608773f5f6fe46c"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "eb3ffd325f5122135c8f3058437fa450670fc48a42781939f90b6fb9f7105cdc",
+      "sha256": "31c2124c4e3446d60704a218e79e947b193936486c40c3f7080e90f66fa5d2f0",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "39539016bac34877c41e8c591349480367646592546a9694580621ef2fbffd2f"
+      "source_sha256": "6ff2df3932c125b31a13465244036fab026e1d1079ba58d5174c8bd2e7c7ecf1"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "1160f4e84c1890ed38767829fe5f13743f8bd7010bdd34b7eea604269f7c1fc1",
+      "sha256": "e1846d2df64c645910e572c2d7307b5fd4a4f3142b5671020b14ddc9ace4555d",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "a9341de908db1da32dc792f6842bbe27adc1cb8b54bda18c018eb464d1ec6b43"
+      "source_sha256": "f72d17d00ecc643067c27002c614b3c6e40f259328d8acc75509998dd2a06704"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "6c14bac8a6b2fe4ce98aecd0eebfd1c77924a9589b706021a7aa99ea3028f501",
+      "sha256": "f53c8e489d5d83e59e3b1351fcbb145f5a4e04fb5db0c2b251062f1f186c061b",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "b3d315102624822cd6875f5a277e20217075523df6ff03aec981f1e566d88469"
+      "source_sha256": "83b4c05660bfbb94a6bfce420665699b096a4ca8991ed2d9deff36d42c0774bc"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",

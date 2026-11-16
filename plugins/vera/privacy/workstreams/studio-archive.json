@@ -408,8 +408,8 @@
       },
       {
         "id": "shared-studio-directory",
-        "purpose": "Find the same registered client and selected saved engagement across Vera, Lucia and Clara",
-        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Selected client engagement listings may include work from all three product folders. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
+        "purpose": "Reuse the shared client directory while keeping each product’s engagements separate",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Each product lists and reopens only engagements in its own product area. Search filters other product areas before ranking and limiting results; saved source links cannot open another product’s indexed content. Opening screens show projects containing work for that product, while the shared client directory remains available for new work. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -421,7 +421,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "3addac2059118b4b7621ee3da7a748ce1fe4096ea3aaa30981a67c2976884c4a"
+    "source_fingerprint": "c037c20c3946de08ddee9fbb3edaa2628f987315ffff56c70d6dfc085fd1b250"
   },
   "role": "internal_engine",
   "runtime_profiles": [

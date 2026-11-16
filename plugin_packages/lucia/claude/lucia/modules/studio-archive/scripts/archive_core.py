@@ -2028,6 +2028,32 @@ def normalize_studio_archive_layout(*, state_dir: Path | None = None) -> dict[st
     }
 
 
+def _has_product_files(client_root: Path) -> bool:
+    """Count work in this product area, excluding its shared registry scaffolding."""
+    area = ledger._product_root(client_root, ledger.product_directory())
+    if not area.exists():
+        return False
+    for path in area.iterdir():
+        if path.name.startswith(".") or path.name in {
+            "client.json",
+            "APRI ARCHIVIO.html",
+            "Pratiche",
+            "reporting",
+        }:
+            continue
+        if path.is_symlink():
+            continue
+        if path.is_file():
+            return True
+        if path.is_dir() and any(
+            item.is_file() and not item.is_symlink()
+            for item in path.rglob("*")
+            if not any(part.startswith(".") for part in item.relative_to(path).parts)
+        ):
+            return True
+    return False
+
+
 def list_studio_clients(
     *,
     state_dir: Path | None = None,
@@ -2076,6 +2102,25 @@ def list_studio_clients(
         )
         for scope in config.scopes
     ]
+    for client in clients:
+        scope = next(
+            scope for scope in config.scopes if scope.scope_id == client["scope_id"]
+        )
+        client_root = config.archive_root / scope.relative_dir
+        try:
+            client["product_has_work"] = _has_product_files(client_root)
+            if client.get("registration_status") == "blocked":
+                client["product_has_work"] = True
+            elif client.get("client_id"):
+                work = ledger.inspect_engagements(client_root, client["client_id"])
+                client["product_has_work"] = bool(
+                    client["product_has_work"]
+                    or work["engagements"]
+                    or work["blocked_engagements"]
+                )
+        except (OSError, ledger.LedgerError):
+            # An unavailable area must not be silently represented as empty.
+            client["product_has_work"] = True
     orphaned = [
         _client_directory_record(record, scope=None)
         for record in records
@@ -5900,7 +5945,8 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
     except ValueError:
         return False
     if len(parts) == 1 and (
-        parts[0] in {".pending-work.lock", "pending-archive-work.json"}
+        parts[0]
+        in {".pending-work.lock", ".project-layout.lock", "pending-archive-work.json"}
         or re.fullmatch(r"pending-(?:work|publication)-[0-9a-f]{64}\.json", parts[0])
     ):
         # These are reserved work-folder records, not client source evidence.
@@ -7168,6 +7214,16 @@ def _decode_limitations(value: str) -> list[str]:
     return payload
 
 
+def _product_source_visible(relative_path: str) -> bool:
+    """Shared source files stay available; another product's area does not."""
+    parts = Path(relative_path).parts
+    return not (
+        len(parts) > 1
+        and parts[1].casefold() in ledger.PRODUCT_DIRECTORIES
+        and parts[1].casefold() != ledger.product_directory()
+    )
+
+
 def search_archive(
     query: str,
     *,
@@ -7196,6 +7252,7 @@ def search_archive(
         raise ArchiveError("Search scope is not configured.")
     expression = _fts_query(query)
     connection = _connect(private_state, readonly=True)
+    connection.create_function("product_source_visible", 1, _product_source_visible)
     try:
         if _metadata_get(connection, "config_fingerprint") != _config_fingerprint(
             config
@@ -7229,6 +7286,7 @@ def search_archive(
                     JOIN chunks AS c ON c.source_id = chunk_fts.source_id
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
+                      AND product_source_visible(d.relative_path)
                 ), ranked AS (
                     SELECT
                         *,
@@ -7270,6 +7328,7 @@ def search_archive(
                     JOIN chunks AS c ON c.source_id = chunk_fts.source_id
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
+                      AND product_source_visible(d.relative_path)
                       AND d.scope_id = ?
                 ), ranked AS (
                     SELECT
@@ -7380,6 +7439,8 @@ def open_archive_source(
         ).fetchone()
         if row is None:
             raise ArchiveError("Source ID is not present in the current index.")
+        if not _product_source_visible(str(row["relative_path"])):
+            raise ArchiveError("Source belongs to another product.")
         if scopes_changed and not any(
             scope.scope_id == row["scope_id"] and scope in current.scopes
             for scope in config.scopes

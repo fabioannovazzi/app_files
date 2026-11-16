@@ -290,3 +290,7 @@ must not substitute an ephemeral execution chat. The portable begin command
 accepts `--originating-conversation-json` with host, thread_id, title and url.
 If the host provides no recoverable chat identity, keep that absence explicit;
 do not fabricate a link or block delivery of the user's work.
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.

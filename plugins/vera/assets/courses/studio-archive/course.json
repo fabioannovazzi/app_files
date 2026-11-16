@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "f59442bd67a290b687f9d49ad4ff543046f7a25d7529c67061ba8e19cffb3f1f"
+      "sha256": "83dec5a51dfc2421fb812d674888ff39023e306c24fe3c6dfb82c95f84e09f3c"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -70,7 +70,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "4440bf27b08b69b10febd8412be9424381ee18a65fc915d3ead79e46751b08a6"
+      "sha256": "8225565769b5721f59f02cbe2189863f7361d25b14e223fc88fe10091fc6ad95"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
@@ -105,7 +105,7 @@
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
-      "sha256": "7748bfd579013b78cefeb312f5d551a3a00db0d80779cbf70182dbaee39ca57f"
+      "sha256": "ffcfcaf6aafbf6dd568759c39da5551e496cf54caf279c3f3c2c93ae85180529"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
@@ -140,7 +140,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "91b4a775036402cc7e7389abdf01d3d1ec46125cbf399ad396c864c7690c007d"
+      "sha256": "bad67776ff1478ae7580f5d579a0b558ea17abf5219ffe899bcff10fffc0bb31"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -275,7 +275,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "1b00ec23287d71c4141051047a1c0c84eb63309d2e0f5dafafe958310c19bb0c"
+      "sha256": "7dc3765ffcace024c52c29c0fb0cb24fc0609cea80548641585cf4d554fc9e33"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",

@@ -590,7 +590,7 @@ def _prepare_engagements_root(client_root: Path) -> Path:
 def _engagement_root(client_root: Path, engagement_id: str) -> Path:
     _identifier(engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE)
     matches = []
-    for parent in _engagement_collections(client_root):
+    for parent in _engagement_collections(client_root, all_products=True):
         candidate = parent / engagement_id
         if candidate.exists() or candidate.is_symlink():
             _ordinary_directory(parent.parent, label="product directory")
@@ -599,6 +599,8 @@ def _engagement_root(client_root: Path, engagement_id: str) -> Path:
             matches.append(candidate)
     if len(matches) > 1:
         raise LedgerError("Engagement ID appears in more than one product directory.")
+    if matches and matches[0].parent.parent.name.casefold() != product_directory():
+        raise LedgerError("Engagement belongs to another product.")
     return matches[0] if matches else _engagements_root(client_root) / engagement_id
 
 
@@ -873,13 +875,29 @@ def ensure_engagement(
         raise LedgerError("Customer folder belongs to another client.")
     label = _text(label, label="engagement label", maximum=160)
     key = _text(idempotency_key, label="idempotency_key", maximum=200)
-    identity = _canonical_json_sha256({"client_id": client_id, "key": key})
-    engagement_id = "eng_" + identity[:24]
-    request_sha = _canonical_json_sha256({"identity": identity, "label": label})
     _prepare_engagements_root(root)
     requests = _product_root(root, LEDGER_DIRECTORY) / ".engagement-requests"
     requests.mkdir(mode=0o700, exist_ok=True)
     _ordinary_directory(requests, label="engagement creation requests")
+    identity = _canonical_json_sha256({"client_id": client_id, "key": key})
+    legacy_intent = (
+        _product_root(root, LEDGER_DIRECTORY)
+        / ".engagement-requests"
+        / ("eng_" + identity[:24] + ".json")
+    )
+    legacy_owner = None
+    if legacy_intent.exists() or legacy_intent.is_symlink():
+        retained = _validate_seal(
+            _read_json(legacy_intent, label="engagement creation request"),
+            label="engagement creation request",
+        )
+        legacy_owner = retained.get("product_directory", LEDGER_DIRECTORY).casefold()
+    if legacy_owner != product_directory():
+        identity = _canonical_json_sha256(
+            {"client_id": client_id, "key": key, "product": product_directory()}
+        )
+    engagement_id = "eng_" + identity[:24]
+    request_sha = _canonical_json_sha256({"identity": identity, "label": label})
     intent_path = requests / f"{engagement_id}.json"
     with _ledger_file_lock(requests / f"{engagement_id}.lock"):
         target = _engagement_root(root, engagement_id)
@@ -901,6 +919,8 @@ def ensure_engagement(
             directory = intent.get("product_directory", LEDGER_DIRECTORY).casefold()
             if directory not in PRODUCT_DIRECTORIES:
                 raise LedgerError("Creation request has an unknown product directory.")
+            if directory != product_directory():
+                raise LedgerError("Creation request belongs to another product.")
             expected_target = (
                 _product_root(root, directory) / "engagements" / engagement_id
             )
@@ -1054,8 +1074,11 @@ def _inspect_collection(
     return valid, blocked
 
 
-def _engagement_collections(root: Path) -> list[Path]:
-    """Discover all existing product areas without creating or moving records."""
+def _engagement_collections(root: Path, *, all_products: bool = False) -> list[Path]:
+    """Enumerate only the active product; global lookup detects duplicate IDs."""
+    if not all_products:
+        area = _product_root(root, product_directory())
+        return [area / "engagements"] if area.exists() else []
     areas = [
         path for path in root.iterdir() if path.name.casefold() in PRODUCT_DIRECTORIES
     ]
