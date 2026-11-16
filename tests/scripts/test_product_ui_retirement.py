@@ -58,7 +58,7 @@ def test_real_product_projection_preserves_deliverables_and_new_native_shells(
     ]
     assert all(prefix + path not in entries for path in retired)
     if product == "clara":
-        assert "assets/studio-archive.html" in html
+        assert "modules/studio-archive/assets/archive.html" in html
         assert "ui/media.html" in html
         assert (
             len([name for name in html if name.startswith("skills/html-deck/assets/")])
@@ -88,7 +88,7 @@ def test_real_product_projection_preserves_deliverables_and_new_native_shells(
         assert "generated charts" in note.read_text()
         assert not (tmp_path / "scatter_bubble_review.html").exists()
     else:
-        assert "assets/studio-archive.html" in html
+        assert "modules/studio-archive/assets/archive.html" in html
         assert "assets/playbook-editor.html" in html
         assert (
             "modules/apertura-pratica/assets/apertura-pratica-review-widget.html"

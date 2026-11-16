@@ -299,14 +299,14 @@ def test_audio_extraction_removes_video_tracks(media, tmp_path):
     assert json.loads(probe.stdout)["streams"] == [{"codec_type": "audio"}]
 
 
-def test_archive_direct_handoff_is_localized_and_cannot_repeat():
+def test_archive_uses_shared_document_history_and_existing_chats():
     import subprocess
 
     result = subprocess.run(
         [
             "node",
-            str(ROOT / "tests/plugins/clara_archive_ui.cjs"),
-            str(ROOT / "plugins/clara/assets/studio-archive.html"),
+            str(ROOT / "tests/plugins/shared_archive_ui.cjs"),
+            str(ROOT / "plugins/studio-archive/assets/archive-ui.js"),
         ],
         capture_output=True,
         text=True,
