@@ -265,8 +265,8 @@ Vera, Lucia and Clara use one studio archive root and one project directory.
 Every existing and new project has all three lowercase folders: `vera/`,
 `lucia/` and `clara/`, including empty product areas. New engagements live in
 `Project/<product>/engagements`. Each product lists, searches and reopens only its own engagements. The client
-directory is shared for creating work; product work and saved links stay separate. The shared client identity and readable navigation
-live at `vera/client.json` and `vera/APRI ARCHIVIO.html`.
+directory is shared for creating work; product work and saved links stay separate. The shared client identity lives at `vera/client.json`. Each product generates
+its readable navigation in its own area, at `<product>/APRI ARCHIVIO.html`.
 Use `normalize-project-layout` to normalize existing projects in the configured
 Archive. It preflights all projects, preserves file bytes and sealed records,
 renames legacy product-folder casing, and creates missing product areas.

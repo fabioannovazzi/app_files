@@ -1093,8 +1093,8 @@ Every existing and new project has all three lowercase folders: `vera/`,
 `Project/<product>/engagements`. Each product lists, searches and reopens only its own engagements. Saved
 engagement and source links cannot open another product’s work. The shared client
 directory remains available when creating new work; opening screens show projects
-with work belonging to the active product. The shared client identity and readable navigation
-live at `vera/client.json` and `vera/APRI ARCHIVIO.html`.
+with work belonging to the active product. The shared client identity lives at `vera/client.json`. Each product generates
+its readable navigation in its own area, at `<product>/APRI ARCHIVIO.html`.
 Use `normalize-project-layout` to normalize existing projects in the configured
 Archive. It preflights all projects, preserves file bytes and sealed records,
 renames legacy product-folder casing, and creates missing product areas.

@@ -140,7 +140,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "bad67776ff1478ae7580f5d579a0b558ea17abf5219ffe899bcff10fffc0bb31"
+      "sha256": "de5729bb08ea34b6f2b9897709cab841b450341579e1c1713ad1b4a02a2e3fb2"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
