@@ -39,7 +39,9 @@ declared in Lucia’s `components.json`: `prompt-optimizer`,
 also describes other products: use its client, engagement, file, search,
 snapshot, and run lifecycle instructions for Lucia. Journal sampling, invoice
 checks, and verification of Vera’s selective reporting receipts are outside
-Lucia’s Archive. Preserve the literal shared `Vera/` ledger paths.
+Lucia’s Archive. Use the common studio root and client directory shared with Vera
+and Clara. New Lucia engagements go under `Lucia/`; reopen legacy `Vera/`
+engagements at their saved paths without renaming or resealing them.
 
 For CLI fallback, use Lucia’s `scripts/lucia_studio_archive.py` at the product
 root with the same arguments as the component guide. It applies Lucia’s workflow

@@ -111,7 +111,7 @@ def copy_source_folder(
         raise ledger.LedgerError("Folder intake source cannot contain symbolic links.")
     name = destination_name if destination_name is not None else source.name
     _safe_name(name)
-    if name.casefold() == ledger.LEDGER_DIRECTORY.casefold():
+    if name.casefold() in {part.casefold() for part in ledger.PRODUCT_DIRECTORIES}:
         raise ledger.LedgerError(
             "Folder intake cannot replace the managed Vera directory."
         )

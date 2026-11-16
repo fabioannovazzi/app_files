@@ -886,8 +886,13 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
     run_relative_path = _relative_path(
         payload["run_relative_path"], label="run_relative_path"
     )
+    product_directory = Path(run_relative_path).parts[0]
+    if product_directory not in {"Vera", "Lucia", "Clara"}:
+        raise AssuranceContractError(
+            "run_relative_path has an unknown product directory"
+        )
     expected_run_relative = (
-        Path("Vera") / "engagements" / engagement_id / "runs" / run_id
+        Path(product_directory) / "engagements" / engagement_id / "runs" / run_id
     ).as_posix()
     if run_relative_path != expected_run_relative:
         raise AssuranceContractError(
@@ -940,7 +945,7 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
     if Path(output_dir) != expected_run_root / output_relative_path:
         raise AssuranceContractError("output_dir does not match the portable run path")
     workspace_root = _absolute_path(payload["workspace_root"], label="workspace_root")
-    if Path(workspace_root) != Path(client_root) / "Vera":
+    if Path(workspace_root) != Path(client_root) / product_directory:
         raise AssuranceContractError("workspace_root must be the customer Vera ledger")
     input_dir = _absolute_path(payload["input_dir"], label="input_dir")
     if not _path_is_within(input_dir, client_root):
@@ -977,7 +982,7 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
         source_parts = Path(binding["source_relative_path"]).parts
         if (
             len(source_parts) < 5
-            or source_parts[0] != "Vera"
+            or source_parts[0] not in {"Vera", "Lucia", "Clara"}
             or source_parts[1] != "engagements"
             or source_parts[2] != binding.get("upstream_engagement_id", engagement_id)
         ):
@@ -1393,6 +1398,7 @@ def _hydrate_v2_client_workflow_context(
         )
     run_root = context_path.parent
     client_root = context_path.parents[5]
+    product_directory = Path(portable["run_relative_path"]).parts[0]
     expected_run_root = client_root / portable["run_relative_path"]
     if run_root != expected_run_root:
         raise AssuranceContractError(
@@ -1400,9 +1406,9 @@ def _hydrate_v2_client_workflow_context(
         )
     for parent in (
         client_root,
-        client_root / "Vera",
-        client_root / "Vera" / "engagements",
-        client_root / "Vera" / "engagements" / portable["engagement_id"],
+        client_root / product_directory,
+        client_root / product_directory / "engagements",
+        client_root / product_directory / "engagements" / portable["engagement_id"],
         run_root.parent,
         run_root,
     ):
@@ -1427,7 +1433,7 @@ def _hydrate_v2_client_workflow_context(
     engagement_manifest = _validated_sealed_manifest(
         _read_bounded_regular_json(
             client_root
-            / "Vera"
+            / product_directory
             / "engagements"
             / portable["engagement_id"]
             / "engagement.json",
@@ -1556,7 +1562,7 @@ def _hydrate_v2_client_workflow_context(
         },
         "input_bindings": bindings,
         "input_dir": str(run_root / "inputs"),
-        "workspace_root": str(client_root / "Vera"),
+        "workspace_root": str(client_root / product_directory),
         "output_dir": str(run_root / "outputs"),
         "run_root": str(run_root),
         "run_manifest_path": str(run_root / "run.json"),

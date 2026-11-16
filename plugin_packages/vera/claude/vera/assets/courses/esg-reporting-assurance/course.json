@@ -157,7 +157,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "16b1454a4c3061b43256759c703899d3e95b96f5ff8214e7f0dce75e8a95d8e3"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -490,5 +490,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b836e863a6f99dc0c060c55cd0092628b9351d9e587058b41a3ded0e77b32b26"
+  "canonical_course_sha256": "d297eeecc5402cd93683e061b3e6dea8bf8d1193fa7aed8850c6c339390474b7"
 }

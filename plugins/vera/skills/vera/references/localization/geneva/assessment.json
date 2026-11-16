@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "035e0c95717bdcd9f279f600d4f1131982fba597ffa0e61ef05d8e253bd00567",
+  "catalogue_fingerprint": "81f4cc2891651a7d5639c06892df31e62b55ac9282e00939caa2b0b974f870af",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2796,5 +2796,11 @@
     "version": "0.1.648",
     "previous_catalogue_fingerprint": "86c9e546dd20aaec0be5491e235745fc0832d430918823a9e658e392c28758f2",
     "scope": "Manifest version binding only: every skill entrypoint ID and byte hash is unchanged. Native search repairs stale local indexing; existing jurisdiction judgments and professional acceptance limits remain unchanged."
+  },
+  "shared_archive_release_binding_20261116": {
+    "previous_catalogue_fingerprint": "035e0c95717bdcd9f279f600d4f1131982fba597ffa0e61ef05d8e253bd00567",
+    "version": "0.1.649",
+    "scope": "Shared Archive profile and product subfolders; installed Archive search recovery preserved. No jurisdiction judgments changed.",
+    "changed_entrypoints": []
   }
 }

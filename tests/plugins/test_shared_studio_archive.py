@@ -37,7 +37,7 @@ def test_fresh_product_reuses_shared_default_and_client(
     archive_core, tmp_path, monkeypatch, product, origin
 ):
     select_product(monkeypatch, origin)
-    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setattr(Path, "home", classmethod(lambda cls: tmp_path))
     monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     root = tmp_path / "studio"
     root.mkdir()

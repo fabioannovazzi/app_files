@@ -2776,11 +2776,7 @@ def create_studio_client_engagement(
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
     input_root = (
-        client_root
-        / ledger.LEDGER_DIRECTORY
-        / "engagements"
-        / engagement["engagement_id"]
-        / "inputs"
+        ledger._engagement_root(client_root, engagement["engagement_id"]) / "inputs"
     )
     return {
         "status": "created" if created else "already_created",
@@ -3292,9 +3288,7 @@ def snapshot_studio_client_google_drive(
         raise ArchiveError(
             "The bound Google Drive root changed identity; review the binding."
         )
-    engagement_root = (
-        client_root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id
-    )
+    engagement_root = ledger._engagement_root(client_root, engagement_id)
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=".vera-google-drive-snapshot-",
         suffix=".json",
@@ -4531,7 +4525,7 @@ def restore_studio_client_workflow(
         # Run checkpoints retain admitted copies, not the engagement's original
         # input collection. Permit new imports without inventing missing receipts.
         ledger._ordinary_directory(
-            root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id / "inputs",
+            ledger._engagement_root(root, engagement_id) / "inputs",
             label="restored engagement input directory",
             create=True,
         )
@@ -5893,7 +5887,7 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
         except (OSError, ValueError, ledger.LedgerError):
             return False
         return True
-    if not parts or parts[0] != ledger.LEDGER_DIRECTORY:
+    if not parts or parts[0] not in ledger.PRODUCT_DIRECTORIES:
         return False
     if (
         len(parts) >= 6
@@ -6720,6 +6714,7 @@ def _index_refresh_transaction(function: Callable[..., Any]) -> Callable[..., An
 def refresh_archive(
     *,
     rebuild: bool = False,
+    only_if_required: bool = False,
     enable_ocr: bool = False,
     ocr_language: str = "it",
     state_dir: Path | None = None,
@@ -6742,6 +6737,12 @@ def refresh_archive(
         _write_private_json(_config_path(private_state), config.as_json())
     else:
         config = stored_config
+    # Reconcile this session before checking the shared index under its writer
+    # lock, so another session's completed recovery is reused without extraction.
+    if only_if_required and not rebuild:
+        status = studio_archive_status(state_dir=private_state)
+        if not status["index_requires_refresh"]:
+            return {**status, "refreshed": False}
     discovered, scan_issues = _discover_files(config)
     connection = _connect(private_state)
     indexed_at = _now_iso()

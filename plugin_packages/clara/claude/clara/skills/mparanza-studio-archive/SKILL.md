@@ -46,7 +46,9 @@ provider to explain this boundary is appropriate and is not a naming violation.
 
 Use the shared Studio Archive client directory before resolving a client. Call
 `list_studio_archive_clients`; if unconfigured use `setup_studio_archive` and
-its operating-system folder chooser. Reuse the approved root across chats.
+its operating-system folder chooser. Reuse the common approved root across chats and across Vera, Lucia and Clara.
+All three show the same registered clients. New Clara engagements are stored
+under the client’s `Clara/` folder; existing saved engagements keep their paths.
 An inaccessible archive or incomplete directory is not evidence that a client
 is absent. Do not create duplicate clients or guess a replacement root.
 

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -47,7 +48,7 @@ def open_case(
     ]
     root = Path(folder["client_root"])
     engagement = ledger.load_engagement_manifest(root, engagement_id)
-    engagement_root = root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id
+    engagement_root = ledger._engagement_root(root, engagement_id)
     identity = {
         "schema_version": "clara.archive_case.v1",
         "client_id": client_id,
@@ -141,6 +142,7 @@ def open_case(
 
 def main() -> int:
     """Serve one JSON request through the installed local MCP bridge."""
+    os.environ["CLARA_ARCHIVE_HOST"] = "1"
     try:
         request = json.load(sys.stdin)
         if not isinstance(request, dict) or "state_dir" in request:

@@ -1,4 +1,4 @@
-"""Vera and Lucia retain separate archives even inside the same host chat."""
+"""Products share a default Archive while retaining explicit session selections."""
 
 from __future__ import annotations
 
@@ -56,7 +56,7 @@ def call(tmp_path, product, operation, root, session="same-chat"):
     return json.loads(result.stdout)
 
 
-def test_two_products_in_one_chat_keep_separate_defaults_and_current_roots(tmp_path):
+def test_shared_default_does_not_replace_active_session_selections(tmp_path):
     vera, lucia = tmp_path / "Studio Vera", tmp_path / "Studio Lucia"
     vera.mkdir()
     lucia.mkdir()
@@ -66,28 +66,28 @@ def test_two_products_in_one_chat_keep_separate_defaults_and_current_roots(tmp_p
     assert call(tmp_path, "vera", "status", vera)["archive_root"] == str(vera)
     assert call(tmp_path, "lucia", "status", lucia)["archive_root"] == str(lucia)
     assert call(tmp_path, "vera", "status", vera, "fresh-chat")["archive_root"] == str(
-        vera
+        lucia
     )
     assert call(tmp_path, "lucia", "status", lucia, "fresh-chat")[
         "archive_root"
     ] == str(lucia)
-    for product, selected in (("vera", vera), ("lucia", lucia)):
-        preference = (
-            tmp_path
-            / ".mparanza"
-            / f"{product}-studio-archive/profile/approved-archive.json"
-        )
-        assert json.loads(preference.read_text())["archive_root"] == str(selected)
+    preference = (
+        tmp_path / ".mparanza/vera-studio-archive/profile/approved-archive.json"
+    )
+    assert json.loads(preference.read_text())["archive_root"] == str(lucia)
+    assert not (tmp_path / ".mparanza/lucia-studio-archive/profile").exists()
 
 
-def test_lucia_does_not_adopt_veras_default_when_its_own_is_unconfigured(tmp_path):
+def test_lucia_adopts_shared_default_in_fresh_session(tmp_path):
     vera = tmp_path / "Studio Vera"
     vera.mkdir()
     call(tmp_path, "vera", "configure", vera)
-    assert call(tmp_path, "lucia", "status", vera, "fresh-chat")["configured"] is False
+    assert call(tmp_path, "lucia", "status", vera, "fresh-chat")["archive_root"] == str(
+        vera
+    )
 
 
-def test_temporary_lucia_selection_cannot_replace_either_product_default(tmp_path):
+def test_temporary_lucia_selection_cannot_replace_shared_default(tmp_path):
     vera, lucia, temporary = [
         tmp_path / name for name in ("Vera", "Lucia", "Temporary")
     ]
@@ -100,7 +100,7 @@ def test_temporary_lucia_selection_cannot_replace_either_product_default(tmp_pat
         "archive_root"
     ] == str(temporary)
     assert call(tmp_path, "vera", "status", vera, "fresh-chat")["archive_root"] == str(
-        vera
+        lucia
     )
     assert call(tmp_path, "lucia", "status", lucia, "fresh-chat")[
         "archive_root"

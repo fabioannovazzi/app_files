@@ -333,7 +333,7 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
                         detail += "<section><h2>Lavori salvati</h2><ul>"
                         for work in assignment["work_links"]:
                             detail += "<li>" + html.escape(work["label"]) + "</li>"
-                        detail += "</ul><p>Riapri questi lavori dal pannello di Vera.</p></section>"
+                        detail += "</ul><p>Riapri questi lavori dal pannello Archivio.</p></section>"
                 except (ledger.LedgerError, OSError):
                     detail += '<p class="warning">Stato dell’incarico da verificare. Documenti e registri conservati.</p>'
                 if source_detail:
@@ -411,7 +411,7 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
             body += _link(index, vera / "client.json", "Identità tecnica del cliente")
             _write(
                 index,
-                _page("Archivio Vera — " + root.name, body + "</details>"),
+                _page("Archivio dello studio — " + root.name, body + "</details>"),
                 ledger,
             )
             return {

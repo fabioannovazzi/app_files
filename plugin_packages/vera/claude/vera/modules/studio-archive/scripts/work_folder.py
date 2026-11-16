@@ -414,7 +414,7 @@ def _archive_files(
     root: Path, record: Mapping[str, Any], loaded: Mapping[str, Any]
 ) -> list[Path]:
     """Copy this job's retained evidence, never a sibling engagement or run."""
-    engagement = root / "Vera/engagements" / record["engagement_id"]
+    engagement = ledger._engagement_root(root, record["engagement_id"])
     files = {root / "Vera/client.json", engagement / "engagement.json"}
     directories = [Path(loaded["run_root"])]
     directories.extend(engagement / "inputs" / item for item in record["imports"])

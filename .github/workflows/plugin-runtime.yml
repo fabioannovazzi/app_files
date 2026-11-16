@@ -1297,6 +1297,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_adoption.py
+          tests/plugins/test_shared_studio_archive.py
           tests/plugins/test_studio_archive_concurrency.py
           tests/plugins/test_archive_fault_isolation.py
           tests/plugins/test_archive_work_recovery.py
