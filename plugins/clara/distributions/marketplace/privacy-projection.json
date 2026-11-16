@@ -22,8 +22,12 @@
         "agents/clara.md",
         "hooks/cowork-hooks.json",
         "hooks/hooks.json",
+        "scripts/media_mcp.cjs",
+        "scripts/media_mcp.py",
         "skills/clara/references/case-operations.md",
-        "skills/clara/references/cowork-runtime.md"
+        "skills/clara/references/cowork-runtime.md",
+        "skills/clara/references/operator-media.md",
+        "ui/media.html"
       ],
       "privacy/workstreams/html-deck.json": [
         "scripts/advisor_case_core.py",
