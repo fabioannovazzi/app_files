@@ -269,7 +269,12 @@ def test_legacy_uppercase_project_migrates_without_rewriting_evidence(
             ledger, "_product_root", lambda root, product: root / product.title()
         )
         old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        old.setattr(ledger, "LEDGER_DIRECTORY", "Vera")
+        old.setattr(
+            ledger, "_engagement_collections", lambda root: [root / "Vera/engagements"]
+        )
         case = client_case.__wrapped__(tmp_path, archive_core)
+        assert {p.name for p in case.client_root.iterdir() if p.is_dir()} == {"Vera"}
         prepared = _prepare_run(archive_core, case, idempotency_key="legacy-layout")
         rid = prepared["run"]["run_id"]
         if started:
@@ -351,7 +356,12 @@ def test_legacy_checkpoint_restores_into_lowercase_project(
             ledger, "_product_root", lambda root, product: root / product.title()
         )
         old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        old.setattr(ledger, "LEDGER_DIRECTORY", "Vera")
+        old.setattr(
+            ledger, "_engagement_collections", lambda root: [root / "Vera/engagements"]
+        )
         case = client_case.__wrapped__(tmp_path, archive_core)
+        assert {p.name for p in case.client_root.iterdir() if p.is_dir()} == {"Vera"}
         prepared = _prepare_run(archive_core, case, idempotency_key="legacy-recovery")
         rid = prepared["run"]["run_id"]
         archive_core.start_studio_client_workflow(
@@ -388,6 +398,10 @@ def test_saved_search_citation_opens_after_folder_normalization(
             ledger, "_product_root", lambda root, product: root / product.title()
         )
         old.setattr(ledger, "ensure_project_layout", lambda root: {})
+        old.setattr(ledger, "LEDGER_DIRECTORY", "Vera")
+        old.setattr(
+            ledger, "_engagement_collections", lambda root: [root / "Vera/engagements"]
+        )
         case = client_case.__wrapped__(tmp_path, archive_core)
     archive_core.refresh_archive(state_dir=case.state_dir)
     found = archive_core.search_archive(
