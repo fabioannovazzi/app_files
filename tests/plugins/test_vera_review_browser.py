@@ -72,9 +72,10 @@ def review_host(env, *, empty=False, inline=False):
                 + "\n"
             )
             worker.stdin.flush()
-            source = rpc("resources/read", {"uri": "ui://vera/workspace-v1.html"})[
-                "contents"
-            ][0]["text"]
+            source = rpc(
+                "resources/read",
+                {"uri": rpc("resources/list", {})["resources"][0]["uri"]},
+            )["contents"][0]["text"]
             browser = runtime.chromium.launch()
             page = browser.new_page(viewport={"width": 560, "height": 900})
             page.set_default_timeout(15000)

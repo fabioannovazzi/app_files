@@ -68,7 +68,7 @@ def test_verifies_raw_receipts_without_hydrated_fields_and_preserves_every_file(
 
     assert "relative_path" not in raw
     assert "imports" not in json.loads(
-        (root / "Vera/engagements" / eid / "engagement.json").read_text()
+        (root / "vera/engagements" / eid / "engagement.json").read_text()
     )
     assert result["verified"] is True
     assert result["input_set_matches"] is True

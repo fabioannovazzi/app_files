@@ -304,7 +304,7 @@ def prepare_case(
             ],
         )
     metadata = case / (
-        "Vera/tutorial_case.json"
+        "vera/tutorial_case.json"
         if workflow == "archive-organization"
         else "tutorial_case.json"
     )

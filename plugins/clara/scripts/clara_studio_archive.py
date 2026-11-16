@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -47,7 +48,7 @@ def open_case(
     ]
     root = Path(folder["client_root"])
     engagement = ledger.load_engagement_manifest(root, engagement_id)
-    engagement_root = root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id
+    engagement_root = ledger._engagement_root(root, engagement_id)
     identity = {
         "schema_version": "clara.archive_case.v1",
         "client_id": client_id,
@@ -60,7 +61,17 @@ def open_case(
             raise ValueError("Case binding belongs to another client or engagement.")
         if saved is not None:
             stored = Path(saved["case_path"])
-            target = root / stored if not stored.is_absolute() else stored
+            if (
+                not stored.is_absolute()
+                and ".." not in stored.parts
+                and len(stored.parts) >= 4
+                and stored.parts[0].casefold() in ledger.PRODUCT_DIRECTORIES
+                and stored.parts[1:3] == ("engagements", engagement_id)
+            ):
+                # Retain the original binding bytes after a verified product move.
+                target = engagement_root.joinpath(*stored.parts[3:])
+            else:
+                target = root / stored if not stored.is_absolute() else stored
             if case_dir is not None and Path(case_dir).resolve() != target.resolve():
                 raise ValueError(
                     "This engagement already has a case; preserve its folder."
@@ -121,10 +132,11 @@ def open_case(
                 stored_path = str(target.relative_to(root))
             except ValueError:
                 stored_path = str(target)
-            atomic_text(
-                pointer,
-                json.dumps({**identity, "case_path": stored_path}, indent=2) + "\n",
-            )
+            if saved is None:
+                atomic_text(
+                    pointer,
+                    json.dumps({**identity, "case_path": stored_path}, indent=2) + "\n",
+                )
     return {
         "status": "resumed" if is_existing else "created",
         **identity,
@@ -141,6 +153,7 @@ def open_case(
 
 def main() -> int:
     """Serve one JSON request through the installed local MCP bridge."""
+    os.environ["CLARA_ARCHIVE_HOST"] = "1"
     try:
         request = json.load(sys.stdin)
         if not isinstance(request, dict) or "state_dir" in request:

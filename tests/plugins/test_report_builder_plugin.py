@@ -1157,7 +1157,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
 
     # Assert
     assert integrity["schema_version"] == "report_builder.review_integrity.v4"
-    assert len(references) == 36
+    assert len(references) == 37
     assert [receipt["artifact_id"] for receipt in receipts] == references
     assert {
         "implementation.report_builder.scripts.report_builder_core.py",
@@ -1169,6 +1169,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
         "implementation.report_builder.assets.report-builder-review-widget.html",
         "implementation.report_builder.scripts.review_successor.py",
         "implementation.vera_assurance.serialization.py",
+        "implementation.vera_assurance.archive_paths.py",
         "implementation.vera_assurance.review_output_transaction.cjs",
     } <= set(references)
 

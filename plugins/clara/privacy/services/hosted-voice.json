@@ -13,7 +13,11 @@
     "scripts/managed_python_runtime.py",
     "scripts/_managed_python_runtime.py",
     "requirements.txt",
-    "components.json"
+    "components.json",
+    "scripts/media_mcp.py",
+    "scripts/media_mcp.cjs",
+    "ui/media.html",
+    "skills/clara/references/operator-media.md"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -146,10 +150,21 @@
         "repository:static/js/case-notes-voice.js"
       ],
       "on_violation": "Keep screen video in the browser bundle; the upload/realtime request contains no screen-video field."
+    },
+    {
+      "id": "local-operator-media",
+      "control": "The local MCP panel saves selected bytes before any external processing. App-only confirmation records the explicit processing request; the worker reads a previously authorized private session file, never browser cookies or credentials in model context. Audio extraction strips video tracks locally. Transcription sends audio without case context; narration revalidates the existing exact approval. Import/attachment precedes completion. Interrupted jobs retain state and are not automatically resubmitted. Status returns identifiers and output locations, not recording bytes or credential contents.",
+      "implemented_by": [
+        "scripts/media_mcp.py",
+        "scripts/media_mcp.cjs",
+        "ui/media.html",
+        "skills/clara/references/operator-media.md"
+      ],
+      "on_violation": "Keep the selection local, report the specific missing capability/authentication or changed input, and do not transmit or automatically retry."
     }
   ],
   "service_details": {
-    "trigger": "The user chooses live Voice Capture, hosted audio upload, or live deck-feedback capture. Importing an already downloaded bundle does not trigger this service.",
+    "trigger": "The user chooses live Voice Capture, hosted audio upload, or live deck-feedback capture. Importing an already downloaded bundle does not trigger this service. In Codex the local media panel handles operator file selection and the existing authenticated worker saves and imports the response directly. Opening/selecting a file makes no external request. Live microphone capture is host-dependent; external participant interviews retain their separate hosted route.",
     "data_sent": [
       {
         "id": "authentication-and-launch",
@@ -199,9 +214,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "b991f3cd272155c7361fc6064edd1bfe6797892b02b3de6940acf613fb4bc2a6"
+    "source_fingerprint": "43b947985357eb8b6b396b96f7b072edab25b799f576674d83596571d7484fbf"
   }
 }

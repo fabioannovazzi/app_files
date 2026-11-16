@@ -38,6 +38,7 @@ ASSURANCE_CONSUMERS = {
 ASSURANCE_FILES = {
     "vera_assurance/__init__.py",
     "vera_assurance/contracts.py",
+    "vera_assurance/archive_paths.py",
     "vera_assurance/decisions.py",
     "vera_assurance/envelope.py",
     "vera_assurance/money.py",

@@ -360,7 +360,7 @@ def test_other_clients_do_not_consume_selected_clients_recovery_batch(tmp_path):
         root.mkdir(parents=True)
         (root / "run.json").write_text('{"status":"failed"}')
         registry.register(f"foreign-{number}", root)
-    root = selected / "Vera/engagements/eng_b/runs/run_selected"
+    root = selected / "vera/engagements/eng_b/runs/run_selected"
     root.mkdir(parents=True)
     (root / "run.json").write_text('{"status":"failed"}')
     registry.register("selected", root)

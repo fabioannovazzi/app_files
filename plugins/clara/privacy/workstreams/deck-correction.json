@@ -40,7 +40,11 @@
     "skills/html-deck/SKILL.md",
     "scripts/run_deck_revision.py",
     "scripts/build_voice_feedback_timeline.py",
-    "scripts/bounded_process.py"
+    "scripts/bounded_process.py",
+    "scripts/media_mcp.py",
+    "scripts/media_mcp.cjs",
+    "ui/media.html",
+    "skills/clara/references/operator-media.md"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -155,6 +159,10 @@
     {
       "id": "pptx-metadata-entity-rejection",
       "control": "The content-type and visible-slide metadata parsers reject XML entity declarations before using those metadata. This control is scoped to those local PPTX parsing helpers."
+    },
+    {
+      "id": "local-operator-handoff",
+      "control": "Codex media selection and confirmation use the local MCP panel. Raw recording chunks remain in local app/tool transport; only session metadata, filename and output locations appear in structured model results. The worker extracts audio locally and invokes the existing authenticated service without source documents or case context. Selected host conversation processing still applies to any transcript subsequently read for the requested work."
     }
   ],
   "service_ids": [
@@ -187,9 +195,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2d5e3d28e215db142348db3a02e5d09b565aac39482d4fa53d1428a1ea98e8f0"
+    "source_fingerprint": "9d38996bea38861212031ff34815119cff4c86658cb0f993ab4aa8c72e6b7f3a"
   }
 }

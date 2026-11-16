@@ -48,6 +48,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/run_concordato_review.py"),
     ("shared_assurance", "__init__.py"),
     ("shared_assurance", "contracts.py"),
+    ("shared_assurance", "archive_paths.py"),
     ("shared_assurance", "jurisdiction.py"),
     ("shared_assurance", "decisions.py"),
     ("shared_assurance", "envelope.py"),

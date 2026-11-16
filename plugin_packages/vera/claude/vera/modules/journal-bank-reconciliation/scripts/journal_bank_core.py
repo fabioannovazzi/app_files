@@ -338,6 +338,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "__init__.py",
     ),
     (
+        "implementation.shared.vera_assurance.archive_paths_py",
+        "shared_implementation",
+        "archive_paths.py",
+    ),
+    (
         "implementation.shared.vera_assurance.contracts_py",
         "shared_implementation",
         "contracts.py",

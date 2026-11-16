@@ -247,8 +247,9 @@ def _outputs(loaded: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 def _archive_path(target: Path, relative: Path) -> Path:
     """Existing nested aliases must not redirect a retained-work copy."""
+    resolved = ledger._archive_path(target, relative)
     path = target
-    for part in relative.parts:
+    for part in resolved.relative_to(target).parts:
         path /= part
         if path.is_symlink():
             raise ValueError("Archive destination contains a symbolic link")
@@ -414,8 +415,8 @@ def _archive_files(
     root: Path, record: Mapping[str, Any], loaded: Mapping[str, Any]
 ) -> list[Path]:
     """Copy this job's retained evidence, never a sibling engagement or run."""
-    engagement = root / "Vera/engagements" / record["engagement_id"]
-    files = {root / "Vera/client.json", engagement / "engagement.json"}
+    engagement = ledger._engagement_root(root, record["engagement_id"])
+    files = {ledger._client_manifest_path(root), engagement / "engagement.json"}
     directories = [Path(loaded["run_root"])]
     directories.extend(engagement / "inputs" / item for item in record["imports"])
     for directory in directories:
@@ -518,7 +519,8 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
             }
             target.mkdir(parents=True, exist_ok=True, mode=0o700)
             with exclusive_file_lock(target / ".pending-work.lock"):
-                client_manifest = _archive_path(target, Path("Vera/client.json"))
+                identity_relative = ledger._client_manifest_path(root).relative_to(root)
+                client_manifest = _archive_path(target, identity_relative)
                 marker = target / ("pending-work-" + record["request_id"] + ".json")
                 if (
                     not client_manifest.exists()
@@ -548,7 +550,10 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                     try:
                         client = ledger.load_client_manifest(target)
                     except (ValueError, ledger.LedgerError):
-                        if not marker.exists() or pending_path != "Vera/client.json":
+                        if (
+                            not marker.exists()
+                            or pending_path != identity_relative.as_posix()
+                        ):
                             raise
                     else:
                         if client["client_id"] != record["client_id"]:
@@ -563,7 +568,7 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                 for name, (source, expected) in selected_files.items():
                     relative = Path(name)
                     path = _archive_path(target, relative)
-                    if relative == Path("Vera/client.json") and path.exists():
+                    if relative == identity_relative and path.exists():
                         # The selected client identity was verified above. Its
                         # original creation timestamp belongs to that archive.
                         continue
@@ -593,6 +598,7 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                     if ledger._stable_copy(source, path, exclusive=True) != expected:
                         raise ValueError("Archive copy changed during transfer")
                     publication.unlink()
+                ledger.ensure_project_layout(target)
                 copied = _loaded(target, record)
                 if copied["run"]["static_sha256"] != loaded["run"]["static_sha256"]:
                     raise ValueError(

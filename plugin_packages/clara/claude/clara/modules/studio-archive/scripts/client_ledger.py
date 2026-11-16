@@ -41,6 +41,8 @@ __all__ = [
     "FOLDER_SNAPSHOT_SCHEMA",
     "INPUT_RECEIPT_SCHEMA",
     "LEDGER_DIRECTORY",
+    "PRODUCT_DIRECTORIES",
+    "product_directory",
     "LedgerError",
     "RUN_LIFECYCLE_STATES",
     "RUN_MANIFEST_SCHEMA",
@@ -78,7 +80,70 @@ __all__ = [
 ]
 
 
-LEDGER_DIRECTORY = "Vera"
+# The existing portable client identity stays shared and byte-for-byte intact.
+LEDGER_DIRECTORY = "vera"
+PRODUCT_DIRECTORIES = ("vera", "lucia", "clara")
+
+
+@cache
+def _archive_preferences() -> Any:
+    """Load the owned sibling even when a consumer imports this ledger by path."""
+    spec = importlib.util.spec_from_file_location(
+        "ledger_archive_preferences", Path(__file__).with_name("archive_preferences.py")
+    )
+    if spec is None or spec.loader is None:
+        raise LedgerError("Archive preferences are unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def product_directory() -> str:
+    """Use the shared product selection for new work only."""
+    return _archive_preferences().product_directory()
+
+
+@cache
+def _layout() -> Any:
+    component = Path(__file__).resolve().parents[1]
+    for base in (
+        component / "vendor/modules",
+        component.parent / "_shared/vendor/modules",
+    ):
+        path = base / "vera_assurance/archive_paths.py"
+        if path.is_file():
+            spec = importlib.util.spec_from_file_location("ledger_archive_paths", path)
+            if spec is not None and spec.loader is not None:
+                module = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                return module
+    raise LedgerError("Archive layout resolver is unavailable")
+
+
+def _product_root(root: Path, product: str) -> Path:
+    try:
+        return _layout().product_root(root, product)
+    except ValueError as exc:
+        raise LedgerError(str(exc)) from exc
+
+
+def _archive_path(root: Path, relative: str | Path) -> Path:
+    try:
+        return _layout().archive_path(root, relative)
+    except ValueError as exc:
+        raise LedgerError(str(exc)) from exc
+
+
+def ensure_project_layout(root: Path) -> dict[str, str]:
+    """Create the exact three product areas and normalize legacy folder casing."""
+    root = _ordinary_directory(root, label="client folder")
+    with _ledger_file_lock(root / ".project-layout.lock"):
+        try:
+            return _layout().ensure_project_layout(root)
+        except ValueError as exc:
+            raise LedgerError(str(exc)) from exc
+
+
 CLIENT_MANIFEST_SCHEMA = "vera.customer_folder.v1"
 ENGAGEMENT_MANIFEST_SCHEMA = "vera.engagement.v1"
 INPUT_RECEIPT_SCHEMA = "vera.input_receipt.v1"
@@ -507,15 +572,36 @@ def _validate_seal(payload: Mapping[str, Any], *, label: str) -> dict[str, Any]:
 
 
 def _client_manifest_path(client_root: Path) -> Path:
-    return client_root / LEDGER_DIRECTORY / "client.json"
+    return _product_root(client_root, LEDGER_DIRECTORY) / "client.json"
 
 
 def _engagements_root(client_root: Path) -> Path:
-    return client_root / LEDGER_DIRECTORY / "engagements"
+    return _product_root(client_root, product_directory()) / "engagements"
+
+
+def _prepare_engagements_root(client_root: Path) -> Path:
+    """Create a product area only after verifying its parent is not a symlink."""
+    ensure_project_layout(client_root)
+    return _ordinary_directory(
+        _engagements_root(client_root), label="engagement ledger directory", create=True
+    )
 
 
 def _engagement_root(client_root: Path, engagement_id: str) -> Path:
-    return _engagements_root(client_root) / engagement_id
+    _identifier(engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE)
+    matches = []
+    for parent in _engagement_collections(client_root, all_products=True):
+        candidate = parent / engagement_id
+        if candidate.exists() or candidate.is_symlink():
+            _ordinary_directory(parent.parent, label="product directory")
+            _product_root(client_root, parent.parent.name)
+            _ordinary_directory(parent, label="engagement collection")
+            matches.append(candidate)
+    if len(matches) > 1:
+        raise LedgerError("Engagement ID appears in more than one product directory.")
+    if matches and matches[0].parent.parent.name.casefold() != product_directory():
+        raise LedgerError("Engagement belongs to another product.")
+    return matches[0] if matches else _engagements_root(client_root) / engagement_id
 
 
 def _run_root(client_root: Path, engagement_id: str, run_id: str) -> Path:
@@ -532,7 +618,8 @@ def create_client_manifest(
 
     client_id = _identifier(client_id, label="client_id", pattern=_CLIENT_ID_RE)
     root = _ordinary_directory(client_root, label="client folder")
-    ledger_root = root / LEDGER_DIRECTORY
+    ensure_project_layout(root)
+    ledger_root = _product_root(root, LEDGER_DIRECTORY)
     _ordinary_directory(ledger_root, label="Vera ledger directory", create=True)
     path = _client_manifest_path(root)
     if path.exists() or path.is_symlink():
@@ -548,8 +635,11 @@ def create_client_manifest(
     manifest = _sealed(content)
     _write_json(path, manifest)
     _ordinary_directory(
-        _engagements_root(root), label="engagement ledger directory", create=True
+        root / LEDGER_DIRECTORY / "engagements",
+        label="shared client ledger",
+        create=True,
     )
+    _prepare_engagements_root(root)
     return manifest
 
 
@@ -557,7 +647,9 @@ def load_client_manifest(client_root: Path) -> dict[str, Any]:
     """Load and validate one portable customer-folder identity."""
 
     root = _ordinary_directory(client_root, label="client folder")
-    _ordinary_directory(root / LEDGER_DIRECTORY, label="Vera ledger directory")
+    _ordinary_directory(
+        _product_root(root, LEDGER_DIRECTORY), label="client ledger directory"
+    )
     payload = _validate_seal(
         _read_json(_client_manifest_path(root), label="client manifest"),
         label="client manifest",
@@ -705,7 +797,8 @@ def load_engagement_manifest(client_root: Path, engagement_id: str) -> dict[str,
         engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE
     )
     _ordinary_directory(
-        _engagements_root(client_root.resolve()), label="engagement ledger directory"
+        _engagement_root(client_root.resolve(), engagement_id).parent,
+        label="engagement ledger directory",
     )
     directory = _ordinary_directory(
         _engagement_root(client_root.resolve(), engagement_id), label="engagement"
@@ -730,9 +823,7 @@ def create_engagement(
     client = load_client_manifest(root)
     if client["client_id"] != client_id:
         raise LedgerError("Customer folder belongs to another client.")
-    engagements_root = _ordinary_directory(
-        _engagements_root(root), label="engagement ledger directory"
-    )
+    engagements_root = _prepare_engagements_root(root)
     for _ in range(100):
         engagement_id = _new_id("eng")
         target = engagements_root / engagement_id
@@ -784,16 +875,32 @@ def ensure_engagement(
         raise LedgerError("Customer folder belongs to another client.")
     label = _text(label, label="engagement label", maximum=160)
     key = _text(idempotency_key, label="idempotency_key", maximum=200)
-    identity = _canonical_json_sha256({"client_id": client_id, "key": key})
-    engagement_id = "eng_" + identity[:24]
-    request_sha = _canonical_json_sha256({"identity": identity, "label": label})
-    _ordinary_directory(_engagements_root(root), label="engagement ledger directory")
-    requests = root / LEDGER_DIRECTORY / ".engagement-requests"
+    _prepare_engagements_root(root)
+    requests = _product_root(root, LEDGER_DIRECTORY) / ".engagement-requests"
     requests.mkdir(mode=0o700, exist_ok=True)
     _ordinary_directory(requests, label="engagement creation requests")
+    identity = _canonical_json_sha256({"client_id": client_id, "key": key})
+    legacy_intent = (
+        _product_root(root, LEDGER_DIRECTORY)
+        / ".engagement-requests"
+        / ("eng_" + identity[:24] + ".json")
+    )
+    legacy_owner = None
+    if legacy_intent.exists() or legacy_intent.is_symlink():
+        retained = _validate_seal(
+            _read_json(legacy_intent, label="engagement creation request"),
+            label="engagement creation request",
+        )
+        legacy_owner = retained.get("product_directory", LEDGER_DIRECTORY).casefold()
+    if legacy_owner != product_directory():
+        identity = _canonical_json_sha256(
+            {"client_id": client_id, "key": key, "product": product_directory()}
+        )
+    engagement_id = "eng_" + identity[:24]
+    request_sha = _canonical_json_sha256({"identity": identity, "label": label})
     intent_path = requests / f"{engagement_id}.json"
-    target = _engagement_root(root, engagement_id)
     with _ledger_file_lock(requests / f"{engagement_id}.lock"):
+        target = _engagement_root(root, engagement_id)
         if intent_path.exists() or intent_path.is_symlink():
             intent = _validate_seal(
                 _read_json(intent_path, label="engagement creation request"),
@@ -809,6 +916,25 @@ def ensure_engagement(
                 raise LedgerError(
                     "Creation key belongs to a different engagement request."
                 )
+            directory = intent.get("product_directory", LEDGER_DIRECTORY).casefold()
+            if directory not in PRODUCT_DIRECTORIES:
+                raise LedgerError("Creation request has an unknown product directory.")
+            if directory != product_directory():
+                raise LedgerError("Creation request belongs to another product.")
+            expected_target = (
+                _product_root(root, directory) / "engagements" / engagement_id
+            )
+            if target.exists() and target != expected_target:
+                raise LedgerError(
+                    "Engagement directory differs from its creation request."
+                )
+            _ordinary_directory(
+                _product_root(root, directory), label="product directory", create=True
+            )
+            _ordinary_directory(
+                expected_target.parent, label="engagement collection", create=True
+            )
+            target = expected_target
             created_at = _text(intent.get("created_at"), label="created_at", maximum=80)
         else:
             if target.exists() or target.is_symlink():
@@ -822,6 +948,7 @@ def ensure_engagement(
                     {
                         "schema_version": "vera.engagement_creation.v1",
                         "request_sha256": request_sha,
+                        "product_directory": target.relative_to(root).parts[0],
                         "client_id": client_id,
                         "engagement_id": engagement_id,
                         "label": label,
@@ -858,6 +985,7 @@ def ensure_engagement(
 
 
 def _iter_manifest_directories(root: Path, *, prefix: str, maximum: int) -> list[Path]:
+    _ordinary_directory(root.parent, label="ledger collection parent")
     directory = _ordinary_directory(root, label="ledger collection")
     entries = sorted(directory.iterdir(), key=lambda item: item.name)
     if len(entries) > maximum:
@@ -883,12 +1011,10 @@ def list_engagements(client_root: Path, client_id: str) -> tuple[dict[str, Any],
     if client["client_id"] != client_id:
         raise LedgerError("Customer folder belongs to another client.")
     manifests = [
-        _validate_engagement_manifest(
-            _read_json(path / "engagement.json", label="engagement manifest"),
-            expected_client_id=client_id,
-        )
+        load_engagement_manifest(client_root, path.name)
+        for product_root in _engagement_collections(client_root.resolve())
         for path in _iter_manifest_directories(
-            _engagements_root(client_root.resolve()),
+            product_root,
             prefix="eng",
             maximum=_MAX_RUNS,
         )
@@ -910,6 +1036,7 @@ def _inspect_collection(
     """Validate children independently; never follow an invalid collection entry."""
 
     try:
+        _ordinary_directory(root.parent, label="ledger collection parent")
         directory = _ordinary_directory(root, label="ledger collection")
         entries = sorted(directory.iterdir(), key=lambda item: item.name)
         if len(entries) > maximum:
@@ -947,22 +1074,39 @@ def _inspect_collection(
     return valid, blocked
 
 
+def _engagement_collections(root: Path, *, all_products: bool = False) -> list[Path]:
+    """Enumerate only the active product; global lookup detects duplicate IDs."""
+    if not all_products:
+        area = _product_root(root, product_directory())
+        return [area / "engagements"] if area.exists() else []
+    areas = [
+        path for path in root.iterdir() if path.name.casefold() in PRODUCT_DIRECTORIES
+    ]
+    if not any(path.name.casefold() == LEDGER_DIRECTORY for path in areas):
+        areas.append(root / LEDGER_DIRECTORY)
+    return [area / "engagements" for area in sorted(areas)]
+
+
 def inspect_engagements(client_root: Path, client_id: str) -> dict[str, Any]:
     """List validated engagements and unavailable siblings without repairing data."""
 
     client = load_client_manifest(client_root)
     if client["client_id"] != client_id:
         raise LedgerError("Customer folder belongs to another client.")
-    valid, blocked = _inspect_collection(
-        _engagements_root(client_root.resolve()),
-        prefix="eng",
-        maximum=_MAX_RUNS,
-        identifier_key="engagement_id",
-        issue_code="invalid_engagement_record",
-        read_record=lambda identifier: load_engagement_manifest(
-            client_root, identifier
-        ),
-    )
+    valid, blocked = [], []
+    for product_root in _engagement_collections(client_root.resolve()):
+        records, issues = _inspect_collection(
+            product_root,
+            prefix="eng",
+            maximum=_MAX_RUNS,
+            identifier_key="engagement_id",
+            issue_code="invalid_engagement_record",
+            read_record=lambda identifier: load_engagement_manifest(
+                client_root, identifier
+            ),
+        )
+        valid.extend(records)
+        blocked.extend(issues)
     return {
         "engagements": sorted(
             valid, key=lambda item: (item["created_at"], item["engagement_id"])
@@ -1417,8 +1561,9 @@ def snapshot_client_folder(
             directory.iterdir(), key=lambda item: (item.name.casefold(), item.name)
         ):
             relative = entry.relative_to(root).as_posix()
-            if relative == LEDGER_DIRECTORY or relative.startswith(
-                f"{LEDGER_DIRECTORY}/"
+            if (
+                entry.name == ".project-layout.lock"
+                or entry.relative_to(root).parts[0].casefold() in PRODUCT_DIRECTORIES
             ):
                 continue
             observed = entry.lstat()
@@ -1876,7 +2021,7 @@ def _validate_run_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
     return dict(payload)
 
 
-def _context_content(run: Mapping[str, Any]) -> dict[str, Any]:
+def _context_content(run: Mapping[str, Any], directory: str) -> dict[str, Any]:
     return {
         "schema_version": RUN_CONTEXT_SCHEMA,
         "client_id": run["client_id"],
@@ -1890,7 +2035,7 @@ def _context_content(run: Mapping[str, Any]) -> dict[str, Any]:
         "input_manifest": run["input_manifest"],
         "input_manifest_sha256": run["input_manifest_sha256"],
         "run_relative_path": (
-            Path(LEDGER_DIRECTORY)
+            Path(directory)
             / "engagements"
             / run["engagement_id"]
             / "runs"
@@ -1901,10 +2046,13 @@ def _context_content(run: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _validate_context(
-    payload: Mapping[str, Any], run: Mapping[str, Any]
+    payload: Mapping[str, Any], run: Mapping[str, Any], directory: str
 ) -> dict[str, Any]:
     normalized = _validate_seal(payload, label="run context")
-    expected = _sealed(_context_content(run))
+    retained = Path(str(payload.get("run_relative_path", ""))).parts
+    if not retained or retained[0].casefold() != directory.casefold():
+        raise LedgerError("Run context belongs to another product directory")
+    expected = _sealed(_context_content(run, retained[0]))
     if normalized != expected:
         raise LedgerError("Run context does not match its run manifest.")
     return normalized
@@ -1960,7 +2108,11 @@ def _load_run_identity(
         or inputs["content_sha256"] != run["input_manifest_sha256"]
     ):
         raise LedgerError("Run input manifest does not match the run.")
-    context = _validate_context(_read_json(context_path, label="run context"), run)
+    context = _validate_context(
+        _read_json(context_path, label="run context"),
+        run,
+        run_root.relative_to(root).parts[0],
+    )
     return {
         "run": run,
         "input_manifest": inputs,
@@ -2014,7 +2166,7 @@ def load_run(
         # The sealed run input manifest is the retained admission decision.
         # Originals and upstream receipts were verified before these execution
         # copies were made. Their later availability cannot reopen that gate.
-        source = root / binding["source_relative_path"]
+        source = _archive_path(root, binding["source_relative_path"])
         execution = _contained_input_path(
             run_root, run_root / binding["execution_relative_path"]
         )
@@ -2044,7 +2196,7 @@ def load_run(
         },
         "input_bindings": resolved_bindings,
         "input_dir": str(run_root / "inputs"),
-        "workspace_root": str(root / LEDGER_DIRECTORY),
+        "workspace_root": str(root / run_root.relative_to(root).parts[0]),
         "output_dir": str(output_dir),
         "run_root": str(run_root),
         "run_manifest_path": str(run_path),
@@ -2561,7 +2713,7 @@ def prepare_run(
             (run_root / "inputs").mkdir(mode=0o700)
             (run_root / "outputs").mkdir(mode=0o700)
             for binding in bindings:
-                source = root / binding["source_relative_path"]
+                source = _archive_path(root, binding["source_relative_path"])
                 destination = run_root / binding["execution_relative_path"]
                 destination_parent = run_root
                 for part in destination.parent.relative_to(run_root).parts:
@@ -2587,7 +2739,7 @@ def prepare_run(
             provenance = run_root / "source-receipts"
             provenance.mkdir(mode=0o700)
             for binding in bindings:
-                receipt_path = root / binding["receipt_relative_path"]
+                receipt_path = _archive_path(root, binding["receipt_relative_path"])
                 receipt = _validate_seal(
                     _read_json(receipt_path, label="admitted source receipt"),
                     label="admitted source receipt",
@@ -2624,7 +2776,9 @@ def prepare_run(
                 "status_history": [{"status": "prepared", "at": created_at}],
             }
             run["static_sha256"] = _canonical_json_sha256(_run_static_content(run))
-            context = _sealed(_context_content(run))
+            context = _sealed(
+                _context_content(run, run_root.relative_to(root).parts[0])
+            )
             _write_json(run_root / "input_manifest.json", input_manifest)
             _write_json(run_root / "context.json", context)
             _write_json(run_root / "run.json", run)
@@ -2669,7 +2823,7 @@ def retry_reporting(
     registry = Registry(
         None
         if os.environ.get("VERA_REPORTING_STATE_DIR")
-        else client_root / LEDGER_DIRECTORY / "reporting"
+        else _product_root(client_root, LEDGER_DIRECTORY) / "reporting"
     )
     if not registry.path.is_file():
         return

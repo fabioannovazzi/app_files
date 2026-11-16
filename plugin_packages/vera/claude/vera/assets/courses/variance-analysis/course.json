@@ -379,8 +379,12 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -400,7 +404,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -444,7 +448,7 @@
     },
     {
       "path": "scripts/archive_report_store.py",
-      "sha256": "916017ea711652bf12d885725b50a8cc168a2624e7f5ad4cee12297f73822186"
+      "sha256": "799a4ab9d9f26ffd65c2545b1a9a7ebd25e4b7149bc53ff01dad4851c7a6110a"
     },
     {
       "path": "scripts/archive_reporting.py",
@@ -591,8 +595,12 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -612,7 +620,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -901,5 +909,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "34b126b2022d7d267cac2b7955c4df7ff9ed511ff49a47682b07e6dd258b480a"
+  "canonical_course_sha256": "4ac79be0169bf04ff1f7ec5b63ed2bb3702d0b327a3fccb68e34017b60daa3f4"
 }

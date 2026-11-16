@@ -26,6 +26,8 @@ if operation in ('seed', 'legacy'):
     result = a.refresh_archive()
 elif operation == 'refresh':
     result = a.refresh_archive()
+elif operation == 'ensure':
+    result = a.refresh_archive(only_if_required=True)
 else:
     def forbidden(*args, **kwargs):
         raise AssertionError('Fresh search must not refresh, discover or extract files')
@@ -42,11 +44,14 @@ def call(home, session, operation, root, product="vera"):
     env = {
         k: v
         for k, v in os.environ.items()
-        if not k.startswith("VERA_STUDIO_ARCHIVE_") and k != "LUCIA_ASSURANCE_HOST"
+        if not k.startswith("VERA_STUDIO_ARCHIVE_")
+        and k not in {"LUCIA_ASSURANCE_HOST", "CLARA_ARCHIVE_HOST"}
     }
     env["VERA_STUDIO_ARCHIVE_SESSION_ID"] = session
     if product == "lucia":
         env["LUCIA_ASSURANCE_HOST"] = "1"
+    elif product == "clara":
+        env["CLARA_ARCHIVE_HOST"] = "1"
     process = subprocess.run(
         [
             sys.executable,
@@ -90,7 +95,7 @@ def test_new_chat_searches_and_opens_existing_index_without_refresh(
     assert result["opened"]["source_verified"] is True
     assert "prova sintetica" in result["opened"]["fragments"][0]["text"]
     databases = list(
-        (tmp_path / ".mparanza" / f"{product}-studio-archive/profile").rglob(
+        (tmp_path / ".mparanza" / "vera-studio-archive/profile").rglob(
             "archive.sqlite3"
         )
     )
@@ -139,3 +144,33 @@ def test_concurrent_refreshes_keep_a_searchable_index(tmp_path, studio):
         )
     assert all(r["unchanged_files"] == 1 for r in results)
     assert call(tmp_path, "fresh-chat", "search", studio)["opened"]["source_verified"]
+
+
+def test_concurrent_recovery_refreshes_stale_shared_index_once(tmp_path, studio):
+    call(tmp_path, "original-chat", "seed", studio)
+    added = studio / "New client"
+    added.mkdir()
+    (added / "new.txt").write_text("New client source", encoding="utf-8")
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        results = list(
+            pool.map(
+                lambda n: call(tmp_path, f"recover-{n}", "ensure", studio), range(4)
+            )
+        )
+
+    assert sum(result.get("status") == "refreshed" for result in results) == 1
+    assert sum(result.get("refreshed") is False for result in results) == 3
+    assert call(tmp_path, "after-recovery", "search", studio)["opened"][
+        "source_verified"
+    ]
+
+
+@pytest.mark.parametrize("origin", ["vera", "lucia", "clara"])
+@pytest.mark.parametrize("receiver", ["vera", "lucia", "clara"])
+def test_other_product_reuses_verified_search_index(tmp_path, studio, origin, receiver):
+    initial = call(tmp_path, "original-chat", "seed", studio, origin)
+    result = call(tmp_path, "fresh-chat", "search", studio, receiver)
+    assert result["status"]["last_refresh_at"] == initial["last_refresh_at"]
+    assert result["opened"]["source_verified"] is True
+    assert "prova sintetica" in result["opened"]["fragments"][0]["text"]

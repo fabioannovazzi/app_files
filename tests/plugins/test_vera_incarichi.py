@@ -118,7 +118,7 @@ def test_exact_retry_does_not_create_history_and_stale_edit_cannot_overwrite(
             {**changed, "continuation": "Stale replacement"},
             first["revision"],
         )
-    history = root / "Vera" / "engagements" / identifier / "incarico-history"
+    history = root / "vera" / "engagements" / identifier / "incarico-history"
     assert (history / f"{first['revision']}.json").is_file()
     assert store.read(root, identifier)["revision"] == second["revision"]
 
@@ -129,7 +129,7 @@ def test_independent_work_link_preserves_legacy_seal_and_survives_context_edit(
     ledger, root, identifier, receipts = assignment
     store = ledger.incarichi()
     original = store.update(root, identifier, fields(receipts, "fusione-guidata"), "")
-    path = root / "Vera/engagements" / identifier / "incarico.json"
+    path = root / "vera/engagements" / identifier / "incarico.json"
     # Exercise a real v1 record, including its original seal and history bytes.
     legacy = {
         key: value
@@ -851,7 +851,7 @@ def test_desktop_metadata_does_not_hide_issued_results(assignment, tmp_path):
     ledger.deliverables().publish(
         root, eid, "plan", "Plan", publish_files(tmp_path), 0, "issue"
     )
-    directory = root / "Vera/engagements" / eid / "deliverables"
+    directory = root / "vera/engagements" / eid / "deliverables"
     for folder in (directory, directory / "plan"):
         for name in (".DS_Store", "Thumbs.db", "desktop.ini"):
             (folder / name).write_text("desktop metadata")

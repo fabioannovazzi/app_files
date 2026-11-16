@@ -117,6 +117,15 @@ jobs:
           node --check plugins/lucia/scripts/matter_mcp.cjs
           node --check plugins/lucia/scripts/review_engine_mcp.cjs
           node --check plugins/clara/scripts/report_mcp.cjs
+      - name: Verify Clara local media selection and native handoff controls
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_media_mcp.py --cov --cov-config=tests/clara_media.coveragerc --cov-report=term-missing --junitxml=clara-media.xml
+          python -m black --check plugins/clara/scripts/media_mcp.py tests/plugins/test_clara_media_mcp.py
+          python -m isort --check-only plugins/clara/scripts/media_mcp.py tests/plugins/test_clara_media_mcp.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/clara/scripts/media_mcp.py
+          python -m bandit -q -ll plugins/clara/scripts/media_mcp.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -124,6 +133,7 @@ jobs:
           path: |
             vera-focused-ui.xml
             product-native-ui.xml
+            clara-media.xml
 
   one-review:
     runs-on: ubuntu-latest
@@ -160,7 +170,7 @@ jobs:
       - name: Verify that exactly one review opens and only relevant controls are visible
         env:
           VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
-        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_posting_review.py tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py tests/plugins/test_vera_management_results_browser.py tests/plugins/test_native_review_final_affordances_browser.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_posting_review.py tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_shared_archive_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py tests/plugins/test_vera_management_results_browser.py tests/plugins/test_native_review_final_affordances_browser.py
       - name: Check reviewed-entry export adapters
         run: |
           python -m pip install black==25.1.0 isort==6.0.1 mypy bandit

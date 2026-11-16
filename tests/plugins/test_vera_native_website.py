@@ -257,7 +257,7 @@ def test_website_all_routes_are_app_only_and_full_records_remain_private(website
     result = rpc_program(
         env,
         """
-const list=service.handle({method:'tools/list',id:2}).result.tools.filter(x=>x.name.startsWith('vera_workspace_website_')),opened=call('vera_workspace_website_setup',{work_ref:'website-fictional'}),resource=service.handle({method:'resources/read',id:3,params:{uri:'ui://vera/workspace-v1.html'}}).result;const result={list,opened,resource};
+const list=service.handle({method:'tools/list',id:2}).result.tools.filter(x=>x.name.startsWith('vera_workspace_website_')),opened=call('vera_workspace_website_setup',{work_ref:'website-fictional'}),resource=service.handle({method:'resources/read',id:3,params:{uri:service.handle({method:'resources/list',id:99}).result.resources[0].uri}}).result;const result={list,opened,resource};
 """,
     )
     assert len(result["list"]) == 6

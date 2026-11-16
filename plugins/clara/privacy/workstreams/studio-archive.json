@@ -6,10 +6,15 @@
   "governed_paths": [
     "scripts/clara_studio_archive.py",
     "scripts/studio_archive_mcp.cjs",
-    "assets/studio-archive.html",
+    "modules/studio-archive/assets/archive.html",
     "skills/studio-archive/SKILL.md",
     "mcp-services.json",
-    "components.json"
+    "components.json",
+    "modules/studio-archive/assets/archive.css",
+    "modules/studio-archive/assets/archive-ui.js",
+    "modules/studio-archive/assets/archive-host.js",
+    "modules/studio-archive/mcp/archive_panel.cjs",
+    "modules/studio-archive/scripts/archive_panel.py"
   ],
   "governed_repository_paths": [
     "plugins/studio-archive/scripts/archive_core.py",
@@ -35,11 +40,31 @@
           "openai-chatgpt",
           "google-antigravity"
         ]
+      },
+      {
+        "id": "shared-studio-directory",
+        "purpose": "Reuse the shared client directory while keeping each product’s engagements separate",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Each product lists and reopens only engagements in its own product area. Search filters other product areas before ranking and limiting results; saved source links cannot open another product’s indexed content. Opening screens show projects containing work for that product, while the shared client directory remains available for new work. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
       }
     ]
   },
   "external_boundaries": [],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "shared-root-product-workspaces",
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. Every project has vera, lucia and clara directories. The local layout normalizer preflights projects, rejects redirected or case-colliding directories, normalizes legacy folder casing and creates missing areas without rewriting retained evidence. Readers resolve historical path casing and exact engagement IDs, reject duplicate identities and verify seals and client ownership. Shared identity remains at vera/client.json. Separate legacy archive roots are not merged automatically."
+    },
+    {
+      "id": "shared-product-archive-ui",
+      "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response."
+    }
+  ],
   "service_ids": [
     "managed-python-runtime",
     "operational-incidents",
@@ -50,6 +75,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d6ba452aa1b601625fdabddf3f66d1ad29d811f4b75c72636ac23e4c679f1e06"
+    "source_fingerprint": "3d0e593c44188de19f418e921a8277e9e7f6f35cae60456822663445d12422be"
   }
 }

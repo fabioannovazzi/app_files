@@ -51,9 +51,10 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
-Vera and Lucia retain separate saved archive locations. Reuse Vera's selected
-root for Vera work; never substitute Lucia's default. A temporary test selection
-must use `make_studio_default: false` and preserve both products' defaults.
+Vera, Lucia and Clara reuse one approved studio root and project directory.
+Vera shows only projects with work in their `vera/` area and opens only Vera
+engagements. A temporary test selection must use `make_studio_default: false`
+and preserve the shared approved default.
 
 For work starting from supplied files, first follow "Check supplied files before
 starting client work" in `../vera/SKILL.md`. Call `check_studio_import_sources`
@@ -66,7 +67,7 @@ engagement IDs after a later import failure; do not duplicate them.
 
 For a user-authorized external folder delivery into a selected client's working
 area, use the component's `copy_studio_client_source_folder` operation. It
-preserves the tree outside `Vera/` for Archive Organization and retains a copy
+preserves the tree outside `vera/` for Archive Organization and retains a copy
 receipt. Single-document engagement imports remain a separate route; they are
 not a substitute for the working-folder delivery. Reuse the selected client,
 engagement and explicit copy authority; do not ask again for settled choices.
@@ -92,7 +93,7 @@ than register it again. Previously known folder locations can support recovery
 when root listing is unavailable, but do not replace current identity validation.
 
 For local archive delivery, show the generated `readable_archive.index_path`
-(`Vera/APRI ARCHIVIO.html`) and the dated, named folders under `Vera/Pratiche/`.
+(`vera/APRI ARCHIVIO.html`) and the dated, named folders under `vera/Pratiche/`.
 These are portable, rebuildable navigation pages, not a replacement for the
 exact `engagements/` ledger. A completed execution does not imply professional
 approval. Check the returned readable-view status before claiming navigation
@@ -290,3 +291,7 @@ must not substitute an ephemeral execution chat. The portable begin command
 accepts `--originating-conversation-json` with host, thread_id, title and url.
 If the host provides no recoverable chat identity, keep that absence explicit;
 do not fabricate a link or block delivery of the user's work.
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.

@@ -85,10 +85,16 @@ for (const name of ["VeraOpenItemsIntake", "VeraBrowser", "VeraFusion", "VeraRat
     }, async refresh() {opened.push({panel:name,work_ref:current,refresh:true});}, active: name === "VeraBandiContributions" ? false : () => Boolean(current) };
   } };
 }
-vm.runInNewContext(fs.readFileSync(process.argv[2], "utf8"), {
+const context = {
   document, window, globalThis: factories, setTimeout: () => 1, clearTimeout() {},
   crypto: require("node:crypto").webcrypto, structuredClone,
-}, { filename: process.argv[2] });
+};
+const uiRoot = path.dirname(process.argv[2]);
+const packagedArchive = path.join(uiRoot, "../modules/studio-archive/assets/archive-ui.js");
+const sharedArchive = fs.existsSync(packagedArchive) ? packagedArchive : path.join(uiRoot, "../../studio-archive/assets/archive-ui.js");
+vm.runInNewContext(fs.readFileSync(sharedArchive, "utf8"), context, {filename:sharedArchive});
+context.StudioArchiveUI = factories.StudioArchiveUI;
+vm.runInNewContext(fs.readFileSync(process.argv[2], "utf8"), context, { filename: process.argv[2] });
 const catalogue = importMode || navigationMode || reviewMode ? fixture.catalogue : fixture;
 listeners.message({ source: parent, data: {
   jsonrpc: "2.0", method: "ui/notifications/tool-result", params: { _meta: { workspace: recoveryMode ? {error: fixture.error} : catalogue } },

@@ -46,7 +46,7 @@ MAX_FILES = 5_000
 MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
 MAX_JSON_BYTES = 16 * 1024 * 1024
 MAX_TEXT = 1_000
-RESERVED_TOP_LEVEL = {"Vera"}
+RESERVED_TOP_LEVEL = {"vera", "lucia", "clara"}
 ALLOWED_CONFIDENCE = {"low", "medium", "high"}
 ALLOWED_DECISIONS = {"accept", "reject", "edit", "mark_unclear", "skip"}
 CHANGE_ACTIONS = {"move", "quarantine_exact_duplicate"}
@@ -181,7 +181,7 @@ def _relative_path(value: object, *, label: str, allow_reserved: bool = False) -
         raise ArchiveOrganizationError(f"{label} must be a normalized relative path.")
     if any(part in {"", ".", ".."} for part in path.parts):
         raise ArchiveOrganizationError(f"{label} escapes its client-folder boundary.")
-    if not allow_reserved and path.parts[0] in RESERVED_TOP_LEVEL:
+    if not allow_reserved and path.parts[0].casefold() in RESERVED_TOP_LEVEL:
         raise ArchiveOrganizationError(
             f"{label} cannot target Vera's ledger directory."
         )
@@ -1979,7 +1979,9 @@ def _archive_lock(context: Mapping[str, Any]) -> Iterator[None]:
     from vera_assurance.serialization import exclusive_file_lock
 
     root = Path(context["studio_client_folder"]["client_root"])
-    metadata = root / "Vera"
+    from vera_assurance.archive_paths import product_root
+
+    metadata = product_root(root, "vera")
     if metadata.is_symlink() or not metadata.is_dir():
         raise ArchiveOrganizationError("Client metadata directory is unsafe")
     try:

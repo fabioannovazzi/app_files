@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LOGGER = logging.getLogger(__name__)
 CSS_SURFACES = (
     "static/shared/incident-recovery.css",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/research-sources.css",
     "plugins/browser-automation/ui/agenzia.css",
     "plugins/bilancio-xbrl-it/ui/workspace.css",
@@ -66,7 +66,11 @@ def expected_resources() -> dict[Path, str]:
         theme = (
             vera_identity_theme()
             if name.startswith("plugins/vera/")
-            or name == "plugins/browser-automation/ui/agenzia.css"
+            or name
+            in {
+                "plugins/browser-automation/ui/agenzia.css",
+                "plugins/studio-archive/assets/archive.css",
+            }
             else None
         )
         resources[path] = theme_css(path.read_text(encoding="utf-8"), theme=theme)

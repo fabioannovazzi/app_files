@@ -173,21 +173,21 @@
 </style>
 </head>
 <body>
-<header><p><strong class="brand">Clara</strong> <span id="app-title">Budget e previsioni</span></p><button id="refresh" disabled>Aggiorna</button></header>
+<header><p><strong class="brand">Clara</strong> <span id="app-title">Budget e previsioni</span></p><button id="refresh" disabled>Verifica report</button></header>
 <p id="status" role="status">Apri il report selezionato dalla chat di Clara.</p>
 <iframe id="report" title="Report budget e previsioni" sandbox="allow-scripts" referrerpolicy="no-referrer" hidden></iframe>
 <script>
 'use strict';
 const status=document.getElementById('status'),button=document.getElementById('refresh'),frame=document.getElementById('report');
 const translations={
- it:{title:'Budget e previsioni',refresh:'Aggiorna',open:'Apri il report selezionato dalla chat di Clara.',ready:'Report in sola lettura · usa i controlli per cambiare periodo o vista.',unavailable:'Impossibile verificare questo report. Riapri il report corrente dalla chat.',unconfirmed:'Aggiornamento non confermato. Riprova.'},
- en:{title:'Budget and forecasts',refresh:'Refresh',open:'Open the selected report from the Clara chat.',ready:'Read-only report · use the controls to change period or view.',unavailable:'This report could not be verified. Reopen the current report from the chat.',unconfirmed:'Refresh unconfirmed. Try again.'},
- es:{title:'Presupuesto y previsiones',refresh:'Actualizar',open:'Abre el informe seleccionado desde el chat de Clara.',ready:'Informe de solo lectura · usa los controles para cambiar el periodo o la vista.',unavailable:'No se pudo verificar este informe. Abre el informe actual desde el chat.',unconfirmed:'Actualización sin confirmar. Inténtalo de nuevo.'},
- fr:{title:'Budget et prévisions',refresh:'Actualiser',open:'Ouvrez le rapport sélectionné depuis la conversation avec Clara.',ready:'Rapport en lecture seule · utilisez les commandes pour changer la période ou la vue.',unavailable:'Ce rapport n’a pas pu être vérifié. Rouvrez le rapport actuel depuis la conversation.',unconfirmed:'Actualisation non confirmée. Réessayez.'},
- de:{title:'Budget und Prognosen',refresh:'Aktualisieren',open:'Öffnen Sie den ausgewählten Bericht aus dem Clara-Chat.',ready:'Bericht nur zum Lesen · wechseln Sie Zeitraum oder Ansicht über die Schaltflächen.',unavailable:'Dieser Bericht konnte nicht geprüft werden. Öffnen Sie den aktuellen Bericht erneut aus dem Chat.',unconfirmed:'Aktualisierung unbestätigt. Versuchen Sie es erneut.'}
+ it:{title:'Budget e previsioni',refresh:'Verifica report',open:'Apri il report selezionato dalla chat di Clara.',ready:'Report in sola lettura · usa i controlli per cambiare periodo o vista.',unavailable:'Impossibile verificare questo report. Riapri il report corrente dalla chat.',unconfirmed:'Aggiornamento non confermato. Riprova.'},
+ en:{title:'Budget and forecasts',refresh:'Check report',open:'Open the selected report from the Clara chat.',ready:'Read-only report · use the controls to change period or view.',unavailable:'This report could not be verified. Reopen the current report from the chat.',unconfirmed:'Refresh unconfirmed. Try again.'},
+ es:{title:'Presupuesto y previsiones',refresh:'Verificar informe',open:'Abre el informe seleccionado desde el chat de Clara.',ready:'Informe de solo lectura · usa los controles para cambiar el periodo o la vista.',unavailable:'No se pudo verificar este informe. Abre el informe actual desde el chat.',unconfirmed:'Actualización sin confirmar. Inténtalo de nuevo.'},
+ fr:{title:'Budget et prévisions',refresh:'Vérifier le rapport',open:'Ouvrez le rapport sélectionné depuis la conversation avec Clara.',ready:'Rapport en lecture seule · utilisez les commandes pour changer la période ou la vue.',unavailable:'Ce rapport n’a pas pu être vérifié. Rouvrez le rapport actuel depuis la conversation.',unconfirmed:'Actualisation non confirmée. Réessayez.'},
+ de:{title:'Budget und Prognosen',refresh:'Bericht prüfen',open:'Öffnen Sie den ausgewählten Bericht aus dem Clara-Chat.',ready:'Bericht nur zum Lesen · wechseln Sie Zeitraum oder Ansicht über die Schaltflächen.',unavailable:'Dieser Bericht konnte nicht geprüft werden. Öffnen Sie den aktuellen Bericht erneut aus dem Chat.',unconfirmed:'Aktualisierung unbestätigt. Versuchen Sie es erneut.'}
 };
 let copy=translations.it,session,busy=false,next=0;
-function setLanguage(language){copy=translations[(language||'en').split('-')[0]]||translations.en;document.documentElement.lang=(language||'en').split('-')[0];document.title='Clara · '+copy.title;document.getElementById('app-title').textContent=copy.title;button.textContent=copy.refresh;}
+function setLanguage(language){copy=translations[(language||'en').split('-')[0]]||translations.en;document.documentElement.lang=(language||'en').split('-')[0];document.title='Clara · '+copy.title;document.getElementById('app-title').textContent=copy.title;button.textContent=copy.refresh;frame.title=copy.title;}
 
 const pending=new Map();
 function request(method,params){return new Promise((resolve,reject)=>{const id=++next;const timer=setTimeout(()=>{pending.delete(id);reject(new Error(copy.unconfirmed));},30000);pending.set(id,{resolve,reject,timer});parent.postMessage({jsonrpc:'2.0',id,method,params},'*');});}

@@ -42,7 +42,6 @@ Do not say that nothing left the device. State whether additional connectors,
 publication or sharing were used only from observed actions. Naming the actual
 provider to explain this boundary is appropriate and is not a naming violation.
 
-<!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 
 For every substantive user mandate, follow

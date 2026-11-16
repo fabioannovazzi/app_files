@@ -212,7 +212,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "c0a7b83e26a3074a94397017081413e0ae5dbe25f22ab3dd0002175a346c78e2",
+  "course_sha256": "fb6cf842044cd3aa3bb3265173956125b71ddeaa8275b2638260629d42f03de9",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -1136,5 +1136,26 @@
     "course_sha256": "c0a7b83e26a3074a94397017081413e0ae5dbe25f22ab3dd0002175a346c78e2",
     "authored_content_unchanged": true,
     "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
+  },
+  "shared_archive_source_binding_review_20261116": {
+    "reviewer": "Codex /root - bounded source-binding comparison",
+    "reviewed_at": "2026-11-16T21:18:40.065586+00:00",
+    "baseline_commit": "ed6e89bd73299656660b9eddf5fb7a7a42f2cdb6",
+    "previous_course_sha256": "c0a7b83e26a3074a94397017081413e0ae5dbe25f22ab3dd0002175a346c78e2",
+    "course_sha256": "fb6cf842044cd3aa3bb3265173956125b71ddeaa8275b2638260629d42f03de9",
+    "changed_source_paths": [
+      "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+      "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+      "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/archive_paths.py",
+      "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/contracts.py",
+      "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/recovery.py",
+      "vendor/modules/vera_assurance/archive_paths.py",
+      "vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/recovery.py"
+    ],
+    "comparison": "Compared the complete compiled course with the exact historical snapshot matching the previous reviewed digest. Every field except sources is identical, including all localized lessons, input identities, requests, checkpoints, expected results and timing.",
+    "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
+    "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
+    "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
   }
 }

@@ -94,11 +94,11 @@ def test_completed_view_links_all_artifacts_and_preserves_ledger(
     manifest = ledger.validate_run_artifacts(root, eid, run["run"]["run_id"])
     before = {
         p.relative_to(root): hashlib.sha256(p.read_bytes()).hexdigest()
-        for p in (root / "Vera/engagements").rglob("*")
+        for p in (root / "vera/engagements").rglob("*")
         if p.is_file()
     }
     result = refresh_readable_archive(root, ledger)
-    page = next((root / "Vera/Pratiche").glob("*/Previsione*/Indice.html"))
+    page = next((root / "vera/Pratiche").glob("*/Previsione*/Indice.html"))
     text = page.read_text()
     assert result["run_count"] == 1
     assert "Esecuzione conclusa" in text
@@ -107,7 +107,7 @@ def test_completed_view_links_all_artifacts_and_preserves_ledger(
     assert all(item["path"] in text for item in manifest["artifacts"])
     assert before == {
         p.relative_to(root): hashlib.sha256(p.read_bytes()).hexdigest()
-        for p in (root / "Vera/engagements").rglob("*")
+        for p in (root / "vera/engagements").rglob("*")
         if p.is_file()
     }
     assert "&lt;script&gt;" in Path(result["index_path"]).read_text()
@@ -121,8 +121,8 @@ def test_view_links_survive_client_folder_move(tmp_path: Path) -> None:
     moved = tmp_path / "Cliente rinominato"
     root.rename(moved)
     pages = [
-        moved / "Vera/APRI ARCHIVIO.html",
-        *list((moved / "Vera/Pratiche").rglob("*.html")),
+        moved / "vera/APRI ARCHIVIO.html",
+        *list((moved / "vera/Pratiche").rglob("*.html")),
     ]
     for page in pages:
         parser = Links()
@@ -148,7 +148,7 @@ def test_unfinalized_outputs_are_not_presented_as_results(
         ledger.cancel_run(root, eid, rid)
     (Path(run["output_dir"]) / "partial.csv").write_text("not final")
     refresh_readable_archive(root, ledger)
-    page = next((root / "Vera/Pratiche").glob("*/Previsione*/Indice.html"))
+    page = next((root / "vera/Pratiche").glob("*/Previsione*/Indice.html"))
     assert "Nessun risultato finalizzato" in page.read_text()
     assert "partial.csv" not in page.read_text()
 
@@ -160,14 +160,14 @@ def test_changed_finalized_output_has_explicit_integrity_failure(
     finish(root, eid, run)
     (Path(run["output_dir"]) / "risultato.csv").write_text("changed")
     refresh_readable_archive(root, ledger)
-    page = next((root / "Vera/Pratiche").glob("*/Previsione*/Indice.html"))
+    page = next((root / "vera/Pratiche").glob("*/Previsione*/Indice.html"))
     assert "Verifica non superata" in page.read_text()
     assert ">risultato.csv</a>" not in page.read_text()
 
 
 def test_rebuild_does_not_overwrite_unowned_navigation_file(tmp_path: Path) -> None:
     root, cid, eid, run = case(tmp_path)
-    target = root / "Vera/APRI ARCHIVIO.html"
+    target = root / "vera/APRI ARCHIVIO.html"
     target.write_text("Human-authored document")
     with pytest.raises(ledger.LedgerError, match="unowned"):
         refresh_readable_archive(root, ledger)
@@ -178,11 +178,11 @@ def test_view_is_rebuildable_without_touching_outputs(tmp_path: Path) -> None:
     root, cid, eid, run = case(tmp_path)
     finish(root, eid, run)
     refresh_readable_archive(root, ledger)
-    old = (root / "Vera/APRI ARCHIVIO.html").read_bytes()
-    shutil.rmtree(root / "Vera/Pratiche")
-    (root / "Vera/APRI ARCHIVIO.html").unlink()
+    old = (root / "vera/APRI ARCHIVIO.html").read_bytes()
+    shutil.rmtree(root / "vera/Pratiche")
+    (root / "vera/APRI ARCHIVIO.html").unlink()
     refresh_readable_archive(root, ledger)
-    assert (root / "Vera/APRI ARCHIVIO.html").read_bytes() == old
+    assert (root / "vera/APRI ARCHIVIO.html").read_bytes() == old
     assert ledger.validate_run_artifacts(root, eid, run["run"]["run_id"])
 
 
@@ -234,14 +234,14 @@ def test_published_versions_and_chat_remain_recoverable_after_folder_move(
         Path(old["path"]).unlink()
     before = {
         path.relative_to(root): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in (root / "Vera/engagements").rglob("*")
+        for path in (root / "vera/engagements").rglob("*")
         if path.is_file()
     }
     refresh_readable_archive(root, ledger)
     moved = tmp_path / "Cliente rinominato"
     root.rename(moved)
     refresh_readable_archive(moved, ledger)
-    page = next((moved / "Vera/Pratiche").glob("*/Indice.html"))
+    page = next((moved / "vera/Pratiche").glob("*/Indice.html"))
     text = page.read_text(encoding="utf-8")
     assert text.index("Previsione aggiornata") < text.index(
         "<summary>Storico</summary>"
@@ -261,7 +261,7 @@ def test_published_versions_and_chat_remain_recoverable_after_folder_move(
     assert Path(current["path"]).resolve() in {path.resolve() for path in files}
     assert before == {
         path.relative_to(moved): hashlib.sha256(path.read_bytes()).hexdigest()
-        for path in (moved / "Vera/engagements").rglob("*")
+        for path in (moved / "vera/engagements").rglob("*")
         if path.is_file()
     }
 

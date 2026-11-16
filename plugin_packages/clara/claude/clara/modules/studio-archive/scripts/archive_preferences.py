@@ -16,6 +16,7 @@ from typing import Any, Iterator
 __all__ = [
     "PROFILE_ENV",
     "default_state_directory",
+    "product_directory",
     "file_lock",
     "profile_directory",
     "read_json",
@@ -26,10 +27,18 @@ _LOCK = RLock()
 _HELD = local()
 
 
+def product_directory() -> str:
+    """Select the owning product, independently from the shared archive location."""
+    if os.environ.get("LUCIA_ASSURANCE_HOST") == "1":
+        return "lucia"
+    if os.environ.get("CLARA_ARCHIVE_HOST") == "1":
+        return "clara"
+    return "vera"
+
+
 def default_state_directory() -> Path:
-    """Keep each product's default and chat configuration in its own namespace."""
-    product = "lucia" if os.environ.get("LUCIA_ASSURANCE_HOST") == "1" else "vera"
-    return Path.home() / ".mparanza" / f"{product}-studio-archive"
+    """Keep concurrent product sessions separate; share discovery through the profile."""
+    return Path.home() / ".mparanza" / f"{product_directory().lower()}-studio-archive"
 
 
 def profile_directory(state: Path) -> Path | None:
@@ -39,7 +48,7 @@ def profile_directory(state: Path) -> Path | None:
     if selected:
         profile = Path(selected).expanduser()
     elif state.parent == default / "sessions":
-        profile = default / "profile"
+        profile = Path.home() / ".mparanza" / "vera-studio-archive" / "profile"
     else:
         return None
     if not profile.is_absolute():

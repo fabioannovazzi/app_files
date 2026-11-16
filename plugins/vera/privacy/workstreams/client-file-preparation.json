@@ -35,7 +35,7 @@
     "plugins/vera/scripts/native_archive_navigation.py",
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css"
+    "plugins/studio-archive/assets/archive.css"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -74,7 +74,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7c54d7e123b01cb74cf787c820be22033978c0b9052e597bc6f36591c51f8bba"
+    "source_fingerprint": "76215b6de29ff7e926b30e707fbe3297b326757ec528b18c1b507e68fe80cff8"
   },
   "role": "internal_engine",
   "runtime_profiles": [

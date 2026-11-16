@@ -26,6 +26,16 @@ def archive_module(root: Path) -> Any:
     return archive_core
 
 
+def document_search(
+    root: Path, args: dict[str, Any], *, opening: bool = False
+) -> dict[str, Any]:
+    """Use the common product-scoped search and verified-source adapter."""
+    core = archive_module(root)
+    from archive_panel import document_search as shared_search
+
+    return shared_search(core, args, opening=opening)
+
+
 def page(rows: list[dict[str, Any]], args: dict[str, Any]) -> dict[str, Any]:
     """Bound presentation only; selection and scope remain explicit."""
     offset = args.get("offset", 0)
@@ -280,6 +290,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
                 )
             }
             for row in clients["clients"]
+            if row.get("product_has_work", True)
         ]
         result = page(rows, args)
         return {**base, **result, "clients": result["rows"]}

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.424",
+  "version": "0.1.428",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -1148,7 +1148,7 @@
         },
         {
           "name": "clara_report_refresh",
-          "title": "Aggiorna il report",
+          "title": "Verifica il report",
           "description": "Recheck the exact app-bound report and receipt, rejecting changes; no arbitrary path or new file can be selected.",
           "inputSchema": {
             "type": "object",

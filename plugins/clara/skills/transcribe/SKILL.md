@@ -2,6 +2,15 @@
 name: transcribe
 description: Capture, transcribe, import, attribute, and review advisor voice notes, consultant debriefs, meetings, calls, and existing audio recordings with Clara Hosted Voice. Use when the user asks to start Voice Capture, transcribe an audio file, import a case-notes-audio or case-notes-voice ZIP/JSON bundle, preserve a transcript in an ordinary folder with deduplication, or add a reviewed transcript to a Clara case. Do not use to create an adaptive external-participant interview link or to revise a deck from spoken feedback.
 ---
+
+## Codex operator UI precedence
+
+For local Codex operation, follow `../clara/references/operator-media.md`.
+Use the local `clara_media_open` panel and persisted native handoff instead of
+the browser upload/download instructions below. Those remain fallback engine
+documentation for hosts without this panel. Preserve the existing approval,
+import, interpretation and final-output validation contracts.
+
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 

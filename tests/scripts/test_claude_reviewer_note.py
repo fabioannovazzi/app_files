@@ -113,13 +113,19 @@ def test_cowork_archive_contains_readable_offline_review_assets(
 
 
 def test_vera_cowork_retires_editors_and_retains_native_review_shells() -> None:
-    from scripts.vera_ui_retirement import APP_HTML, RETIRED_HTML
+    from scripts.vera_ui_retirement import RETIRED_HTML
 
     root = Path(__file__).resolve().parents[2]
     with ZipFile(root / "plugin_packages/vera/vera-claude-plugin.zip") as archive:
         names = set(archive.namelist())
         assert not RETIRED_HTML.intersection(names)
-        assert {name for name in names if name.endswith(".html")} == APP_HTML
+        assert {name for name in names if name.endswith(".html")} == {
+            "modules/studio-archive/assets/archive.html",
+            "ui/studio-work.html",
+            "ui/research-sources.html",
+            "modules/browser-automation/ui/agenzia.html",
+            "vendor/modules/courseware/assets/chat.html",
+        }
         assert "modules/open-item-reconciliation/scripts/review_server.py" in names
 
 

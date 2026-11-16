@@ -596,3 +596,8 @@ For Studio Archive, registered clients, or resuming a saved client engagement,
 follow `../studio-archive/SKILL.md`. Use `clara_archive_open` for the local
 client directory when callable, or the equivalent directory tools in chat.
 Resolve the engagement's `clara_archive_case` before continuing advisory work.
+
+## Operator audio and narration
+
+For transcription, recorded deck feedback or research-video narration in Codex,
+follow `references/operator-media.md` and use the local `clara_media_open` panel.

@@ -42,7 +42,7 @@ Never write run outputs inside this Git workspace, `static/shared`,
 `protected_downloads`, or any GitHub Pages/static-site folder unless the task is
 explicitly plugin packaging/release. Every local Vera run writes only inside
 the selected customer folder at
-`Vera/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
+`<Product>/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
 only its rebuildable search index, local configuration, and optional private
 contact metadata in the machine-local state directory, normally
 `~/.mparanza/vera-studio-archive/sessions/<session-key>` for Vera or
@@ -138,16 +138,16 @@ Immediate child directories become exact search scopes; supported root-level
 files receive their own root scope. Two separately authorized intake actions
 may write: New Client creates one safely derived top-level folder, and document
 import copies one user-selected regular file into that customer's
-`Vera/engagements/<engagement-id>/inputs/<input-id>` subtree. Neither action
+`<Product>/engagements/<engagement-id>/inputs/<input-id>` subtree. Neither action
 renames, deletes, or overwrites an existing file. Refresh detects top-level
-scope-folder changes and reads the stable identity from `Vera/client.json`.
+scope-folder changes and reads the stable identity from `vera/client.json`.
 The index never follows symbolic links.
 
 When the user supplies an external folder tree to bring into the selected
 client's working area, use `copy_studio_client_source_folder` after the exact
 client, open engagement and copy scope have been authorized. This separate
 intake copies every ordinary file and preserves relative subfolders beneath a
-new delivery folder outside `Vera/`, so Archive Organization can snapshot it.
+new delivery folder outside `vera/`, so Archive Organization can snapshot it.
 The default delivery name is the supplied folder's name. Do not ask for another
 name unless it conflicts. Never copy the tree manually, import each file into
 engagement inputs as a substitute, merge an occupied destination, or infer that
@@ -161,7 +161,7 @@ foreign or uncertain retained files fail closed and remain untouched.
 ### Consultare cartelle e risultati
 
 Ogni modifica esplicita al ledger aggiorna una vista leggibile locale:
-`Vera/APRI ARCHIVIO.html` e `Vera/Pratiche/`. Le cartelle delle pratiche
+`vera/APRI ARCHIVIO.html` e `vera/Pratiche/`. Le cartelle delle pratiche
 mostrano data, etichetta e ID completo; le cartelle delle attività mostrano
 nome del workflow e ID completo. I link relativi portano alle copie esatte
 dei documenti e a tutti gli output e versioni dichiarati. Non creano nuove
@@ -243,14 +243,14 @@ a generic `Access denied` message:
 - `archive_filesystem_access_denied`: a host-approved retry still received an
   access-denied code. State that the signed-in user needs both share and
   filesystem/NTFS read and list permissions, plus write permission before Vera
-  creates `Vera/client.json` or engagement records.
+  creates `vera/client.json` or engagement records.
 - `archive_network_share_unreachable`: verify that the desktop can reach the
   server and share, then retry the same path.
 - `archive_unc_requires_local_mount`: the current runtime does not treat UNC
   syntax as a native absolute path. Ask for the share to be mounted as a local
   drive or folder and use that mounted absolute path.
 
-Do not create `Vera/client.json`, an engagement, or any document changes until
+Do not create `vera/client.json`, an engagement, or any document changes until
 the diagnostic and configuration succeed. An unknown OS error remains
 `archive_root_unavailable` with numeric codes; do not guess its cause. The
 diagnostic does not probe client-ledger write access, so the first authorized
@@ -258,7 +258,7 @@ registration still fails closed if write permission is absent.
 
 A third bounded intake action supports `archive-organization`:
 `snapshot_studio_client_folder` hashes at most 5,000 ordinary client files and
-2 GB, excludes `Vera/`, follows no symlinks, and imports its JSON snapshot
+2 GB, excludes `vera/`, follows no symlinks, and imports its JSON snapshot
 receipt into the selected engagement. It returns the complete model-facing
 inventory with paths, names, sizes, dates, opaque item references, and opaque
 exact-duplicate relationships. Raw hashes and absolute paths remain local. It
@@ -289,8 +289,8 @@ temporary bytes. It never persists a Drive content cache.
 
 The selected customer folder is the source of truth for Vera's durable client,
 engagement, input, run, lifecycle, and artifact records in Codex. Folder names
-are labels; `Vera/client.json` carries the stable `client_...` identity, and
-each `Vera/engagements/<engagement-id>/engagement.json` carries one stable
+are labels; `vera/client.json` carries the stable `client_...` identity, and
+each `<Product>/engagements/<engagement-id>/engagement.json` carries one stable
 `eng_...` identity. The adjacent `.vera-engagement.lock` has one technical
 purpose: serialize simultaneous ledger mutations across local processes. It
 contains no case data and is not a workflow output. These records survive an
@@ -321,7 +321,7 @@ Do not keep trying that same inaccessible path. Use this recovery sequence:
 
 1. Inspect the host's actual callable file-transfer capabilities and the already
    connected folders. Reuse an authorized ordinary working folder outside the
-   managed `Vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
+   managed `vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
    menu only when the current host offers it; otherwise explain the available
    connection method. Ask for a folder only if an accessible destination is needed.
 2. With a supported bridge, copy only the selected original attachments to that
@@ -562,7 +562,7 @@ scope operations. An executable Vera workflow must use the separately prepared
 for a run context.
 
 If a customer folder was renamed, refresh the archive. Studio Archive finds the
-same `client_id` in `Vera/client.json`, updates the machine-local scope pointer,
+same `client_id` in `vera/client.json`, updates the machine-local scope pointer,
 and hydrates current absolute paths from the portable relative records. Use
 `recover_studio_client_ledger` to rebuild local pointers and verify every
 customer-folder engagement, receipt, and run. Recovery does not restore private
@@ -699,7 +699,7 @@ On each professional's computer:
    application; never assume Fabio's and Paolo's accounts or chats are shared.
 
 The absolute source paths may differ between computers. The relative
-`Vera/...` ledger in each customer folder remains valid, and each computer
+`vera/...` ledger in each customer folder remains valid, and each computer
 hydrates its own current absolute paths. Do not copy either user's
 `archive.sqlite3`, `config.json`, or private contact registry to the other. If
 Fabio and Paolo use the same operating-system account, each must set a
@@ -1087,12 +1087,26 @@ automatically.
 
 ### Session state ownership
 
-State now defaults to a private session subdirectory under
-`~/.mparanza/vera-studio-archive/sessions/` for Vera or
-`~/.mparanza/lucia-studio-archive/sessions/` for Lucia. Their default roots and
-private profiles remain separate even when both products use the same host chat.
-Use Lucia's maintained entrypoints to select its namespace. Never move archive
-contents or adopt another product's saved location during setup.
+Vera, Lucia and Clara use one studio archive root and one project directory.
+Every existing and new project has all three lowercase folders: `vera/`,
+`lucia/` and `clara/`, including empty product areas. New engagements live in
+`Project/<product>/engagements`. Each product lists, searches and reopens only its own engagements. Saved
+engagement and source links cannot open another product’s work. The shared client
+directory remains available when creating new work; opening screens show projects
+with work belonging to the active product. The shared client identity lives at `vera/client.json`. Each product generates
+its readable navigation in its own area, at `<product>/APRI ARCHIVIO.html`.
+Use `normalize-project-layout` to normalize existing projects in the configured
+Archive. It preflights all projects, preserves file bytes and sealed records,
+renames legacy product-folder casing, and creates missing product areas.
+Readers resolve historical uppercase paths to the actual lowercase folders;
+do not edit or reseal historical records to change their path spelling.
+
+Default session state remains separate under `~/.mparanza/<product>-studio-archive/sessions/`.
+All three products reuse the existing shared `~/.mparanza/vera-studio-archive/profile`
+for the approved root, private aliases and root-bound index. Choosing the permanent
+archive in any product sets the shared default for fresh sessions. Explicit test
+state/profile overrides remain isolated. Previously separate archive contents
+are not moved or merged automatically.
 The session key is
 `VERA_STUDIO_ARCHIVE_SESSION_ID`, then `CODEX_THREAD_ID`, with a unique
 process identity as the fallback. The MCP server supplies a stable session ID
@@ -1108,8 +1122,7 @@ Reuse a session ID only to resume that same session. A fresh default session
 revalidates the owner-private profile's approved root and creates its own config;
 run `recover-ledger` when ledger verification is needed. Explicit state directories
 stay isolated unless `VERA_STUDIO_ARCHIVE_PROFILE_DIR` explicitly selects a private
-profile. The default profile is `~/.mparanza/vera-studio-archive/profile` for Vera
-or `~/.mparanza/lucia-studio-archive/profile` for Lucia, outside
+profile. The common default profile is `~/.mparanza/vera-studio-archive/profile`, outside
 sources. It stores the approved root and root-specific private identity aliases,
 and the root-bound search index, not active run selection, OAuth tokens or session configuration.
 Registry updates use short root-specific locks. A changed/unavailable root requires

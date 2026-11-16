@@ -104,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "d5e6e2487c11912d333c103187fbcfd78e3e709240ad0ee0303ac7faea80be6d"
+      "sha256": "590a80f69ff8d8189d2b6ad79dbe8b03933982d0b9f81627e1afd68db08fd0b1"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
@@ -172,9 +172,14 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/archive_paths.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -199,7 +204,7 @@
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/relationships.py",
@@ -217,6 +222,26 @@
       "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
     },
     {
+      "path": "modules/studio-archive/assets/archive-host.js",
+      "repository_path": "plugins/studio-archive/assets/archive-host.js",
+      "sha256": "f1bd5c4dadf3bbfb4d71a5721eafc5e927987d145383718ff382c371f65cf035"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive-ui.js",
+      "repository_path": "plugins/studio-archive/assets/archive-ui.js",
+      "sha256": "be2266910bc3a79f7e58ea6994a86e86ff1cc14dc3b4a755f344f0b86cb438da"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.css",
+      "repository_path": "plugins/studio-archive/assets/archive.css",
+      "sha256": "770033c02655269c7ed9c66fb954f6f2194a1e589a01a140d887b95a0aa4468c"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.html",
+      "repository_path": "plugins/studio-archive/assets/archive.html",
+      "sha256": "59cba905ef3676949c133c38efc43bebe05d8b49bc5fcbc3ee746ef8c73228d2"
+    },
+    {
       "path": "modules/studio-archive/assets/icon.svg",
       "repository_path": "plugins/studio-archive/assets/icon.svg",
       "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
@@ -229,7 +254,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "be6fa0bf59e5d70b6b51040bbfead9ceab4f9cacf9cf2315456d9523e8078b76"
+      "sha256": "860b803c53003c4708782f4ba352806b1e180e18839f2c7302cfec4cf4a8b42b"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -237,9 +262,14 @@
       "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
     },
     {
+      "path": "modules/studio-archive/scripts/archive_panel.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_panel.py",
+      "sha256": "7d47ac02833e3986f6708c9e490372cf7be111cda7b84664b6a2e0767dcacb68"
+    },
+    {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "4644e7ada5603f49ec2a29107d98dce4e6b0f88e9eb2309cff12cb89b6e090dd"
+      "sha256": "f680fb92c062bbb0ba79317b60aaace04fb4c6788f8cda1c7c28d5df1c9d8483"
     },
     {
       "path": "modules/studio-archive/scripts/archive_search_cache.py",
@@ -259,7 +289,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "0fd54f286371f65c64be7bbab7967c59e169bc888e5932bf30e3c5be4a6ed1d0"
+      "sha256": "8225565769b5721f59f02cbe2189863f7361d25b14e223fc88fe10091fc6ad95"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
@@ -269,7 +299,7 @@
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
       "repository_path": "plugins/studio-archive/scripts/folder_intake.py",
-      "sha256": "834a3d5462167d9109346ff6623e0e09365324a5a969c6cb8d283e1ac0deb111"
+      "sha256": "7f75ed4fc0493e918e4d1728759b7ff4f5ee329f3d759dfdb492026eacc87b53"
     },
     {
       "path": "modules/studio-archive/scripts/google_drive.py",
@@ -294,7 +324,7 @@
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
-      "sha256": "ba8e7aeb3543b0843b812f814b660b231487c1299928253d11e331ce938a38b3"
+      "sha256": "ffcfcaf6aafbf6dd568759c39da5551e496cf54caf279c3f3c2c93ae85180529"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
@@ -309,7 +339,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "7912ae22158105396883a73cda747b2055e245365e9942b0802cc11202fab993"
+      "sha256": "963b70ac1672008a5374be0139555905e2427b42d09c3ab4f751cb1d5efa663b"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -324,7 +354,7 @@
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
       "repository_path": "plugins/studio-archive/scripts/work_folder.py",
-      "sha256": "9c185704179d1738326521ced58802020350ea63a2fd9ab29a5397fd08ea7b7d"
+      "sha256": "4fa0c64ae5728e234884f599f30b527af0201d483e8b77ec0aa82698e1d03602"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -354,7 +384,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "916017ea711652bf12d885725b50a8cc168a2624e7f5ad4cee12297f73822186"
+      "sha256": "799a4ab9d9f26ffd65c2545b1a9a7ebd25e4b7149bc53ff01dad4851c7a6110a"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
@@ -387,9 +417,14 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/archive_paths.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -414,7 +449,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
@@ -687,9 +722,14 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "vendor/modules/vera_assurance/archive_paths.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -714,7 +754,7 @@
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

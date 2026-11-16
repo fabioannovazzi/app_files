@@ -28,6 +28,7 @@ const JOURNAL_SAMPLING_PLUGIN_IMPLEMENTATION_PATHS = [
 const JOURNAL_SAMPLING_SHARED_IMPLEMENTATION_PATHS = [
   "__init__.py",
   "contracts.py",
+  "archive_paths.py",
   "jurisdiction.py",
   "decisions.py",
   "envelope.py",

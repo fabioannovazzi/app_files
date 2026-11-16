@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "d54c66addbd83a3e825e93573792a5e1649e788a1a58591905b38a90053ced9a"
+      "sha256": "27e66792dd3e1f9210ecee42685c98193075fd88b2736fa1c2173031c6a4b9dd"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
@@ -139,8 +139,12 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/decisions.py",
@@ -160,7 +164,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "modules/open-item-reconciliation/vendor/modules/vera_assurance/relationships.py",
@@ -175,6 +179,22 @@
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
     },
     {
+      "path": "modules/studio-archive/assets/archive-host.js",
+      "sha256": "b352481b1a727fa72ed4ecec9eca3a6dd206247160478fc5d0d9eeff4ca4c5ad"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive-ui.js",
+      "sha256": "5f26390630fda799b53102c45d785c893c34e610511ab722e397c3c647e8d766"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.css",
+      "sha256": "770033c02655269c7ed9c66fb954f6f2194a1e589a01a140d887b95a0aa4468c"
+    },
+    {
+      "path": "modules/studio-archive/assets/archive.html",
+      "sha256": "59cba905ef3676949c133c38efc43bebe05d8b49bc5fcbc3ee746ef8c73228d2"
+    },
+    {
       "path": "modules/studio-archive/assets/icon.svg",
       "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
     },
@@ -184,15 +204,19 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "851fa9911f53e553bdb4d2b26c383274651a93959482ed9d7459fc3fea4a3647"
+      "sha256": "8d530b5e01cf6773915a191f4edc94ab3a6b893ec760a18c42a51aeb9f841a04"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
       "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
     },
     {
+      "path": "modules/studio-archive/scripts/archive_panel.py",
+      "sha256": "7d47ac02833e3986f6708c9e490372cf7be111cda7b84664b6a2e0767dcacb68"
+    },
+    {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
-      "sha256": "4644e7ada5603f49ec2a29107d98dce4e6b0f88e9eb2309cff12cb89b6e090dd"
+      "sha256": "f680fb92c062bbb0ba79317b60aaace04fb4c6788f8cda1c7c28d5df1c9d8483"
     },
     {
       "path": "modules/studio-archive/scripts/archive_search_cache.py",
@@ -208,7 +232,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "0fd54f286371f65c64be7bbab7967c59e169bc888e5932bf30e3c5be4a6ed1d0"
+      "sha256": "8225565769b5721f59f02cbe2189863f7361d25b14e223fc88fe10091fc6ad95"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
@@ -216,7 +240,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
-      "sha256": "834a3d5462167d9109346ff6623e0e09365324a5a969c6cb8d283e1ac0deb111"
+      "sha256": "7f75ed4fc0493e918e4d1728759b7ff4f5ee329f3d759dfdb492026eacc87b53"
     },
     {
       "path": "modules/studio-archive/scripts/google_drive.py",
@@ -236,7 +260,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
-      "sha256": "ba8e7aeb3543b0843b812f814b660b231487c1299928253d11e331ce938a38b3"
+      "sha256": "ffcfcaf6aafbf6dd568759c39da5551e496cf54caf279c3f3c2c93ae85180529"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
@@ -248,11 +272,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "7912ae22158105396883a73cda747b2055e245365e9942b0802cc11202fab993"
+      "sha256": "963b70ac1672008a5374be0139555905e2427b42d09c3ab4f751cb1d5efa663b"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
-      "sha256": "9c185704179d1738326521ced58802020350ea63a2fd9ab29a5397fd08ea7b7d"
+      "sha256": "4fa0c64ae5728e234884f599f30b527af0201d483e8b77ec0aa82698e1d03602"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -276,7 +300,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
-      "sha256": "916017ea711652bf12d885725b50a8cc168a2624e7f5ad4cee12297f73822186"
+      "sha256": "799a4ab9d9f26ffd65c2545b1a9a7ebd25e4b7149bc53ff01dad4851c7a6110a"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
@@ -303,8 +327,12 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -324,7 +352,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
@@ -443,8 +471,12 @@
       "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
     },
     {
+      "path": "vendor/modules/vera_assurance/archive_paths.py",
+      "sha256": "3d3ddaa178b4f3d9ad161b0d7e40ec9b63046587fcccf700e457d0d3763f8d9d"
+    },
+    {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
+      "sha256": "9cda8061660295024cb43fc2072ad085fa06e749186fc100e0037184b9686a78"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -464,7 +496,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
+      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -809,5 +841,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ce9bd0c54aa2b94d3b1546757c03ad7d7a74c89957ff0be27cf47117effb9bd8"
+  "canonical_course_sha256": "ad84a536831b5385e228077ac49adb4cef7701eec5fc74cc5da800b4c0cb108e"
 }

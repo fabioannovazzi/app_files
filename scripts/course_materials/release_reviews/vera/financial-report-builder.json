@@ -154,7 +154,7 @@
     "reviewer": "Codex /root - bounded report output source review",
     "source_review": "Inspected report-builder Markdown omission repair, compact-table pagination and continuous audit appendix; numeric review, source capture and integrity validation unchanged. The component version advances to0.1.47. Shared studio-format preview code calls the same renderer. Full compiled course comparison shows only source inventory changes; original editorial judgments and outputs remain historical. Fresh current-digest localized execution remains required."
   },
-  "course_sha256": "5aed165f66f4d1c5f80a829a99d87f4a851ee06d1e88d68452482440f9991498",
+  "course_sha256": "9953074f639cc0e3d22949caa2a5fe2343a377b7e67b6093e21ce7e3ef1d401c",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "16a53e01bc86e54ccb9643978e0813a01cc0bafcc26255d8129eb395d6fb6b8b",
@@ -895,5 +895,26 @@
     "course_sha256": "5aed165f66f4d1c5f80a829a99d87f4a851ee06d1e88d68452482440f9991498",
     "authored_content_unchanged": true,
     "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
+  },
+  "shared_archive_source_binding_review_20261116": {
+    "reviewer": "Codex /root - bounded source-binding comparison",
+    "reviewed_at": "2026-11-16T21:18:40.063057+00:00",
+    "baseline_commit": "2aaa538fb59329fe0f71cc2a5b37f89917cf8220",
+    "previous_course_sha256": "5aed165f66f4d1c5f80a829a99d87f4a851ee06d1e88d68452482440f9991498",
+    "course_sha256": "9953074f639cc0e3d22949caa2a5fe2343a377b7e67b6093e21ce7e3ef1d401c",
+    "changed_source_paths": [
+      "modules/report-builder/scripts/implementation_bootstrap.py",
+      "modules/report-builder/scripts/implementation_contract.py",
+      "modules/report-builder/vendor/modules/vera_assurance/archive_paths.py",
+      "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
+      "modules/report-builder/vendor/modules/vera_assurance/recovery.py",
+      "vendor/modules/vera_assurance/archive_paths.py",
+      "vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/recovery.py"
+    ],
+    "comparison": "Compared the complete compiled course with the exact historical snapshot matching the previous reviewed digest. Every field except sources is identical, including all localized lessons, input identities, requests, checkpoints, expected results and timing.",
+    "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
+    "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
+    "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
   }
 }

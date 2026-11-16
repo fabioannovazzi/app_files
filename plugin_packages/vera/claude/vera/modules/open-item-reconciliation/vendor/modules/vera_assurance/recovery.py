@@ -20,6 +20,7 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 from uuid import uuid4
 
+from .archive_paths import archive_path, ensure_project_layout, product_root
 from .serialization import canonical_json_sha256, exclusive_file_lock
 
 __all__ = ["checkpoint_run", "restore_run", "repair_run_inputs"]
@@ -227,7 +228,10 @@ def checkpoint_run(context_path: Path, store: Path | None = None) -> dict[str, A
             _snapshot(store)["run_identity"]
         ) != _run_identity(run):
             raise ValueError("Recovery reference belongs to another run")
-        headers = [root / "Vera/client.json", run_root.parents[1] / "engagement.json"]
+        headers = [
+            product_root(root, "vera") / "client.json",
+            run_root.parents[1] / "engagement.json",
+        ]
 
         def files() -> list[Path]:
             paths = list(run_root.rglob("*"))
@@ -356,7 +360,9 @@ def _restore_run(
         if any(progress.get(key) != value for key, value in restore_record.items()):
             raise ValueError("Recovery destination belongs to another restore request")
         if progress["status"] == "restored":
-            context = destination / _relative(snapshot["context_relative_path"])
+            context = archive_path(
+                destination, _relative(snapshot["context_relative_path"])
+            )
             if _run_identity(_json(context.parent / "run.json")) != tuple(
                 snapshot["run_identity"]
             ):
@@ -384,9 +390,14 @@ def _restore_run(
     staging = destination / "work-restore-evidence"
     _write(marker, progress, staging_directory=staging)
     for directory in directories:
-        _private_directory(destination / directory)
-    expected_paths = {_relative(relative) for relative in snapshot["files"]}
-    context_relative = _relative(snapshot["context_relative_path"])
+        _private_directory(archive_path(destination, directory))
+    expected_paths = {
+        archive_path(destination, _relative(relative)).relative_to(destination)
+        for relative in snapshot["files"]
+    }
+    context_relative = archive_path(
+        destination, _relative(snapshot["context_relative_path"])
+    ).relative_to(destination)
     for existing in destination.rglob("*"):
         if existing.is_symlink():
             raise ValueError("Recovery destination contains a symbolic link")
@@ -402,7 +413,7 @@ def _restore_run(
         ):
             raise ValueError("Recovery destination contains unrelated work")
     for relative, record in snapshot["files"].items():
-        target = destination / _relative(relative)
+        target = archive_path(destination, _relative(relative))
         _private_directory(target.parent)
         if target.exists():
             if _identity(target) == (record["byte_count"], record["sha256"]):
@@ -446,6 +457,7 @@ def _restore_run(
             )
         progress["written"].append(relative)
         _write(marker, progress, staging_directory=staging)
+    ensure_project_layout(destination)
     context = destination / context_relative
     if _run_identity(_json(context.parent / "run.json")) != tuple(
         snapshot["run_identity"]

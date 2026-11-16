@@ -81,7 +81,7 @@ function call(name,args) {
 function resource() {
   const dir=path.join(ROOT,"ui");
   const html=fs.readFileSync(path.join(dir,"studio-work.html"),"utf8")
-    .replace("/*__CSS__*/",fs.readFileSync(path.join(dir,"workspace.css"),"utf8")+"\n"+fs.readFileSync(path.join(dir,"studio-work.css"),"utf8"))
+    .replace("/*__CSS__*/",fs.readFileSync((fs.existsSync(path.join(dir,"../modules/studio-archive/assets/archive.css")) ? path.join(dir,"../modules/studio-archive/assets/archive.css") : path.join(dir,"../../studio-archive/assets/archive.css")),"utf8")+"\n"+fs.readFileSync(path.join(dir,"studio-work.css"),"utf8"))
     .replace("/*__SELECT_JS__*/",fs.readFileSync(path.join(dir,"custom_select.js"),"utf8"))
     .replace("/*__JS__*/",fs.readFileSync(path.join(dir,"studio-work.js"),"utf8"))
     .replace("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"))

@@ -55,10 +55,21 @@ declared in Lucia’s `components.json`: `prompt-optimizer`,
 also describes other products: use its client, engagement, file, search,
 snapshot, and run lifecycle instructions for Lucia. Journal sampling, invoice
 checks, and verification of Vera’s selective reporting receipts are outside
-Lucia’s Archive. Preserve the literal shared `Vera/` ledger paths.
+Lucia’s Archive. Use the common studio root and client directory shared with Vera
+and Clara. Every project has lowercase `vera/`, `lucia/` and `clara/` folders. New Lucia
+engagements go under `lucia/`. The layout normalizer changes legacy folder casing
+without rewriting sealed evidence; readers resolve retained historical paths.
 
 For CLI fallback, use Lucia’s `scripts/lucia_studio_archive.py` at the product
 root with the same arguments as the component guide. It applies Lucia’s workflow
 list and retains the same client, engagement, receipts and lifecycle.
 
 Lucia's public experience and deliverables are in Italian.
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.
+
+The native Archive uses the same interface as Vera and Clara: document search,
+saved documents, exact revision history and existing linked chats. It does not
+create a new chat. Searches and document reads remain scoped to Lucia’s projects.

@@ -243,7 +243,7 @@ def test_restore_does_not_overwrite_an_existing_destination(case, tmp_path):
         core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
 
     assert existing.read_bytes() == b"Unrelated work"
-    assert not (destination / "Vera").exists()
+    assert not (destination / "vera").exists()
 
 
 def test_restore_does_not_claim_destination_created_after_preflight(
@@ -493,7 +493,7 @@ def test_restore_refuses_linked_destination_without_changing_its_target(case, tm
         core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
 
     assert retained.read_text() == "Unrelated original"
-    assert not (target / "Vera").exists()
+    assert not (target / "vera").exists()
 
 
 @pytest.mark.parametrize("operation", ["write", "verify"])

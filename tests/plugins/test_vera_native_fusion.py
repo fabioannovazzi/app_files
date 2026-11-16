@@ -141,7 +141,7 @@ const result={{linked,retry,page,opened,review}};
     assert result["review"]["work_ref"] == "fictional-merger"
     assert store.report()["history"] == before
     assert ledger.list_runs(folder, eid) == ()
-    index = next((folder / "Vera/Pratiche").glob("*Fusione*/Indice.html")).read_text()
+    index = next((folder / "vera/Pratiche").glob("*Fusione*/Indice.html")).read_text()
     assert "Fusione selezionata" in index and "Lavori salvati" in index
     changed = json.loads(config.read_text())
     changed["bindings"][0]["operation_id"] = "op_" + "f" * 32

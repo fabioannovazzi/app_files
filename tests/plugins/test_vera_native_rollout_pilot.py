@@ -86,7 +86,7 @@ const result={finished,retry,before:runs(before.works),after:runs(after.works)};
     assert result["after"] == result["before"]
     conserved = next(
         (tmp_path / "import-pilot/fictional-archive").glob(
-            "*/Vera/engagements/*/inputs/*/fictional-pilot-source.txt"
+            "*/vera/engagements/*/inputs/*/fictional-pilot-source.txt"
         )
     )
     assert conserved.read_bytes() == data.encode()
@@ -253,7 +253,7 @@ const result={published,current,directory};
     binding = case["binding"]
     run = (
         Path(binding["client_root"])
-        / "Vera/engagements"
+        / "vera/engagements"
         / binding["engagement_id"]
         / "runs"
         / binding["run_id"]
@@ -367,14 +367,14 @@ const result={directory,works,foreign,bilancio,initial,inspection,page,reviewed,
 
     bank_outputs = next(
         (tmp_path / "owned/fictional-archive/Banca iniziale - dati fittizi").glob(
-            "Vera/engagements/*/runs/*/outputs"
+            "vera/engagements/*/runs/*/outputs"
         )
     )
     assert (bank_outputs / "reconciliation/journal_bank_reconciliation.xlsx").is_file()
     assert (bank_outputs / "reconciliation/review_payload.json").is_file()
     treasury_outputs = next(
         (tmp_path / "owned/fictional-archive/Studio client").glob(
-            "Vera/engagements/*/runs/*/outputs"
+            "vera/engagements/*/runs/*/outputs"
         )
     )
     assert (

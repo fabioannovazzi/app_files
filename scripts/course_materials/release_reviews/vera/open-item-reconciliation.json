@@ -253,7 +253,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "484ba1851d5b83894c4a9268bf6a51b450912e942e293b71eff9fd32dd7321c7",
+  "course_sha256": "ba44e3bd937d5cdf625fc3e8f65173709a453c117bda253bdbb672b69c3b0663",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
@@ -1234,5 +1234,41 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "shared_archive_source_binding_review_20261116": {
+    "reviewer": "Codex /root - bounded source-binding comparison",
+    "reviewed_at": "2026-11-16T21:18:40.070123+00:00",
+    "baseline_commit": "46aa5bce047f54e32d5f811ac16d9764c20733a0",
+    "previous_course_sha256": "484ba1851d5b83894c4a9268bf6a51b450912e942e293b71eff9fd32dd7321c7",
+    "course_sha256": "ba44e3bd937d5cdf625fc3e8f65173709a453c117bda253bdbb672b69c3b0663",
+    "changed_source_paths": [
+      "modules/open-item-reconciliation/scripts/implementation_bootstrap.py",
+      "modules/open-item-reconciliation/vendor/modules/vera_assurance/archive_paths.py",
+      "modules/open-item-reconciliation/vendor/modules/vera_assurance/contracts.py",
+      "modules/open-item-reconciliation/vendor/modules/vera_assurance/recovery.py",
+      "modules/studio-archive/assets/archive-host.js",
+      "modules/studio-archive/assets/archive-ui.js",
+      "modules/studio-archive/assets/archive.css",
+      "modules/studio-archive/assets/archive.html",
+      "modules/studio-archive/scripts/archive_core.py",
+      "modules/studio-archive/scripts/archive_panel.py",
+      "modules/studio-archive/scripts/archive_preferences.py",
+      "modules/studio-archive/scripts/client_ledger.py",
+      "modules/studio-archive/scripts/folder_intake.py",
+      "modules/studio-archive/scripts/readable_archive.py",
+      "modules/studio-archive/scripts/studio_archive.py",
+      "modules/studio-archive/scripts/work_folder.py",
+      "modules/studio-archive/vendor/modules/archive_report_store.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/archive_paths.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
+      "vendor/modules/vera_assurance/archive_paths.py",
+      "vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/recovery.py"
+    ],
+    "comparison": "Compared the complete compiled course with the exact historical snapshot matching the previous reviewed digest. Every field except sources is identical, including all localized lessons, input identities, requests, checkpoints, expected results and timing.",
+    "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
+    "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
+    "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
   }
 }

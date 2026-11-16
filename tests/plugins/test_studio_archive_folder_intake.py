@@ -36,7 +36,14 @@ def command(base: Path, session: str, *args: str, check: bool = True):
 def case(base: Path):
     archive = base / "Studio"
     archive.mkdir()
-    command(base, "setup", "configure", "--archive-root", str(archive))
+    command(
+        base,
+        "setup",
+        "configure",
+        "--archive-root",
+        str(archive),
+        "--make-studio-default",
+    )
     cid = command(base, "setup", "create-client", "--legal-name", "Synthetic bakery")[
         "client"
     ]["client_id"]

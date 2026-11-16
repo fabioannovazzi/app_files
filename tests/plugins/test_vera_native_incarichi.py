@@ -217,7 +217,7 @@ def test_native_begin_publish_and_open_grouped_current_revision(
     )
     assert document["preview"] == "Synthetic grouped format test"
     html = next(
-        (root / "Cliente Beta/Vera/Pratiche").glob("*New*/Indice.html")
+        (root / "Cliente Beta/vera/Pratiche").glob("*New*/Indice.html")
     ).read_text()
     assert html.index("<h2>Conversazioni</h2>") < html.index("<h2>Documenti</h2>")
     assert "Risultati salvati" not in html and "Documenti acquisiti" not in html
@@ -253,7 +253,7 @@ def test_native_publication_reuses_legacy_output_without_rewriting_its_receipt(
     imported = ledger.import_document(folder, cid, eid, source, "support")["receipt"]
     before = {
         str(p): p.read_bytes()
-        for p in (folder / "Vera/engagements" / eid).rglob("*")
+        for p in (folder / "vera/engagements" / eid).rglob("*")
         if p.is_file()
     }
     request = {

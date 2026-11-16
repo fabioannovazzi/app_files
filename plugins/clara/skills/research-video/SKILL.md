@@ -2,6 +2,15 @@
 name: research-video
 description: Turn user-approved research scenes or real-estate photographs into a source-faithful narrated MP4 with approved ordering, landscape, vertical or square format, restrained motion, optional on-screen text and local background music, synchronized narration in English, Italian, French, German, or Spanish, captions, a reviewable script, and mechanical media validation. Use for a research explainer, executive briefing, client education video, narrated visual short, or promotional property video. Do not use for filming, avatar video, generative scene invention, or revising an existing video.
 ---
+
+## Codex operator UI precedence
+
+For local Codex operation, follow `../clara/references/operator-media.md`.
+Use the local `clara_media_open` panel and persisted native handoff instead of
+the browser upload/download instructions below. Those remain fallback engine
+documentation for hosts without this panel. Preserve the existing approval,
+import, interpretation and final-output validation contracts.
+
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 

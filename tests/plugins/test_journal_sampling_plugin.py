@@ -178,6 +178,7 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("plugin", ".codex-plugin/plugin.json"),
     ("assurance", "__init__.py"),
     ("assurance", "contracts.py"),
+    ("assurance", "archive_paths.py"),
     ("assurance", "jurisdiction.py"),
     ("assurance", "decisions.py"),
     ("assurance", "envelope.py"),

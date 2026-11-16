@@ -141,7 +141,11 @@
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
     "scripts/_python_bootstrap.py",
-    "skills/clara/references/case-operations.md"
+    "skills/clara/references/case-operations.md",
+    "scripts/media_mcp.py",
+    "scripts/media_mcp.cjs",
+    "ui/media.html",
+    "skills/clara/references/operator-media.md"
   ],
   "model_context": {
     "classes": [
@@ -226,9 +230,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-15",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "9e335c9d2cf275b2504bd190ba39245fbbe1db0677ef225a080c15bff101d836"
+    "source_fingerprint": "3b103bc656cc70d0e15146c6588e08caa7e858bb3dd0c32c296f78061fb0f4f8"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -242,6 +246,10 @@
     {
       "control": "M6 raw workbooks and row- or account-level prepared outputs remain in an owner-only private pilot root at a fixed opaque source locator; group/other permission bits and macOS extended ACLs are rejected at audit validation. They are not committed, packaged, or published. Ordinary model processing remains within the user-selected Codex account and this workflow adds no separate external recipient.",
       "id": "m6-exact-local-source-boundary"
+    },
+    {
+      "id": "local-operator-handoff",
+      "control": "Codex media selection and confirmation use the local MCP panel. Raw recording chunks remain in local app/tool transport; only session metadata, filename and output locations appear in structured model results. The worker extracts audio locally and invokes the existing authenticated service without source documents or case context. Selected host conversation processing still applies to any transcript subsequently read for the requested work."
     }
   ],
   "service_ids": [

@@ -55,9 +55,9 @@
     "plugins/vera/scripts/native_aml_bridge.py",
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.html",
+    "plugins/studio-archive/assets/archive.html",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/ui/InstrumentSans-Regular.ttf",
     "plugins/vera/scripts/native_aml_authoring.py",
     "plugins/vera/scripts/native_archive_closure.py"
@@ -108,7 +108,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "23d34576eb26cd1d33a5e0a26d2fd65995f9437a21595d21062a8813e8f3f712"
+    "source_fingerprint": "420f6cc953d0fa82d6b9b5e1113f63ab1e6587bf8a5223a076c7c07a9b09c918"
   },
   "role": "workflow",
   "runtime_profiles": [

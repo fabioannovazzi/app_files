@@ -12,7 +12,7 @@
     "ui/studio-work.html",
     "ui/studio-work.js",
     "ui/studio-work.css",
-    "ui/workspace.css",
+    "modules/studio-archive/assets/archive.css",
     "ui/custom_select.js",
     "ui/InstrumentSans-Regular.ttf",
     "scripts/whatsapp_requests.py",
@@ -85,6 +85,6 @@
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "dd5c0121e20cab89347870b54d584b9e444cec233dc6bf3d7e615087e8d386b8"
+    "source_fingerprint": "f2a4fdc0e22acaa9532f05f3766e07e31f95a895e5878e403ef9cc35a1e9314f"
   }
 }

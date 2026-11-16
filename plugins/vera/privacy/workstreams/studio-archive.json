@@ -160,7 +160,13 @@
     "mcp",
     ".mcp.json",
     "requirements.txt",
-    "requirements-ocr.txt"
+    "requirements-ocr.txt",
+    "assets/archive.html",
+    "assets/archive.css",
+    "assets/archive-ui.js",
+    "assets/archive-host.js",
+    "mcp/archive_panel.cjs",
+    "scripts/archive_panel.py"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/model_data_report.py",
@@ -173,8 +179,8 @@
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/ui/workspace.js",
-    "plugins/vera/ui/workspace.html",
-    "plugins/vera/ui/workspace.css",
+    "plugins/studio-archive/assets/archive.html",
+    "plugins/studio-archive/assets/archive.css",
     "plugins/vera/skills/studio-archive/SKILL.md",
     "plugins/vera/skills/vera/references/native-workspace.md",
     "plugins/vera/scripts/native_archive_imports.py",
@@ -405,6 +411,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "shared-studio-directory",
+        "purpose": "Reuse the shared client directory while keeping each product’s engagements separate",
+        "content": "The three products on one computer reuse the approved archive root, safe client directory, private aliases and root-bound index. Each product lists and reopens only engagements in its own product area. Search filters other product areas before ranking and limiting results; saved source links cannot open another product’s indexed content. Opening screens show projects containing work for that product, while the shared client directory remains available for new work. No automatic document-content disclosure or cross-client input selection is added. Existing sealed records and receipts remain byte-for-byte unchanged. Historical product-folder casing is resolved to the actual lowercase folder locally.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -412,7 +427,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "cabc3ee1b1dfd9497c58b37d0c8200c647130caa9735714bd23313e2d9cf0f1b"
+    "source_fingerprint": "3185b225010392c5f28d4e7b2f166536986227c16e810f5f54b36c62febec795"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -548,6 +563,14 @@
     {
       "id": "versioned-incarico-preservation",
       "control": "Assignment edits use exact revision comparison and retain metadata history. Grouped formats are copied and hash-verified before one atomic revision-directory publication; exact retry keys recover the same revision without rolling back a newer issue. Reuse validates explicit origin and selected format bytes. Existing imported receipts and sealed run headers remain unchanged. Chat associations use actual host identity, never filename or recency inference; Codex links must match the stored UUID. The shared run checkpoint also retains the selected assignment metadata, sources, working files and issued history when available, independently of the archive destination. Recovery failures remain separate from delivery. No automatic deletion or new external transmission is added. Optional saved-work links retain workflow, label, opaque work reference and a case-identity digest. Version 2 assignment records preserve unchanged version 1 seals and history. Metadata edits that omit links preserve the existing links. These references do not grant access or move case files; reopening requires the originating specialist service and its current permissions. Begin can retain an actual originating chat identity in the same metadata revision as the workflow binding. CODEX_THREAD_ID is used only when provided; explicit parent chat identity takes precedence for delegated work. Existing chat associations are merged by host and thread ID, and retries preserve the saved revision. No session ID is promoted to a chat identity and no transcript is copied."
+    },
+    {
+      "id": "shared-root-product-workspaces",
+      "control": "One shared owner-private profile supplies the approved archive root. Product session leases remain separate. Every project has vera, lucia and clara directories. The local layout normalizer preflights projects, rejects redirected or case-colliding directories, normalizes legacy folder casing and creates missing areas without rewriting retained evidence. Readers resolve historical path casing and exact engagement IDs, reject duplicate identities and verify seals and client ownership. Shared identity remains at vera/client.json. Separate legacy archive roots are not merged automatically."
+    },
+    {
+      "id": "shared-product-archive-ui",
+      "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response."
     }
   ],
   "workstream": "studio-archive",

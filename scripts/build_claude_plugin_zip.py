@@ -2719,6 +2719,7 @@ def _project_clara_cowork_skill(
     """Project one Clara skill onto the bounded Cowork runtime."""
 
     text = content.decode("utf-8")
+    text = re.sub(r"(?ms)^## Codex operator UI precedence\n.*?(?=^## |\Z)", "", text)
     if relative_path == "skills/clara/SKILL.md":
         frontmatter = re.sub(
             r"(?m)^description: .*$",
@@ -2877,6 +2878,10 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     parts = Path(relative_path).parts
     if relative_path in {
         "scripts/_desktop_teaching.py",
+        "scripts/media_mcp.py",
+        "scripts/media_mcp.cjs",
+        "ui/media.html",
+        "skills/clara/references/operator-media.md",
         "scripts/course_chat_bridge.py",
         "scripts/course_chat_mcp.cjs",
         "scripts/local_courses.py",
@@ -3160,7 +3165,7 @@ def _clara_package_entries(
     # The Codex directory app depends on its MCP resource host. Cowork retains
     # the same Archive/case Python helpers through the documented CLI fallback.
     services = json.loads(entries["mcp-services.json"])
-    for name in ("claraStudioArchive", "claraArchivePanel"):
+    for name in ("claraStudioArchive", "claraArchivePanel", "claraMedia"):
         services["mcpServers"].pop(name, None)
     entries["mcp-services.json"] = (json.dumps(services, indent=2) + "\n").encode()
     _overlay_cowork_agents(entries, plugin="clara")
@@ -3358,7 +3363,6 @@ def _lucia_package_entries(
         "assets/playbook-editor.html",
         "assets/playbook-nda.json",
         "assets/method-ui-labels.json",
-        "assets/studio-archive.html",
         "assets/InstrumentSans-Regular.ttf",
         "assets/InstrumentSans-SemiBold.ttf",
         "assets/OFL.txt",

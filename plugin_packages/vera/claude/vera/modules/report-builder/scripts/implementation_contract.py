@@ -73,6 +73,7 @@ PLUGIN_IMPLEMENTATION_PATHS = (
 SHARED_IMPLEMENTATION_PATHS = (
     "__init__.py",
     "contracts.py",
+    "archive_paths.py",
     "jurisdiction.py",
     "decisions.py",
     "envelope.py",

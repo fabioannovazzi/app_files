@@ -119,7 +119,7 @@ def test_separate_commands_reuse_config_and_new_session_recovers_same_client(
         json.loads(recovered.stdout)["clients"][0]["client_id"]
         == first_clients[0]["client_id"]
     )
-    assert len(list(archive.glob("*/Vera/client.json"))) == 1
+    assert len(list(archive.glob("*/vera/client.json"))) == 1
 
 
 def test_missing_package_stops_before_managed_setup(

@@ -386,7 +386,10 @@ def test_vera_zip_expected_entries_embed_new_client_component() -> None:
         engine_prefix + "assets/client-file-preparation-review-widget.html"
         not in entries
     )
-    assert "vera-codex-plugin/plugins/vera/ui/workspace.html" in entries
+    assert (
+        "vera-codex-plugin/plugins/vera/modules/studio-archive/assets/archive.html"
+        in entries
+    )
 
     catalogue = json.loads(entries["vera-codex-plugin/plugins/vera/mcp-catalog.json"])
     advertised = {

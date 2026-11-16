@@ -924,6 +924,10 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     _copy_local_helper_environment(vera_root / "scripts")
     shutil.copytree(ROOT / "plugins" / "client-file-preparation", component_root)
     shutil.copytree(
+        ROOT / "plugins" / "studio-archive" / "assets",
+        plugins_root / "studio-archive" / "assets",
+    )
+    shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
         shared_assurance,
     )

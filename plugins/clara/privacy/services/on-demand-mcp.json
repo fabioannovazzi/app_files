@@ -7,7 +7,13 @@
     "mcp-services.json",
     "scripts/on_demand_mcp.cjs",
     "scripts/report_mcp.py",
-    "scripts/report_mcp.cjs"
+    "scripts/report_mcp.cjs",
+    "modules/studio-archive/assets/archive.html",
+    "modules/studio-archive/assets/archive.css",
+    "modules/studio-archive/assets/archive-ui.js",
+    "modules/studio-archive/assets/archive-host.js",
+    "modules/studio-archive/mcp/archive_panel.cjs",
+    "modules/studio-archive/scripts/archive_panel.py"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -51,6 +57,19 @@
         "scripts/on_demand_mcp.cjs"
       ],
       "on_violation": "Keep the existing Archive ownership checks; do not adopt another connection's temporary root or replace the permanent default."
+    },
+    {
+      "id": "shared-product-archive-ui",
+      "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response.",
+      "implemented_by": [
+        "modules/studio-archive/assets/archive.html",
+        "modules/studio-archive/assets/archive.css",
+        "modules/studio-archive/assets/archive-ui.js",
+        "modules/studio-archive/assets/archive-host.js",
+        "modules/studio-archive/mcp/archive_panel.cjs",
+        "modules/studio-archive/scripts/archive_panel.py"
+      ],
+      "on_violation": "Reject an invalid or foreign selection; retain saved documents and receipts."
     }
   ],
   "service_details": {
@@ -73,6 +92,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "0087aff693217a53351419d5cdb1f9037a082aee7c03a58121dec855704cc9a0"
+    "source_fingerprint": "0dce0f803eb918629fa105d2e3f77dd907dafd2969e0645af812f140fa448b99"
   }
 }

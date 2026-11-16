@@ -105,6 +105,7 @@ __all__ = [
     "verify_studio_client_inputs",
     "list_studio_client_identities",
     "list_studio_clients",
+    "normalize_studio_archive_layout",
     "match_studio_email_client",
     "open_archive_source",
     "open_studio_archive_organization_item",
@@ -2007,6 +2008,52 @@ def _client_directory_record(
     }
 
 
+def normalize_studio_archive_layout(*, state_dir: Path | None = None) -> dict[str, Any]:
+    """Normalize every visible project in the configured shared Archive."""
+    config = _load_config(_state_dir(state_dir), validate_scope_roots=False)
+    projects = sorted(
+        path
+        for path in config.archive_root.iterdir()
+        if not path.name.startswith(".") and (path.is_dir() or path.is_symlink())
+    )
+    # Preflight the whole Archive before changing any project's folder names.
+    for project in projects:
+        ledger._layout().plan_project_layout(project)
+    for project in projects:
+        ledger.ensure_project_layout(project)
+    return {
+        "status": "normalized",
+        "project_count": len(projects),
+        "product_directories": list(ledger.PRODUCT_DIRECTORIES),
+    }
+
+
+def _has_product_files(client_root: Path) -> bool:
+    """Count work in this product area, excluding its shared registry scaffolding."""
+    area = ledger._product_root(client_root, ledger.product_directory())
+    if not area.exists():
+        return False
+    for path in area.iterdir():
+        if path.name.startswith(".") or path.name in {
+            "client.json",
+            "APRI ARCHIVIO.html",
+            "Pratiche",
+            "reporting",
+        }:
+            continue
+        if path.is_symlink():
+            continue
+        if path.is_file():
+            return True
+        if path.is_dir() and any(
+            item.is_file() and not item.is_symlink()
+            for item in path.rglob("*")
+            if not any(part.startswith(".") for part in item.relative_to(path).parts)
+        ):
+            return True
+    return False
+
+
 def list_studio_clients(
     *,
     state_dir: Path | None = None,
@@ -2055,6 +2102,25 @@ def list_studio_clients(
         )
         for scope in config.scopes
     ]
+    for client in clients:
+        scope = next(
+            scope for scope in config.scopes if scope.scope_id == client["scope_id"]
+        )
+        client_root = config.archive_root / scope.relative_dir
+        try:
+            client["product_has_work"] = _has_product_files(client_root)
+            if client.get("registration_status") == "blocked":
+                client["product_has_work"] = True
+            elif client.get("client_id"):
+                work = ledger.inspect_engagements(client_root, client["client_id"])
+                client["product_has_work"] = bool(
+                    client["product_has_work"]
+                    or work["engagements"]
+                    or work["blocked_engagements"]
+                )
+        except (OSError, ledger.LedgerError):
+            # An unavailable area must not be silently represented as empty.
+            client["product_has_work"] = True
     orphaned = [
         _client_directory_record(record, scope=None)
         for record in records
@@ -2776,11 +2842,7 @@ def create_studio_client_engagement(
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
     input_root = (
-        client_root
-        / ledger.LEDGER_DIRECTORY
-        / "engagements"
-        / engagement["engagement_id"]
-        / "inputs"
+        ledger._engagement_root(client_root, engagement["engagement_id"]) / "inputs"
     )
     return {
         "status": "created" if created else "already_created",
@@ -3292,9 +3354,7 @@ def snapshot_studio_client_google_drive(
         raise ArchiveError(
             "The bound Google Drive root changed identity; review the binding."
         )
-    engagement_root = (
-        client_root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id
-    )
+    engagement_root = ledger._engagement_root(client_root, engagement_id)
     descriptor, temporary_name = tempfile.mkstemp(
         prefix=".vera-google-drive-snapshot-",
         suffix=".json",
@@ -3510,13 +3570,15 @@ def open_studio_archive_organization_item(
             "temporary_content_deleted": True,
         }
 
-    source = _resolve_source_file(client_root, relative_path)
+    source = _resolve_source_file(client_root, relative_path, project_relative=True)
     if _sha256_file(source) != str(expected["sha256"]):
         raise SourceChangedError(
             "Local archive source changed after the selected snapshot."
         )
     extraction = _extract_document(source, enable_ocr=False)
-    current_source = _resolve_source_file(client_root, relative_path)
+    current_source = _resolve_source_file(
+        client_root, relative_path, project_relative=True
+    )
     if current_source != source or _sha256_file(current_source) != str(
         expected["sha256"]
     ):
@@ -4240,7 +4302,7 @@ def import_studio_client_document(
         foreign_scope = any(
             _path_is_within(resolved_source, root) for root in archive_roots
         ) or any(
-            (parent / ledger.LEDGER_DIRECTORY / "client.json").exists()
+            ledger._client_manifest_path(parent).exists()
             for parent in resolved_source.parents
         )
         if foreign_scope and not _path_is_within(resolved_source, client_root):
@@ -4531,7 +4593,7 @@ def restore_studio_client_workflow(
         # Run checkpoints retain admitted copies, not the engagement's original
         # input collection. Permit new imports without inventing missing receipts.
         ledger._ordinary_directory(
-            root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id / "inputs",
+            ledger._engagement_root(root, engagement_id) / "inputs",
             label="restored engagement input directory",
             create=True,
         )
@@ -5883,7 +5945,8 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
     except ValueError:
         return False
     if len(parts) == 1 and (
-        parts[0] in {".pending-work.lock", "pending-archive-work.json"}
+        parts[0]
+        in {".pending-work.lock", ".project-layout.lock", "pending-archive-work.json"}
         or re.fullmatch(r"pending-(?:work|publication)-[0-9a-f]{64}\.json", parts[0])
     ):
         # These are reserved work-folder records, not client source evidence.
@@ -5893,7 +5956,7 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
         except (OSError, ValueError, ledger.LedgerError):
             return False
         return True
-    if not parts or parts[0] != ledger.LEDGER_DIRECTORY:
+    if not parts or parts[0].casefold() not in ledger.PRODUCT_DIRECTORIES:
         return False
     if (
         len(parts) >= 6
@@ -6000,7 +6063,9 @@ def _discover_files(
     return discovered, issues
 
 
-def _resolve_source_file(root: Path, relative_path: str) -> Path:
+def _resolve_source_file(
+    root: Path, relative_path: str, *, project_relative: bool = False
+) -> Path:
     """Resolve one indexed regular file without following symbolic links."""
 
     relative = Path(relative_path)
@@ -6011,8 +6076,12 @@ def _resolve_source_file(root: Path, relative_path: str) -> Path:
     ):
         raise ArchiveError("Indexed source path is not normalized and relative.")
     candidate = root
-    for part in relative.parts:
-        candidate /= part
+    product_index = 0 if project_relative else 1
+    for index, part in enumerate(relative.parts):
+        if index == product_index and part.casefold() in ledger.PRODUCT_DIRECTORIES:
+            candidate = ledger._product_root(candidate, part)
+        else:
+            candidate /= part
         if candidate.is_symlink():
             raise ArchiveError("Indexed source path contains a symbolic link.")
     try:
@@ -6720,6 +6789,7 @@ def _index_refresh_transaction(function: Callable[..., Any]) -> Callable[..., An
 def refresh_archive(
     *,
     rebuild: bool = False,
+    only_if_required: bool = False,
     enable_ocr: bool = False,
     ocr_language: str = "it",
     state_dir: Path | None = None,
@@ -6742,6 +6812,12 @@ def refresh_archive(
         _write_private_json(_config_path(private_state), config.as_json())
     else:
         config = stored_config
+    # Reconcile this session before checking the shared index under its writer
+    # lock, so another session's completed recovery is reused without extraction.
+    if only_if_required and not rebuild:
+        status = studio_archive_status(state_dir=private_state)
+        if not status["index_requires_refresh"]:
+            return {**status, "refreshed": False}
     discovered, scan_issues = _discover_files(config)
     connection = _connect(private_state)
     indexed_at = _now_iso()
@@ -7138,12 +7214,23 @@ def _decode_limitations(value: str) -> list[str]:
     return payload
 
 
+def _product_source_visible(relative_path: str) -> bool:
+    """Shared source files stay available; another product's area does not."""
+    parts = Path(relative_path).parts
+    return not (
+        len(parts) > 1
+        and parts[1].casefold() in ledger.PRODUCT_DIRECTORIES
+        and parts[1].casefold() != ledger.product_directory()
+    )
+
+
 def search_archive(
     query: str,
     *,
     scope_id: str,
     limit: int = 10,
     state_dir: Path | None = None,
+    allowed_scope_ids: set[str] | None = None,
 ) -> dict[str, Any]:
     """Search one exact configured scope, or ``all`` when explicitly requested."""
 
@@ -7166,6 +7253,12 @@ def search_archive(
         raise ArchiveError("Search scope is not configured.")
     expression = _fts_query(query)
     connection = _connect(private_state, readonly=True)
+    connection.create_function("product_source_visible", 1, _product_source_visible)
+    connection.create_function(
+        "panel_scope_visible",
+        1,
+        lambda scope: allowed_scope_ids is None or scope in allowed_scope_ids,
+    )
     try:
         if _metadata_get(connection, "config_fingerprint") != _config_fingerprint(
             config
@@ -7199,6 +7292,8 @@ def search_archive(
                     JOIN chunks AS c ON c.source_id = chunk_fts.source_id
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
+                      AND product_source_visible(d.relative_path)
+                      AND panel_scope_visible(d.scope_id)
                 ), ranked AS (
                     SELECT
                         *,
@@ -7240,6 +7335,8 @@ def search_archive(
                     JOIN chunks AS c ON c.source_id = chunk_fts.source_id
                     JOIN documents AS d ON d.document_id = c.document_id
                     WHERE chunk_fts MATCH ?
+                      AND product_source_visible(d.relative_path)
+                      AND panel_scope_visible(d.scope_id)
                       AND d.scope_id = ?
                 ), ranked AS (
                     SELECT
@@ -7350,6 +7447,8 @@ def open_archive_source(
         ).fetchone()
         if row is None:
             raise ArchiveError("Source ID is not present in the current index.")
+        if not _product_source_visible(str(row["relative_path"])):
+            raise ArchiveError("Source belongs to another product.")
         if scopes_changed and not any(
             scope.scope_id == row["scope_id"] and scope in current.scopes
             for scope in config.scopes

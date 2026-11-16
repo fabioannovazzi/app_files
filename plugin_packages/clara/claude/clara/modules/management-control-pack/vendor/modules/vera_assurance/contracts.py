@@ -21,6 +21,7 @@ from pathlib import Path
 from types import ModuleType
 from typing import Any
 
+from .archive_paths import archive_path, product_root
 from .money import MoneyValidationError, parse_canonical_decimal
 from .serialization import canonical_json_sha256
 
@@ -886,8 +887,13 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
     run_relative_path = _relative_path(
         payload["run_relative_path"], label="run_relative_path"
     )
+    product_directory = Path(run_relative_path).parts[0]
+    if product_directory.casefold() not in {"vera", "lucia", "clara"}:
+        raise AssuranceContractError(
+            "run_relative_path has an unknown product directory"
+        )
     expected_run_relative = (
-        Path("Vera") / "engagements" / engagement_id / "runs" / run_id
+        Path(product_directory) / "engagements" / engagement_id / "runs" / run_id
     ).as_posix()
     if run_relative_path != expected_run_relative:
         raise AssuranceContractError(
@@ -933,15 +939,17 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
         raise AssuranceContractError("runtime client folder belongs to another client")
     client_root = _absolute_path(folder["client_root"], label="client_root")
     run_root = _absolute_path(payload["run_root"], label="run_root")
-    expected_run_root = Path(client_root) / run_relative_path
+    expected_run_root = archive_path(Path(client_root), run_relative_path)
     if Path(run_root) != expected_run_root:
         raise AssuranceContractError("run_root does not match the portable run path")
     output_dir = _absolute_path(payload["output_dir"], label="output_dir")
     if Path(output_dir) != expected_run_root / output_relative_path:
         raise AssuranceContractError("output_dir does not match the portable run path")
     workspace_root = _absolute_path(payload["workspace_root"], label="workspace_root")
-    if Path(workspace_root) != Path(client_root) / "Vera":
-        raise AssuranceContractError("workspace_root must be the customer Vera ledger")
+    if Path(workspace_root) != product_root(Path(client_root), product_directory):
+        raise AssuranceContractError(
+            "workspace_root must be the project product directory"
+        )
     input_dir = _absolute_path(payload["input_dir"], label="input_dir")
     if not _path_is_within(input_dir, client_root):
         raise AssuranceContractError("input_dir must stay inside the customer folder")
@@ -964,7 +972,9 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
     if len({item["binding_id"] for item in bindings}) != len(bindings):
         raise AssuranceContractError("client workflow input bindings are duplicated")
     for binding in bindings:
-        expected_source = Path(client_root) / binding["source_relative_path"]
+        expected_source = archive_path(
+            Path(client_root), binding["source_relative_path"]
+        )
         expected_path = Path(run_root) / binding["execution_relative_path"]
         if Path(binding["source_path"]) != expected_source:
             raise AssuranceContractError(
@@ -977,7 +987,7 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
         source_parts = Path(binding["source_relative_path"]).parts
         if (
             len(source_parts) < 5
-            or source_parts[0] != "Vera"
+            or source_parts[0].casefold() not in {"vera", "lucia", "clara"}
             or source_parts[1] != "engagements"
             or source_parts[2] != binding.get("upstream_engagement_id", engagement_id)
         ):
@@ -1393,16 +1403,19 @@ def _hydrate_v2_client_workflow_context(
         )
     run_root = context_path.parent
     client_root = context_path.parents[5]
-    expected_run_root = client_root / portable["run_relative_path"]
+    product_directory = Path(portable["run_relative_path"]).parts[0]
+    expected_run_root = archive_path(client_root, portable["run_relative_path"])
     if run_root != expected_run_root:
         raise AssuranceContractError(
             "context path does not match its portable run identity"
         )
     for parent in (
         client_root,
-        client_root / "Vera",
-        client_root / "Vera" / "engagements",
-        client_root / "Vera" / "engagements" / portable["engagement_id"],
+        product_root(client_root, product_directory),
+        product_root(client_root, product_directory) / "engagements",
+        product_root(client_root, product_directory)
+        / "engagements"
+        / portable["engagement_id"],
         run_root.parent,
         run_root,
     ):
@@ -1415,7 +1428,7 @@ def _hydrate_v2_client_workflow_context(
 
     client_manifest = _validated_sealed_manifest(
         _read_bounded_regular_json(
-            client_root / "Vera" / "client.json", label="client manifest"
+            product_root(client_root, "vera") / "client.json", label="client manifest"
         ),
         label="client manifest",
     )
@@ -1426,8 +1439,7 @@ def _hydrate_v2_client_workflow_context(
         raise AssuranceContractError("client manifest does not match the run")
     engagement_manifest = _validated_sealed_manifest(
         _read_bounded_regular_json(
-            client_root
-            / "Vera"
+            product_root(client_root, product_directory)
             / "engagements"
             / portable["engagement_id"]
             / "engagement.json",
@@ -1513,7 +1525,7 @@ def _hydrate_v2_client_workflow_context(
         relative_source = _relative_path(
             item.get("source_relative_path"), label="source_relative_path"
         )
-        source = client_root / relative_source
+        source = archive_path(client_root, relative_source)
         # Preparation already admitted this exact source and copied its bytes.
         # Reopening the original here would turn a passed intake into a late
         # gate when the original moves or an upstream run is subsequently edited.
@@ -1556,7 +1568,7 @@ def _hydrate_v2_client_workflow_context(
         },
         "input_bindings": bindings,
         "input_dir": str(run_root / "inputs"),
-        "workspace_root": str(client_root / "Vera"),
+        "workspace_root": str(product_root(client_root, product_directory)),
         "output_dir": str(run_root / "outputs"),
         "run_root": str(run_root),
         "run_manifest_path": str(run_root / "run.json"),

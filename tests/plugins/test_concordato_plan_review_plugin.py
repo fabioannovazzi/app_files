@@ -684,6 +684,7 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("implementation", "scripts/run_concordato_review.py"),
         ("assurance_implementation", "__init__.py"),
         ("assurance_implementation", "contracts.py"),
+        ("assurance_implementation", "archive_paths.py"),
         ("assurance_implementation", "jurisdiction.py"),
         ("assurance_implementation", "decisions.py"),
         ("assurance_implementation", "envelope.py"),
@@ -3301,7 +3302,7 @@ def test_managed_replay_after_rename_rejects_nonportable_source_without_io(
     output_dir, arguments = _concordato_transaction_case(tmp_path)
     context_path = Path(arguments["client_engagement"])
     run_root = context_path.parent
-    vera_root = next(parent for parent in run_root.parents if parent.name == "Vera")
+    vera_root = next(parent for parent in run_root.parents if parent.name == "vera")
     client_root = vera_root.parent
     relative_output = output_dir.relative_to(client_root)
     relative_context = context_path.relative_to(client_root)

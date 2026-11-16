@@ -155,7 +155,7 @@ def test_invalid_literal_draft_authority_or_shape_cannot_create_source(
     )
     assert result["isError"] is True
     assert not list(
-        (folder / "Vera").glob(
+        (folder / "vera").glob(
             "engagements/*/.native-imports/*/upload-*/original-note.json"
         )
     )
@@ -243,7 +243,7 @@ def test_foreign_actor_does_not_read_another_literal_draft_or_captured_original(
     assert result["denied"]["isError"] is True
 
 
-def test_altered_captured_original_refuses_import_and_new_run_preparation(
+def test_altered_captured_original_refuses_exact_read_and_import(
     import_workspace,
 ):
     env, folder, client, engagement = import_workspace
@@ -252,7 +252,7 @@ def test_altered_captured_original_refuses_import_and_new_run_preparation(
         env, program(client, engagement, STORE + BEGIN + "const result={setup,begun};")
     )
     original = next(
-        (folder / "Vera").glob(
+        (folder / "vera").glob(
             "engagements/*/.native-imports/*/upload-*/original-note.json"
         )
     )
@@ -260,26 +260,27 @@ def test_altered_captured_original_refuses_import_and_new_run_preparation(
     result = rpc_program(
         env,
         "const result=call('vera_workspace_archive_import_note_read',"
-        + json.dumps({"client_id": client, "engagement_id": engagement})
+        + json.dumps(
+            {
+                "client_id": client,
+                "engagement_id": engagement,
+                "upload_ref": initial["begun"]["upload_ref"],
+            }
+        )
         + ");",
     )
-    assert result["isError"] is True
-    args = {
-        "client_id": client,
-        "engagement_id": engagement,
-        "scope_revision": initial["setup"]["scope_revision"],
-        "archive_ticket": initial["setup"]["archive_ticket"],
-        "confirmed": True,
-        "workflow_id": "adeguati-assetti",
-        "input_ids": [before[0]["input_id"]],
-        "upstream_artifacts": [],
-        "label": "Refused changed original",
-        "purpose": "Must not adopt tampered capture.",
-        "idempotency_key": "tampered-note",
-    }
+    assert result.get("isError") is True, result
     refused = rpc_program(
         env,
-        "const result=call('vera_workspace_archive_prepare'," + json.dumps(args) + ");",
+        "const selected="
+        + json.dumps({"client_id": client, "engagement_id": engagement})
+        + ";"
+        "const current=payload(call('vera_workspace_archive_import_setup',selected));"
+        "const result=call('vera_workspace_archive_import_finish',{...selected,"
+        "scope_revision:current.scope_revision,archive_ticket:current.archive_ticket,"
+        "confirmed:true,upload_ref:"
+        + json.dumps(initial["begun"]["upload_ref"])
+        + "});",
     )
     assert refused["isError"] is True
     assert _load_customer_ledger().list_inputs(folder, engagement) == before
@@ -430,7 +431,7 @@ def test_literal_draft_linked_file_or_owner_directory_refuses_scope_escape(
     env, folder, client, engagement = import_workspace
     rpc_program(env, program(client, engagement, STORE + "const result=stored;"))
     draft = next(
-        (folder / "Vera").glob("engagements/*/.native-imports/*/note-draft.json")
+        (folder / "vera").glob("engagements/*/.native-imports/*/note-draft.json")
     )
     if link == "hardlink":
         (tmp_path / "linked-note.json").hardlink_to(draft)

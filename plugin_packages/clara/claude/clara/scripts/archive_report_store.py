@@ -379,7 +379,9 @@ class Registry:
 
     def _stored_root(self, root: Path) -> str:
         base = self.path.parent.parent
-        if base.name == "Vera" and root.is_relative_to(base):
+        if base.name.casefold() in {"vera", "lucia", "clara"} and root.is_relative_to(
+            base
+        ):
             return root.relative_to(base).as_posix()
         return str(root)
 

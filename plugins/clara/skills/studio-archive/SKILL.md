@@ -7,13 +7,19 @@ description: Browse registered Studio Archive clients, create or resume an engag
 
 Use the shared Studio Archive client directory before resolving a client. Call
 `list_studio_archive_clients`; if unconfigured use `setup_studio_archive` and
-its operating-system folder chooser. Reuse the approved root across chats.
+its operating-system folder chooser. Reuse the common approved root across chats and across Vera, Lucia and Clara.
+The shared directory is available when creating work; Clara’s opening panel
+shows only projects containing Clara work. New Clara engagements are stored
+under the project’s `clara/` folder. Every project also has `vera/` and `lucia/`.
+The layout normalizer preserves existing document bytes and sealed records;
+readers resolve historical product-folder casing.
 An inaccessible archive or incomplete directory is not evidence that a client
 is absent. Do not create duplicate clients or guess a replacement root.
 
 Open `clara_archive_open` for the local directory panel when available. The
-panel lists clients and engagements and hands the selection to a chat; browsing
-never creates an engagement or runs an analysis. Missing panel support does not
+panel uses the same interface as Vera and Lucia: search the product’s archive,
+open saved documents and their exact revisions, and follow existing linked chats.
+It does not create new chats, engagements or analyses. Missing panel support does not
 block the equivalent chat tools.
 
 For an existing client, call `list_studio_client_engagements`. Reuse the selected
@@ -35,7 +41,8 @@ resume it. Existing unbound cases remain usable through their normal path.
 The packaged component lives at `../../modules/studio-archive` relative to this
 skill directory; source checkouts use `../../../studio-archive`. Read its
 `skills/studio-archive/SKILL.md` for maintained registration, import, search and
-source receipt operations. Preserve its literal Vera ledger directory. Clara's
+source receipt operations. Preserve shared client identity and each owning
+product’s engagement directory. Clara's
 case binding does not claim a specialist run, completed deliverable, professional
 approval, or a Vera privacy receipt. Do not call Vera-only workflow tools.
 
@@ -106,3 +113,7 @@ unavailable. Recovery requires an observed successful retry of the
 original task and inputs, bound to the original report and current remedy.
 Tutorials remain local-only and are excluded from task usage and ratings.
 <!-- MPARANZA_REPORTING_END -->
+
+The shared root and project directory do not share engagements. Show, search and
+resume only this product’s work, documents, results and chat links. Reuse a shared
+project when creating new work without adopting another product’s engagement.

@@ -30,7 +30,7 @@ def test_central_theme_edit_reaches_workspace_and_specialist_review(
 
     resources = sync_vera_ui_theme.expected_resources()
 
-    workspace = sync_vera_ui_theme.ROOT / "plugins/vera/ui/workspace.css"
+    workspace = sync_vera_ui_theme.ROOT / "plugins/studio-archive/assets/archive.css"
     vouching = (
         sync_vera_ui_theme.ROOT
         / "plugins/check-entries/assets/check-entries-review-widget.html"
@@ -71,7 +71,7 @@ def test_host_packaging_themes_product_ui_and_preserves_reports(
         b"<style>.queue { display: grid; }</style><script>window.review = 1;</script>"
     )
     entries = {
-        prefix + "ui/workspace.css": b"body { margin: 0; }",
+        prefix + "modules/studio-archive/assets/archive.css": b"body { margin: 0; }",
         prefix
         + "modules/check-entries/assets/check-entries-review-widget.html": widget,
         prefix + "vendor/modules/courseware/assets/course.css": b"body { margin: 0; }",
@@ -85,8 +85,10 @@ def test_host_packaging_themes_product_ui_and_preserves_reports(
     identity = (vera_ui_theme.VERA_UI / "identity.css").read_bytes()
     expected = theme.encode() + (identity if product == "vera" else b"")
     assert entries[prefix + "ui/theme.css"] == expected
-    assert (identity in entries[prefix + "ui/workspace.css"]) == (product == "vera")
-    assert theme.encode() in entries[prefix + "ui/workspace.css"]
+    assert identity in entries[prefix + "modules/studio-archive/assets/archive.css"]
+    assert (
+        theme.encode() in entries[prefix + "modules/studio-archive/assets/archive.css"]
+    )
     assert (
         theme.encode()
         in entries[prefix + "vendor/modules/courseware/assets/course.css"]
