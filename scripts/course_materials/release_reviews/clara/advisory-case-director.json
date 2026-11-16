@@ -139,7 +139,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "7cd2cd09374fb06b0c3ffd9b9a004735fd655d28f8731e24a819435b56da3350",
+  "course_sha256": "9dab130e133222999012db5bc8132ec7ea3df19646b90fde8732115aee1ec201",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e17fa58fad19bfed908c2046d308ab9373fa4a2f80bc97939fa74f832266e2f1",
@@ -835,5 +835,20 @@
     "previous_course_sha256": "f1c2c69e38561c741cb093e8eb50bb97bd0e6d7090caafbe0c9e570718cfa743",
     "current_course_sha256": "7cd2cd09374fb06b0c3ffd9b9a004735fd655d28f8731e24a819435b56da3350",
     "scope": "Repaired an inherited stale binding from PR #1001. The prior reviewed course is exactly fd8d38f51^; every authored field except sources equals the current course. Preserve historical editorial and learner judgments. Current teaching-native evidence from Actions run 43699180048 is checked separately by the unchanged release verifier."
+  },
+  "shared_archive_source_binding_review_20261116": {
+    "reviewer": "Codex /root - bounded source-binding comparison",
+    "reviewed_at": "2026-11-16T21:18:40.035408+00:00",
+    "baseline_commit": "fd8d38f51d690faeeb0328939d643d158dda50d1",
+    "previous_course_sha256": "7cd2cd09374fb06b0c3ffd9b9a004735fd655d28f8731e24a819435b56da3350",
+    "course_sha256": "9dab130e133222999012db5bc8132ec7ea3df19646b90fde8732115aee1ec201",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.html",
+      "vendor/modules/courseware/assets/chat.js"
+    ],
+    "comparison": "Compared the complete compiled course with the exact historical snapshot matching the previous reviewed digest. Every field except sources is identical, including all localized lessons, input identities, requests, checkpoints, expected results and timing.",
+    "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
+    "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
+    "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
   }
 }

@@ -392,7 +392,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "05e4eee089a8353c209000ccbd54c34fa87aa6c311563f58fe9ec0b37383a080",
+  "course_sha256": "1fa6ba90764939b7e8bdd9cc0f37905bdf036ee34d4459518c730cd0e0f7695f",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
@@ -1274,5 +1274,39 @@
     "new_visual_or_learner_acceptance": false,
     "previous_course_sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa",
     "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
+  },
+  "shared_archive_source_binding_review_20261116": {
+    "reviewer": "Codex /root - bounded source-binding comparison",
+    "reviewed_at": "2026-11-16T21:18:40.079222+00:00",
+    "baseline_commit": "46aa5bce047f54e32d5f811ac16d9764c20733a0",
+    "previous_course_sha256": "05e4eee089a8353c209000ccbd54c34fa87aa6c311563f58fe9ec0b37383a080",
+    "course_sha256": "1fa6ba90764939b7e8bdd9cc0f37905bdf036ee34d4459518c730cd0e0f7695f",
+    "changed_source_paths": [
+      "modules/studio-archive/assets/archive-host.js",
+      "modules/studio-archive/assets/archive-ui.js",
+      "modules/studio-archive/assets/archive.css",
+      "modules/studio-archive/assets/archive.html",
+      "modules/studio-archive/scripts/archive_core.py",
+      "modules/studio-archive/scripts/archive_panel.py",
+      "modules/studio-archive/scripts/archive_preferences.py",
+      "modules/studio-archive/scripts/client_ledger.py",
+      "modules/studio-archive/scripts/folder_intake.py",
+      "modules/studio-archive/scripts/readable_archive.py",
+      "modules/studio-archive/scripts/studio_archive.py",
+      "modules/studio-archive/scripts/work_folder.py",
+      "modules/studio-archive/skills/studio-archive/SKILL.md",
+      "modules/studio-archive/vendor/modules/archive_report_store.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/archive_paths.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
+      "skills/studio-archive/SKILL.md",
+      "vendor/modules/vera_assurance/archive_paths.py",
+      "vendor/modules/vera_assurance/contracts.py",
+      "vendor/modules/vera_assurance/recovery.py"
+    ],
+    "comparison": "Compared the complete compiled course with the exact historical snapshot matching the previous reviewed digest. Every field except sources is identical, including all localized lessons, input identities, requests, checkpoints, expected results and timing.",
+    "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
+    "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
+    "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
   }
 }
