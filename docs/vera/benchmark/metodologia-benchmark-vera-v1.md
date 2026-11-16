@@ -1,6 +1,6 @@
 # Metodo riutilizzabile per valutare le risposte di Vera
 
-Versione 1.0 — 16 novembre 2026
+Versione 1.1 — 16 novembre 2026
 Stato: metodo concordato con Fabio. Sostituisce, per queste valutazioni, la media delle percentuali dei casi e la distinzione essenziale/non essenziale.
 
 ## Scopo e ipotesi
@@ -25,13 +25,15 @@ Formula: punti soddisfatti / tutti i punti richiesti × 100.
 
 Un punto vale 1 se soddisfatto, 0 se omesso o non soddisfatto. Una formulazione generica non basta per una condizione specifica. Una frase contraddetta altrove nella risposta non basta per assegnare 1. Le citazioni non determinano questo indicatore.
 
-### 2. Contenuto con fonti adeguate
+### 2. Fonti sui punti soddisfatti
 
-Domanda: quanti degli stessi punti sono soddisfatti e hanno almeno una citazione usata da Vera che li sostiene?
+Domanda: dei punti soddisfatti da Vera, quanti hanno almeno una citazione pertinente verificata che li sostiene?
 
-Formula: punti soddisfatti con almeno una citazione adeguata verificata / tutti i punti richiesti × 100.
+Formula: punti soddisfatti con almeno una citazione adeguata verificata / punti soddisfatti nell’indicatore 1 × 100.
 
-Il denominatore è IDENTICO a quello dell'indicatore 1, anche per ciascun caso. Un punto vale 1 soltanto se passa il contenuto e almeno una fonte citata da Vera sostiene il punto specifico. Un collegamento presente ma casuale, generico o contrario non basta. Una fonte aggiunta soltanto dal valutatore non può migliorare questo risultato. Il numeratore non può superare quello dell'indicatore 1.
+Il denominatore è il NUMERATORE dell’indicatore 1, anche per ciascun caso. I punti omessi o non soddisfatti incidono sull’indicatore 1 e sono esclusi dal denominatore del secondo. Fra i punti soddisfatti, assegnare 1 se almeno una fonte citata da Vera sostiene il punto specifico, 0 se manca un supporto adeguato. Un collegamento casuale, generico o contrario non basta. Una fonte aggiunta soltanto dal valutatore non può migliorare questo risultato. Ogni punto soddisfatto conta una sola volta, anche con più citazioni.
+
+Esempio Eutekne: 84/101 punti soddisfatti (83%); 83/84 punti soddisfatti con fonte adeguata (99%). I 17 punti non soddisfatti non vengono penalizzati una seconda volta. Uno degli 84 soddisfatti resta senza supporto adeguato.
 
 ### 3. Citazioni che sostengono le affermazioni
 
@@ -69,7 +71,7 @@ Conservare tre registri collegati da identificativi stabili:
 - Copertura: stesso identificativo del punto, giudizio di contenuto con fonti e relazioni di citazione che forniscono supporto.
 - Citazioni: caso, identificativo della relazione, affermazione di Vera e posizione, fonte e URL, passaggio controllato, giudizio e motivazione.
 
-Verificare: stessi punti e denominatori per 1 e 2; ogni punto che passa 2 passa 1 e ha almeno una relazione adeguata verificata; tutti gli usi di citazioni nel perimetro sono censiti una volta; numeratori coerenti con i registri; nessun giudizio sospeso nei risultati definitivi; totali ricalcolabili; nessun decimale nei punteggi mostrati.
+Verificare: denominatore del 2 uguale al numeratore dell’1, per caso e nel totale; punti non soddisfatti esclusi dal 2; ogni punto che passa 2 passa 1 e ha almeno una relazione adeguata verificata; tutti gli usi di citazioni nel perimetro sono censiti una volta; numeratori coerenti con i registri; nessun giudizio sospeso nei risultati definitivi; totali ricalcolabili; nessun decimale nei punteggi mostrati.
 
 Descrivere in prosa eventuali errori materiali aggiuntivi e contraddizioni. Non creare un quarto indicatore né modificare silenziosamente il denominatore per assorbirli.
 
@@ -78,3 +80,7 @@ Descrivere in prosa eventuali errori materiali aggiuntivi e contraddizioni. Non 
 Aprire il rapporto con la spiegazione dei tre indicatori, il perimetro e l'assunzione sulle risposte di riferimento. Mostrare risultati per caso e totali, sempre nell'ordine 1–2–3, accompagnati dai conteggi. Distinguere i diversi insiemi di casi: 393 relazioni nel benchmark dei dieci casi Eutekne e 97 nel benchmark degli altri dodici pareri sono conteggi di due raccolte diverse, non costanti del metodo.
 
 Conservare gli originali e le precedenti revisioni. Per una nuova esecuzione verificare dati e registri, senza forzare i vecchi punteggi. Documentare ogni modifica dei giudizi e ogni revisione del metodo. Non introdurre AllPass o altre misure come ulteriori indicatori.
+
+## Cronologia
+
+Versione 1.1: il denominatore del secondo indicatore passa da tutti i punti richiesti ai soli punti soddisfatti. Non cambiano i giudizi individuali, il primo o il terzo indicatore. La versione 1.0 resta nella cronologia del repository e di Studio Archive.
