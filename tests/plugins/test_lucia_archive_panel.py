@@ -261,5 +261,5 @@ def test_shared_ui_opens_exact_revisions_and_existing_chats():
 def test_each_shared_asset_invalidates_cached_panel(panel, asset):
     before = call(panel, "resources/list")["resources"][0]["uri"]
     path = panel / "modules/studio-archive/assets" / asset
-    path.write_text(path.read_text() + "\n/* shared change */\n")
+    path.write_bytes(path.read_bytes() + b"\n/* shared change */\n")
     assert call(panel, "resources/list")["resources"][0]["uri"] != before
