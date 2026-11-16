@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "e1846d2df64c645910e572c2d7307b5fd4a4f3142b5671020b14ddc9ace4555d",
+      "sha256": "b556ce5517ef290710f307cf18397d22aaf21a876af0c000fbe5a8650bce664a",
       "languages": [
         "it",
         "en",
@@ -1056,7 +1056,7 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "f72d17d00ecc643067c27002c614b3c6e40f259328d8acc75509998dd2a06704"
+      "source_sha256": "aa8111a08208b288a43b314272f8e05ad86d7e54bd356ee52d48168caecfa492"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",

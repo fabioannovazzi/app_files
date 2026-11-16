@@ -47,7 +47,8 @@ provider to explain this boundary is appropriate and is not a naming violation.
 Use the shared Studio Archive client directory before resolving a client. Call
 `list_studio_archive_clients`; if unconfigured use `setup_studio_archive` and
 its operating-system folder chooser. Reuse the common approved root across chats and across Vera, Lucia and Clara.
-All three show the same registered clients. New Clara engagements are stored
+The shared directory is available when creating work; Clara’s opening panel
+shows only projects containing Clara work. New Clara engagements are stored
 under the project’s `clara/` folder. Every project also has `vera/` and `lucia/`.
 The layout normalizer preserves existing document bytes and sealed records;
 readers resolve historical product-folder casing.
@@ -78,7 +79,8 @@ resume it. Existing unbound cases remain usable through their normal path.
 The packaged component lives at `../../modules/studio-archive` relative to this
 skill directory; source checkouts use `../../../studio-archive`. Read its
 `skills/mparanza-studio-archive/SKILL.md` for maintained registration, import, search and
-source receipt operations. Preserve its literal Vera ledger directory. Clara's
+source receipt operations. Preserve shared client identity and each owning
+product’s engagement directory. Clara's
 case binding does not claim a specialist run, completed deliverable, professional
 approval, or a Vera privacy receipt. Do not call Vera-only workflow tools.
 

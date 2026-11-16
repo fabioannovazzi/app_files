@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-11-16/lucia-0254-native-acceptance/work/shared-studio-archive/plugins/vera",
   "version": "0.1.650",
-  "captured_at": "2026-11-16T17:13:29.280176+00:00",
-  "catalogue_fingerprint": "172bc1c98decd6cf1f3af0e7cc398e22506f1b00d78c2b15c5141828278e1484",
+  "captured_at": "2026-11-16T17:49:37.544820+00:00",
+  "catalogue_fingerprint": "23dc6f83c9730f60cf8f8b531e520b3efb01b6f7c838288b988bd511d769e726",
   "manifest_sha256": "cba4d45b2456032ccc39596888efc74624fcbf8c54058fbdd98022730ff61ab6",
   "entries": [
     {
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "7dc3765ffcace024c52c29c0fb0cb24fc0609cea80548641585cf4d554fc9e33"
+      "sha256": "1baeed4c8cd026b3d785d54e7da25559687ea83cb4e7053e91e46135644fba50"
     },
     {
       "function_id": "studio-document-format",

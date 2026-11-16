@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "172bc1c98decd6cf1f3af0e7cc398e22506f1b00d78c2b15c5141828278e1484",
+  "catalogue_fingerprint": "23dc6f83c9730f60cf8f8b531e520b3efb01b6f7c838288b988bd511d769e726",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2820,6 +2820,14 @@
     "version": "0.1.650",
     "previous_catalogue_fingerprint": "23009280636b7c195fa17290097893780b505be313aa5c60dd60b7793e9de299",
     "scope": "Shared root and client directory; engagements, documents, search and saved links stay within the selected product. No jurisdiction judgment changed.",
+    "changed_entrypoints": [
+      "studio-archive"
+    ]
+  },
+  "archive_guidance_consistency_20261116": {
+    "version": "0.1.650",
+    "previous_catalogue_fingerprint": "172bc1c98decd6cf1f3af0e7cc398e22506f1b00d78c2b15c5141828278e1484",
+    "scope": "Replace obsolete separate-root wording with the approved common root and product-specific visibility. No jurisdiction judgment changed.",
     "changed_entrypoints": [
       "studio-archive"
     ]

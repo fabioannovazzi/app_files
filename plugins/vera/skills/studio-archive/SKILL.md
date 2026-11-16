@@ -51,9 +51,10 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
-Vera and Lucia retain separate saved archive locations. Reuse Vera's selected
-root for Vera work; never substitute Lucia's default. A temporary test selection
-must use `make_studio_default: false` and preserve both products' defaults.
+Vera, Lucia and Clara reuse one approved studio root and project directory.
+Vera shows only projects with work in their `vera/` area and opens only Vera
+engagements. A temporary test selection must use `make_studio_default: false`
+and preserve the shared approved default.
 
 For work starting from supplied files, first follow "Check supplied files before
 starting client work" in `../vera/SKILL.md`. Call `check_studio_import_sources`
