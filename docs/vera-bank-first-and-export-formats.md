@@ -3,18 +3,26 @@
 The normal `run-all` reconciliation route and raw open-item preparation use one
 source-bound bank-first orchestrator. The optional purpose is `bank_open_items`,
 `bookkeeping_check` or `audit_reconciliation`; it changes the assignment context,
-not the process or its accounting controls.
+and the accounting questions in scope, with common evidence-search and accounting controls.
 
-The existing strict matcher files remain intermediate candidate evidence for
-compatibility and replay. The final route reads the **whole normalized bank and
-journal population**, not only their unmatched residual, and never restores an
-old zero-difference group as an established bank fact. Before reserving any cash
-evidence, the common orchestrator applies its explicit versioned admission rule:
-nonempty source reference and party, known currency/unit/entity, signed direction,
-exact cents, admitted complete group/date scope, no duplicate source signatures.
-Amount/date candidates remain context and do not consume evidence. Open-item
-strong admissions additionally reuse the established source-replayed exact-match
-eligibility checks and the existing domain allocation validator.
+The final journal-bank route reads the normalized population and preserves the
+local matcher results after source replay validates their provenance. Connected
+reference groups stay whole, and actual monetary differences remain visible.
+An exact shared name or code is not an additional gate on an ordinary local
+cash match. For `bank_open_items`, completed local rows stay outside the model
+search index; their accounting scope is explicitly cash reconciliation only.
+For `bookkeeping_check` and `audit_reconciliation`, the established cash link
+remains while accounting treatment is reviewed. Open-item settlement keeps its
+separate exact-match eligibility and domain allocation controls; a journal-bank
+match never grants invoice-closure authority.
+
+Every focused small residual candidate set is supplied to the model, with
+coverage metadata for larger sets. Iterative search remains available beyond
+the local date/amount window. A later stage may attach a missing ledger link;
+Sol may join complete previously unlinked bank groups, carrying forward their
+bank facts. Existing reserved links and allocations remain protected. Saved
+runs replay their original admission contract; opening them does not adopt
+new matches or rerun models.
 
 Every other primary case goes to the actual native low-cost worker. Every doubt
 left by it, including missing documents, goes to the actual stronger native worker.

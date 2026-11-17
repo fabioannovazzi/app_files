@@ -601,6 +601,11 @@ def complete_grouped_review(
         ):
             raise ValueError("Source bindings changed during native bank review")
 
+    local_matches = [
+        {key: row[key] for key in ("bank_transaction_id", "journal_transaction_id")}
+        for row in _csv(reconciliation / "reconciliation_matches.csv")
+    ]
+    source_check()
     canonical = bank_first.run_bank_first(
         bank,
         journal,
@@ -612,6 +617,7 @@ def complete_grouped_review(
         source_check=source_check,
         purpose=purpose,
         resume_checkpoint=resume_checkpoint,
+        local_matches=local_matches,
     )
     if canonical["errors"]:
         _write(
@@ -630,6 +636,7 @@ def complete_grouped_review(
                 error["reason"] or "unknown error" for error in canonical["errors"]
             )
         )
+    source_check()
     usages = [a.get("usage") for a in canonical["attempts"]]
     tokens = (
         {
@@ -677,8 +684,9 @@ def complete_grouped_review(
                     Decimal(0),
                 )
             )
-        item["difference"] = str(
-            Decimal(item["bank_sum"]) - Decimal(item["journal_sum"])
+        item["difference"] = group.get(
+            "difference",
+            str(Decimal(item["bank_sum"]) - Decimal(item["journal_sum"])),
         )
         relations.append(item)
     used_bank = {i for g in relations for i in g["bank_ids"]}

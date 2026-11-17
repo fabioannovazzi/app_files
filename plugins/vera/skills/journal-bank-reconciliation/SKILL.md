@@ -64,13 +64,18 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
-The normal final route is bank-first: versioned strong explicit source identities
-resolve locally; all probable and unresolved primary cases go to the actual
-native Luna stage, and ALL remaining bank/accounting doubts go to the actual
-stronger Sol stage before specific human questions. On other hosts retain the
-actual native model identity. Keep bank_resolution separate from
-accounting_resolution. Carry established bank facts unchanged into accounting
-analysis; generic RiBa/effects totals still need identified parties/titles.
+The normal final route preserves source-replayed local journal-bank matches,
+then investigates residual relationships in small groups with iterative evidence
+search and escalation to the stronger native model. Shared codes or exact names
+are not additional universal conditions on an established local match. For
+bank_open_items, completed local cash links stay outside model searches; their
+accounting scope is cash reconciliation only. Explicit bookkeeping_check and
+audit_reconciliation still review accounting treatment while preserving those
+cash links. Models may complete missing links and combine previously unlinked
+groups without reallocating reserved evidence. ALL remaining bank/accounting
+doubts pass to the stronger stage before human questions. Retain actual native
+model identities; keep bank_resolution separate from accounting_resolution.
+Generic RiBa/effects totals still require evidence of the parties/titles.
 Opening saved work never reruns models. Use the same process for reconciliation,
 bookkeeping checks and auditor control, with the appropriate --purpose.
 

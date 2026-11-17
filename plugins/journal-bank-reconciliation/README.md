@@ -176,7 +176,8 @@ If MCP rendering is unavailable, Codex should use the JSON payloads plus
 `review_notes.md`, CSVs, and workbook as the fallback review surface.
 
 
-The normal final route now uses the shared bank-first orchestrator; see
-`../../docs/vera-bank-first-and-export-formats.md`. Strict matcher files remain
-intermediate candidate evidence, not automatic semantic clearance. Existing
-row-only prepare/validate tools are retained diagnostics, not a final route.
+The normal final route preserves receipt-replayed local cash matches and uses
+the shared grouped evidence-search/escalation controller for residual work; see
+`../../docs/vera-bank-first-and-export-formats.md`. Local cash matching does not
+certify accounting treatment or close invoices. Explicit accounting checks keep
+their semantic review. Existing row-only prepare/validate tools remain diagnostics.
