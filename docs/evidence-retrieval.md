@@ -7,7 +7,11 @@ The shared bookkeeping/audit purposes use the same controller. Replay dispatches
 by the retained retrieval protocol. Legacy receipt replay remains available;
 legacy active runs are not silently migrated or recalculated.
 
-The qualified population stays in a per-run SQLite B-tree/FTS index. Selection is
+The qualified residual population stays in a per-run SQLite B-tree/FTS index.
+Journal-bank cash-only reconciliation excludes completed local matcher groups
+from this index; explicit accounting checks retain them for treatment review.
+Known small candidate sets for every focused residual are seeded into context.
+Selection is
 mechanical; interpretation belongs to the model. There is no universal date or
 amount gate. Documented aliases require a canonical value, alias and source
 reference. Group/reference/settlement searches provide paginated members and

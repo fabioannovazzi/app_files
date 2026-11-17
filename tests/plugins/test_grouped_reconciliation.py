@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import sys
+from decimal import Decimal
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -574,14 +575,13 @@ def test_final_workbook_preserves_strict_split_reference_group_without_reusing_r
 
     result = grouped.complete_grouped_review(reconciliation, output)
 
-    assert len(calls) == 1
-    assert calls[0]["focus"][0]["question_scope"] == "accounting"
+    assert calls == []
     assert result["summary"]["strict_match_count"] == 1
     retained = json.loads(result["result"].read_text())
     assert len(retained["relations"]) == 1
     assert retained["relations"][0]["journal_ids"] == ["j1", "j2"]
-    assert retained["relations"][0]["difference"] == "0"
-    assert result["model_tokens"]["total_tokens"] == 14
+    assert Decimal(retained["relations"][0]["difference"]) == 0
+    assert result["model_tokens"]["total_tokens"] == 0
 
 
 def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evidence(
@@ -889,13 +889,10 @@ def test_source_change_after_a_returned_call_stops_without_retry_and_keeps_its_t
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
     semantic = sys.modules["semantic_review"]
     original = semantic._validated_source_replay
-    replay_count = 0
 
     def replay(*args, **kwargs):
-        nonlocal replay_count
-        replay_count += 1
         result = original(*args, **kwargs)
-        if replay_count > 2:
+        if calls:
             result["source_binding"] = {"hash": "changed"}
         return result
 

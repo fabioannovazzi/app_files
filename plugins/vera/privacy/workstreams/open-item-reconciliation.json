@@ -54,7 +54,8 @@
     "plugins/studio-archive/assets/archive.html",
     "plugins/vera/ui/workspace.js",
     "plugins/journal-bank-reconciliation/scripts/evidence_retrieval.py",
-    "plugins/journal-bank-reconciliation/scripts/retrieval_review.py"
+    "plugins/journal-bank-reconciliation/scripts/retrieval_review.py",
+    "plugins/journal-bank-reconciliation/scripts/local_cash_links.py"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -194,7 +195,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6638d4337282743f866ac1c737ebd762a9062965d33ef899c0a8f423f53ea010"
+    "source_fingerprint": "151f3b048bde1bcee6f03f069230cf29b683a0f03b4d0c12c101d5522dcb312f"
   },
   "role": "workflow",
   "runtime_profiles": [

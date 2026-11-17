@@ -300,8 +300,9 @@ and exports the final four-sheet client workbook through `grouped_review.py` and
 `grouped_workbook.py`. The low-level exact matcher workbook is intermediate.
 Normal completion never substitutes the row-only graph described below.
 
-The grouped packet retains the remaining bank population, all remaining journal
-counterparts and targeted original posting/continuation text. Strict per-row
+Verified local cash matches are retained before semantic review. Each grouped
+packet contains a bounded subset of residual bank and journal records with
+targeted original posting/continuation text. Strict per-row
 amount/date eligibility is not applied as a semantic relevance filter. The
 model proposes explicit sets of bank and journal IDs; code checks literal source
 citations, signed group totals, perimeter, coverage and non-reuse. Up to 25 focus
@@ -585,7 +586,9 @@ write-off or a new accounting entry: keep actual differences visible for review.
 
 ### Indexed evidence and bounded context
 
-The complete qualified population stays local in a source-bound SQLite/FTS index.
+For cash reconciliation, completed local matches are excluded from the residual
+SQLite/FTS index and model context. Bookkeeping and audit purposes retain those
+cash links while making their accounting evidence available for treatment review.
 Each worker receives focus records, a small candidate page, relevant prior
 conclusions and explicit query coverage. Both the first stage and Sol can request
 read-only identifier, text, documented-alias, amount/date and linked-group searches.

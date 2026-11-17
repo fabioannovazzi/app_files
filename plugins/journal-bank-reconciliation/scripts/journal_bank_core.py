@@ -298,6 +298,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/retrieval_review.py",
     ),
     (
+        "implementation.plugin.scripts.local_cash_links_py",
+        "implementation",
+        "scripts/local_cash_links.py",
+    ),
+    (
         "implementation.plugin.scripts.bank_first_policy_json",
         "implementation",
         "scripts/bank_first_policy.json",

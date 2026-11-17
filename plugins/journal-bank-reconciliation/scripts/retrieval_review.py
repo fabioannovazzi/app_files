@@ -36,8 +36,9 @@ REPLAY_IMPLEMENTATIONS = (
     FULL_HISTORY_PREDECESSOR,
     "94fb8ac0be8d6908415dd599a49bea49e364e7119767ad617e6d59bc8c9886b0",
     "543a42bfd1a09fd406c1a6dec6bc226e6395c541aac152bece0b6658925ae72c",
+    "4d7a71e0ca88b8e81d544d9481991134941898c1f4df16b4148ec1d3ea715d3a",
 )
-PACKET_PROJECTION = 3
+PACKET_PROJECTION = bf.LOCAL_FIRST_PROJECTION
 RETRY_FOCUS_GROUPS = 5
 
 
@@ -127,7 +128,7 @@ def _packet(
     *,
     projection=PACKET_PROJECTION,
 ):
-    if projection not in {1, 2, PACKET_PROJECTION}:
+    if projection not in {1, 2, 3, PACKET_PROJECTION}:
         raise ValueError("Unsupported retained packet projection")
     selected = {
         s: set(session["anchors"][s]) | set(session["retain"][s])
@@ -137,6 +138,25 @@ def _packet(
         for ref in page["records"]:
             selected[ref["side"]].add(ref["transaction_id"])
     focus_ids = {i for f in focus for i in f["bank_ids"]}
+    candidates = []
+    if projection >= bf.LOCAL_FIRST_PROJECTION and admitted.get("local_first"):
+        for candidate in admitted["probable_candidates"]:
+            if not focus_ids.intersection(candidate["bank_ids"]):
+                continue
+            # Seed every small candidate set, not just the first four bank rows.
+            # Larger sets retain their coverage count and remain searchable.
+            total = candidate.get("candidate_total", len(candidate["journal_ids"]))
+            if total <= 4:
+                selected["journal"].update(candidate["journal_ids"])
+            visible = [i for i in candidate["journal_ids"] if i in selected["journal"]]
+            candidates.append(
+                {
+                    **candidate,
+                    "journal_ids": visible,
+                    "candidate_total": total,
+                    "preview_complete": len(visible) == total,
+                }
+            )
     # Keep the latest complete prior group for carry-forward, not recursive history.
     relevant = [g for g in groups if selected["bank"].intersection(g["bank_ids"])]
     for g in relevant:
@@ -160,7 +180,11 @@ def _packet(
         eligible |= {
             i
             for g in relevant
-            if g.get("stage") == "luna" and g["bank_resolution"]["status"] != "resolved"
+            if g.get("stage") == "luna"
+            and (
+                g["bank_resolution"]["status"] != "resolved"
+                or (admitted.get("local_first") and not g["journal_ids"])
+            )
             for i in g["bank_ids"]
         }
     owners = {
@@ -188,8 +212,8 @@ def _packet(
         "stage": stage,
         "purpose": purpose,
         "source_binding": dict(binding),
-        "policy": bf.policy(),
-        "policy_sha256": bf.digest(bf.policy()),
+        "policy": admitted["policy"],
+        "policy_sha256": admitted["policy_sha256"],
         "relationship_policy": rel,
         "admission_sha256": admitted["content_sha256"],
         "focus": focus,
@@ -198,7 +222,7 @@ def _packet(
         "journal_records": rows["journal"],
         "prior_conclusions": prior,
         "reserved_journal_owners": reserved,
-        "probable_candidates": [],
+        "probable_candidates": candidates,
         "invoice_closure_authorized": bool(
             relationship.get("open_item_allocation_authorized")
         ),
@@ -257,6 +281,8 @@ def _packet(
     }
     if projection >= 2:
         content["retrieval"]["packet_projection"] = projection
+    if projection >= bf.LOCAL_FIRST_PROJECTION and admitted.get("local_first"):
+        content["local_first"] = True
     return {**content, "packet_sha256": bf.digest(content)}
 
 
@@ -465,7 +491,13 @@ def _reconstruct(
             raise ValueError("Retained stage skipped first-stage work")
         if session is None:
             expected_focus = bf._next_focus(
-                list(index.rows["bank"].values()), groups, stage, completed[stage]
+                list(index.rows["bank"].values()),
+                groups,
+                stage,
+                completed[stage],
+                complete_cash_links=bool(
+                    packet.get("local_first") and admitted.get("cash_links_required")
+                ),
             )
             if reduced_sol_focus and stage == "sol":
                 expected_focus = expected_focus[:RETRY_FOCUS_GROUPS]
@@ -587,6 +619,7 @@ def _implementation_digest():
                 "retrieval_review.py",
                 "evidence_retrieval.py",
                 "bank_first_policy.json",
+                "local_cash_links.py",
             )
         }
     )
@@ -609,6 +642,7 @@ def _run_review(
     source_records=None,
     retrieval_budget=None,
     resume_checkpoint=False,
+    local_matches=None,
 ):
     """Persist every evidence exchange; resume completed work without model replay."""
     import semantic_review as semantic
@@ -622,7 +656,19 @@ def _run_review(
     if purpose not in bf.policy()["purposes"]:
         raise ValueError("Unsupported shared reconciliation purpose")
     budget = _settings(retrieval_budget)
-    admitted = bf.admission(bank, journal, relationship)
+    # Resume the original admission contract; never reinterpret saved customer
+    # decisions just because the producer now supplies local matcher results.
+    state_path = Path(output) / "bank_first_state.json"
+    saved_state = (
+        bf._read(state_path)
+        if state_path.is_file() and not state_path.is_symlink()
+        else None
+    )
+    if saved_state is not None:
+        local_matches = saved_state.get("local_matches")
+    admitted = bf.admission(
+        bank, journal, relationship, local_matches=local_matches, purpose=purpose
+    )
     binding_inputs = {
         "source": source_binding,
         "admission": admitted,
@@ -640,8 +686,11 @@ def _run_review(
         ): implementation
         for implementation in REPLAY_IMPLEMENTATIONS
     }
+    from local_cash_links import review_population
+
+    review_bank, review_journal = review_population(bank, journal, admitted)
     index = EvidenceIndex(
-        bank, journal, source_binding, relationship, budget["page_rows"]
+        review_bank, review_journal, source_binding, relationship, budget["page_rows"]
     )
     output = Path(output)
     output.mkdir(parents=True, exist_ok=True)
@@ -671,6 +720,7 @@ def _run_review(
             "groups": [],
             "stage_completed": {"luna": [], "sol": []},
             "errors": [],
+            "local_matches": local_matches,
         }
     )
     migrating = state["binding_sha256"] != binding
@@ -735,7 +785,13 @@ def _run_review(
     for stage in ("luna", "sol"):
         if stopped:
             break
-        while focus := bf._next_focus(bank, groups, stage, completed[stage]):
+        while focus := bf._next_focus(
+            review_bank,
+            groups,
+            stage,
+            completed[stage],
+            complete_cash_links=bool(admitted.get("cash_links_required")),
+        ):
             if reduced_sol_focus and stage == "sol":
                 focus = focus[:RETRY_FOCUS_GROUPS]
             if pending_session is not None:
@@ -953,8 +1009,9 @@ def _run_review(
         "source_binding": dict(source_binding),
         "binding_sha256": binding,
         "implementation_transitions": state.get("implementation_transitions", []),
-        "policy": bf.policy(),
+        "policy": admitted["policy"],
         "admission_sha256": admitted["content_sha256"],
+        "local_matches": local_matches,
         "groups": groups,
         "attempts": state["attempts"],
         "errors": state["errors"],
@@ -1007,11 +1064,24 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
             "Retrieval implementation changed; use original execution source for replay"
         )
     budget = _settings(result["retrieval_budget"])
-    admitted = bf.admission(bank, journal, relationship)
+    admitted = bf.admission(
+        bank,
+        journal,
+        relationship,
+        local_matches=result.get("local_matches"),
+        purpose=result.get("purpose", "bank_open_items"),
+    )
     if admitted["content_sha256"] != result["admission_sha256"]:
         raise ValueError("Source population changed")
+    from local_cash_links import review_population
+
+    review_bank, review_journal = review_population(bank, journal, admitted)
     index = EvidenceIndex(
-        bank, journal, result["source_binding"], relationship, budget["page_rows"]
+        review_bank,
+        review_journal,
+        result["source_binding"],
+        relationship,
+        budget["page_rows"],
     )
     try:
         with tempfile.TemporaryDirectory(prefix="retrieval-replay-") as temp:

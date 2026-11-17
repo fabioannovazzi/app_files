@@ -1281,7 +1281,8 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    timeout-minutes: 10
+    # Windows setup can consume four minutes before the 600+ case suite starts.
+    timeout-minutes: ${{ matrix.os == 'windows-latest' && 20 || 10 }}
     steps:
       - uses: actions/checkout@v4
       - name: Download product archives built from this commit
