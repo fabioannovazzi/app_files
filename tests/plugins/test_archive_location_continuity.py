@@ -376,7 +376,9 @@ def test_bank_preparation_calculation_review_delivery_and_reopen(
     reviewed = semantic.run_semantic_resolution_pipeline(
         reconciliation, output / "semantic-review", client_engagement=context
     )
-    assert model_calls
+    # This exact source-replayed cash match must finish locally and still
+    # deliver/reopen the same complete Archive work product.
+    assert model_calls == []
     assert reviewed["reviewed_bank_count"] == 1
     assert reviewed["exhaustive"] is True
     result = json.loads(reviewed["result"].read_text(encoding="utf-8"))
@@ -384,6 +386,7 @@ def test_bank_preparation_calculation_review_delivery_and_reopen(
     assert result["summary"]["journal_net"] == "100"
     assert result["summary"]["bank_minus_journal"] == "0"
     assert result["summary"]["concordant_bank_count"] == 1
+    assert result["summary"]["strict_match_count"] == 1
     assert result["entries_posted"] is False
     workbook = reviewed["workbook"]
     assert load_workbook(workbook).sheetnames == [

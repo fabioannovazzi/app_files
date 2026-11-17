@@ -1,9 +1,9 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-11-16/lucia-0254-native-acceptance/work/shared-studio-archive/plugins/vera",
+  "root": "/Users/fabio/.codex/worktrees/reconciliation-local-first/app_files/plugins/vera",
   "version": "0.1.652",
-  "captured_at": "2026-11-17T08:37:41.871810+00:00",
-  "catalogue_fingerprint": "f6c1015d2a6bb378f41918258fca602dbda40834d81038f0dfd4bfb24057eecd",
+  "captured_at": "2026-11-17T15:40:24.387864+00:00",
+  "catalogue_fingerprint": "8be799bccdd53338b987e7183741859f9bba5fb8f67d9c399d871cfc46ae3f3f",
   "manifest_sha256": "8ef445720a204d846df97c2aa75a25598e61a756dd544814f6466ae2fb5ccdba",
   "entries": [
     {
@@ -144,7 +144,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "669daeff1df919c22e49fa09c5ed3e9c658ef6ee017c59900920e6a2f3e6e574"
+      "sha256": "6845b90ca5e7523f3b7e573a3178b92789c4c34694b06579b2c30582a4426e64"
     },
     {
       "function_id": "journal-sampling",

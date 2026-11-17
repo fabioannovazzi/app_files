@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "f6c1015d2a6bb378f41918258fca602dbda40834d81038f0dfd4bfb24057eecd",
+  "catalogue_fingerprint": "8be799bccdd53338b987e7183741859f9bba5fb8f67d9c399d871cfc46ae3f3f",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2835,5 +2835,13 @@
   "shared_archive_ui_release_binding_20261116": {
     "previous_catalogue_fingerprint": "23dc6f83c9730f60cf8f8b531e520b3efb01b6f7c838288b988bd511d769e726",
     "scope": "Shared Archive presentation, scoped search and exact saved-document navigation. No jurisdiction-specific behavior or professional acceptance claim changes."
+  },
+  "local_first_reconciliation_binding_20261117": {
+    "date": "2026-11-17",
+    "previous_catalogue_fingerprint": "f6c1015d2a6bb378f41918258fca602dbda40834d81038f0dfd4bfb24057eecd",
+    "reviewed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "scope": "Restore source-replayed local cash links before bounded residual semantic review and stronger-model escalation. Accounting-treatment review remains purpose-dependent. No change to Geneva currency, input qualification or jurisdiction dispositions; no new Geneva acceptance claimed."
   }
 }
