@@ -7,6 +7,7 @@ treats a payment receipt as proof of a complete statement population.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
@@ -16,6 +17,127 @@ from .adapter import _bands, _run_adapter, source_inventory
 from .rules import RuleLayout, money_candidate, signed_amount
 
 __all__ = ["read_bank_pdf"]
+
+
+def _non_movement_pages(
+    inventory: dict[str, Any],
+    layout: dict[str, Any],
+    bands: dict[str, tuple[float, float]],
+    rules: RuleLayout,
+    reject: Callable[[int, int, str], None],
+    review_signals: list[dict[str, Any]],
+) -> dict[int, dict[str, Any]]:
+    """Account for reviewed summary/info pages without losing numeric coverage."""
+    decisions = layout.get("non_movement_pages", [])
+    if not isinstance(decisions, list):
+        raise ValueError("non_movement_pages must be a reviewed list")
+    pages = {p["page"]: p for p in inventory["pages"]}
+    excluded: dict[int, dict[str, Any]] = {}
+    seen: set[int] = set()
+    monetary = {"amount", "debit", "credit", "balance"} & bands.keys()
+    for decision in decisions:
+        page = 0
+        try:
+            if not isinstance(decision, dict) or set(decision) != {
+                "page",
+                "classification",
+                "heading",
+                "numeric_refs",
+            }:
+                raise ValueError("invalid_non_movement_page_decision")
+            page = decision["page"]
+            if type(page) is not int or page not in pages or page in seen:
+                raise ValueError("invalid_or_duplicate_non_movement_page")
+            seen.add(page)
+            if decision["classification"] not in {
+                "bank_overview",
+                "customer_information",
+            }:
+                raise ValueError("invalid_non_movement_page_classification")
+            words = pages[page]["words"]
+            lookup = {w["id"]: w for w in words}
+            heading = decision["heading"]
+            if not isinstance(heading, dict) or set(heading) != {"refs", "text"}:
+                raise ValueError("invalid_non_movement_page_heading")
+            ids = heading["refs"]
+            if (
+                not isinstance(ids, list)
+                or not ids
+                or any(not isinstance(ref, str) for ref in ids)
+                or len(set(ids)) != len(ids)
+                or any(ref not in lookup for ref in ids)
+            ):
+                raise ValueError("invalid_non_movement_page_heading_refs")
+            tokens = [lookup[ref] for ref in ids]
+            if (
+                tokens != sorted(tokens, key=lambda w: (w["row"], float(w["x0"])))
+                or len({w["row"] for w in tokens}) != 1
+                or any(money_candidate(w["text"]) for w in tokens)
+                or not isinstance(heading["text"], str)
+                or not any(c.isalpha() for c in heading["text"])
+                or " ".join(w["text"] for w in tokens) != heading["text"]
+            ):
+                raise ValueError("non_movement_page_heading_mismatch")
+
+            def inside(w: dict[str, Any], name: str) -> bool:
+                return (
+                    bands[name][0] <= float(w["x0"])
+                    and float(w["x1"]) <= bands[name][1]
+                )
+
+            expected = {
+                w["id"]
+                for w in words
+                if rules.body[0] <= float(w["top"]) < rules.body[1]
+                and (
+                    money_candidate(w["text"])
+                    or any(inside(w, name) for name in monetary)
+                    and any(c.isdigit() for c in w["text"])
+                )
+            }
+            refs = decision["numeric_refs"]
+            if (
+                not isinstance(refs, list)
+                or any(not isinstance(ref, str) for ref in refs)
+                or len(set(refs)) != len(refs)
+                or set(refs) != expected
+            ):
+                raise ValueError("non_movement_page_numeric_coverage_mismatch")
+            dated = False
+            for w in words:
+                if inside(w, "date"):
+                    try:
+                        datetime.strptime(
+                            w["text"], layout.get("date_format", "%d/%m/%Y")
+                        )
+                        dated = True
+                    except ValueError:
+                        pass
+            if dated and any(
+                money_candidate(w["text"]) and any(inside(w, name) for name in monetary)
+                for w in words
+            ):
+                # Dates plus amounts can also be legitimate summary balances.
+                # Surface this evidence for semantic review; do not classify it.
+                review_signals.append(
+                    {
+                        "source_page": page,
+                        "reason": "non_movement_page_has_dates_and_amounts",
+                        "classification": decision["classification"],
+                    }
+                )
+            excluded[page] = decision
+        except (ValueError, KeyError, TypeError) as exc:
+            reject(
+                page if type(page) is int else 0,
+                0,
+                (
+                    str(exc)
+                    if isinstance(exc, ValueError)
+                    else "invalid_non_movement_page_decision"
+                ),
+            )
+    return excluded
 
 
 def read_bank_pdf(
@@ -34,6 +156,9 @@ def read_bank_pdf(
     order = layout.get("transaction_order", "ascending")
     if order not in {"ascending", "descending"}:
         raise ValueError("Review ascending or descending statement order")
+    strategy = layout.get("movement_strategy", "amount_rows")
+    if strategy not in {"amount_rows", "source_blocks"}:
+        raise ValueError("Unknown bank movement strategy")
     bands = _bands(layout, source_role="bank")
     rules = RuleLayout(layout)
     inventory = source_inventory(path, layout, source_role="bank")
@@ -49,6 +174,11 @@ def read_bank_pdf(
 
     def position(word: dict[str, Any]) -> tuple[int, int]:
         return word["page"], word["row"]
+
+    review_signals: list[dict[str, Any]] = []
+    non_movement_pages = _non_movement_pages(
+        inventory, layout, bands, rules, reject, review_signals
+    )
 
     def refs(value: Any, *, optional: bool = False) -> list[dict[str, Any]]:
         if optional and value == []:
@@ -112,6 +242,8 @@ def read_bank_pdf(
             }:
                 raise ValueError("invalid_bank_control")
             amount_word = refs([control["amount"]])[0]
+            if amount_word["page"] in non_movement_pages:
+                raise ValueError("bank_control_on_non_movement_page")
             labels = refs(control["label"])
             if (
                 any(position(w) != position(amount_word) for w in labels)
@@ -138,10 +270,11 @@ def read_bank_pdf(
         reject(0, 0, "incomplete_bank_total_controls")
 
     records = []
+    spans: dict[str, tuple[tuple[int, int], tuple[int, int]]] = {}
     for candidate in proposal["rows"]:
         page = row = 0
         try:
-            if not isinstance(candidate, dict) or set(candidate) != {
+            expected_keys = {
                 "amount",
                 "column",
                 "date",
@@ -149,16 +282,36 @@ def read_bank_pdf(
                 "description",
                 "reference",
                 "balance",
-            }:
+            }
+            if strategy == "source_blocks":
+                expected_keys.add("movement_span")
+            if not isinstance(candidate, dict) or set(candidate) != expected_keys:
                 raise ValueError("invalid_bank_movement_proposal")
             amount_word = refs([candidate["amount"]])[0]
             page, row = position(amount_word)
+            if page in non_movement_pages:
+                raise ValueError("bank_movement_on_non_movement_page")
+            span = ((page, row), (page, row))
+            if strategy == "source_blocks":
+                endpoints = refs(candidate["movement_span"])
+                if len(endpoints) != 2:
+                    raise ValueError("invalid_bank_movement_span")
+                span = position(endpoints[0]), position(endpoints[1])
+                if not span[0] <= (page, row) <= span[1]:
+                    raise ValueError("bank_amount_outside_movement_span")
+                if any(span[0][0] <= p <= span[1][0] for p in non_movement_pages):
+                    raise ValueError("bank_span_on_non_movement_page")
+                if any(span[0] <= position(c[1]) <= span[1] for c in controls.values()):
+                    raise ValueError("bank_span_crosses_control")
             column = candidate["column"]
             if column not in {"amount", "debit", "credit"}:
                 raise ValueError("invalid_bank_movement_column")
             value = money(amount_word, column)
             dates = refs(candidate["date"])
-            if any(not within(w, "date") or position(w) != (page, row) for w in dates):
+            if any(
+                not within(w, "date") or not span[0] <= position(w) <= span[1]
+                for w in dates
+            ):
                 raise ValueError("bank_date_outside_movement")
             date_format = layout.get("date_format", "%d/%m/%Y")
             try:
@@ -171,7 +324,7 @@ def read_bank_pdf(
             value_date = ""
             if value_dates:
                 if any(
-                    not within(w, "value_date") or position(w) != (page, row)
+                    not within(w, "value_date") or not span[0] <= position(w) <= span[1]
                     for w in value_dates
                 ):
                     raise ValueError("bank_value_date_outside_movement")
@@ -200,7 +353,7 @@ def read_bank_pdf(
             )
             balance = None
             if balance_word is not None:
-                if position(balance_word) != (page, row):
+                if not span[0] <= position(balance_word) <= span[1]:
                     raise ValueError("bank_balance_outside_movement")
                 balance = money(balance_word, "balance")
             # Bank credits increase the balance; debits decrease it. Signed
@@ -225,6 +378,8 @@ def read_bank_pdf(
                 "debit": str(-amount if amount < 0 else Decimal(0)),
                 "credit": str(amount if amount > 0 else Decimal(0)),
             }
+            spans[amount_word["id"]] = span
+            record["source_amount_ref"] = amount_word["id"]
             records.append((record, description + reference, balance))
         except (ValueError, KeyError, TypeError) as exc:
             reject(
@@ -244,7 +399,23 @@ def read_bank_pdf(
             if index + 1 < len(records)
             else (len(inventory["pages"]) + 1, 0)
         )
-        if any(not start <= position(w) < end for w in tokens):
+        if strategy == "source_blocks":
+            # Geometry is model-selected. These checks prove ownership and
+            # completeness inside each proposed block, not its semantic meaning.
+            low, high = spans[record["source_amount_ref"]]
+            if index and spans[records[index - 1][0]["source_amount_ref"]][1] >= low:
+                reject(*start, "bank_movement_spans_overlap")
+            if any(not low <= position(w) <= high for w in tokens):
+                reject(*start, "bank_text_outside_movement_span")
+            expected_text = {
+                w["id"]
+                for w in words.values()
+                if low <= position(w) <= high
+                and any(within(w, name) for name in ("description", "reference"))
+            }
+            if {w["id"] for w in tokens} != expected_text:
+                reject(*start, "bank_movement_text_coverage_mismatch")
+        elif any(not start <= position(w) < end for w in tokens):
             reject(*start, "bank_text_crosses_movement")
         if any(
             position(w) == position(c[1]) for w in tokens for c in controls.values()
@@ -254,6 +425,8 @@ def read_bank_pdf(
     # Balanced omissions and unproposed transactions therefore cannot pass.
     monetary = {"amount", "debit", "credit", "balance"} & bands.keys()
     for word in words.values():
+        if word["page"] in non_movement_pages:
+            continue
         if not rules.body[0] <= float(word["top"]) < rules.body[1]:
             continue
         text_bands = set(bands) - monetary
@@ -303,6 +476,8 @@ def read_bank_pdf(
                 reject(0, 0, "bank_printed_movement_total_mismatch")
     if not records:
         reject(0, 0, "bank_statement_has_no_readable_movements")
+    for record, _, _ in records:
+        record.pop("source_amount_ref", None)
     accepted = bool(records) and not issues
     diagnostics = {
         "accepted": accepted,
@@ -314,5 +489,7 @@ def read_bank_pdf(
         "unresolved_issues": issues,
         "population_operations_allowed": False,
         "statement_control_count": len(controls),
+        "non_movement_pages": list(non_movement_pages.values()),
+        "review_signals": review_signals,
     }
     return [r[0] for r in records] if accepted else [], diagnostics

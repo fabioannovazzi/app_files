@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-11-16/lucia-0254-native-acceptance/work/shared-studio-archive/plugins/vera",
-  "version": "0.1.651",
-  "captured_at": "2026-11-16T18:38:59.218215+00:00",
-  "catalogue_fingerprint": "074d439ce83d85e0dc4deb7ebe3a9ab87db18dbb2709ab56e0b31fc34efd0f63",
-  "manifest_sha256": "db822b7034e8c6c81ad8be9d5e804548c4417e5cfe3595c2fd9fe3406ed067a7",
+  "version": "0.1.652",
+  "captured_at": "2026-11-17T08:37:41.871810+00:00",
+  "catalogue_fingerprint": "f6c1015d2a6bb378f41918258fca602dbda40834d81038f0dfd4bfb24057eecd",
+  "manifest_sha256": "8ef445720a204d846df97c2aa75a25598e61a756dd544814f6466ae2fb5ccdba",
   "entries": [
     {
       "function_id": "adeguati-assetti",
