@@ -331,6 +331,15 @@ launch receipt to identify the model. Packet-local B/J references are resolved
 locally back to exact source IDs before downstream validation.
 
 The shared controller now supplies indexed evidence subsets to both stages.
+Receipt-replayed local matcher results are retained as cash links, including
+ordinary unique amount/date matches without a shared code or name. For
+bank_open_items those completed rows are removed from the model-search index;
+their completion concerns cash reconciliation only. Bookkeeping and audit
+purposes preserve the cash links while reviewing accounting treatment.
+Supply the known small candidate sets for every focused residual, then allow
+unrestricted semantic searches for groups and timing differences. Sol can add
+a missing ledger link or combine complete previously unlinked bank groups;
+existing reserved links and allocations cannot be reassigned.
 Models can request read-only searches and subsequent pages using the structured
 JSON evidence protocol; they receive candidate counts and incomplete coverage.
 Keep unresolved alternatives visible. Never infer absence from a page or budget.
@@ -357,8 +366,9 @@ branch may replace that route. Semantic review uses the established host account
 and authorized reconciliation scope. Do not ask for a second consent receipt.
 An actual host denial stops execution; do not bypass it.
 
-The model sees the remaining bank rows and **all remaining journal counterparts**,
-not just exact amount/same-day graph neighbors. Targeted original PDF posting and
+The model sees focused residual rows and bounded retrieved counterpart subsets;
+all remaining journal counterparts are searchable, including candidates beyond
+the exact amount/date window. Targeted original PDF posting and
 continuation text supplies source context absent from normalized descriptions.
 Names, dates, signed amounts, descriptions, references and selected posting text
 are real case data; they are not automatically anonymized. Unmapped unrelated
