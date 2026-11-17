@@ -50,7 +50,14 @@ def bank_tools(monkeypatch):
 
 
 def bank_case(
-    tmp_path, bank_tools, *, signed=False, change="", closing="980,00", totals=False
+    tmp_path,
+    bank_tools,
+    *,
+    signed=False,
+    change="",
+    closing="980,00",
+    totals=False,
+    blocks=False,
 ):
     """Independent two-page source with a continued description and bank controls."""
     inventory, _, _ = bank_tools
@@ -138,6 +145,17 @@ def bank_case(
     column = (
         '"amount"' if signed else '("debit" if float(amount["x0"]) < 480 else "credit")'
     )
+    if blocks:
+        layout["movement_strategy"] = "source_blocks"
+        change += """
+lookup = {w["id"]: w for p in source["pages"] for w in p["words"]}
+for record in rows:
+    ids = [record["amount"]] + record["date"] + record["value_date"] + record["description"] + record["reference"]
+    if record["balance"] is not None:
+        ids.append(record["balance"])
+    ordered = sorted(ids, key=lambda ref: (lookup[ref]["page"], lookup[ref]["row"], float(lookup[ref]["x0"])))
+    record["movement_span"] = [ordered[0], ordered[-1]]
+"""
     script.write_text(HOST_ADAPTER.replace("COLUMN", column).replace("CHANGE", change))
     layout["agent_adapter"] = {
         "path": str(script),
@@ -225,11 +243,14 @@ def test_ordinary_bank_inspection_preserves_partial_entries_and_issues(
 
 
 @pytest.mark.parametrize("signed", [False, True])
+@pytest.mark.parametrize("blocks", [False, True])
 def test_bank_recovery_reads_distinct_layouts_and_freezes_with_separate_history(
-    bank_tools, tmp_path, signed
+    bank_tools, tmp_path, signed, blocks
 ):
     _, reader, recover = bank_tools
-    source, output, layout = bank_case(tmp_path, bank_tools, signed=signed)
+    source, output, layout = bank_case(
+        tmp_path, bank_tools, signed=signed, blocks=blocks
+    )
     (output / "pdf_recovery").mkdir()
     (output / "pdf_recovery" / "session.json").write_text('{"journal": "unchanged"}')
 

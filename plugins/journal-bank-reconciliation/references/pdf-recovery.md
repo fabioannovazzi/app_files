@@ -10,6 +10,29 @@ No helper calls a model or changes the installed plugin. A local recovery is
 not a reusable product fix. OCR-only sources cannot qualify through this text
 word-reference contract; preserve their readable evidence and unresolved status.
 
+## Model chooses the extraction strategy
+
+For an unfamiliar PDF, inspect representative source pages before choosing an
+extraction strategy. Use the first detail page, a continuation and the final
+controls; inspect overview/information pages separately. Render when column
+alignment, shading or multiline blocks are ambiguous in text. The host model
+chooses between labelled tables, positioned text with amount-aligned rows,
+source-defined movement blocks, or registration postings. Choose from evidence,
+not the bank name, filename or a fixed template catalogue. Existing reviewed
+CSV, XLS/XLSX and PDF mappings keep their normal route.
+
+Record the chosen strategy, the observed evidence and rejected alternatives in
+`--pdf-reason`. Let local Python collect source words and execute the selected
+adapter over every page. Read the failed regions and revise the strategy when
+checks expose a wrong assumption; do not trim descriptions or silently discard
+pages to fit the default row parser. Check independent pages after revision.
+The model owns semantic decisions about page purpose, block boundaries and
+column meaning. Python proves source-reference validity, non-overlap, numeric
+coverage and exact arithmetic. Passing those checks alone does not prove the
+semantic decisions correct. OCR may be an appropriate reading strategy for
+image-only pages, but this text-reference qualifier cannot yet qualify OCR;
+report that concrete limitation without claiming the PDF itself is unreadable.
+
 ## Same case, retained recovery history
 
 Keep the same running Studio Archive context and immutable source input. Use
@@ -118,6 +141,42 @@ and pages until the next movement. The checker reconstructs all values from the
 PDF, rejects duplicate or unclaimed monetary tokens and checks physical column
 ownership. Debit decreases the bank balance; credit increases it. A signed
 amount column must use that same reviewed cash direction.
+
+For centered or otherwise non-row-aligned movements, select
+`movement_strategy: "source_blocks"` in the source-bound layout. Every adapter
+row then also supplies `"movement_span": ["first-source-word-id", "last-source-word-id"]`.
+The two different IDs identify inclusive physical rows in source order. Include
+all the movement's dates, amount, balance and description, including text above
+the amount or on a continuation page. The model selects the boundaries from the
+actual layout; there is no universal nearest-date or next-amount assumption.
+Blocks must not overlap or contain statement controls or classified information
+pages. Every word in the reviewed description/reference columns within a block
+must be assigned. Missing text, a field outside its block or overlapping blocks
+returns a targeted failure for the agent to inspect and revise. Without this
+option, the existing amount-row contract remains unchanged.
+
+For an overview or customer-information page, the model can supply
+`non_movement_pages` in the layout:
+
+```json
+{
+  "page": 1,
+  "classification": "bank_overview",
+  "heading": {"refs": ["p1w1", "p1w2"], "text": "Account overview"},
+  "numeric_refs": ["p1w8", "p1w12"]
+}
+```
+
+The other classification is `customer_information`. These are model decisions,
+not keyword classifiers. Read the page before making one. Source references,
+exact heading text and all monetary/numeric tokens in the reviewed amount/body
+area must be accounted for. The checker returns `review_signals` when a classified page has dates and
+amounts: inspect them to distinguish summary balances from omitted transactions.
+That distinction belongs to the model, not a date/amount heuristic. Any
+movement/control taken from a classified page is a contradictory assignment and
+is rejected. Do not move column bands to conceal failures. Page decisions
+are retained in diagnostics, the frozen recipe and the mapping receipt. A
+numeric inventory is not independent proof of the model's page classification.
 
 Provide `statement_controls` containing `opening_balance` and `closing_balance`,
 or `debit_total` and `credit_total`, or both pairs. Each control is a reference:

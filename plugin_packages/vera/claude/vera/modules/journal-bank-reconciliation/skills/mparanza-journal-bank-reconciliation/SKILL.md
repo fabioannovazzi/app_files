@@ -117,6 +117,10 @@ date and one or more amounts on a line is never enough to infer a movement.
 
 ### Agent-led journal and bank PDF recovery
 
+For unfamiliar PDFs, the host model first examines representative page structure
+and chooses table, positioned-row or source-block extraction from that evidence.
+Local Python executes the chosen strategy and returns coverage/arithmetic failures
+for targeted model revision. Preserve the existing routes for reviewed formats.
 Before declaring an unfamiliar journal or bank statement layout unsupported, follow
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
 freeze actions in the existing inspection command. The host agent diagnoses,

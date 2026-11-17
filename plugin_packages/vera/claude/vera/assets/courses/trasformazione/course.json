@@ -309,7 +309,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/bank.py",
-      "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+      "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
@@ -574,5 +574,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "936109d1b0fbdc51475050412380d5743d588c7df7a2d814e4ad13813636b36d"
+  "canonical_course_sha256": "4cc26c3d03ee5fde1cd0bd51350b3a60bc076461530da340161cc0d0c123586a"
 }
