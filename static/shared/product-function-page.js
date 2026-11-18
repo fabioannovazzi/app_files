@@ -172,11 +172,11 @@
       <section class="pf-section pf-public-example" aria-labelledby="${pageKey}-public-example-title">
         <div class="pf-section__head">
           <div>
-            <p class="pf-section__label">${text.publicExampleLabel}</p>
+            ${text.publicExampleLabel ? `<p class="pf-section__label">${text.publicExampleLabel}</p>` : ""}
             <h2 id="${pageKey}-public-example-title">${text.publicExampleTitle}</h2>
           </div>
           <div class="pf-public-example__body">
-            <p class="pf-section__copy">${text.publicExampleSummary}</p>
+            ${text.publicExampleSummary ? `<p class="pf-section__copy">${text.publicExampleSummary}</p>` : ""}
             <div class="pf-public-example__links">
               <a class="pf-public-example__primary" href="${page.publicExampleHref}">${text.publicExampleLinkLabel}</a>
               ${page.publicExampleSourceHref && text.publicExampleSourceLabel ? `<a href="${page.publicExampleSourceHref}" target="_blank" rel="noreferrer">${text.publicExampleSourceLabel}</a>` : ""}
