@@ -1,19 +1,25 @@
 # Metodo riutilizzabile per valutare le risposte di Vera
 
-Versione 1.1 — 16 novembre 2026
+Versione 1.2 — 18 novembre 2026
 Stato: metodo concordato con Fabio. Sostituisce, per queste valutazioni, la media delle percentuali dei casi e la distinzione essenziale/non essenziale.
 
 ## Scopo e ipotesi
 
-Valutare risposte già prodotte da Vera rispetto a risposte di riferimento assunte corrette, e verificare se le citazioni usate da Vera sostengono le affermazioni cui sono collegate. Non rigenerare o correggere i pareri durante la valutazione. Non valutare le citazioni del riferimento. Identificare per ogni caso quesito, risposta di riferimento, risposta di Vera e data giuridica pertinente.
+Valutare risposte già prodotte da Vera o da altri prodotti rispetto a risposte di riferimento assunte corrette, e verificare se le citazioni di ciascuna risposta sostengono le affermazioni cui sono collegate. Non rigenerare o correggere i pareri durante la valutazione. Non valutare le citazioni del riferimento. Identificare per ogni caso quesito, risposta di riferimento, risposte valutate e data giuridica pertinente. Le regole illustrate per Vera si applicano allo stesso modo a ogni risposta valutata.
 
 Il metodo usa esattamente tre indicatori separati. Non crea una media o un punteggio composito dei tre. Non misura una probabilità di correttezza e non dimostra affidabilità fuori dai casi esaminati.
 
 ## Unità di conteggio
 
-**Punto richiesto:** un requisito di contenuto ricavato dal quesito e dalla risposta di riferimento. Deve essere sufficientemente specifico da poter assegnare un giudizio, senza duplicare lo stesso requisito. Definire e fissare la griglia prima di assegnare i giudizi a Vera. Nessuna distinzione tra punti essenziali e non essenziali. Tutti i punti hanno lo stesso peso.
+**Punto richiesto:** un requisito di contenuto ricavato dal quesito e dalla risposta di riferimento. Deve essere sufficientemente specifico da poter assegnare un giudizio, senza duplicare lo stesso requisito. Nessuna distinzione tra punti essenziali e non essenziali. Tutti i punti hanno lo stesso peso.
 
 **Uso di citazione:** una relazione tra una specifica affermazione di Vera e una fonte che Vera le associa. Non è il numero di URL o di documenti distinti. La stessa fonte per due affermazioni diverse forma due relazioni; due fonti per una stessa affermazione formano due relazioni. Deduplicare le ripetizioni della medesima relazione fonte–affermazione nello stesso caso. Registrare la regola di deduplicazione e mantenerla costante.
+
+## Griglia comune di valutazione
+
+Per ogni quesito, definire i punti dal quesito e dalla risposta di riferimento e fissare la griglia prima di valutare le risposte. Usare sempre la stessa griglia per tutte le risposte messe a confronto sullo stesso quesito, anche quando una risposta viene aggiunta in seguito. Riutilizzare gli stessi identificativi, requisiti, passi del riferimento, pesi e regole di attribuzione. Dichiarare la revisione della griglia nel rapporto.
+
+Se occorre correggere o integrare la griglia, registrare la modifica, creare una nuova revisione e ricalcolare tutti i risultati messi a confronto con quella revisione. Pubblicare il confronto quando tutte le risposte sono state valutate sulla griglia revisionata.
 
 ## I tre indicatori, sempre in quest'ordine
 
@@ -71,7 +77,7 @@ Conservare tre registri collegati da identificativi stabili:
 - Copertura: stesso identificativo del punto, giudizio di contenuto con fonti e relazioni di citazione che forniscono supporto.
 - Citazioni: caso, identificativo della relazione, affermazione di Vera e posizione, fonte e URL, passaggio controllato, giudizio e motivazione.
 
-Verificare: denominatore del 2 uguale al numeratore dell’1, per caso e nel totale; punti non soddisfatti esclusi dal 2; ogni punto che passa 2 passa 1 e ha almeno una relazione adeguata verificata; tutti gli usi di citazioni nel perimetro sono censiti una volta; numeratori coerenti con i registri; nessun giudizio sospeso nei risultati definitivi; totali ricalcolabili; nessun decimale nei punteggi mostrati.
+Verificare che, per ogni quesito, tutte le risposte abbiano gli stessi identificativi dei punti e la stessa revisione della griglia. Il denominatore del secondo indicatore deve essere uguale al numeratore del primo per caso e nel totale. Escludere dal secondo indicatore i punti non soddisfatti e contare un punto solo se soddisfatto e sostenuto da almeno una citazione adeguata verificata. Censire una sola volta ogni uso di citazione nel perimetro. Controllare la coerenza dei numeratori con i registri, la possibilità di ricalcolare i totali e l’assenza di giudizi sospesi nei risultati definitivi. Mostrare percentuali intere.
 
 Descrivere in prosa eventuali errori materiali aggiuntivi e contraddizioni. Non creare un quarto indicatore né modificare silenziosamente il denominatore per assorbirli.
 
@@ -82,5 +88,7 @@ Aprire il rapporto con la spiegazione dei tre indicatori, il perimetro e l'assun
 Conservare gli originali e le precedenti revisioni. Per una nuova esecuzione verificare dati e registri, senza forzare i vecchi punteggi. Documentare ogni modifica dei giudizi e ogni revisione del metodo. Non introdurre AllPass o altre misure come ulteriori indicatori.
 
 ## Cronologia
+
+Versione 1.2. Introduce la griglia comune obbligatoria per le risposte messe a confronto e il ricalcolo di tutti i risultati confrontati in caso di revisione della griglia.
 
 Versione 1.1: il denominatore del secondo indicatore passa da tutti i punti richiesti ai soli punti soddisfatti. Non cambiano i giudizi individuali, il primo o il terzo indicatore. La versione 1.0 resta nella cronologia del repository e di Studio Archive.

@@ -1,14 +1,16 @@
-Esegui una valutazione delle risposte originali di Vera applicando integralmente il documento allegato «metodologia-benchmark-vera-v1.md», versione 1.1 del 16 novembre 2026.
+Valuta e confronta le risposte originali applicando integralmente il documento allegato «metodologia-benchmark-vera-v1.md», versione 1.2 del 18 novembre 2026.
 
-Perimetro: [indicare casi, posizione delle risposte di Vera e dei riferimenti, e destinazione del rapporto].
+Indica i casi, dove si trovano le risposte da confrontare e quelle di riferimento, e la destinazione del rapporto.
+
+Fissa la griglia di ogni quesito prima di valutare le risposte, ricavando i punti dal quesito e dalla soluzione di riferimento. Usa sempre la stessa revisione della griglia, gli stessi punti, pesi e regole di attribuzione per tutte le risposte confrontate sullo stesso caso, incluse quelle aggiunte in seguito. Indica la revisione nel rapporto. Se correggi la griglia, registra la modifica e rivaluta tutte le risposte del confronto con la griglia aggiornata.
 
 Assumi corrette le risposte di riferimento e non valutarne le citazioni. Non rigenerare i pareri. Usa esattamente questi tre indicatori nell'ordine seguente:
 1. Punti di contenuto soddisfatti / tutti i punti richiesti.
 2. Punti soddisfatti con almeno una citazione pertinente verificata / punti soddisfatti nell’indicatore 1. Il denominatore del secondo è il numeratore del primo: i punti non soddisfatti sono esclusi dal secondo. Se nessun punto è soddisfatto, indicare non applicabile.
-3. Singole relazioni fonte–affermazione supportate / tutte le relazioni citate da Vera.
+3. Singole relazioni fonte–affermazione supportate / tutte le relazioni citate nella risposta valutata.
 
 Nessuna distinzione essenziale/non essenziale. Ogni punto pesa uguale. I totali sono rapporti tra somme dei numeratori e somme dei denominatori, NON medie delle percentuali dei casi. Mostra conteggi esatti e percentuali intere, senza decimali. Non aggiungere indicatori o punteggi compositi.
 
-Completa i controlli delle fonti di Vera, senza attribuirle citazioni trovate soltanto dal valutatore. Non convertire controlli sospesi in giudizi negativi o positivi senza evidenza. Se materiale necessario è irrecuperabile, segnala il blocco senza dichiarare conclusa la verifica.
+Completa i controlli delle fonti di ogni risposta, usando per il punteggio le citazioni presenti in quella risposta. Non convertire controlli sospesi in giudizi negativi o positivi senza evidenza. Se materiale necessario è irrecuperabile, segnala il blocco senza dichiarare conclusa la verifica.
 
 Spiega i tre indicatori all'inizio. Produci un rapporto e registri ricalcolabili dei punti, della copertura e delle relazioni fonte–affermazione, con passi, motivazioni e riscontri. Verifica denominatori, deduplicazione, arrotondamenti e completezza. Mantieni gli originali e la cronologia delle revisioni; spiega eventuali modifiche dei giudizi. Non usare i risultati di precedenti benchmark come obiettivi da raggiungere.
