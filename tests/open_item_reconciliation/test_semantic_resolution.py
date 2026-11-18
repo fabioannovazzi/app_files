@@ -1495,8 +1495,9 @@ def test_current_bank_source_keeps_cash_direction_separate_from_matching_magnitu
     assert relationship["comparison_basis"] == "settlement_magnitude"
 
 
+@pytest.mark.parametrize("recover_response", [False, True])
 def test_current_supported_native_allocations_replay_after_rendered_closure(
-    runtime, monkeypatch, tmp_path
+    runtime, monkeypatch, tmp_path, recover_response
 ):
     from tests.plugins.test_vera_bank_first import NativeFixture
 
@@ -1543,7 +1544,7 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
             "evidence": citations,
             "questions": [],
         }
-        return {
+        result = {
             "packet_sha256": packet["packet_sha256"],
             "groups": [
                 {
@@ -1569,6 +1570,12 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
                 }
             ],
         }
+
+        if recover_response and packet["stage"] == "luna":
+            result["groups"][0]["bank_resolution"]["evidence"][0][
+                "quote"
+            ] = "fabricated"
+        return result
 
     native.respond = response
     monkeypatch.setattr(
@@ -1607,7 +1614,7 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
     from audit_assurance import validate_assurance_run
 
     assert validate_assurance_run(tmp_path)["content_sha256"]
-    assert len(native.calls) == 2
+    assert len(native.calls) == (6 if recover_response else 2)
 
 
 def test_current_exact_closed_bank_fact_needs_no_native_or_duplicate_semantic_adoption(

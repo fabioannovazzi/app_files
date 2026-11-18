@@ -47,6 +47,7 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_archive_location_continuity.py
           tests/plugins/test_evidence_retrieval.py
+          tests/plugins/test_reconciliation_response_recovery.py
           tests/plugins/test_studio_archive_file_identity.py
           tests/plugins/test_vera_verified_execution.py
       - name: Verify equivalent dates and reviewed ambiguities at intake

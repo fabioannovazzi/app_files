@@ -17,10 +17,14 @@ def admit_local_matches(
     relationship: Mapping[str, Any],
     matches: Sequence[Mapping[str, str]],
     purpose: str,
+    *,
+    evidence_version: int = 2,
 ) -> list[dict[str, Any]]:
     """Restore connected match groups from the source-replayed local pass."""
     import bank_first as bf
 
+    if evidence_version not in {1, 2}:
+        raise ValueError("Unsupported local evidence version")
     if relationship.get("open_item_allocation_authorized"):
         raise ValueError("Journal matcher results cannot authorize invoice allocation")
     records = {"bank": bf._records(bank), "journal": bf._records(journal)}
@@ -64,11 +68,16 @@ def admit_local_matches(
             if direction == "same_sign"
             else abs(sums["bank"]) - abs(sums["journal"])
         )
+        # Preserve source identity evidence for accounting carry-forward. The
+        # legacy projection remains available only for exact saved-run replay.
+        fields = ("transaction_date", "amount_signed", "description")
+        if evidence_version >= 2:
+            fields += ("reference", "movement_number", "beneficiary", "party_ref")
         evidence = [
             bf._citation(s, records[s][i], field)
             for s in ids
             for i in ids[s]
-            for field in ("transaction_date", "amount_signed", "description")
+            for field in fields
             if records[s][i].get(field)
         ]
         content = {

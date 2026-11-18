@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "e7c49997ae4244a4aee31638ac30511fc69fad6666798a677935efc5c4b623c7",
+  "catalogue_fingerprint": "9e35998679824c59e9a03317ea847162bc6117324c4ce885a1d15f587b7a3e08",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2848,5 +2848,12 @@
     "version": "0.1.653",
     "previous_catalogue_fingerprint": "8be799bccdd53338b987e7183741859f9bba5fb8f67d9c399d871cfc46ae3f3f",
     "scope": "Canonical release version binding only. Existing skill identities and jurisdiction judgments remain unchanged."
+  },
+  "reconciliation_recovery_review_2026_11_18": {
+    "previous_catalogue_fingerprint": "0eefe1be41f90cd1921edff9ba34712b329e21c2fa54871cb13bc7a253eb88d5",
+    "reviewed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "finding": "Source-reference preservation and bounded stronger-stage response recovery; local matching and Geneva adaptations unchanged. Synthetic controller checks; no new local professional acceptance."
   }
 }
