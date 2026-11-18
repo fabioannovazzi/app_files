@@ -31,6 +31,7 @@ FULL_HISTORY_PREDECESSOR = (
     "b7d1e9cd267729ab661bfe19c12aa3fd4ebd658d607fff4c40633cfbb78e240f"
 )
 REPLAY_IMPLEMENTATIONS = (
+    "af2bf55103a93775ee563948f177f3777087c8ee71d02b8d47de656ed54fffe1",
     LEGACY_IMPLEMENTATION,
     UTF8_PREDECESSOR,
     FULL_HISTORY_PREDECESSOR,
@@ -470,7 +471,11 @@ def _reconstruct(
             active_focus = None
             reduced_sol_focus = True
             continue
-        if attempt["status"] not in {"validated", "evidence_requested"}:
+        if attempt["status"] not in {
+            "validated",
+            "evidence_requested",
+            "escalated_response",
+        }:
             continue
         directory = output / "bank-first-attempts" / attempt["directory"]
         if (
@@ -538,6 +543,21 @@ def _reconstruct(
             raise ValueError(
                 "Retained evidence differs from indexed sources, search or prior state"
             )
+        if attempt["status"] == "escalated_response":
+            # No rejected answer becomes a conclusion. Replay only the exact
+            # source-bound focus's bounded handoff to the stronger stage.
+            if (
+                stage != "luna"
+                or attempt.get("format_attempt")
+                != bf.policy()["format_attempts_per_stage"]
+                or attempt.get("response_failure_kind") not in {"domain", "format"}
+                or set(attempt["bank_ids"]) != {i for f in focus for i in f["bank_ids"]}
+            ):
+                raise ValueError("Invalid stronger-stage recovery transition")
+            completed["luna"].update(attempt["bank_ids"])
+            session = None
+            active_focus = None
+            continue
         response = bf._read(directory / "response.json")
         bf.validate_receipt(
             bf._read(directory / "receipt.json"),
@@ -664,10 +684,17 @@ def _run_review(
         if state_path.is_file() and not state_path.is_symlink()
         else None
     )
+    local_evidence_version = 2
     if saved_state is not None:
         local_matches = saved_state.get("local_matches")
+        local_evidence_version = saved_state.get("local_evidence_version", 1)
     admitted = bf.admission(
-        bank, journal, relationship, local_matches=local_matches, purpose=purpose
+        bank,
+        journal,
+        relationship,
+        local_matches=local_matches,
+        purpose=purpose,
+        local_evidence_version=local_evidence_version,
     )
     binding_inputs = {
         "source": source_binding,
@@ -721,6 +748,7 @@ def _run_review(
             "stage_completed": {"luna": [], "sol": []},
             "errors": [],
             "local_matches": local_matches,
+            "local_evidence_version": local_evidence_version,
         }
     )
     migrating = state["binding_sha256"] != binding
@@ -866,7 +894,7 @@ def _run_review(
                     bf._write(directory / "schema.json", schema)
                     (directory / "prompt.md").write_text(text, encoding="utf-8")
                 bf._save(path, state)
-                received_response = False
+                response_ready = False
                 try:
                     _source_check(source_check)
                     size = len(text.encode()) + len(
@@ -911,7 +939,6 @@ def _run_review(
                         ],
                     )
                     response = call["response_payload"]
-                    received_response = True
                     receipt = bf._read(Path(call["launch_receipt"]))
                     bf._write(directory / "response.json", response)
                     bf._write(directory / "receipt.json", receipt)
@@ -926,6 +953,7 @@ def _run_review(
                         observed_worker=receipt.get("runtime_attestation", {}),
                     )
                     _source_check(source_check)
+                    response_ready = True
                     if response.get("evidence_requests"):
                         if session["round"] >= budget["max_rounds"]:
                             raise RetrievalLimit(
@@ -955,7 +983,7 @@ def _run_review(
                     last_error = str(error)[:2400]
                     status = (
                         "rejected_format"
-                        if received_response
+                        if response_ready
                         or isinstance(error, semantic.WorkerResponseFormatError)
                         else "technical_error"
                     )
@@ -974,7 +1002,21 @@ def _run_review(
                             ),
                         )
                     if failures >= bf.policy()["format_attempts_per_stage"]:
-                        stopped = True
+                        if stage == "luna" and status == "rejected_format":
+                            # Retry only answer failures, never receipt/source/host
+                            # failures. Keep rejected evidence; Sol starts with the
+                            # same sources and unchanged financial validators.
+                            _source_check(source_check)
+                            attempt.update(
+                                status="escalated_response",
+                                response_failure_kind=(
+                                    "domain" if response_ready else "format"
+                                ),
+                            )
+                            completed["luna"].update(attempt["bank_ids"])
+                            state["stage_completed"]["luna"] = sorted(completed["luna"])
+                        else:
+                            stopped = True
                 except (OSError, RuntimeError) as error:
                     attempt.update(status="technical_error", error=str(error))
                     stopped = True
@@ -996,7 +1038,7 @@ def _run_review(
                     ]
                     bf._save(path, state)
                     break
-                if attempt["status"] == "validated":
+                if attempt["status"] in {"validated", "escalated_response"}:
                     break
             if stopped:
                 break
@@ -1012,6 +1054,7 @@ def _run_review(
         "policy": admitted["policy"],
         "admission_sha256": admitted["content_sha256"],
         "local_matches": local_matches,
+        "local_evidence_version": local_evidence_version,
         "groups": groups,
         "attempts": state["attempts"],
         "errors": state["errors"],
@@ -1024,6 +1067,15 @@ def _run_review(
     for attempt in state["attempts"]:
         if attempt["status"] == "retry_smaller_focus":
             result["retained_native_evidence"].append({"attempt": attempt})
+            continue
+        if attempt["status"] == "escalated_response":
+            d = root / attempt["directory"]
+            result["retained_native_evidence"].append(
+                {
+                    "attempt": attempt,
+                    "packet": bf._read(d / "packet.json"),
+                }
+            )
             continue
         if attempt["status"] not in {"validated", "evidence_requested"}:
             continue
@@ -1070,6 +1122,7 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
         relationship,
         local_matches=result.get("local_matches"),
         purpose=result.get("purpose", "bank_open_items"),
+        local_evidence_version=result.get("local_evidence_version", 1),
     )
     if admitted["content_sha256"] != result["admission_sha256"]:
         raise ValueError("Source population changed")
@@ -1096,6 +1149,12 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
                     continue
                 d = root / "bank-first-attempts" / attempt["directory"]
                 d.mkdir(parents=True)
+                if attempt["status"] == "escalated_response":
+                    bf._write(d / "packet.json", evidence["packet"])
+                    attempts.append(
+                        {k: v for k, v in attempt.items() if k != "artifact_sha256"}
+                    )
+                    continue
                 for key in ("packet", "schema", "response", "receipt"):
                     raw = evidence.get(key + "_json")
                     if raw is not None:
