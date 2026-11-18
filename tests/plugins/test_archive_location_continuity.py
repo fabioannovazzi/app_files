@@ -90,6 +90,24 @@ def test_saved_work_native_read_and_stage_handoff_without_archive(
     assert resumed["run"]["run_id"] == run["run_id"]
 
 
+def test_missing_artifact_read_preserves_other_output_in_saved_run(
+    tmp_path, monkeypatch
+):
+    core, _, saved = prepared_case(tmp_path, monkeypatch, blocked=True)
+    run = saved["run"]
+    selected = run["client_id"], run["engagement_id"], run["run_id"]
+    retained = Path(saved["client_engagement"]["output_dir"]) / "prepared.txt"
+    retained.write_bytes(b"Synthetic retained result")
+
+    with core.use_studio_run_context(Path(saved["client_engagement_path"])):
+        with pytest.raises(core.ArchiveError, match="artifact could not be read"):
+            core.read_studio_run_artifact(*selected, "outputs/missing.txt")
+        result = core.read_studio_run_artifact(*selected, "outputs/prepared.txt")
+
+    assert "Synthetic retained result" in json.dumps(result["data"])
+    assert retained.read_bytes() == b"Synthetic retained result"
+
+
 def test_explicit_context_rejects_cross_run_selection_and_does_not_leak(
     tmp_path, monkeypatch
 ):

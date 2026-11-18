@@ -663,28 +663,27 @@ def _stable_executable_binding(
             digest.update(chunk)
             byte_count += len(chunk)
         after = os.fstat(handle.fileno())
-    entry_identity = (
-        entry.st_dev,
-        entry.st_ino,
-        entry.st_size,
-        entry.st_mtime_ns,
-        entry.st_nlink,
-        entry.st_mode,
-    )
-    if entry_identity != (
-        before.st_dev,
-        before.st_ino,
-        before.st_size,
-        before.st_mtime_ns,
-        before.st_nlink,
-        before.st_mode,
-    ) or entry_identity != (
-        after.st_dev,
-        after.st_ino,
-        after.st_size,
-        after.st_mtime_ns,
-        after.st_nlink,
-        after.st_mode,
+
+    def identity(info: os.stat_result, mode: int) -> tuple[int, ...]:
+        return (
+            info.st_dev,
+            info.st_ino,
+            info.st_size,
+            info.st_mtime_ns,
+            info.st_nlink,
+            mode,
+        )
+
+    # Windows path stat derives execute bits from the .exe suffix. Handle stat
+    # has no filename. Ignore only those bits across APIs, retaining full mode
+    # comparisons between two observations through the same API.
+    mode_mask = ~0o111 if platform.system() == "Windows" else -1
+    final_entry = unresolved.lstat()
+    if (
+        identity(entry, entry.st_mode & mode_mask)
+        != identity(before, before.st_mode & mode_mask)
+        or identity(before, before.st_mode) != identity(after, after.st_mode)
+        or identity(entry, entry.st_mode) != identity(final_entry, final_entry.st_mode)
     ):
         raise ValueError(f"{label} changed while it was hashed")
     actual_sha256 = digest.hexdigest()

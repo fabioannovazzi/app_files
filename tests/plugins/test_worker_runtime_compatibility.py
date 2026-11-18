@@ -8,6 +8,7 @@ import os
 import platform
 import re
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -69,7 +70,7 @@ def test_updated_executable_is_snapshotted_without_release_allowlist(
     tmp_path: Path, payload: bytes
 ) -> None:
     semantic = load_semantic_review()
-    executable = tmp_path / "runtime"
+    executable = tmp_path / "runtime.exe"
     executable.write_bytes(payload)
     executable.chmod(0o700)
 
@@ -81,7 +82,7 @@ def test_updated_executable_is_snapshotted_without_release_allowlist(
 
 def test_executable_change_during_execution_remains_rejected(tmp_path: Path) -> None:
     semantic = load_semantic_review()
-    executable = tmp_path / "runtime"
+    executable = tmp_path / "runtime.exe"
     executable.write_bytes(b"before")
     executable.chmod(0o700)
     before = semantic._stable_executable_binding(executable, label="runtime")
@@ -91,6 +92,40 @@ def test_executable_change_during_execution_remains_rejected(tmp_path: Path) -> 
         semantic._stable_executable_binding(
             executable, label="runtime", expected_sha256=before["sha256"]
         )
+
+
+@pytest.mark.parametrize("change_file_identity", [False, True])
+def test_windows_executable_hash_tolerates_only_synthesized_execute_bits(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, change_file_identity: bool
+) -> None:
+    semantic = load_semantic_review()
+    executable = tmp_path / "synthetic.exe"
+    payload = b"synthetic executable fixture"
+    executable.write_bytes(payload)
+    executable.chmod(0o777)
+    real_fstat = os.fstat
+    monkeypatch.setattr(platform, "system", lambda: "Windows")
+
+    def handle_stat(fd: int) -> Any:
+        info = real_fstat(fd)
+        return SimpleNamespace(
+            st_dev=info.st_dev,
+            st_ino=info.st_ino + int(change_file_identity),
+            st_size=info.st_size,
+            st_mtime_ns=info.st_mtime_ns,
+            st_nlink=info.st_nlink,
+            st_mode=info.st_mode & ~0o111,
+        )
+
+    monkeypatch.setattr(os, "fstat", handle_stat)
+    if change_file_identity:
+        with pytest.raises(ValueError, match="changed while it was hashed"):
+            semantic._stable_executable_binding(executable, label="runtime")
+        return
+
+    binding = semantic._stable_executable_binding(executable, label="runtime")
+
+    assert binding["sha256"] == hashlib.sha256(payload).hexdigest()
 
 
 @pytest.mark.parametrize("build", ["26A429", "27B999", "99Z999a"])
