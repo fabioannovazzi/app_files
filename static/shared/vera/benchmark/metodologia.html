@@ -18,6 +18,11 @@
     p { margin: 0 0 14px; }
     a { color: #075c87; text-underline-offset: .2em; }
     .intro { font-size: 1.2rem; }
+    .benchmark-totals { width: 100%; margin: 0 0 24px; border-collapse: collapse; font-size: .9rem; }
+    .benchmark-totals caption { margin-bottom: 8px; text-align: left; font-weight: 600; }
+    .benchmark-totals th, .benchmark-totals td { padding: 8px; border-bottom: 1px solid #d7e1e7; text-align: left; }
+    .benchmark-totals thead th { background: #e5eef3; }
+    .benchmark-totals td { font-variant-numeric: tabular-nums; }
     .results { margin: 0; padding: 0; list-style: none; border-top: 1px solid #d7e1e7; }
     .results li { padding: 14px 0; border-bottom: 1px solid #d7e1e7; }
     .results a { font-weight: 700; }
@@ -31,6 +36,17 @@
   </nav>
   <main>
     <h1>Benchmark Vera</h1>
+    <table class="benchmark-totals">
+      <caption>Risultati complessivi · 4 benchmark, 47 quesiti</caption>
+      <thead>
+        <tr><th scope="col">Indicatore</th><th scope="col">Vera</th><th scope="col">Codex</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Punti soddisfatti</th><td>287/323 (89%)</td><td>269/323 (83%)</td></tr>
+        <tr><th scope="row">Supporto documentale</th><td>285/287 (99%)</td><td>258/269 (96%)</td></tr>
+        <tr><th scope="row">Citazioni pertinenti</th><td>990/1.009 (98%)</td><td>493/504 (98%)</td></tr>
+      </tbody>
+    </table>
     <p class="intro">Confrontiamo le risposte a quesiti fiscali con soluzioni pubblicate. I risultati aiutano a individuare i punti coperti, le omissioni e le affermazioni da verificare prima di usare un parere.</p>
 
     <h2>Come valutiamo le risposte</h2>
