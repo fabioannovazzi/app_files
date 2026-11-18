@@ -150,6 +150,7 @@ def admission(
     *,
     local_matches: list[dict[str, Any]] | None = None,
     purpose: str = "bank_open_items",
+    local_evidence_version: int = 2,
 ) -> dict[str, Any]:
     """Admit explicit complete identities before any candidate is consumed.
 
@@ -163,7 +164,14 @@ def admission(
     if local_matches is not None:
         from local_cash_links import admit_local_matches
 
-        local = admit_local_matches(bank, journal, relationship, local_matches, purpose)
+        local = admit_local_matches(
+            bank,
+            journal,
+            relationship,
+            local_matches,
+            purpose,
+            evidence_version=local_evidence_version,
+        )
     locally_used = {
         side: {i for g in local for i in g[side + "_ids"]}
         for side in ("bank", "journal")

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/.codex/worktrees/reconciliation-local-first/app_files/plugins/vera",
-  "version": "0.1.653",
-  "captured_at": "2026-11-17T16:40:14.393704+00:00",
-  "catalogue_fingerprint": "0eefe1be41f90cd1921edff9ba34712b329e21c2fa54871cb13bc7a253eb88d5",
-  "manifest_sha256": "3870de5c79a7999fd16699967337b592170332d9a6e70086ca2a4079d175821d",
+  "root": "/Users/fabio/.codex/worktrees/reconciliation-review-recovery/app_files/plugins/vera",
+  "version": "0.1.655",
+  "captured_at": "2026-11-18T09:48:12.028932+00:00",
+  "catalogue_fingerprint": "8a650ff24a460bc76989023d72d3201fc5a18732a0f16ec6f5862c062d7810eb",
+  "manifest_sha256": "62a579c851f5e92d7b16542387686b09c25d020f5f5d7d325231f6aecc9671a0",
   "entries": [
     {
       "function_id": "adeguati-assetti",

@@ -803,6 +803,11 @@ def explanation_evidence(
         replayed = _replay(rows, evidence, assumptions)
         origins = {}
         for retained in assumptions[KEY]["bank_first"]["retained_native_evidence"]:
+            if retained.get("attempt", {}).get("status") in {
+                "escalated_response",
+                "retry_smaller_focus",
+            }:
+                continue  # Recovery transitions contain no accepted assessment.
             response = retained["response"]
             if retained["packet"].get("retrieval"):
                 response = _bank_first_module().decode_response(

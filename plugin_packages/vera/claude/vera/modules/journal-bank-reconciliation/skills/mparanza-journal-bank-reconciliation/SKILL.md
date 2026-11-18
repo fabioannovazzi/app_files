@@ -398,8 +398,13 @@ Every returned Claude process retains its raw events, stderr, observed usage and
 duration before response interpretation. A complete, otherwise verified tool-free
 turn with multiple assistant messages is rejected and can be retried through the
 same stage, never adopted by choosing one message. Invalid domain output can
-also be corrected within the same maximum of three calls per packet. Source,
-executable, isolation and forbidden-tool failures stop; they are not format retries.
+also be corrected within the same maximum of three calls per packet. After three
+recoverable first-stage answer failures, the same unresolved focus passes to Sol
+with unchanged evidence and financial checks. Rejected answers never become
+conclusions; Sol also stops after three failed response attempts. Source,
+receipt, executable, isolation and forbidden-tool failures stop without escalation.
+Local cash evidence retains explicit references and party fields even when a
+source has no description. Saved runs retain their original evidence projection.
 Missing terminal usage remains unknown, never zero. Reopening unchanged validated work replays
 source/response bindings and the retained groups without another model call.
 
