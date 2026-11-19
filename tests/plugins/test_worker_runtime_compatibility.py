@@ -341,3 +341,28 @@ def test_native_current_runtime_isolation_without_model_or_credentials(
     assert result["outside_capsule_read_denied"] is True
     assert result["required_cli_capabilities_available"] is True
     assert result["codex_version_inside_boundary"].startswith("codex-cli ")
+
+
+def test_windows_worker_child_uses_the_verified_codex_home(monkeypatch, tmp_path):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(platform, "system", lambda: "Windows")
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setenv("CODEX_HOME", str(tmp_path / "unverified"))
+    assert semantic._worker_environment()["CODEX_HOME"] == str(tmp_path / ".codex")
+
+
+def test_worker_readiness_probes_private_schema_and_cleans_capsule(
+    monkeypatch, tmp_path
+):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic, "_qualified_executables", lambda _: {})
+    monkeypatch.setattr(semantic, "_codex_home_boundary_inputs", lambda: {})
+
+    def probe(**paths):
+        assert paths["schema_path"].read_bytes() == paths["schema_bytes"]
+        assert paths["state_dir"].is_dir() and paths["log_dir"].is_dir()
+        return {"capsule": paths["capsule"]}
+
+    monkeypatch.setattr(semantic, "_qualification_canaries", probe)
+    outcome = semantic.probe_worker_readiness(tmp_path, None)
+    assert not outcome["capsule"].exists()

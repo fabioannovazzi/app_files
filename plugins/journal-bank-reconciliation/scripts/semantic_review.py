@@ -809,7 +809,14 @@ def _worker_environment() -> dict[str, str]:
             "TMP",
             "COMSPEC",
         )
-    return {name: os.environ[name] for name in allowed_names if name in os.environ}
+    environment = {
+        name: os.environ[name] for name in allowed_names if name in os.environ
+    }
+    if platform.system() == "Windows":
+        # Use the same home whose auth and installation files the boundary
+        # verifies. Native Windows CLI home discovery can ignore USERPROFILE.
+        environment["CODEX_HOME"] = str((Path.home() / ".codex").resolve())
+    return environment
 
 
 def _kill_process_group(process: subprocess.Popen[bytes]) -> None:
