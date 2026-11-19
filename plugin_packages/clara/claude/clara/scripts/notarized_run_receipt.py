@@ -42,7 +42,6 @@ __all__ = [
 
 PRODUCT = product_name(Path(__file__).resolve().parents[1])
 RECEIPT_ENDPOINT = f"https://mparanza.com/api/{PRODUCT}/run-receipts"
-_ENDPOINT_ENV = PRODUCT.upper() + "_RUN_RECEIPT_ENDPOINT"
 _REQUEST_FILE = "model_data_receipt_request.json"
 _RECEIPT_FILE = "model_data_receipt.json"
 _HTML_FILE = "model_data_receipt.html"
@@ -486,11 +485,6 @@ def _validate_endpoint(value: str) -> str:
     return value
 
 
-def _configured_endpoint() -> str:
-    value = os.environ.get(_ENDPOINT_ENV, "").strip() or RECEIPT_ENDPOINT
-    return _validate_endpoint(value)
-
-
 def _read_bounded_response(response: Any) -> bytes:
     data = response.read(_MAX_RESPONSE_BYTES + 1)
     if len(data) > _MAX_RESPONSE_BYTES:
@@ -883,6 +877,7 @@ def stamp_model_data_report(
     plugin_root: Path,
     endpoint: str | None = None,
     opener: Callable[..., Any] | None = None,
+    local_only: bool = False,
 ) -> dict[str, Any]:
     """Stamp one validated local report and write portable JSON and HTML proofs."""
 
@@ -893,7 +888,7 @@ def stamp_model_data_report(
     report = _validated_report(report_path)
     # Direct receipt retries share the run's explicit no-transmission setting.
     # Check before creating a receipt request or opening any network connection.
-    if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+    if local_only:
         return {"status": "not_requested", "reason": "local_only"}
     # VERA_OPENAI_ONBOARDING_BEGIN
     # A local tutorial scope suppresses transmission even on direct later retries.
@@ -932,7 +927,7 @@ def stamp_model_data_report(
         receipt = _validate_response(stored, request_payload)
     else:
         response = _post_receipt_request(
-            endpoint or _configured_endpoint(),
+            endpoint or RECEIPT_ENDPOINT,
             request_payload,
             opener=opener,
         )
@@ -1050,7 +1045,8 @@ def _parser() -> argparse.ArgumentParser:
     stamp.add_argument("--report", type=Path, required=True)
     stamp.add_argument("--output-dir", type=Path, required=True)
     stamp.add_argument("--plugin-root", type=Path, default=Path(__file__).parents[1])
-    stamp.add_argument("--endpoint")
+    stamp.add_argument("--endpoint", help=argparse.SUPPRESS)
+    stamp.add_argument("--local-only", action="store_true", help=argparse.SUPPRESS)
     verify = subparsers.add_parser("verify")
     verify.add_argument("--report", type=Path, required=True)
     verify.add_argument("--receipt", type=Path, required=True)
@@ -1072,6 +1068,7 @@ def main(argv: list[str] | None = None) -> int:
                 output_dir=args.output_dir,
                 plugin_root=args.plugin_root,
                 endpoint=args.endpoint,
+                local_only=args.local_only,
             )
         else:
             payload = verify_model_data_receipt(

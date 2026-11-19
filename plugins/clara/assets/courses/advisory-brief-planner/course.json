@@ -74,7 +74,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
+      "sha256": "206255b62100a2ea4c168bf6274edbec7e7d05238e336d96ff8554e5b6ffae3e"
     },
     {
       "path": "scripts/archive_reporting_failure.py",

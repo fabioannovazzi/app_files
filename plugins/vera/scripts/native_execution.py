@@ -48,6 +48,15 @@ def _jobs() -> Path:
     return root
 
 
+def _release_version(root: Path) -> str | None:
+    """Read the host manifest from the selected package, including older snapshots."""
+    for host in (".codex-plugin", ".claude-plugin"):
+        manifest = root / host / "plugin.json"
+        if manifest.is_file():
+            return json.loads(manifest.read_text(encoding="utf-8")).get("version")
+    return None
+
+
 def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     """Resolve only shipped Python helpers; never accept a shell or caller code."""
     from _managed_python_runtime import resolve_helper_root
@@ -275,6 +284,7 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
             "binding": binding,
             "reporting": reporting,
             "package_sha256": execution_package_id(execution_root),
+            "executing_version": _release_version(execution_root),
         }
         try:
             job.mkdir(mode=0o700)
@@ -359,6 +369,8 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
     value = {
         "job_id": job_id,
         "package_sha256": request.get("package_sha256"),
+        "installed_version": _release_version(ROOT),
+        "executing_version": request.get("executing_version"),
         **_output(job, streaming=streaming),
     }
     if (job / "cancellation_error.json").exists():

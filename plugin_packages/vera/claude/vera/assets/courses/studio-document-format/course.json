@@ -381,7 +381,7 @@
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
+      "sha256": "14546e7b1dd7ed2edb9e3d59ec878bc38fc110fcfae94be073692dc9fa6c4d50"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/relationships.py",
@@ -421,7 +421,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "8d530b5e01cf6773915a191f4edc94ab3a6b893ec760a18c42a51aeb9f841a04"
+      "sha256": "427dcf368c49bc275a3929e8a77069ecc442064305263bb0dd9c46cf59b675b0"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -449,7 +449,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "8225565769b5721f59f02cbe2189863f7361d25b14e223fc88fe10091fc6ad95"
+      "sha256": "fa799d8d89227e91c915b2b7bfca7ed2d40c0381d231a6fb4748f890cdcfe6be"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
@@ -489,7 +489,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "963b70ac1672008a5374be0139555905e2427b42d09c3ab4f751cb1d5efa663b"
+      "sha256": "f2a416c1426d34b9dc47740d006e86186fb94eee1da045aff8a7dbfaca87c63a"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
@@ -521,7 +521,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
-      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
+      "sha256": "206255b62100a2ea4c168bf6274edbec7e7d05238e336d96ff8554e5b6ffae3e"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -569,7 +569,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
+      "sha256": "14546e7b1dd7ed2edb9e3d59ec878bc38fc110fcfae94be073692dc9fa6c4d50"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
@@ -621,7 +621,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
+      "sha256": "206255b62100a2ea4c168bf6274edbec7e7d05238e336d96ff8554e5b6ffae3e"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -641,11 +641,11 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "dd2c59d516e10197e5050bc4f8f29898bc370aa5d5a79f03d978bf703c27dd8d"
+      "sha256": "435c880c26e6743b5dea657be3d09899bfeaeb90791124d18a7bebe1e2d9da9e"
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+      "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -657,11 +657,11 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+      "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+      "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
@@ -797,7 +797,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
+      "sha256": "14546e7b1dd7ed2edb9e3d59ec878bc38fc110fcfae94be073692dc9fa6c4d50"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -1062,5 +1062,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "666a690e77293b1ea4d7053d84fa838485b0237b5658f4476899e4959c0a55ef"
+  "canonical_course_sha256": "1652580ad13466e0556daa7fbcca4dbb73eca432daef2c8aea880d428440b746"
 }

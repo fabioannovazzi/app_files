@@ -294,3 +294,15 @@ and verify that exact ID with the native thread reader. Never use the Archive
 service's randomly generated session ID as a conversation identity. Use the
 canonical `fields` object returned by the read tool when updating metadata;
 keep availability/projection fields out of the saved fields.
+
+
+### Continue a saved reconciliation after a worker fix
+
+Check the native job's installed and executing versions. A saved Archive run
+keeps its original package across reconnects. When a correction requires a newer
+package, use the selected engagement's prepare-workflow with --continue-from-run, the original
+run ID and a new --idempotency-key. Preserve the old run and its
+receipts. Verify source hashes, inspect the new job's executing version and
+replay source and mapping checks before reusing any prior result. Report which
+run produced the workbook. When multiple locations are listed, select the
+intended context.json with --context before the Archive command.

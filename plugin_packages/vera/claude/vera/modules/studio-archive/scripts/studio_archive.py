@@ -285,6 +285,10 @@ def _parser() -> argparse.ArgumentParser:
         default=[],
         help="Exact upstream reference formatted run_id:artifact_id:role.",
     )
+    prepare_workflow.add_argument(
+        "--continue-from-run",
+        help="Prepare a new technical run from the selected run’s verified sources",
+    )
     prepare_workflow.add_argument("--label")
     prepare_workflow.add_argument("--purpose")
     prepare_workflow.add_argument(
@@ -591,6 +595,7 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
                 args.engagement_id,
                 args.workflow_id,
                 input_ids=args.input_id,
+                continue_from_run=args.continue_from_run,
                 upstream_artifacts=upstream_artifacts,
                 label=args.label,
                 purpose=args.purpose,

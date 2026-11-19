@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-11-19/op/vera-residual-passes/plugins/vera",
-  "version": "0.1.656",
-  "captured_at": "2026-11-19T14:34:24.022805+00:00",
-  "catalogue_fingerprint": "3b785b83eb95394ea6b00853fe0e9cbdb56f32d4fc49362b584244f326a7f0d2",
-  "manifest_sha256": "8de163db23e38250168ef179263cafcf2a1120ad8b8c00d3b0953108eccc34f7",
+  "root": "/private/tmp/vera-windows-nov19/plugins/vera",
+  "version": "0.1.657",
+  "captured_at": "2026-11-19T17:03:09.296255+00:00",
+  "catalogue_fingerprint": "c70692b763e6f934908261e6d04e49a047a571d2c50810183a32dcbe99eafd9f",
+  "manifest_sha256": "8dfa1cccdda7500bbaed3bc7d881872bf5ac104d88c144cf36fb40c6ab58c4a0",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -144,7 +144,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "cff4d1895af03a2e18b6c03958fc04500e6b2fac5583c0f37ceee6a20ac18b75"
+      "sha256": "232d018675c5789974640f755d7a95e8e15663bb1a0688fc01300e6058c98bde"
     },
     {
       "function_id": "journal-sampling",

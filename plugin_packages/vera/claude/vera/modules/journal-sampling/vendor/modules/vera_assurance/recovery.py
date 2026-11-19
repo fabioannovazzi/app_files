@@ -368,7 +368,6 @@ def _restore_run(
             ):
                 raise ValueError("Recovery destination now belongs to another run")
             return context  # Replaying a restore must not roll back subsequent work.
-    _ordinary(destination.parent, directory=True)
     # Verify every retained byte before creating any destination files.
     for relative, record in snapshot["files"].items():
         _relative(relative)
@@ -378,6 +377,13 @@ def _restore_run(
         ):
             raise ValueError("Retained recovery bytes no longer match the checkpoint")
     directories = [_relative(relative) for relative in snapshot["directories"]]
+    # A selected new folder may include new parent directories. Verify each
+    # existing ancestor before creating its immediate child.
+    parents = list(reversed(destination.parent.parents)) + [destination.parent]
+    for parent in parents:
+        if not parent.exists() and not parent.is_symlink():
+            parent.mkdir(mode=0o700, exist_ok=True)
+        _ordinary(parent, directory=True)
     if prior is None:
         try:
             destination.mkdir(mode=0o700)

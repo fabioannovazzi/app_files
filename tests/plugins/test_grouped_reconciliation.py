@@ -609,6 +609,8 @@ def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evi
 def test_final_workbook_keeps_source_references_and_counterparties_for_equal_amounts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    tmp_path = tmp_path.joinpath(*(["Contabilità sintetica di novembre" * 2] * 4))
+    tmp_path.mkdir(parents=True)
     reconciliation, output, _ = _environment(tmp_path, monkeypatch, bank=[], journal=[])
     _write_csv(
         reconciliation / "normalized_bank.csv",

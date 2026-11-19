@@ -21,7 +21,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 19
+POLICY_REVISION = 20
 SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
@@ -122,8 +122,32 @@ def reenter_base(script: Path, arguments: list[str]) -> int | None:
     environment = dict(os.environ)
     for name in ("PYTHONHOME", "PYTHONPATH", INSTALLING):
         environment.pop(name, None)
+    command = [str(base), "-X", "utf8", "-s", str(script.absolute()), *arguments]
+    reporter = sys.modules.get("operational_incidents")
+    settings = getattr(reporter, "_SETTINGS", None)
+    if settings:
+        # Preserve explicit recovery/session settings across the base-Python hop.
+        program = (
+            "import json, runpy, sys; from pathlib import Path; "
+            "script = sys.argv.pop(1); settings = json.loads(sys.argv.pop(1)); "
+            "sys.path.insert(0, str(Path(script).parent)); "
+            "import operational_incidents as incidents; "
+            "incidents.configure_settings(settings); "
+            "sys.argv[0] = script; runpy.run_path(script, run_name='__main__')"
+        )
+        command = [
+            str(base),
+            "-X",
+            "utf8",
+            "-s",
+            "-c",
+            program,
+            str(script.absolute()),
+            json.dumps(settings),
+            *arguments,
+        ]
     return subprocess.run(
-        [str(base), "-X", "utf8", "-s", str(script.absolute()), *arguments],
+        command,
         env=environment,
         check=False,
     ).returncode

@@ -193,6 +193,41 @@ def test_runtime_updates_do_not_bypass_failed_boundary_or_missing_capabilities(
         )
 
 
+def test_failed_schema_probe_retains_exact_local_process_evidence(
+    tmp_path, monkeypatch
+):
+    import json
+
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic, "_seatbelt_prefix", lambda **kwargs: ["probe"])
+    monkeypatch.setattr(
+        semantic,
+        "_run_captured_process",
+        lambda *a, **kw: {
+            "return_code": 3,
+            "stdout": b"partial",
+            "stderr": bytes([255, 0, 10]),
+        },
+    )
+    with pytest.raises(ValueError, match="exact schema canary"):
+        semantic._qualification_canaries(
+            semantic_dir=tmp_path,
+            profile_path=tmp_path / "policy",
+            schema_path=tmp_path / "schema",
+            schema_bytes=b"{}",
+            capsule=tmp_path,
+            state_dir=tmp_path,
+            log_dir=tmp_path,
+            boundary_inputs={},
+            executables={"host_profile": semantic._resolve_host_profile()},
+        )
+    [receipt] = tmp_path.glob("schema-canary-*.json")
+    record = json.loads(receipt.read_text())
+    assert record["return_code"] == 3
+    assert bytes.fromhex(record["stdout_hex"]) == b"partial"
+    assert bytes.fromhex(record["stderr_hex"]) == bytes([255, 0, 10])
+
+
 def test_missing_runtime_executable_has_a_specific_diagnostic(tmp_path: Path) -> None:
     semantic = load_semantic_review()
 
@@ -306,3 +341,31 @@ def test_native_current_runtime_isolation_without_model_or_credentials(
     assert result["outside_capsule_read_denied"] is True
     assert result["required_cli_capabilities_available"] is True
     assert result["codex_version_inside_boundary"].startswith("codex-cli ")
+
+
+def test_windows_worker_child_uses_verified_home_and_mxc_system_drive(monkeypatch, tmp_path):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(platform, "system", lambda: "Windows")
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setenv("CODEX_HOME", str(tmp_path / "unverified"))
+    monkeypatch.setenv("SystemDrive", "D:")
+    environment = semantic._worker_environment()
+    assert environment["CODEX_HOME"] == str(tmp_path / ".codex")
+    assert environment["SystemDrive"] == "D:"
+
+
+def test_worker_readiness_probes_private_schema_and_cleans_capsule(
+    monkeypatch, tmp_path
+):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic, "_qualified_executables", lambda _: {})
+    monkeypatch.setattr(semantic, "_codex_home_boundary_inputs", lambda: {})
+
+    def probe(**paths):
+        assert paths["schema_path"].read_bytes() == paths["schema_bytes"]
+        assert paths["state_dir"].is_dir() and paths["log_dir"].is_dir()
+        return {"capsule": paths["capsule"]}
+
+    monkeypatch.setattr(semantic, "_qualification_canaries", probe)
+    outcome = semantic.probe_worker_readiness(tmp_path, None)
+    assert not outcome["capsule"].exists()

@@ -61,7 +61,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
+      "sha256": "206255b62100a2ea4c168bf6274edbec7e7d05238e336d96ff8554e5b6ffae3e"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+      "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -77,7 +77,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+      "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -85,11 +85,11 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "dd2c59d516e10197e5050bc4f8f29898bc370aa5d5a79f03d978bf703c27dd8d"
+      "sha256": "435c880c26e6743b5dea657be3d09899bfeaeb90791124d18a7bebe1e2d9da9e"
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+      "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -97,11 +97,11 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+      "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+      "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
@@ -229,7 +229,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
+      "sha256": "14546e7b1dd7ed2edb9e3d59ec878bc38fc110fcfae94be073692dc9fa6c4d50"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -598,5 +598,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "655819201977ab3ff7211c89772a98c7a37c721c18463d0d81c331877f197d22"
+  "canonical_course_sha256": "f75aa433e2bbe41a46463d740589cd3dcd89d0047020d71efa0d7267e5f0734e"
 }
