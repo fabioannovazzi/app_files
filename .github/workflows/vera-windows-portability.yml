@@ -82,6 +82,7 @@ jobs:
           New-Item $env:CODEX_HOME -ItemType Directory -Force | Out-Null
           Set-Content (Join-Path $env:CODEX_HOME "installation_id") ([guid]::NewGuid()) -NoNewline
           Set-Content (Join-Path $env:CODEX_HOME "auth.json") '{}' -NoNewline
+          Set-Content (Join-Path $env:CODEX_HOME "config.toml") @('[windows]', 'sandbox = "elevated"')
           $probe = Join-Path $env:RUNNER_TEMP "vera-readiness"
           python plugins/journal-bank-reconciliation/scripts/semantic_review.py host-status --codex-bin $binary.FullName --probe-dir $probe
           $status = $LASTEXITCODE
