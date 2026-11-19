@@ -43,7 +43,9 @@ versions are not updated. No OpenAI Marketplace submission or publication.
   the capability probe. No global Python installation was changed.
 - Lucia package build: all host versions aligned at 0.1.258. Claude Code 2.1.328
   strict validation passed. The three generated helpers contain no `os.environ`
-  or `getenv(` references. Repository archive: 127.75 MiB, below the 230 MiB guard.
+  or `getenv(` references. Repository archive: 127.82 MiB, below the 230 MiB guard.
+- Native Archive reporting fixture tests: 12 passed. Reduced-edition privacy and
+  packaging tests for Clara and Lucia: 33 passed.
 - Lucia Codex package tests: 36 passed. Native execution tests: 41 passed.
 - Scoped CI artifact drift guard: seven regressions passed. CI still builds all
   products for testing; it rejects every source drift and artifact drift for any
@@ -76,6 +78,15 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 - Initial CI required committing all three rebuilt packages. Its drift guard now
   distinguishes released products from build-only sibling previews while retaining
   source and released-artifact checks.
+
+- Native Archive mocks assumed the last worker argument was its job directory;
+  they now read the explicit `--execute` value. No production change was needed.
+- Reduced editions omit the native MCP server. Their privacy projections now
+  explicitly disclose omission of the new server-owned settings control.
+- CI artifact extraction over old tracked Cowork trees retained two obsolete
+  top-level environment helpers in unreleased sibling directories. Consumers now
+  remove only generated Cowork trees before extracting this commit's artifact;
+  strict package verification remains enabled.
 
 - The optional local update-notification cache check fails for unchanged Clara:
   public manifest 0.1.248 versus installed curated cache 0.1.407 (17 tests passed,

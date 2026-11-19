@@ -100,6 +100,8 @@ jobs:
           fi
           echo "editorial_required=$editorial_required" >> "$GITHUB_OUTPUT"
           echo "Editorial verification required: $editorial_required. Native execution and quality checks always run."
+      - name: Remove previous generated Cowork trees before artifact extraction
+        run: python -c "import shutil; from pathlib import Path; [shutil.rmtree(p) for p in Path('plugin_packages').glob('*/claude')]"
       - name: Download product archives built from this commit
         uses: actions/download-artifact@v4
         with:
@@ -293,6 +295,8 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Remove previous generated Cowork trees before artifact extraction
+        run: python -c "import shutil; from pathlib import Path; [shutil.rmtree(p) for p in Path('plugin_packages').glob('*/claude')]"
       - name: Download product archives built from this commit
         uses: actions/download-artifact@v4
         with:
