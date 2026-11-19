@@ -127,3 +127,15 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 Strict manifest validation is not the directory's safety scan or policy review.
 Fabio must select **Check for new commits** on Lucia's directory page after merge.
 These results do not certify installation in an existing customer chat.
+
+Final CI at 6c42e26b0 passed 120 jobs; the last teaching job passed 1,752 tests
+(three explicit skips), then rejected stale editorial source bindings. Of 53
+stale records, 44 were already stale on main and 9 reflect this task's source
+updates. Exact reviewed ancestors were located for all 53 courses: only source
+inventories differ, with every authored field unchanged. A bounded agent source
+review retains historical editorial/artifact judgments and links the actual
+successful JUnit evidence; it does not invent human acceptance. The unchanged
+verifier accepts all 58 kits and 258 locales against that JUnit; 36 verifier
+regressions pass. See `lucia-runtime-course-source-review-2026-11-19.json`.
+Final-head CI remains required. No runtime or package bytes changed in this
+evidence update.

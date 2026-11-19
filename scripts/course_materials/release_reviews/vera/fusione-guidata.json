@@ -155,7 +155,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "705ca369450f42c564b176de647375ae457ed1c714b6d35a3608773f5f6fe46c",
+  "course_sha256": "f28e065dbaf3576523fc06482035472f5b41432341f6932ef53636c9b1436df6",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
@@ -804,5 +804,15 @@
     "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
     "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
     "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
+  },
+  "explicit_runtime_source_binding_review_20261119": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-11-19T10:45:47.751696+00:00",
+    "review_record": "docs/acceptance/lucia-runtime-course-source-review-2026-11-19.json",
+    "reviewed_ancestor_commit": "778e05a1178d35e3495f19aca45ba2c20636feb7",
+    "previous_course_sha256": "705ca369450f42c564b176de647375ae457ed1c714b6d35a3608773f5f6fe46c",
+    "course_sha256": "f28e065dbaf3576523fc06482035472f5b41432341f6932ef53636c9b1436df6",
+    "authored_content_unchanged": true,
+    "judgment": "Complete course comparison against the exact previously reviewed ancestor changes only the source inventory. Current native demo/practice identities passed for this course hash. Preserve original editorial and historical artifact judgments; this is a bounded agent source-compatibility review, not new learner, visual or professional acceptance."
   }
 }
