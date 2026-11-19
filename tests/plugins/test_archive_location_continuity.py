@@ -108,6 +108,28 @@ def test_missing_artifact_read_preserves_other_output_in_saved_run(
     assert retained.read_bytes() == b"Synthetic retained result"
 
 
+def test_selected_run_continuation_preserves_inputs_and_historical_context(
+    tmp_path, monkeypatch
+):
+    core, _, saved = prepared_case(tmp_path, monkeypatch)
+    run = saved["run"]
+    context = Path(saved["client_engagement_path"])
+    historical = context.read_bytes()
+    with core.use_studio_run_context(context):
+        fresh = core.prepare_studio_client_workflow(
+            run["engagement_id"],
+            run["workflow_id"],
+            continue_from_run=run["run_id"],
+            idempotency_key="synthetic-upgrade",
+        )
+    assert fresh["run"]["run_id"] != run["run_id"]
+    assert (
+        fresh["input_manifest"]["inputs"]
+        == json.loads((context.parent / "input_manifest.json").read_bytes())["inputs"]
+    )
+    assert context.read_bytes() == historical
+
+
 def test_explicit_context_rejects_cross_run_selection_and_does_not_leak(
     tmp_path, monkeypatch
 ):

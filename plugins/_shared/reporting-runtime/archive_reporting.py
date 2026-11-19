@@ -267,7 +267,7 @@ def _read_without_collection(
     path = path.expanduser()
     path = (path if path.is_absolute() else root / path).absolute()
     inputs = loaded["context"]["input_bindings"]
-    binding = next((item for item in inputs if item["path"] == str(path)), None)
+    binding = next((item for item in inputs if Path(item["path"]) == path), None)
     if any(item.is_symlink() for item in (path, *path.parents)) or (
         binding is None
         and not path.resolve().is_relative_to(Path(loaded["output_dir"]).resolve())
@@ -278,6 +278,19 @@ def _read_without_collection(
     )
     if binding and source["sha256"] != binding["sha256"]:
         raise ValueError("The selected input no longer matches its admitted bytes")
+    if (
+        source["measurement_error"]
+        and offset == 0
+        and limit is None
+        and columns is None
+    ):
+        return {
+            "kind": "local_file",
+            "path": str(path),
+            "sha256": source["sha256"],
+            "bytes": source["bytes"],
+            "content_returned": False,
+        }
     data, _ = read_selection(source, offset=offset, limit=limit, columns=columns)
     return data
 

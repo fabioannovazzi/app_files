@@ -20,6 +20,21 @@ function main(root = path.resolve(__dirname, "..")) {
     VERA_STUDIO_ARCHIVE_SESSION_ID: process.env.VERA_STUDIO_ARCHIVE_SESSION_ID?.trim()
       || process.env.CODEX_THREAD_ID?.trim() || `${product}-${randomUUID()}`,
   };
+  // One explicit reporting session is shared with the native incident service.
+  const settingsIndex = process.argv.indexOf("--settings");
+  const settings = settingsIndex < 0 ? {} : JSON.parse(fs.readFileSync(process.argv[settingsIndex + 1], "utf8"));
+  const os = require("node:os");
+  const host = fs.existsSync(path.join(root, ".codex-plugin/plugin.json")) ? "codex" : "cowork";
+  let settingsPath;
+  function reportingSettingsPath() {
+    if (!settingsPath) {
+      const settingsRoot = path.join(settings.state_dir || path.join(os.homedir(), ".mparanza", product, "incidents", host), "sessions");
+      fs.mkdirSync(settingsRoot, { recursive: true, mode: 0o700 });
+      settingsPath = path.join(settingsRoot, `${randomUUID()}.json`);
+      fs.writeFileSync(settingsPath, JSON.stringify({ host, host_session: randomUUID(), ...settings }), { mode: 0o600, flag: "wx" });
+    }
+    return settingsPath;
+  }
   const services = new Map();
   const active = new Map();
   const serverRequests = new Map();
@@ -49,7 +64,9 @@ function main(root = path.resolve(__dirname, "..")) {
   async function service(name) {
     if (closing) throw new Error(`${product} connection is closing`);
     if (!services.has(name)) {
-      const config = configurations[name];
+      const original = configurations[name];
+      const config = original?.args?.some(value => ["incident_host_mcp.cjs", "native_execution_mcp.cjs"].some(script => value.endsWith(script)))
+        ? { ...original, args: [...original.args, "--settings", reportingSettingsPath()] } : original;
       if (!config) throw new Error(`Missing ${product} service: ${name}`);
       const client = new ServiceClient(root, name, config, {
         env: serviceEnvironment,
@@ -154,6 +171,7 @@ function main(root = path.resolve(__dirname, "..")) {
   });
   const close = signal => {
     closing = true;
+    if (settingsPath) fs.rmSync(settingsPath, { force: true });
     for (const { client } of services.values()) client.close(signal);
     input.close();
   };

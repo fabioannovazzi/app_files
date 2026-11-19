@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.258",
+  "version": "0.1.259",
   "services": [
     {
       "name": "luciaArchivePanel",

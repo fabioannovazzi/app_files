@@ -258,6 +258,7 @@ def _same_file_stat(
 def _stable_file_identity(path: Path, *, label: str) -> tuple[int, str]:
     """Hash one regular file while proving its path and bytes stayed stable."""
 
+    path = _io_path(path)
     before_path = _ordinary_file(path, label=label)
     descriptor = -1
     try:
@@ -331,18 +332,26 @@ def _relative_path(value: object, *, label: str) -> str:
 
 
 def _ordinary_directory(path: Path, *, label: str, create: bool = False) -> Path:
-    if create and not path.exists() and not path.is_symlink():
-        path.mkdir(mode=0o700, parents=True)
+    io_path = _io_path(path)
+    if create and not io_path.exists() and not io_path.is_symlink():
+        io_path.mkdir(mode=0o700, parents=True)
     try:
-        observed = path.lstat()
+        observed = io_path.lstat()
     except OSError as exc:
         raise LedgerError(f"{label} is unavailable: {exc}") from exc
-    if path.is_symlink() or not stat.S_ISDIR(observed.st_mode):
+    if io_path.is_symlink() or not stat.S_ISDIR(observed.st_mode):
         raise LedgerError(f"{label} must be a real directory.")
-    return path.resolve(strict=True)
+    resolved = io_path.resolve(strict=True)
+    if io_path == path:
+        return resolved
+    value = str(resolved)
+    if value.startswith("\\\\?\\UNC\\"):
+        return Path("\\\\" + value[8:])
+    return Path(value.removeprefix("\\\\?\\"))
 
 
 def _ordinary_file(path: Path, *, label: str) -> os.stat_result:
+    path = _io_path(path)
     try:
         observed = path.lstat()
     except OSError as exc:
@@ -511,7 +520,7 @@ def _read_json(path: Path, *, label: str) -> dict[str, Any]:
 
     try:
         payload = json.loads(
-            path.read_text(encoding="utf-8"), parse_constant=reject_nonfinite
+            _io_path(path).read_text(encoding="utf-8"), parse_constant=reject_nonfinite
         )
     except (OSError, ValueError, RecursionError) as exc:
         raise LedgerError(f"{label} is unreadable: {exc}") from exc
@@ -520,10 +529,22 @@ def _read_json(path: Path, *, label: str) -> dict[str, Any]:
     return payload
 
 
+def _io_path(path: Path) -> Path:
+    """Use the extended Win32 namespace for absolute long disk and UNC paths."""
+    value = str(path)
+    if os.name != "nt" or not path.is_absolute() or len(value) < 220:
+        return path
+    if value.startswith(("\\\\?\\", "\\\\.\\")) or ".." in path.parts:
+        return path
+    if value.startswith("\\\\"):
+        return Path("\\\\?\\UNC\\" + value[2:])
+    return Path("\\\\?\\" + value)
+
+
 def _temporary_file(parent: Path, *, prefix: str, suffix: str) -> tuple[int, str]:
     """Retain the OS cause and location facts when staging cannot create a file."""
     try:
-        return tempfile.mkstemp(prefix=prefix, suffix=suffix, dir=parent)
+        return tempfile.mkstemp(prefix=prefix, suffix=suffix, dir=_io_path(parent))
     except OSError as exc:
         raise LedgerError(
             "Temporary file creation failed "
@@ -550,7 +571,7 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
             handle.write(encoded)
             handle.flush()
             os.fsync(handle.fileno())
-        os.replace(temporary, path)
+        os.replace(temporary, _io_path(path))
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -1312,7 +1333,8 @@ def _stable_copy(
     exclusive: bool = False,
     temporary_directory: Path | None = None,
 ) -> tuple[int, str]:
-    source = source_path.expanduser()
+    source = _io_path(source_path.expanduser())
+    destination = _io_path(destination)
     if not source.is_absolute() or source.is_symlink():
         raise LedgerError("Imported document must be an absolute non-symlink file.")
     before_path = _ordinary_file(source, label="import source")
@@ -2703,15 +2725,15 @@ def prepare_run(
             # Retain interrupted staging separately from published run records.
             run_root = preparation_root / run_id
             try:
-                run_root.mkdir(mode=0o700)
+                _io_path(run_root).mkdir(mode=0o700)
                 break
             except FileExistsError:
                 continue
         else:
             raise LedgerError("Could not allocate a unique run ID.")
         try:
-            (run_root / "inputs").mkdir(mode=0o700)
-            (run_root / "outputs").mkdir(mode=0o700)
+            _io_path(run_root / "inputs").mkdir(mode=0o700)
+            _io_path(run_root / "outputs").mkdir(mode=0o700)
             for binding in bindings:
                 source = _archive_path(root, binding["source_relative_path"])
                 destination = run_root / binding["execution_relative_path"]
@@ -2719,10 +2741,10 @@ def prepare_run(
                 for part in destination.parent.relative_to(run_root).parts:
                     destination_parent /= part
                     if (
-                        not destination_parent.exists()
-                        and not destination_parent.is_symlink()
+                        not _io_path(destination_parent).exists()
+                        and not _io_path(destination_parent).is_symlink()
                     ):
-                        destination_parent.mkdir(mode=0o700)
+                        _io_path(destination_parent).mkdir(mode=0o700)
                     _ordinary_directory(
                         destination_parent,
                         label="run execution input directory",
@@ -2737,7 +2759,7 @@ def prepare_run(
                 ):
                     raise LedgerError("Run execution input copy is not exact.")
             provenance = run_root / "source-receipts"
-            provenance.mkdir(mode=0o700)
+            _io_path(provenance).mkdir(mode=0o700)
             for binding in bindings:
                 receipt_path = _archive_path(root, binding["receipt_relative_path"])
                 receipt = _validate_seal(
@@ -3102,7 +3124,7 @@ def write_run_artifact(
         )
         target = folder / name
         digest = hashlib.sha256(payload).hexdigest()
-        replayed = target.exists() or target.is_symlink()
+        replayed = _io_path(target).exists() or _io_path(target).is_symlink()
         if replayed:
             if _stable_file_identity(target, label="authored artifact") != (
                 len(payload),
@@ -3114,12 +3136,14 @@ def write_run_artifact(
         else:
             pending = None
             try:
-                with tempfile.NamedTemporaryFile(dir=folder, delete=False) as handle:
+                with tempfile.NamedTemporaryFile(
+                    dir=_io_path(folder), delete=False
+                ) as handle:
                     pending = Path(handle.name)
                     handle.write(payload)
                     handle.flush()
                     os.fsync(handle.fileno())
-                os.replace(pending, target)
+                os.replace(pending, _io_path(target))
             finally:
                 if pending is not None:
                     pending.unlink(missing_ok=True)

@@ -61,7 +61,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
+      "sha256": "206255b62100a2ea4c168bf6274edbec7e7d05238e336d96ff8554e5b6ffae3e"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -233,7 +233,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "d2dd56a6aac567d9090f11feba9ea56d82ae52c05214b9d08b86937eee741d05"
+      "sha256": "14546e7b1dd7ed2edb9e3d59ec878bc38fc110fcfae94be073692dc9fa6c4d50"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -508,5 +508,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "089d9280496dbe9209a8a9361217af2bf314312f7c656a47a88d44c84f0af3a5"
+  "canonical_course_sha256": "26ed4294e24830406c2583a6bf10c8f16ddde5d3a7229c6bec7991c4ba4c307e"
 }

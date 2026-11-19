@@ -1,0 +1,46 @@
+name: Static website
+on:
+  pull_request:
+    paths:
+      - 'static/**'
+      - 'AGENTS.md'
+      - '.github/workflows/**'
+      - 'scripts/validate_static_website.py'
+      - 'tests/scripts/test_static_website_checks.py'
+      - 'requirements-static-checks.txt'
+  push:
+    branches: [main]
+    paths:
+      - 'static/**'
+      - 'AGENTS.md'
+      - '.github/workflows/**'
+      - 'scripts/validate_static_website.py'
+      - 'tests/scripts/test_static_website_checks.py'
+      - 'requirements-static-checks.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install -r requirements-static-checks.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Validate routing and website checks
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/scripts tests/scripts/test_static_website_checks.py
+      - name: Check affected pages
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
+        run: |
+          git cat-file -e "$BASE_SHA^{commit}" || git fetch --depth 1 origin "$BASE_SHA"
+          python scripts/validate_static_website.py --base "$BASE_SHA" --browser

@@ -831,3 +831,10 @@ use that exact recorded value in downstream review and the delivered explanation
 State whether it came from the professional, an established studio instruction,
 or a disclosed draft assumption. Matching within tolerance does not authorize a
 write-off or a new accounting entry: keep actual differences visible for review.
+
+
+For Windows reconciliation requiring the native semantic worker, run
+`semantic_review.py host-status --probe-dir <selected-local-diagnostics-directory>`
+before expensive preparation. It runs the same capability probes on a synthetic
+schema. If it fails, retain local diagnostics, continue independent accounting
+steps and deliver saved results. Recheck the actual capsule before submission.

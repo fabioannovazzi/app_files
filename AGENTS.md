@@ -346,13 +346,28 @@ This executes the full quality gate:
 
 Every **4–6 weeks** we schedule a short “cleanup sprint” to eliminate duplicate code and improve readability (monitored via Sonar/GitClear reports).
 
-## 6. Green Before Merge
+## 6. Verification Must Match the Change
 
-A pull request may be merged only when all required CI checks show **green**:
+Run checks for the behavior being changed. Do not run or wait for unrelated
+product suites merely because a pull request exists.
 
-1. Tests pass and coverage stays ≥ 80 %.
-2. Black, Isort, and Mypy return no errors.
-3. Bandit reports no medium- or high-severity issues.
+- **Static website changes** (HTML, CSS, images, fonts, PDFs, and self-contained
+  benchmark page assets/data): run the focused website workflow. Check affected
+  pages, local links and anchors, JavaScript where changed, relevant numeric
+  data, and desktop/mobile rendering. Keep the secret scan. Do not require
+  plugin builds, accounting/reconciliation tests, operating-system matrices,
+  runtime installation checks, or unrelated product tests.
+- **Application or plugin code changes**: run the relevant component's tests,
+  formatting, type and security checks, retaining its coverage requirements.
+  Mixed website/code changes must also pass the checks relevant to the code.
+- **CI routing or instruction-only changes**: validate workflow syntax and the
+  affected routing rules, including that mixed/code changes still trigger
+  their checks. Unrelated product jobs are not a merge or deployment gate.
+- All checks relevant to the change must pass before merge. A pending or failed
+  unrelated job does not block a focused change; record why it is unrelated.
+  Do not ask for an exception to this rule for routine static publication.
+- After website deployment, verify HTTP responses, exact deployed files and
+  representative live navigation. Passing local tests is not live verification.
 
 ## Appendix · Starter Configs
 

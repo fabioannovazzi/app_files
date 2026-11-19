@@ -443,3 +443,10 @@ before sealing. No separate chat-shell write is required. Inspect success before
 reinspection or calculation; a failed prerequisite must never trigger its
 consumer. Use `write_studio_run_artifact` for authored drafts and JSON controls;
 retain source-coordinate gaps honestly rather than inventing lineage.
+
+
+For Windows reconciliation requiring the native semantic worker, run
+`semantic_review.py host-status --probe-dir <selected-local-diagnostics-directory>`
+before expensive preparation. It runs the same capability probes on a synthetic
+schema. If it fails, retain local diagnostics, continue independent accounting
+steps and deliver saved results. Recheck the actual capsule before submission.

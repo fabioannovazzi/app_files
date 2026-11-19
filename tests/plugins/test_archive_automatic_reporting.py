@@ -1798,3 +1798,21 @@ def test_read_selection_rejects_source_changed_during_extraction(tmp_path, monke
         measurements.read_selection(source)
 
     assert path.read_text(encoding="utf-8") == "item,amount\nchanged,99\n"
+
+
+def test_missing_adapter_delivers_verified_local_file_with_reporting_gap(
+    archive_core, client_case
+):
+    import archive_reporting
+
+    loaded = start(archive_core, client_case)
+    artifact = Path(loaded["output_dir"]) / "synthetic.bin"
+    artifact.write_bytes(b"retained binary work")
+    packet = archive_reporting.read_artifact(loaded, artifact)
+    assert packet["data"]["kind"] == "local_file"
+    assert Path(packet["data"]["path"]).read_bytes() == b"retained binary work"
+    assert packet["data"]["content_returned"] is False
+    assert packet["reporting"]["status"] == "unavailable"
+
+    with pytest.raises(ValueError, match="measurement adapter"):
+        archive_reporting.read_artifact(loaded, artifact, columns=[0])
