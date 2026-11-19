@@ -14,6 +14,15 @@ if (!["vera", "clara", "lucia"].includes(PRODUCT)) throw new Error("Unsupported 
 const RECOVERY_URL = `https://mparanza.com/${PRODUCT}/incident-recovery`;
 const RECOVERY_HELP = `use the host browser at ${RECOVERY_URL} with the original reporting owner and exact retained request`;
 const SESSION = randomUUID();
+// Only explicit invocation arguments supply internal/test settings. The server
+// derives production storage and host identity from its own installation.
+const settingsIndex = process.argv.indexOf("--settings");
+const SETTINGS = settingsIndex < 0 ? {} : JSON.parse(fs.readFileSync(process.argv[settingsIndex + 1], "utf8"));
+const HOST = fs.existsSync(path.join(ROOT, ".codex-plugin/plugin.json")) ? "codex" : "cowork";
+const INTERNAL_SETTINGS = { host: HOST, plugin_root: ROOT,
+  state_dir: path.join(os.homedir(), ".mparanza", PRODUCT, "incidents", HOST),
+  device_dir: path.join(os.homedir(), ".mparanza/vera/host-identity"),
+  ...SETTINGS, host_session: SETTINGS.host_session || SESSION };
 class HostFailure extends Error {}
 const uuid = { type: "string", format: "uuid" };
 const capability = { type: "string", minLength: 32, maxLength: 128, pattern: "^[A-Za-z0-9_-]+$" };
@@ -99,6 +108,8 @@ function bridge(command, args) {
 from pathlib import Path
 root = Path(sys.argv.pop(1))
 sys.path.insert(0, str(root / "scripts"))
+import operational_incidents as incidents
+incidents.configure_settings(json.loads(sys.argv.pop(1)))
 from technical_runner import exception_events
 try:
     if sys.argv[1] == "workflow-usage":
@@ -108,7 +119,7 @@ try:
         from operational_incidents import native_request
         sys.stdout.write(json.dumps(native_request(json.load(sys.stdin))))
     else:
-        runpy.run_path(str(root / "scripts/operational_incidents.py"), run_name="__main__")
+        incidents.main()
 except Exception as error:
     # Process boundary: collect fixed technical facts, never values or raw stderr.
     events = exception_events(error, root)
@@ -119,9 +130,8 @@ except Exception as error:
     sys.stdout.write(json.dumps({"native_error": {"events": events, "http_status": code if isinstance(code, int) else None, "errno": getattr(error, "errno", None), "sqlite_errorname": getattr(error, "sqlite_errorname", None), "capture_state": "pending" if events else "unavailable", "unavailable": ["This native bridge does not collect raw diagnostic values."]}}))
     raise SystemExit(1)
 `;
-    const result = spawnSync(python, ["-X", "utf8", "-I", "-B", "-c", program, snapshot, command], {
+    const result = spawnSync(python, ["-X", "utf8", "-I", "-B", "-c", program, snapshot, JSON.stringify({ ...INTERNAL_SETTINGS, ...(command === "workflow-usage" && args.run_id ? { task_id: args.run_id } : {}) }), command], {
       cwd: snapshot, encoding: "utf8", input: JSON.stringify(args), timeout: command === "workflow-usage" ? 60000 : 20000, maxBuffer: 1000000,
-      env: { ...process.env, MPARANZA_INCIDENT_HOST_SESSION: SESSION },
     });
     if (result.error || result.status !== 0) {
       const failure = new HostFailure(`Native incident host operation unavailable; inspect its structured technical facts and ${RECOVERY_HELP}`);

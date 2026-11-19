@@ -327,8 +327,14 @@ def test_engagement_lookup_rejects_two_verified_live_copies(prepared_case, tmp_p
         other, run["engagement_id"], successor["run"]["run_id"]
     )
 
-    with pytest.raises(archive.ArchiveError, match="multiple live locations"):
+    with pytest.raises(archive.ArchiveError, match="multiple live locations") as failed:
         archive.list_studio_client_engagements(run["client_id"])
+    choices = [Path(line) for line in str(failed.value).splitlines()[1:]]
+    assert len(choices) == 2
+    assert {path.parents[5] for path in choices} == {original, other}
+    with archive.use_studio_run_context(choices[0]):
+        selected = archive.list_studio_client_engagements(run["client_id"])
+    assert selected["engagements"][0]["engagement_id"] == run["engagement_id"]
 
 
 def test_retained_import_rejects_source_in_other_selected_archive(
