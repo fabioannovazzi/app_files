@@ -68,8 +68,24 @@ jobs:
           tests/plugins/test_bank_pdf_recovery.py
           tests/plugins/test_archive_reporting_recovery.py
           -k 'updated_executable or executable_change_during_execution or final_workbook_keeps_source_references or failed_schema_probe_retains or executable_hash_tolerates or bank_recovery_reaches_reconciliation or wrong_bank_closing or local_report_failure_returns_committed_status'
+
+  windows-worker-readiness:
+    name: Native Windows 11 worker isolation
+    runs-on: windows-11-arm
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          architecture: x64
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          architecture: arm64
+      - name: Install declared worker dependencies
+        run: python -m pip install -r plugins/journal-bank-reconciliation/requirements.txt
       - name: Exercise installed Windows worker readiness with a synthetic profile
-        if: matrix.os == 'windows-latest' && matrix.encoding == 'utf-8'
         shell: pwsh
         run: |
           $install = Join-Path $env:RUNNER_TEMP "worker-readiness-cli"
@@ -77,6 +93,7 @@ jobs:
           if ($LASTEXITCODE) { exit $LASTEXITCODE }
           $binary = Get-ChildItem $install -Recurse -File -Filter codex.exe | Select-Object -First 1
           if (!$binary) { throw "Native Codex executable missing" }
+          & $binary.FullName --version
           $env:USERPROFILE = Join-Path $env:RUNNER_TEMP "synthetic-worker-profile"
           $env:CODEX_HOME = Join-Path $env:USERPROFILE ".codex"
           New-Item $env:CODEX_HOME -ItemType Directory -Force | Out-Null
