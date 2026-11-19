@@ -78,7 +78,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          architecture: x64
+          architecture: arm64
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -103,7 +103,7 @@ jobs:
           $probe = Join-Path $env:RUNNER_TEMP "vera-readiness"
           python plugins/journal-bank-reconciliation/scripts/semantic_review.py host-status --codex-bin $binary.FullName --probe-dir $probe
           $status = $LASTEXITCODE
-          if ($status) {
+          if ($status -and (Test-Path $probe)) {
             Get-ChildItem $probe -Filter 'schema-canary-*.json' | ForEach-Object {
               $capture = Get-Content $_.FullName -Raw | ConvertFrom-Json
               Write-Output ("exit=" + $capture.return_code)
