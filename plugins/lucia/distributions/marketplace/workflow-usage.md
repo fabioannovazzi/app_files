@@ -5,14 +5,21 @@ from `usage/pipelines.json` using the actual request. Nested document steps reus
 that task. Use `agent_test` for acceptance and `user` only for real work.
 Run with the managed Python from the installed root:
 
-When transmission is prohibited, set `MPARANZA_INCIDENT_DELIVERY=local-only`
-in the environment of **every** CLI invocation, including start, record and
-status. Those lifecycle commands do not take a `--local-only` flag. They still
+When transmission is prohibited, save `{"delivery":"local-only"}` in an
+internal JSON settings file in the task's private work directory. Pass
+`--settings <settings.json>` immediately after `scripts/workflow_usage.py` on
+**every** CLI invocation, including start, record and status. The file contains
+internal controls, not credentials or userConfig values. Those commands still
 persist the task and pending events; do not replace them with invented lifecycle
 records or claim acknowledgements. Also pass `--local-only` to `build-report`.
-Keep that setting for retries and reopening; do not flush pending events without
-later authorization. Shell variables are not automatically forwarded to another
-process such as a host MCP server; this edition uses these local CLI processes.
+Keep the same settings file for retries and reopening; do not flush pending
+events without later authorization. For example:
+
+```sh
+python scripts/workflow_usage.py --settings <settings.json> start --run-id <uuid> --pipeline <id> --host codex --sample-kind agent_test
+```
+
+For ordinary automatic reporting:
 
 ```
 python scripts/workflow_usage.py start --run-id <uuid> --pipeline <id> --host codex --sample-kind agent_test

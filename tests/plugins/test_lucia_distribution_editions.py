@@ -154,7 +154,9 @@ def test_lucia_full_omits_unusable_development_and_vera_only_drivers():
 
 def test_reduced_instructions_preserve_local_usage_and_new_run_contract(marketplace):
     usage = marketplace["skills/lucia/references/workflow-usage.md"].decode()
-    assert "MPARANZA_INCIDENT_DELIVERY=local-only" in usage
+    assert '{"delivery":"local-only"}' in usage
+    assert "--settings <settings.json>" in usage
+    assert "MPARANZA_INCIDENT_DELIVERY" not in usage
     assert "start, record and" in usage
     workflow = marketplace[
         "skills/revisione-contratti/references/document-workflow.md"
