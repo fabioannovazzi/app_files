@@ -90,6 +90,11 @@ versions are not updated. No OpenAI Marketplace submission or publication.
   the artifact at repository root, including its public test ZIPs; 18 archive
   guard/prerequisite tests pass, including stale-file removal before extraction.
 
+- The packaged workflow-usage CLI fixture still used environment-only state
+  selection. It now passes `--settings`; all three product CLI cases pass.
+  Packaged on-demand Archive fixtures also pass explicit settings, and both
+  native UI cases pass in the host context after sandboxed server-start failures.
+
 - The optional local update-notification cache check fails for unchanged Clara:
   public manifest 0.1.248 versus installed curated cache 0.1.407 (17 tests passed,
   one skipped). No Clara publication or public-version change is part of this task.

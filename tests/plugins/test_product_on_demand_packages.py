@@ -58,11 +58,20 @@ def test_chat_only_archive_pin_opens_native_incarico_and_preserves_default(
         "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
         "VERA_WORKSPACE_PYTHON": sys.executable,
         "VERA_REPORTING_STATE_DIR": str(tmp_path / "reporting"),
-        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incidents"),
-        "MPARANZA_INCIDENT_DEVICE_DIR": str(tmp_path / "device"),
-        "MPARANZA_INCIDENT_DELIVERY": "local-only",
     }.items():
         monkeypatch.setenv(name, value)
+
+    settings = tmp_path / "incident-settings.json"
+    settings.write_text(
+        json.dumps(
+            {
+                "state_dir": str(tmp_path / "incidents"),
+                "device_dir": str(tmp_path / "device"),
+                "delivery": "local-only",
+                "host": host,
+            }
+        )
+    )
 
     def call(session, name, arguments):
         reply = session.call(
@@ -76,7 +85,7 @@ def test_chat_only_archive_pin_opens_native_incarico_and_preserves_default(
     permanent, temporary = tmp_path / "Permanent", tmp_path / "Temporary"
     permanent.mkdir()
     temporary.mkdir()
-    active = Session(plugin)
+    active = Session(plugin, settings=settings)
     try:
         call(
             active,
@@ -120,7 +129,7 @@ def test_chat_only_archive_pin_opens_native_incarico_and_preserves_default(
         monkeypatch.setenv(
             "VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "second-chat-state")
         )
-        other = Session(plugin)
+        other = Session(plugin, settings=settings)
         try:
             visible = call(other, "list_studio_archive_clients", {})[
                 "structuredContent"
