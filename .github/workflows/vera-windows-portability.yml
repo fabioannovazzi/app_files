@@ -83,8 +83,8 @@ jobs:
         with:
           node-version: '22'
           architecture: arm64
-      - name: Install declared worker dependencies
-        run: python -m pip install -r plugins/journal-bank-reconciliation/requirements.txt
+      - name: Install worker readiness dependencies
+        run: python -m pip install -c plugins/journal-bank-reconciliation/requirements.txt polars fastexcel openpyxl
       - name: Exercise installed Windows worker readiness with a synthetic profile
         shell: pwsh
         run: |
