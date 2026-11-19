@@ -86,7 +86,9 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 - CI artifact extraction over old tracked Cowork trees retained two obsolete
   top-level environment helpers in unreleased sibling directories. Consumers now
   remove only generated Cowork trees before extracting this commit's artifact;
-  strict package verification remains enabled.
+  strict package verification remains enabled. The prerequisite tests now expect
+  the artifact at repository root, including its public test ZIPs; 18 archive
+  guard/prerequisite tests pass, including stale-file removal before extraction.
 
 - The optional local update-notification cache check fails for unchanged Clara:
   public manifest 0.1.248 versus installed curated cache 0.1.407 (17 tests passed,
