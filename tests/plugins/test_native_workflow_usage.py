@@ -236,6 +236,12 @@ def test_native_service_persists_when_chat_shell_cannot_write_global_state(
     state = tmp_path / "unused-task-state"
     profile = f"(version 1)(allow default)(deny file-write* (subpath {json.dumps(str(state))}))"
 
+    settings = tmp_path / "blocked-settings.json"
+    settings.write_text(
+        json.dumps(
+            {"state_dir": str(state), "device_dir": str(device), "host": "codex"}
+        )
+    )
     restricted = subprocess.run(
         [
             "sandbox-exec",
@@ -243,6 +249,8 @@ def test_native_service_persists_when_chat_shell_cannot_write_global_state(
             profile,
             sys.executable,
             str(root / "scripts/workflow_usage.py"),
+            "--settings",
+            str(settings),
             "start",
             "--run-id",
             run_id,

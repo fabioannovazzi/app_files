@@ -528,33 +528,39 @@ def test_direct_cli_uses_empty_bootstrap_interpreter(monkeypatch, tmp_path):
     )
     assert "CLAUDE_ENV_FILE" not in run.env
     assert run.env["MPARANZA_RUNTIME_ROOT"] == str(run.output / "shared-runtime")
-    assert run.env["MPARANZA_INCIDENT_DELIVERY"] == "local-only"
+    assert "MPARANZA_INCIDENT_DELIVERY" not in run.env
 
 
 def test_release_failure_retains_log_without_customer_delivery(monkeypatch, tmp_path):
-    import sys
+    import shutil
 
     archive = tmp_path / "candidate.zip"
     archive.write_bytes(b"test")
     monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     run = gate.CheckRun(archive, tmp_path / "output", 60)
-    run.root.mkdir(parents=True)
-
-    passed = run.command(
-        "setup-failure",
-        [
-            sys.executable,
-            "-c",
-            "import os,sys; sys.stdout.write(os.environ['MPARANZA_INCIDENT_DELIVERY']); sys.exit(1)",
-        ],
+    scripts = run.root / "scripts"
+    scripts.mkdir(parents=True)
+    source = SCRIPT.parents[1] / "plugins/clara/scripts"
+    for name in ("operational_incidents.py", "reporting_product.py"):
+        shutil.copyfile(source / name, scripts / name)
+    manifest = run.root / ".codex-plugin/plugin.json"
+    manifest.parent.mkdir()
+    manifest.write_text(json.dumps({"name": "clara", "version": "0.1.428"}))
+    failure = scripts / "failure.py"
+    failure.write_text(
+        "import json,sys,urllib.request\n"
+        "def deny(*args, **kwargs): raise AssertionError('Unexpected network')\n"
+        "urllib.request.urlopen=deny\n"
+        "import operational_incidents as incidents\n"
+        "receipt=incidents.report_failure('test','execution','Synthetic failure')\n"
+        "sys.stdout.write(json.dumps(receipt)); sys.exit(1)\n"
     )
 
+    passed = run.command("setup-failure", [sys.executable, str(failure)])
+
     assert passed is False
-    assert (run.output / "setup-failure.log").read_text() == "local-only"
+    receipt = json.loads((run.output / "setup-failure.log").read_text())
+    assert receipt["reporting"] == "queued"
+    state = gate.read_json(run.output / "incident-state/state.json")
+    assert state["outbox"][0]["delivery_mode"] == "local-only"
     assert gate.read_json(run.output / "result.json")["steps"][0]["status"] == "fail"
-
-
-def test_pytest_defaults_to_local_only_incident_delivery():
-    import os
-
-    assert os.environ["MPARANZA_INCIDENT_DELIVERY"] == "local-only"

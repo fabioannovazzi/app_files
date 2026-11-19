@@ -5,10 +5,14 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
-const { createHash } = require("node:crypto");
+const { createHash, randomUUID } = require("node:crypto");
 const { spawn } = require("node:child_process");
 function launch() {
 const root = path.resolve(__dirname, "..");
+const settingsIndex = process.argv.indexOf("--settings");
+const settings = { host_session: randomUUID(),
+  host: fs.existsSync(path.join(root, ".codex-plugin/plugin.json")) ? "codex" : "cowork",
+  ...(settingsIndex < 0 ? {} : JSON.parse(fs.readFileSync(process.argv[settingsIndex + 1], "utf8"))) };
 const indexPath = path.join(root, "execution-files.json");
 const development = fs.existsSync(path.resolve(root, "../../.git")) &&
   fs.existsSync(path.resolve(root, "../_shared"));
@@ -48,7 +52,7 @@ const program = [
   "    os.chdir(snapshot)",
   "    os.environ['VERA_EXECUTION_PACKAGE_ID']=execution_package_id(snapshot) or 'development'",
   "    script=snapshot/'scripts/native_execution.py'",
-  "    sys.argv=[str(script)]",
+  "    sys.argv=[str(script), '--settings-json', sys.argv[3]]",
   "    runpy.run_path(str(script),run_name='__main__',init_globals={'_SHUTDOWN':shutdown})",
   "finally:",
   "    if snapshot is not None: release_execution_root(snapshot)",
@@ -64,7 +68,7 @@ try {
   // The transport parent must release the replaceable installation directory
   // too: Windows prevents its removal while any process keeps it as cwd.
   process.chdir(os.tmpdir());
-  const child = spawn(python, ["-X", "utf8", "-I", "-B", "-c", program, bootstrap, root],
+  const child = spawn(python, ["-X", "utf8", "-I", "-B", "-c", program, bootstrap, root, JSON.stringify(settings)],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
   // A host stop closes this transport, not the detached professional jobs.
   // Keep the owner alive until its workers release the leased code.

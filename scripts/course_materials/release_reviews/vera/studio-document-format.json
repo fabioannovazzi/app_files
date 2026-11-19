@@ -334,7 +334,7 @@
     "reviewer": "Codex /root - bounded report output source review",
     "source_review": "Inspected report-builder Markdown omission repair, compact-table pagination and continuous audit appendix; numeric review, source capture and integrity validation unchanged. The component version advances to0.1.47. Shared studio-format preview code calls the same renderer. Full compiled course comparison shows only source inventory changes; original editorial judgments and outputs remain historical. Fresh current-digest localized execution remains required."
   },
-  "course_sha256": "87948a06b3bde03d706e332c2b0dc925abcd95b94ce4321a6ab44e2bc8b85a59",
+  "course_sha256": "7b16ac51ef7054bc059a789e78ee44ec545f77e1af7cf23c40728b3b64bb7f6a",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -1215,5 +1215,15 @@
     "source_scope": "Shared Archive root and lowercase product folders, product-owned views and source access, shared Vera Archive UI and adapters, and the previously authorized Vera search and Clara UI/media releases. These source changes are reviewed in PR 1008; their regression and package evidence is separate from historical editorial judgments.",
     "execution_evidence": "GitHub Actions run 43949658512, job 133594447114 at 664990876e4d1e6bb7416d38f6507e395ddd0a6c: 1752 tests passed, 3 skipped, 85.05% coverage. Retained teaching-native.xml binds the actual localized demo/practice cases to the current compiled course digests.",
     "limits": "Preserves prior named editorial and output-artifact judgments. This source-binding comparison does not assert new human learner, visual, installed-host or professional acceptance. The unchanged release verifier must pass against the retained actual JUnit evidence and fresh CI."
+  },
+  "explicit_runtime_source_binding_review_20261119": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-11-19T10:45:47.751696+00:00",
+    "review_record": "docs/acceptance/lucia-runtime-course-source-review-2026-11-19.json",
+    "reviewed_ancestor_commit": "d8ddc3aa902b5f6c3dbf5967ca468b37b28b2e87",
+    "previous_course_sha256": "87948a06b3bde03d706e332c2b0dc925abcd95b94ce4321a6ab44e2bc8b85a59",
+    "course_sha256": "7b16ac51ef7054bc059a789e78ee44ec545f77e1af7cf23c40728b3b64bb7f6a",
+    "authored_content_unchanged": true,
+    "judgment": "Complete course comparison against the exact previously reviewed ancestor changes only the source inventory. Current native demo/practice identities passed for this course hash. Preserve original editorial and historical artifact judgments; this is a bounded agent source-compatibility review, not new learner, visual or professional acceptance."
   }
 }

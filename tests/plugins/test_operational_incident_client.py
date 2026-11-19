@@ -128,8 +128,8 @@ def test_codex_compatibility_hook_retains_existing_machine_identity(
     tmp_path, monkeypatch, product
 ):
     module, _, _ = client(tmp_path, monkeypatch, product)
-    monkeypatch.delenv("MPARANZA_INCIDENT_STATE_DIR")
-    monkeypatch.delenv("MPARANZA_INCIDENT_HOST", raising=False)
+    monkeypatch.delitem(module._SETTINGS, "state_dir")
+    monkeypatch.delitem(module._SETTINGS, "host", raising=False)
     monkeypatch.delenv("PLUGIN_ROOT", raising=False)
     monkeypatch.delenv("CLAUDE_PLUGIN_ROOT", raising=False)
     monkeypatch.setattr(module.Path, "home", lambda: tmp_path / "home")
@@ -151,10 +151,10 @@ def test_cowork_hook_keeps_its_host_when_explicitly_selected(
     module, _, _ = client(tmp_path, monkeypatch)
     monkeypatch.setenv("CLAUDE_PLUGIN_ROOT", str(module.ROOT))
     monkeypatch.delenv("PLUGIN_ROOT", raising=False)
-    monkeypatch.delenv("MPARANZA_INCIDENT_HOST", raising=False)
+    monkeypatch.setitem(module._SETTINGS, "host", "cowork")
     if codex_compatibility:
         monkeypatch.setenv("PLUGIN_ROOT", str(module.ROOT))
-        monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+        monkeypatch.setitem(module._SETTINGS, "host", "cowork")
 
     observed = module.local_context()
 
@@ -166,7 +166,7 @@ def test_local_delivery_retains_failure_and_success_without_transport(
     tmp_path, monkeypatch, product
 ):
     module, store, _ = client(tmp_path, monkeypatch, product)
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+    monkeypatch.setitem(module._SETTINGS, "delivery", "local-only")
     receipt = module.report_failure(
         "journal-sampling", "execution-startup", "Synthetic argument failure"
     )
@@ -186,7 +186,7 @@ def test_local_delivery_retains_failure_and_success_without_transport(
         "observed-success",
     ]
     assert store.queue() == [] and state["receipts"] == []
-    monkeypatch.delenv("MPARANZA_INCIDENT_DELIVERY")
+    monkeypatch.delitem(module._SETTINGS, "delivery")
     module._flush(state)
     assert store.queue() == []
 
@@ -204,7 +204,7 @@ def test_incident_delivery_setting_blocks_direct_http(
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", mode)
+    monkeypatch.setitem(module._SETTINGS, "delivery", mode)
     monkeypatch.setattr(
         module.urllib.request,
         "build_opener",
@@ -501,6 +501,7 @@ def client(tmp_path, monkeypatch, product="vera"):
     )
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    module.configure_settings({"delivery": "automatic"})
     root = tmp_path / "installation"
     (root / ".codex-plugin").mkdir(parents=True)
     (root / ".codex-plugin/plugin.json").write_text(
@@ -524,7 +525,7 @@ def client(tmp_path, monkeypatch, product="vera"):
     usage_spec.loader.exec_module(usage_module)
     monkeypatch.setitem(sys.modules, "workflow_usage", usage_module)
     monkeypatch.setattr(module, "ROOT", root)
-    monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "private"))
+    monkeypatch.setitem(module._SETTINGS, "state_dir", str(tmp_path / "private"))
     store = IncidentStore(tmp_path / "server.sqlite3")
 
     def post(operation, payload):
@@ -561,15 +562,19 @@ def client(tmp_path, monkeypatch, product="vera"):
 def test_fresh_native_cowork_instances_keep_one_host_and_app_identity(
     tmp_path, monkeypatch
 ):
-    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "native"))
-    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
     first, store, transport = client(tmp_path / "one", monkeypatch)
+    first.configure_settings(
+        {**first._SETTINGS, "device_dir": str(tmp_path / "native"), "host": "cowork"}
+    )
     monkeypatch.setattr(first.platform, "system", lambda: "Darwin")
     one = first.report_failure(
         "journal-sampling", "execution-startup", "synthetic failure"
     )
     first_context = first.local_context()
     second, _, _ = client(tmp_path / "two", monkeypatch)
+    second.configure_settings(
+        {**second._SETTINGS, "device_dir": str(tmp_path / "native"), "host": "cowork"}
+    )
     monkeypatch.setattr(second, "_post", transport)
     second.report_failure("journal-sampling", "execution-startup", "synthetic failure")
     second_context = second.local_context()
@@ -590,7 +595,7 @@ def test_fresh_native_cowork_instances_keep_one_host_and_app_identity(
 
 def test_cowork_guest_never_invents_a_native_host_identity(tmp_path, monkeypatch):
     module, store, _ = client(tmp_path, monkeypatch)
-    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+    monkeypatch.setitem(module._SETTINGS, "host", "cowork")
     monkeypatch.setattr(module.platform, "system", lambda: "Linux")
 
     module.report_failure("journal-sampling", "execution-startup", "synthetic failure")
@@ -751,7 +756,8 @@ def test_remote_status_runs_fixed_retry_once_offline_and_retains_private_error_f
 
     assert len(calls) == 1
     assert calls[0][1:3] == ["-X", "utf8"]
-    assert calls[0][4:] == ([] if workflow == "vera-core" else ["--module", workflow])
+    assert json.loads(calls[0][6])["recovery_active"] is True
+    assert calls[0][7:] == ([] if workflow == "vera-core" else ["--module", workflow])
     assert result["queued"] == repeated["queued"] == 1
     state = module._read()
     assert state["outbox"][0]["payload"]["outcome"]["execution_succeeded"] is False
@@ -1394,7 +1400,7 @@ def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
     from types import SimpleNamespace
 
     module, store, _ = client(tmp_path, monkeypatch)
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", delivery)
+    monkeypatch.setitem(module._SETTINGS, "delivery", delivery)
     monkeypatch.setitem(sys.modules, "operational_incidents", module)
     spec = importlib.util.spec_from_file_location(
         "diagnostic_capture_launcher",

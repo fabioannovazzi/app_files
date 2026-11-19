@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import shlex
 import subprocess
 from pathlib import Path
 from zipfile import ZipFile
@@ -144,6 +145,34 @@ def test_direct_archive_consumers_wait_for_and_download_their_build(workflow, jo
     )
     assert any(
         step.get("uses") == "actions/download-artifact@v4"
-        and step["with"] == {"name": "product-archives", "path": "plugin_packages"}
+        and step["with"] == {"name": "product-archives", "path": "."}
         for step in consumer["steps"]
     )
+
+
+def test_artifact_consumer_removes_stale_cowork_files_before_download(tmp_path):
+    workflow = yaml.safe_load((ROOT / ".github/workflows/clara-cowork.yml").read_text())
+    steps = workflow["jobs"]["packaged-reporting"]["steps"]
+    cleanup = next(
+        step
+        for step in steps
+        if step.get("name")
+        == "Remove previous generated Cowork trees before artifact extraction"
+    )
+    download = next(
+        step for step in steps if step.get("uses") == "actions/download-artifact@v4"
+    )
+    stale = (
+        tmp_path
+        / "plugin_packages/clara/claude/clara/scripts/local_helper_environment.py"
+    )
+    stale.parent.mkdir(parents=True)
+    stale.write_text("obsolete helper")
+    archive = tmp_path / "plugin_packages/clara/clara-claude-plugin.zip"
+    archive.write_bytes(b"retained archive")
+
+    subprocess.run(shlex.split(cleanup["run"]), cwd=tmp_path, check=True)
+
+    assert not stale.exists()
+    assert archive.read_bytes() == b"retained archive"
+    assert steps.index(cleanup) < steps.index(download)

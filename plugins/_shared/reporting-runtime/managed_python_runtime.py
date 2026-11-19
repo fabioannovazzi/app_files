@@ -33,6 +33,7 @@ _VERIFICATION = runpy.run_path(str(Path(__file__).with_name("verified_execution.
 prepare_execution_root = _VERIFICATION["prepare_execution_root"]
 release_execution_root = _VERIFICATION["release_execution_root"]
 report_preparation_failure = _VERIFICATION["report_preparation_failure"]
+current_incident_settings = _VERIFICATION["current_incident_settings"]
 
 
 def _implementation_path() -> Path:
@@ -277,7 +278,7 @@ def _technical_events(
 
 def _independent_failure(stage: str, module: str | None, error_type: str) -> None:
     """Route pre-execution failures without running an unverified incident helper."""
-    if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+    if current_incident_settings().get("delivery") == "local-only":
         logging.error(
             "VERA_LOCAL_INCIDENT: workflow=%s stage=%s error_type=%s. "
             "Retain local evidence; incident transmission is disabled for this execution.",
@@ -476,7 +477,7 @@ def run_verified_helper(
         if error_path is not None:
             try:
                 pointer = retain_diagnostic(error_path, receipt)
-                if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+                if current_incident_settings().get("delivery") == "local-only":
                     logging.error(
                         "VERA_TECHNICAL_EVIDENCE: %s. Read retained stderr locally; "
                         "incident transmission is disabled for this execution.",

@@ -315,18 +315,24 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                         str(execution_root / "scripts/native_execution.py"),
                         "--execute",
                         str(job),
+                        "--settings-json",
+                        json.dumps(
+                            {
+                                **__import__("operational_incidents")._SETTINGS,
+                                "task_id": spec["task_id"],
+                                **(
+                                    {"delivery": "local-only"}
+                                    if spec["incident_delivery"] == "local-only"
+                                    else {}
+                                ),
+                            }
+                        ),
                     ],
                     cwd=execution_root,
                     env={
                         **os.environ,
                         "VERA_EXECUTION_PACKAGE_ID": request["package_sha256"]
                         or "development",
-                        "MPARANZA_INCIDENT_TASK_ID": spec["task_id"],
-                        **(
-                            {"MPARANZA_INCIDENT_DELIVERY": "local-only"}
-                            if spec["incident_delivery"] == "local-only"
-                            else {}
-                        ),
                     },
                     stdin=subprocess.DEVNULL,
                     stdout=subprocess.DEVNULL,
@@ -464,7 +470,14 @@ def _run(job: Path) -> int:
                         "utf8",
                         "-I",
                         "-B",
+                        "-c",
+                        "import json,runpy,sys; from pathlib import Path; "
+                        "script=sys.argv.pop(1); settings=json.loads(sys.argv.pop(1)); "
+                        "sys.path.insert(0,str(Path(script).parent)); "
+                        "import operational_incidents; operational_incidents.configure_settings(settings); "
+                        "sys.argv[0]=script; runpy.run_path(script,run_name='__main__')",
                         str(ROOT / "scripts/managed_python_runtime.py"),
+                        json.dumps(__import__("operational_incidents")._SETTINGS),
                         *_arguments(request),
                     ],
                     cwd=ROOT,
@@ -474,7 +487,6 @@ def _run(job: Path) -> int:
                     env={
                         **os.environ,
                         "VERA_REPORTING_INTERNAL": "1",
-                        "MPARANZA_INCIDENT_TASK_ID": request["task_id"],
                     },
                     **(
                         {
@@ -698,7 +710,11 @@ def serve() -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--execute", type=Path)
+    parser.add_argument("--settings-json", default="{}")
     args = parser.parse_args()
+    from operational_incidents import configure_settings
+
+    configure_settings(json.loads(args.settings_json))
     if args.execute is not None:
         return _run(args.execute)
     for signum in (signal.SIGTERM, signal.SIGINT):

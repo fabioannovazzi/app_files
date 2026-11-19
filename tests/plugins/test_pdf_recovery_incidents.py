@@ -159,7 +159,7 @@ def test_failure_attempt_and_replay_share_incident_without_closing_original_task
 ):
     reporter, store, _ = client(tmp_path, monkeypatch)
     if local_only:
-        monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+        monkeypatch.setitem(reporter._SETTINGS, "delivery", "local-only")
     history, arguments = episode(tmp_path)
     execution = reporter.execution_identity("journal-bank-reconciliation", arguments)
     event(history, 1, False)

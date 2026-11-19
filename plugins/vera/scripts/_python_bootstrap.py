@@ -47,36 +47,6 @@ ASSETS = {
     ),
 }
 MAX_DOWNLOAD = 64 * 1024 * 1024
-# Standalone bootstrap: copy host/path names from local_helper_environment.json,
-# omit helper/runtime overrides, and add only installer proxy/CA/cache settings.
-# A fixed allowlist keeps unrelated credentials out of networked subprocesses.
-INSTALLER_ENVIRONMENT_NAMES = frozenset(
-    {
-        "PATH",
-        "HOME",
-        "USERPROFILE",
-        "SYSTEMROOT",
-        "WINDIR",
-        "COMSPEC",
-        "PATHEXT",
-        "LOCALAPPDATA",
-        "APPDATA",
-        "TEMP",
-        "TMP",
-        "TMPDIR",
-        "LANG",
-        "LC_ALL",
-        "HTTPS_PROXY",
-        "HTTP_PROXY",
-        "ALL_PROXY",
-        "NO_PROXY",
-        "SSL_CERT_FILE",
-        "SSL_CERT_DIR",
-        "REQUESTS_CA_BUNDLE",
-        "XDG_CACHE_HOME",
-        "XDG_DATA_HOME",
-    }
-)
 
 
 def _replace_download(temporary: Path, binary: Path) -> None:
@@ -154,39 +124,25 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
     if (base / "python").is_symlink():
         raise ValueError("Private Python storage cannot be a symlink")
     uv = _uv(base / "bootstrap")
-    environment = {
-        key: os.environ[key]
-        for key in os.environ
-        if key.upper() in INSTALLER_ENVIRONMENT_NAMES
-    }
-    environment.update(
-        {
-            "UV_PYTHON_INSTALL_DIR": str(base / "python"),
-            "UV_CACHE_DIR": str(base / "bootstrap/cache"),
-            "UV_PYTHON_BIN_DIR": str(base / "bootstrap/bin"),
-            "UV_PYTHON_INSTALL_BIN": "0",
-        }
-    )
     commands = [
-        [str(uv), "--no-config", "python", "install", "--no-bin", "cpython@3.12"],
         [
             str(uv),
             "--no-config",
+            "--cache-dir",
+            str(base / "bootstrap/cache"),
             "python",
-            "find",
-            "--no-project",
-            "--system",
-            "--managed-python",
-            "--no-python-downloads",
+            "install",
+            "--install-dir",
+            str(base / "python"),
+            "--no-bin",
+            "--no-registry",
             "cpython@3.12",
         ],
     ]
-    candidate = ""
     install_error = ""
-    for index, command in enumerate(commands):
+    for command in commands:
         result = runner(
             command,
-            env=environment,
             capture_output=True,
             text=True,
             timeout=600,
@@ -194,17 +150,20 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             encoding="utf-8",
         )
         if result.returncode:
-            if index == 0:
-                # uv can finish extraction but fail creating its minor-version link.
-                # Reuse only a private interpreter which passes the capability probe.
-                install_error = result.stderr.strip()
-                continue
-            raise ValueError(
-                "Automatic Python setup failed; retry after resolving download or storage access: "
-                + "\n".join(filter(None, (install_error, result.stderr.strip())))
-            )
-        candidate = result.stdout.strip()
-    executable = Path(candidate)
+            # Extraction may succeed even when a platform link step fails.
+            install_error = result.stderr.strip()
+    # uv 0.12.10 has no --bin-dir, nor an install-dir flag for `python find`.
+    # --no-bin avoids global links. Find only installations in our explicit root;
+    # the capability probe below still verifies the actual interpreter.
+    candidates = sorted((base / "python").glob("cpython-3.12-*/python.exe"))
+    candidates += sorted((base / "python").glob("cpython-3.12.*/python.exe"))
+    candidates += sorted((base / "python").glob("cpython-3.12.*/bin/python3.12"))
+    if not candidates:
+        raise ValueError(
+            "Automatic Python setup did not return its private interpreter. "
+            + install_error
+        )
+    executable = candidates[-1]
     if not executable.is_file() or not executable.resolve().is_relative_to(
         (base / "python").resolve()
     ):
@@ -220,7 +179,6 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             "-c",
             "import sys, ssl, venv, ensurepip; assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 12)",
         ],
-        env=environment,
         capture_output=True,
         text=True,
         timeout=30,

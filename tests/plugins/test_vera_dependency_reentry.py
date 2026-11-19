@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import subprocess
 from pathlib import Path
 from types import SimpleNamespace
@@ -10,8 +11,11 @@ from tests.plugins.test_single_shared_runtime import backend
 
 
 @pytest.mark.parametrize("exit_code", [0, 1])
+@pytest.mark.parametrize(
+    "settings", [None, {"delivery": "local-only", "recovery_active": True}]
+)
 def test_base_handoff_releases_only_the_launcher_lease_and_propagates_result(
-    tmp_path, monkeypatch, exit_code
+    tmp_path, monkeypatch, exit_code, settings
 ):
     module = backend()
     root = tmp_path / "product"
@@ -31,7 +35,10 @@ def test_base_handoff_releases_only_the_launcher_lease_and_propagates_result(
             prefix=str(target),
             executable=str(target / "bin/python"),
             _base_executable=str(base),
-            modules={"_mparanza_runtime_guard": SimpleNamespace(_mpr_lease=lease)},
+            modules={
+                "_mparanza_runtime_guard": SimpleNamespace(_mpr_lease=lease),
+                "operational_incidents": SimpleNamespace(_SETTINGS=settings),
+            },
         ),
     )
     calls = []
@@ -47,6 +54,11 @@ def test_base_handoff_releases_only_the_launcher_lease_and_propagates_result(
     result = module.reenter_base(script, ["--module", "studio-archive"])
 
     assert result == exit_code
+    if settings:
+        assert calls[0][4] == "-c"
+        assert json.loads(calls[0][7]) == settings
+        assert calls[0][8:] == ["--module", "studio-archive"]
+        return
     assert calls == [
         [str(base), "-X", "utf8", "-s", str(script), "--module", "studio-archive"]
     ]

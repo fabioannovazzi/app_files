@@ -15,6 +15,9 @@ from pathlib import Path
 from types import SimpleNamespace
 from zipfile import ZipFile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from plugin_test_reporting import configure_reporting, script_command  # noqa: E402
+
 __all__ = ["main"]
 
 
@@ -57,8 +60,10 @@ def check_scatter(root: Path, base: Path) -> None:
     )
     output = base / "scatter-output"
     result = subprocess.run(
-        [
+        script_command(
             sys.executable,
+            root,
+            base / "clara",
             str(root / "scripts/managed_python_runtime.py"),
             "--module",
             "scatter-bubble-analysis",
@@ -71,7 +76,7 @@ def check_scatter(root: Path, base: Path) -> None:
             str(output),
             "--artifact-mode",
             "data_only",
-        ],
+        ),
         capture_output=True,
         text=True,
         timeout=180,
@@ -105,8 +110,6 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="shared-cold-") as temporary:
         base = Path(temporary).resolve()
         os.environ["MPARANZA_RUNTIME_ROOT"] = str(base / "runtime")
-        os.environ["MPARANZA_INCIDENT_DELIVERY"] = "local-only"
-        os.environ["MPARANZA_INCIDENT_STATE_DIR"] = str(base / "incident-state")
         os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
         sys.dont_write_bytecode = True
         os.environ["PATH"] = ""
@@ -125,6 +128,7 @@ def main() -> int:
                 if args.host_package == "codex"
                 else extracted
             )
+            configure_reporting(root, base / product)
             spec = importlib.util.spec_from_file_location(
                 f"cold_{product}", root / "scripts/_managed_python_runtime.py"
             )
@@ -143,27 +147,31 @@ def main() -> int:
             ok, target, detail = manager.ensure_runtime(root, component)
             if not ok:
                 raise RuntimeError(detail)
-            command = [
+            command = script_command(
                 sys.executable,
+                root,
+                base / product,
                 str(root / "scripts/check_dependencies.py"),
                 "--module",
                 component,
-            ]
+            )
             checked = subprocess.run(
                 command, capture_output=True, text=True, timeout=180, check=False
             )
             if checked.returncode:
                 raise RuntimeError(checked.stdout + checked.stderr)
             launched = subprocess.run(
-                [
+                script_command(
                     sys.executable,
+                    root,
+                    base / product,
                     str(root / "scripts/managed_python_runtime.py"),
                     "--module",
                     component,
                     "run",
                     "scripts/check_dependencies.py",
                     "--help",
-                ],
+                ),
                 capture_output=True,
                 text=True,
                 timeout=180,

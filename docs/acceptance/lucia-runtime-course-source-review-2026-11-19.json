@@ -1,0 +1,2448 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "reviewer": "Codex /root - bounded source compatibility review",
+  "reviewed_at": "2026-11-19T10:45:47.751696+00:00",
+  "reviewed_source_commit": "6c42e26b0bf3cf4d88ddf814b778149d02950a5b",
+  "baseline_main_commit": "a20d0fc53e35de6e1ef980639f3c6116e2079f36",
+  "scope": "For all 53 stale records, located the exact committed ancestor matching the previously approved course SHA-256 and compared the complete compiled JSON. Only source inventories differ; every authored locale, input, request, checkpoint, expected result and demo/practice identity is unchanged. 44 were already stale against baseline main; 9 became stale when this task refreshed their source inventories.",
+  "source_compatibility_judgment": [
+    "Inspected the inherited bank PDF changes: source-referenced page classification and optional movement spans preserve numeric coverage and source ownership; the default amount-row route remains available. Source classification still belongs to model review.",
+    "Inspected inherited reconciliation changes: replayed local cash matches are preserved, residual evidence remains searchable, accounting/invoice conclusions stay separate, and rejected first-stage responses are retained as recovery transitions instead of accepted assessments. Windows executable binding compares equivalent mode metadata across APIs while retaining within-API checks.",
+    "The current task changes explicit reporting settings and inherited child environments. Reviewed request/delivery boundaries, validation, bootstrap flags and preserved receipts in the associated task evidence. Existing lesson materials and output contracts remain applicable; the exact current demo/practice cases passed against their current course hashes."
+  ],
+  "native_execution_evidence": {
+    "run_id": 44499939373,
+    "job_id": 135488005192,
+    "passed": 1752,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "junit_sha256": "22ab137c0b55967fd239f32f99b716a8993a1d68700726015d135ba88ed5609e",
+    "artifact_url": "https://github.com/fabioannovazzi/app_files/actions/runs/44499939373/artifacts/14519174479",
+    "later_gate": "stale editorial source bindings",
+    "final_head_fresh_ci_required": true
+  },
+  "limits": "Preserves historical named editorial and output-artifact judgments. This is an agent source-compatibility review supported by exact current native test identities, not new human, learner, visual, voice or professional acceptance. No test or release gate is removed. Existing historical artifact hashes and reviewers remain unchanged.",
+  "kits": [
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/advisory-brief-planner.json",
+      "course_path": "plugins/clara/assets/courses/advisory-brief-planner/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "4578ac3ee0d234102ca0381c87420e7fc0f67401183a874b927f964d1d8241b4",
+      "current_sha256": "5838041ac59a16e169e789b70d16ceedf51bc72bc5df56185a9d5d593d9f6fa4",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/advisory-deliverable-validator.json",
+      "course_path": "plugins/clara/assets/courses/advisory-deliverable-validator/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "c86c35364ef874c81a4915407a04a1bcacd4fd82fd715fe41938e7e74ec77f82",
+      "current_sha256": "19ca1f3295ff877c99973c757b7ec656f7b27bebae907fcaad7d8c0f53868e3e",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/attribute-reporting.json",
+      "course_path": "plugins/clara/assets/courses/attribute-reporting/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "a9eb27965642b324a8a148dabd821c824c5e5cb0660980e0fed8cd2189432d34",
+      "current_sha256": "d827eee17395cb06bc194d419f2f25fab929b1b8e3b093aa499c16a3466cbd57",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/deck-correction.json",
+      "course_path": "plugins/clara/assets/courses/deck-correction/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "c8a3b66f0470a01e8c3d190da3d09dfa881ccdc6364deff5d2c893af580e2785",
+      "current_sha256": "de6fd1011e23998a5c4714323ffdbe7af80a75ca65e652a6fe5423206a8f15be",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/html-deck.json",
+      "course_path": "plugins/clara/assets/courses/html-deck/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "6929eca5a0082ec8ae93caa9d951f5ab7f967da368d8747f378f4af376f34dbf",
+      "current_sha256": "da13397d701aa5a2b2452a65f91cf977dc17855f4945c3ef9336f612e4acf69f",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/reporting-engine.json",
+      "course_path": "plugins/clara/assets/courses/reporting-engine/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "3ca9a889accb983db8a402a5637cea1dd7c5bd0667058deefaa28b91288a95eb",
+      "current_sha256": "7a04e48a51183d1403d8791774c7b7a972a58f4e703a6a47afc1e00e72697f27",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/clara/transcribe.json",
+      "course_path": "plugins/clara/assets/courses/transcribe/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "790073299a48ecab500ed364e8f3c1b7d4cc11b2dd0204553f42c2ef96ca57e1",
+      "current_sha256": "992248f356fb10c840d5481eed671e3e296401ef828476f4ab4364ecdff0fe46",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/clara/scripts/check_dependencies.py",
+            "sha256": "5e54e11ff5f1b091e2bc10c6dcd46f4c4d0d5da09ccbde3caa77c9034e64e817"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/clara/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/clara/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/clara/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/clara/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/lucia/apertura-pratica.json",
+      "course_path": "plugins/lucia/assets/courses/apertura-pratica/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "0c791ef864469c46f24ee7e012b9db1e3a6209f613da45fe7e447581eff19660",
+      "current_sha256": "ec529deffe317fcce894b3cfd3d0a72f47a5548d075703606272ee7f9a8c734e",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/lucia/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/lucia/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/lucia/contenzioso-tributario.json",
+      "course_path": "plugins/lucia/assets/courses/contenzioso-tributario/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "6adf0f42a0b92c726e1f9d347d8cfb23f5dfea69e2ba059408ef6d88ea040999",
+      "current_sha256": "d057ffac1672986e6f84bae53bdc88824480e7cb27dbaae004249557a93e78b6",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/lucia/scripts/check_dependencies.py",
+            "sha256": "f9cd81df20cf16f38df2ad5e754b7cc9db53fdf3d43ec3eb7b5338b07138d89a"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/lucia/scripts/check_dependencies.py",
+            "sha256": "99e7ca67d4f697b1389da36194aef772aa74abb79111f883ffe3543c8aeaa881"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/lucia/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/lucia/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/lucia/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/lucia/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/adeguati-assetti.json",
+      "course_path": "plugins/vera/assets/courses/adeguati-assetti/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "edda3c5e53db786dc91f46a4fbd0fd128080d97b9df245623bcc8d5dea818f4d",
+      "current_sha256": "adb9524b648f951e57a839dcc49470b8d99c03e2a62a96f8c133a6212e3ef736",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/agenzia-acquisition.json",
+      "course_path": "plugins/vera/assets/courses/agenzia-acquisition/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "e9a5ff9e96254b7c6d2e41797f225ca005b8e0e05cb76682452ca75ce3604d3e",
+      "current_sha256": "eaebe771a7dce6b2931661d7269cef9ddbd21e4cdc0a4a3b0107f81bd297f12c",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/aml-review.json",
+      "course_path": "plugins/vera/assets/courses/aml-review/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "d97a769ceea5587ec1db26f92f1860280fcd0a239238d95ca7222d3e53f40d88",
+      "current_sha256": "9938ba026d92fba80c5311b10277ba69257689629ef9b40d592e097eb234b3e6",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/archive-organization.json",
+      "course_path": "plugins/vera/assets/courses/archive-organization/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "d68ef025291eae24e04bf95eee8e4b888088ad6287d7f069d5a042b38eb1c9d8",
+      "current_sha256": "7aabd910a1539af732a3bf9176d5a20f38f708ffc85f823b8f3f3ea223216754",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/avviso-intake.json",
+      "course_path": "plugins/vera/assets/courses/avviso-intake/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "2f250cdf781d44de9aad45c1562d6bab80e2cd30c861e66dcfca3e0d04a1592f",
+      "current_sha256": "88718e9df11358bb74c85d1e30dcbc28916191423f1025fd0b830241668b621d",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/bandi-agevolazioni.json",
+      "course_path": "plugins/vera/assets/courses/bandi-agevolazioni/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "2443a20b759aa9bd50f077c1a18af8582276270a2b9035a81ae27e432f71b15b",
+      "current_sha256": "2ef93b6535db8b9693e6c6bec5c947a78efacd3c08381fa9ce6058524393e1b8",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/bilancio-oic.json",
+      "course_path": "plugins/vera/assets/courses/bilancio-oic/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "1754f0483c04f5b1765bf359be158d81abe6125f25fc3bdd76cf9b3246bc03a4",
+      "current_sha256": "6cffb11e512f35bdcac0221fc507f8107cbff159d3052b8515eb04011e12407e",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/browser-automation.json",
+      "course_path": "plugins/vera/assets/courses/browser-automation/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "7fc59167279bedcba168b9fd796885a257e0687a7704e570332b59913a53cc8b",
+      "current_sha256": "4d23e177e6e2c9e6b032f2408f202a0e49dfdfd603d386cc7f46a51104f6d1bc",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/business-planning.json",
+      "course_path": "plugins/vera/assets/courses/business-planning/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "85e2750fa286ba1a6f1d592bc5c381bd0d908ce8d0e2742d46f9f297b2074502",
+      "current_sha256": "fd8f65b7804d1ae5aa094a66f54eabf495312ac6baeab33acd8a0aedf0699bce",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/business-valuation.json",
+      "course_path": "plugins/vera/assets/courses/business-valuation/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "b7a44c19df7cd6b8566352a27945856b9ec9b555786fc07b282a5039e8fa81d8",
+      "current_sha256": "abd25f378c27489b1223e36bc7538417eacd15bfa5c170cdea9b4ebb23631158",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/centrale-rischi-review.json",
+      "course_path": "plugins/vera/assets/courses/centrale-rischi-review/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "7d6e46db52a2766c2af0b4c575f8310d2f6a43dff3d88cf562a6d0af0f11145a",
+      "current_sha256": "5cdcec4e2d08d662d23453b366a9f16fd35978a52e447c89a4ff0a3946e0dc51",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/composizione-negoziata.json",
+      "course_path": "plugins/vera/assets/courses/composizione-negoziata/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "4e82298dd01806076ec23804595e3285d7beddf4493defa9aab222d25b0b4a26",
+      "current_sha256": "06bd602e408f667db246e3e39b28bdbab31f719c3a46b32aadba8a6dd1511c17",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/comunicazione-professionale.json",
+      "course_path": "plugins/vera/assets/courses/comunicazione-professionale/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "598515bf1e29009c47c2acff751e96de4ae6061f21e1f069972ec9260b0067ad",
+      "current_sha256": "c49383845a1f1a7ff65828d26741e575c0fdcdc9698a118712e0ced7d6adfdc5",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/concordato-plan-review.json",
+      "course_path": "plugins/vera/assets/courses/concordato-plan-review/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "55ea005186aa0e11f2e525a82691eebc0415a9af521b67b4dcad78e91cd9a333",
+      "current_sha256": "b4059940ee845498c2c74453e61290bbf26ab25de978b998854007e4b9d286e4",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/contenzioso-tributario.json",
+      "course_path": "plugins/vera/assets/courses/contenzioso-tributario/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "b9469fe17b932620b3f965e685ca0d764ad087c5f2efaefc340580b6c2ffbc92",
+      "current_sha256": "22525cfaefcaf748631b7acf3767860cc60cfc8fef9202fab1d1330abd37dd2b",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/dati-fiscali-strutturati.json",
+      "course_path": "plugins/vera/assets/courses/dati-fiscali-strutturati/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "493e54181401f2731d8d41a98a4a71ca49540bab80c70288c04e67b5bd0da25c",
+      "current_sha256": "80a7f1fe611950d61e1381a6912fe39115b7935bdbda404023b917b9cf09f411",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/email-cliente.json",
+      "course_path": "plugins/vera/assets/courses/email-cliente/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "530721443656f9c81e34f1ba9572ca1c81af18a86e7840c49b29eef7a794b7a9",
+      "current_sha256": "be7ea6ead23580fa70c00055645e1d90ebe8d3f6e38518fc385ab56735ae6f1b",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/esg-reporting-assurance.json",
+      "course_path": "plugins/vera/assets/courses/esg-reporting-assurance/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "7e8208b49a85b67b748703ec854a1fe8376da03d50b059ee4fdbd1dc410eeacb",
+      "current_sha256": "9726e85393c8c174d696c12f0a39479539eb90dcfa1761f85630661853e87dd8",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/fatture-xml-check.json",
+      "course_path": "plugins/vera/assets/courses/fatture-xml-check/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "af198650e77bbc49d3d295c68d60f7a2237a14c2ec4ff46898713500d36d4c8f",
+      "current_sha256": "84b7bc5bd06c4f1f4b175d8759b7708fa317bcf7759ace548b93136e2b4d5d0e",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/financial-analysis.json",
+      "course_path": "plugins/vera/assets/courses/financial-analysis/course.json",
+      "ancestor": "52def75106ac4b02864d6335991a980cbd3dbdec",
+      "previous_sha256": "7fcf00fddefec5d5873896513e39c67d040a69d2bf60754e8b4122888fc28d99",
+      "current_sha256": "4284caa94bfc29662c1710598c2b096886335e4fcd4faa139847eb9c2059d610",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/financial-report-builder.json",
+      "course_path": "plugins/vera/assets/courses/financial-report-builder/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "9953074f639cc0e3d22949caa2a5fe2343a377b7e67b6093e21ce7e3ef1d401c",
+      "current_sha256": "14cbac694fcfc43bc68e11486da4d04f14ebde04a4cac6235e18d67f06556645",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/fusione-guidata.json",
+      "course_path": "plugins/vera/assets/courses/fusione-guidata/course.json",
+      "ancestor": "778e05a1178d35e3495f19aca45ba2c20636feb7",
+      "previous_sha256": "705ca369450f42c564b176de647375ae457ed1c714b6d35a3608773f5f6fe46c",
+      "current_sha256": "f28e065dbaf3576523fc06482035472f5b41432341f6932ef53636c9b1436df6",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/invoice-xml.json",
+      "course_path": "plugins/vera/assets/courses/invoice-xml/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "34eee8d9d28f5a3707b42c952f764407c53a85667b15140bf05c25ca78266d96",
+      "current_sha256": "f8151d3e1e0b4352af11c253a14bcc1fb14f2c9d7b6cb57162b57188f5b30bcc",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/journal-bank-reconciliation.json",
+      "course_path": "plugins/vera/assets/courses/journal-bank-reconciliation/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "fb6cf842044cd3aa3bb3265173956125b71ddeaa8275b2638260629d42f03de9",
+      "current_sha256": "9950f4bb96777e5c3820af084055237bc970989426d0ff8697ea98d9307506ac",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
+            "repository_path": "plugins/journal-bank-reconciliation/references/pdf-recovery.md",
+            "sha256": "aa4ffbcedeae822cd5855bf7c0aace4699ca1e9af60890490ab3c7ec0bdd7b2d"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
+            "repository_path": "plugins/journal-bank-reconciliation/references/pdf-recovery.md",
+            "sha256": "5bb3ccacfcbb120e67062d639e6595c533466edb257cce177cd3773984af6765"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
+            "repository_path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
+            "sha256": "8df14093de06440cd64df01a510996faba9dd6d5000969d91f1b218b5f67ca06"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
+            "repository_path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
+            "sha256": "82fd5f3921d76aeda9bc46f15c5fff31f0f09713655ec759e026e8c89809619b"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_first.py",
+            "sha256": "2703736bdf5efba162fe9e6cc008b2f2f139fe216873c9f625a62170df12c09b"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_first.py",
+            "sha256": "2fff8f05ab59686bb98a12c457fdebbb479a82b553a77813c7ce7bb9637c31fe"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/grouped_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_review.py",
+            "sha256": "d3e0101fce2505da3e2b69bbbe84fc0fbdd67e7163facecfeac19a4b82e2a301"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/grouped_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_review.py",
+            "sha256": "f7128ffe201ca94fada5e728478f8f67ced9cb2f5a0797a76826c7a82e1016ad"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "5fe04bc8b720302ff404add19a3031c3f9cceaafdda0875470d31608e6e8939c"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
+            "sha256": "8662912f3f3107e5cc3177557a0510da3035af7e64f4e21d23a7381ddaf19fd4"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "144f2cee1aff7e39c5a23751637ab45ef23b6f13383f3870d9f820c13b3cbf26"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "b1b2cb30c9f363e91208db6ce0ab5fc76a4a99384ff3e603d117c2fb147d54a7"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/local_cash_links.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/local_cash_links.py",
+            "sha256": "da29a421a103b537daafc8fed0ba61dce6aa12695422896d39e9722f0ae027e5"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/retrieval_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/retrieval_review.py",
+            "sha256": "edc2779c27836081b7aadf19f32255951d40464f7ca679d7c619aa1abbd8426d"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/retrieval_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/retrieval_review.py",
+            "sha256": "7ce2f053fe41f1686959b99abdb796381982ba684fe3372df77c6db25b6524a9"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
+            "sha256": "fd8bb4dd78708a1120aefd444ad09ca1d0e2301ea30a66a7be6df50550ad051e"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
+            "sha256": "1bc1fca5916d32a20ae377ef454792e28646694a97f26e85a19299368a1508a4"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "bde0c261c3b606d79563d446093c9ebc8241ecae6e98feaf2bdd9fbd0b66f142"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "bdb8378afd2a7da93a5c9d6452c8d63a9a9bac1d9633ccbf72620df0a96b4171"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "669daeff1df919c22e49fa09c5ed3e9c658ef6ee017c59900920e6a2f3e6e574"
+          },
+          "after": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "6845b90ca5e7523f3b7e573a3178b92789c4c34694b06579b2c30582a4426e64"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/journal-sampling.json",
+      "course_path": "plugins/vera/assets/courses/journal-sampling/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "cafeb15594060ca2f4582b4497dfa6a60b7260a1eb76128547837823d11861d8",
+      "current_sha256": "b55b4cf652065cc3e57126fad904fafd973bcd1513e240aed82a23b72b230c69",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/lipe.json",
+      "course_path": "plugins/vera/assets/courses/lipe/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "106d31c1f32e6c92d3d482508e36377f934a00248acfcf21cb0713390418983e",
+      "current_sha256": "364c6deb1abc7204fc4793b732f20af927f6163e6b576d85a538f6f2e170a209",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/management-control-pack.json",
+      "course_path": "plugins/vera/assets/courses/management-control-pack/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "9a2fe5ada0b6d0df7a000e98d3b5939d18c04d316472a173d38618cafcc61d47",
+      "current_sha256": "9874c0701eaaff4116c440f514026b4fe5528e69dea6131fc40cc068a33ec21e",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/new-client.json",
+      "course_path": "plugins/vera/assets/courses/new-client/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "8e05a6ee414fdb69ee915064c484d548364d93baa829dee41cf1f9d79f8b5bbe",
+      "current_sha256": "791f796bf42183c96580cf8716122ea6adc13350d713343baf3c6bf1783584c0",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/open-item-reconciliation.json",
+      "course_path": "plugins/vera/assets/courses/open-item-reconciliation/course.json",
+      "ancestor": "d8ddc3aa902b5f6c3dbf5967ca468b37b28b2e87",
+      "previous_sha256": "ba44e3bd937d5cdf625fc3e8f65173709a453c117bda253bdbb672b69c3b0663",
+      "current_sha256": "aeb77fe0de1c828612685f0bfcd7516734de9ffa559096fe00cb4f7581b5ef48",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
+            "sha256": "a20aae30321438885996d5462cafc142d71cbdf32bbe898a6d539beed577fbfd"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
+            "sha256": "7ec5529bccc5c2aea7a38d177c38e30ba23f2f050e0e2e951b2715e735890076"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/organizzazione-lavoro.json",
+      "course_path": "plugins/vera/assets/courses/organizzazione-lavoro/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "b416e65fad271cb642311e8ec79d215ef6ca3a95747309ca047f3abf29a27ec4",
+      "current_sha256": "51277e145c84a2d636c3d77e9069cf978fa4905ff9089514505afc8e416929e6",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/patent-box-review.json",
+      "course_path": "plugins/vera/assets/courses/patent-box-review/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "abeca3fc6e2aff8a2f63f71ee5813f94ddfe8e0c804fe8814649dc3e572b2cb5",
+      "current_sha256": "2de581a415840688b903bfdbc4e655dba7bb8f975f9f0daf483e9ed51c600e91",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/presenza-digitale-studio.json",
+      "course_path": "plugins/vera/assets/courses/presenza-digitale-studio/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "ef6d98245880cf90796f7c2b554d55fbeaa320c10113ce31eaf40cd10a586770",
+      "current_sha256": "9cab18346e55a905368bd7784023eb584d8b97fcd699d82228638b08647a1304",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/previdenza-inps.json",
+      "course_path": "plugins/vera/assets/courses/previdenza-inps/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "68b3b8654ae9838d3188d80a2e3a6aa5245f2a681680f05a34a6417809cb2050",
+      "current_sha256": "10e8b2880376c1aa370e162de595502ef8413fd501e82f0e9cf91f117efb0061",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/purchase-invoice-review.json",
+      "course_path": "plugins/vera/assets/courses/purchase-invoice-review/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "f68df7c5303e392eaf928c758b79f9b695d983d7857d19b3bdb2bc653b4ce2a1",
+      "current_sha256": "dc9fe9b50abc6bb394e669f602cb5c6feb71c456c7a4d68e4fdd2696beb85ba0",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/quesito-legale-fiscale.json",
+      "course_path": "plugins/vera/assets/courses/quesito-legale-fiscale/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "d2d87a219c7f15147277565fb8c05c359d94b95d85a9604bc7e47311fbd3e59b",
+      "current_sha256": "4d8d923abc3fa3a363ffd9c96735af9a86c2bb6d228539e2df8c747593ae9599",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/registro-imprese-sari.json",
+      "course_path": "plugins/vera/assets/courses/registro-imprese-sari/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "8892afef5ddc00bce8bf532bcd6b2a4ee7fe5b345415d814cae4f2fb70ebca7b",
+      "current_sha256": "6aa8b35c5a42d8f28709bee18614d1373cbc2eab26fb531c4179c157b087be65",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/sales-plan.json",
+      "course_path": "plugins/vera/assets/courses/sales-plan/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "7234700dc7f56020435733c7b221d81ef202c70d3a3e54144cdf24d7333f9c73",
+      "current_sha256": "8902fde12e985116cf723eed2a8a80347bb290828ebc3a8a668d6394477d498d",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/scissione-guidata.json",
+      "course_path": "plugins/vera/assets/courses/scissione-guidata/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "88c99374a1def8e4187b314546ed24a53f270c8b8fcb67dde9dbcabf9f328651",
+      "current_sha256": "fdd4e1a3c44bea946cd0ea02fb0bbc7a6b98db1e1114dd2bd7633c7580aedcce",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/studio-archive.json",
+      "course_path": "plugins/vera/assets/courses/studio-archive/course.json",
+      "ancestor": "d8ddc3aa902b5f6c3dbf5967ca468b37b28b2e87",
+      "previous_sha256": "1fa6ba90764939b7e8bdd9cc0f37905bdf036ee34d4459518c730cd0e0f7695f",
+      "current_sha256": "91d8334139ea48743ab3acc822e403fe2b5149e404653b3674befb49b8f13a07",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/studio-document-format.json",
+      "course_path": "plugins/vera/assets/courses/studio-document-format/course.json",
+      "ancestor": "d8ddc3aa902b5f6c3dbf5967ca468b37b28b2e87",
+      "previous_sha256": "87948a06b3bde03d706e332c2b0dc925abcd95b94ce4321a6ab44e2bc8b85a59",
+      "current_sha256": "7b16ac51ef7054bc059a789e78ee44ec545f77e1af7cf23c40728b3b64bb7f6a",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/trasformazione.json",
+      "course_path": "plugins/vera/assets/courses/trasformazione/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "8f4491876832d705e5f9aab7fda2ddf86bb9087a030d579a2681144be58d1080",
+      "current_sha256": "4b9c96e3c92a67aa09e1a41fda07ccc6c51ba72cbc76b6399f9b87784dd3ebd8",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/treasury-forecast.json",
+      "course_path": "plugins/vera/assets/courses/treasury-forecast/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "c1c95990278c812d8fef0dc50d1182be19d2786f2e54fc28162098744730f590",
+      "current_sha256": "b07cd9394a6427ac23c8fbc1452a1b8d5da2ca42823078a3c99d5524a43eff3f",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/variance-analysis.json",
+      "course_path": "plugins/vera/assets/courses/variance-analysis/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "27496d083e64c68b3a54d353f3f7fd070a9860d94b38467282e692d24e81d8e8",
+      "current_sha256": "1616c17869461631603399283a1ac1be28b4ac33a2314d3a8b249d05d72ee0cc",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "68c0766eb4bafe8d306712a3d0dc6fe894f025364d5871ecfef7c191d475fc07"
+          },
+          "after": {
+            "path": "scripts/check_dependencies.py",
+            "repository_path": "plugins/vera/scripts/check_dependencies.py",
+            "sha256": "a8140413936d86fba4b2791966e15098986b80db35dadf52f500adb0a01ed0a2"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+          },
+          "after": {
+            "path": "scripts/managed_python_runtime.py",
+            "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
+            "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+          },
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+          },
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+          },
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+          },
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    },
+    {
+      "review_path": "scripts/course_materials/release_reviews/vera/vouching.json",
+      "course_path": "plugins/vera/assets/courses/vouching/course.json",
+      "ancestor": "fa4549cb812cedcf013e71d4aebc02645f803250",
+      "previous_sha256": "e866a5c51a6b7161b8625849a10508e47ce0f619d9695b6e3ba94c7d12ca11dd",
+      "current_sha256": "d3c7a0b827c29ba9fe44fcd863870fb5d7024081dd9c1ff58651dcfd8fdb2206",
+      "changed_fields": [
+        "sources"
+      ],
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/check-entries/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "modules/check-entries/vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "54485d63341faa8574a0e8b99b94509646b902b605429f5ace9b478083cb0ad9"
+          },
+          "after": {
+            "path": "vendor/modules/vera_journal_pdf/bank.py",
+            "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/bank.py",
+            "sha256": "9fa5860973928674678369ad3e4a4ab32377e727d83dbf546d2c24ba4318a43d"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,14 @@
 # Incident delivery permissions
 
 The shared reporter retains `delivery_mode` on each queued event. A task that
-explicitly selects `MPARANZA_INCIDENT_DELIVERY=local-only` is retained in
+explicitly selects `"delivery": "local-only"` in its server/test settings is retained in
 `local_only_tasks`; restarting its reporter does not authorize its evidence.
 New unrelated automatic tasks can deliver without releasing restricted history.
 Native report retries and related diagnostic supplements apply the same rule.
-UUIDs, payloads, installation capabilities and receipts remain unchanged.
+The CLI accepts `--settings <settings.json>` before its operation name; the
+server passes the same internal settings explicitly. Process-environment
+overrides are not read. UUIDs, payloads, installation capabilities and receipts
+remain unchanged.
 
 An older reporter stored one global `delivery_mode: local-only` flag. On reading
 that state, the new reporter marks all previously unclassified queue entries and

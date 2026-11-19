@@ -24,7 +24,6 @@
   ],
   "skills": "./skills/",
   "privacyPolicyUrl": "https://mparanza.com/privacy",
-  "shortDescription": "Assistente AI per avvocati",
   "icon": "./assets/icon.svg",
   "documentationUrl": "https://mparanza.com/static/shared/lucia/index.html?lang=it",
   "supportUrl": "https://mparanza.com/support",

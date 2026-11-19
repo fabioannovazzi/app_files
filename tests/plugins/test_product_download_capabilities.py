@@ -121,14 +121,22 @@ def test_packaged_reporting_cli_retains_task_without_native_mcp(
     plugin = tmp_path / f"installed/{product}-codex-plugin/plugins/{product}"
     helper = str(plugin / "scripts/workflow_usage.py")
     run_id = "5b6d7d35-0fe2-4ac4-84e4-c5a2da3eb6a0"
-    env = {
-        **os.environ,
-        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incident-state"),
-        "MPARANZA_INCIDENT_DELIVERY": "local-only",
-        "MPARANZA_INCIDENT_HOST": "codex",
-    }
+    settings = tmp_path / "incident-settings.json"
+    settings.write_text(
+        json.dumps(
+            {
+                "state_dir": str(tmp_path / "incident-state"),
+                "device_dir": str(tmp_path / "incident-device"),
+                "delivery": "local-only",
+                "host": "codex",
+                "task_id": run_id,
+            }
+        )
+    )
+    helper_args = [helper, "--settings", str(settings)]
+    env = dict(os.environ)
     begin = [
-        helper,
+        *helper_args,
         "start",
         "--run-id",
         run_id,
@@ -145,13 +153,16 @@ def test_packaged_reporting_cli_retains_task_without_native_mcp(
     started = _run(begin, tmp_path / "start", env, isolated=False)
     reopened = _run(begin, tmp_path / "reopened", env, isolated=False)
     _run(
-        [helper, "record", "--run-id", run_id, "--kind", "completed"],
+        [*helper_args, "record", "--run-id", run_id, "--kind", "completed"],
         tmp_path / "completion",
         env,
         isolated=False,
     )
     retained = _run(
-        [helper, "status", "--run-id", run_id], tmp_path / "status", env, isolated=False
+        [*helper_args, "status", "--run-id", run_id],
+        tmp_path / "status",
+        env,
+        isolated=False,
     )
 
     assert started["run_id"] == reopened["run_id"] == retained["run_id"] == run_id

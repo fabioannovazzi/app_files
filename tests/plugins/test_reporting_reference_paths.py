@@ -56,7 +56,9 @@ def test_packaged_startup_guidance_points_to_installed_references(
     incidents = importlib.import_module("operational_incidents")
     # The package's actual guidance runs with isolated, synthetic pending state.
     # Never access a real installation identity or send a report from this test.
-    monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "state"))
+    incidents.configure_settings(
+        {"state_dir": str(tmp_path / "state"), "delivery": "local-only"}
+    )
     monkeypatch.setattr(
         incidents,
         "local_context",

@@ -608,7 +608,10 @@ def stamp_report(run_id: str, report_path: Path, output_dir: Path) -> dict[str, 
 
     try:
         result = stamp_model_data_report(
-            report_path, output_dir=output_dir, plugin_root=ROOT
+            report_path,
+            output_dir=output_dir,
+            plugin_root=ROOT,
+            local_only=incidents._local_delivery_only(),
         )
     except NotarizedRunReceiptError:
         return {"status": "pending", "reason": "receipt_service_unavailable"}
@@ -699,6 +702,7 @@ def native_operation(arguments: dict[str, Any]) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--settings", type=Path)
     commands = parser.add_subparsers(dest="command", required=True)
     preference = commands.add_parser("consent")
     preference.add_argument("--choice", choices=("allow", "deny"))
@@ -745,6 +749,8 @@ def main(argv: list[str] | None = None) -> int:
     ack = commands.add_parser("ack")
     ack.add_argument("--receipt", type=Path, required=True)
     args = parser.parse_args(argv)
+    if args.settings:
+        incidents.load_settings(args.settings)
     try:
         if args.command == "consent":
             result = consent(args.choice)

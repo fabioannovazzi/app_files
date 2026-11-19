@@ -43,11 +43,13 @@ jobs:
       - name: Preserve canonical source bytes on checkout
         run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
+      - name: Remove previous generated Cowork trees before artifact extraction
+        run: python -c "import shutil; from pathlib import Path; [shutil.rmtree(p) for p in Path('plugin_packages').glob('*/claude')]"
       - name: Download product archives built from this commit
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}

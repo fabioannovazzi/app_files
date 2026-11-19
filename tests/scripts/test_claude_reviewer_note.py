@@ -45,7 +45,7 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
     assert ('Local review tokens (flagged as "Uses a credential")' in note) == (
         product != "lucia"
     )
-    assert "inherited token or API-key variables" in note
+    assert ("inherited token or API-key variables" in note) == (product != "lucia")
     assert ("check-entries" in note) == (product == "vera")
     assert ("`secrets.token_urlsafe(32)`" in note) == (product != "lucia")
     assert "`secrets.token_urlsafe(24)`" not in note
@@ -89,7 +89,7 @@ def test_lucia_reviewer_note_answers_all_four_credential_findings_in_order() -> 
     assert "https://mparanza.com/api/lucia/run-receipts" in section
     assert "https://mparanza.com/api/operational-incidents" in section
     assert "reads no installation key or signing secret" in section
-    assert "may contain proxy authentication" in section
+    assert "may include proxy authentication" in section
 
 
 @pytest.mark.parametrize(

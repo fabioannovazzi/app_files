@@ -75,6 +75,14 @@ def installed(tmp_path):
     return root
 
 
+def incident_settings(tmp_path):
+    path = tmp_path / "incident-settings.json"
+    path.write_text(
+        json.dumps({"state_dir": str(tmp_path / "incidents"), "delivery": "local-only"})
+    )
+    return ["--settings", str(path)]
+
+
 def environment(tmp_path):
     temporary = tmp_path / "os-temp"
     temporary.mkdir(exist_ok=True)
@@ -93,7 +101,7 @@ def environment(tmp_path):
 @contextmanager
 def native(root, tmp_path, entry="native_execution_mcp.cjs"):
     process = subprocess.Popen(
-        ["node", str(root / "scripts" / entry)],
+        ["node", str(root / "scripts" / entry), *incident_settings(tmp_path)],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -195,7 +203,11 @@ def test_closed_connection_retains_worker_code_then_releases_temporary_copies(
     }
 
     result = subprocess.run(
-        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+        ],
         input=json.dumps(message) + "\n",
         text=True,
         capture_output=True,
@@ -449,7 +461,11 @@ def test_bootstrap_rejects_changed_owned_code_before_loading_it(installed, tmp_p
     source.write_text("raise RuntimeError('Unverified code was loaded')\n")
 
     result = subprocess.run(
-        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+        ],
         input="",
         text=True,
         capture_output=True,
@@ -543,7 +559,11 @@ def test_termination_keeps_accepted_work_and_releases_code(
     installed, tmp_path, target, busy, signum
 ):
     process = subprocess.Popen(
-        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+        ],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -609,7 +629,11 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
     installed, tmp_path, busy
 ):
     process = subprocess.Popen(
-        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+        ],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -720,7 +744,11 @@ def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
 
     def restart():
         result = subprocess.run(
-            ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+            [
+                "node",
+                str(installed / "scripts/native_execution_mcp.cjs"),
+                *incident_settings(tmp_path),
+            ],
             input=initialize,
             text=True,
             capture_output=True,
@@ -782,7 +810,11 @@ def test_native_tool_discloses_standard_semantic_worker_without_weakening_contro
     message = {"jsonrpc": "2.0", "id": 1, "method": method, "params": {}}
 
     result = subprocess.run(
-        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+        ],
         input=json.dumps(message) + "\n",
         text=True,
         capture_output=True,

@@ -146,6 +146,8 @@ def test_end_to_end_stamps_exports_and_verifies_without_sending_report(
     report_module, receipt_module = _modules(monkeypatch)
     report_path = _report(report_module, tmp_path)
     opener, store = _opener(tmp_path)
+    monkeypatch.setenv("VERA_RUN_RECEIPT_ENDPOINT", "https://untrusted.invalid/receipt")
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
 
     stamped = receipt_module.stamp_model_data_report(
         report_path,
@@ -282,13 +284,16 @@ def test_direct_stamp_in_local_only_mode_never_calls_transport(tmp_path, monkeyp
     report_module, receipt_module = _modules(monkeypatch)
     report_path = _report(report_module, tmp_path)
     original = report_path.read_bytes()
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
 
     def forbidden(*args, **kwargs):
         pytest.fail("Local-only receipt retry attempted transmission")
 
     result = receipt_module.stamp_model_data_report(
-        report_path, output_dir=tmp_path, plugin_root=PLUGIN_ROOT, opener=forbidden
+        report_path,
+        output_dir=tmp_path,
+        plugin_root=PLUGIN_ROOT,
+        opener=forbidden,
+        local_only=True,
     )
 
     assert result == {"status": "not_requested", "reason": "local_only"}

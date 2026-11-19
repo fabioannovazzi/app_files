@@ -144,20 +144,20 @@
       "on_violation": "A worker failure remains failure; diagnostic persistence errors are logged rather than converted into a success."
     },
     {
-      "id": "python-installer-environment-allowlist",
-      "control": "The standalone Python bootstrap passes uv only declared host paths, locale, proxy, CA and cache settings, preserving original environment-name casing. Unrelated token/API-key variables and inherited UV_*, VIRTUAL_ENV, CONDA_PREFIX, PYTHONHOME and PYTHONPATH are excluded; private UV_PYTHON_* and UV_CACHE_DIR values are set by the bootstrap. The same environment is used for interpreter discovery and its local probe.",
+      "id": "explicit-private-python-installation",
+      "control": "The bootstrap reads no process environment settings. uv inherits the normal environment, including proxy and CA configuration; unrelated environment values are not filtered. Explicit --install-dir and --cache-dir flags select private storage, --no-bin and --no-registry prevent global installation links/registration. Pinned wheel SHA-256 and a private-path CPython 3.12 capability probe remain enforced.",
       "implemented_by": [
         "scripts/_python_bootstrap.py"
       ],
-      "on_violation": "Undeclared environment names are absent from every bootstrap child process."
+      "on_violation": "Reject a mismatched wheel or an interpreter outside private storage or lacking required capabilities."
     },
     {
-      "id": "helper-environment-allowlist",
-      "control": "The built-in incident dependency-setup retry uses the shared host/runtime environment allowlist, named runtime/state locations and recovery recursion guard instead of inheriting unrelated user tokens and keys.",
+      "id": "explicit-incident-recovery-settings",
+      "control": "Built-in recovery children inherit their process environment normally. Internal reporting state, host/session/task and recursion guard are passed as explicit arguments to the fixed helper wrapper; the incident helper does not read process environment settings. No new endpoint or report payload is introduced.",
       "implemented_by": [
         "scripts/operational_incidents.py"
       ],
-      "on_violation": "Undeclared environment names are absent from the child environment."
+      "on_violation": "Reject invalid UUIDs, delivery modes and symlinked internal storage paths; preserve the existing durable outbox."
     },
     {
       "id": "isolated-launcher-owned-imports",
@@ -181,7 +181,7 @@
     "reviewed_at": "2026-11-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "9c2d63e9fff13cbd458ff0e9f6e7581ccb41f2d4c224f8aaa7fbb79b49d7ac53"
+    "source_fingerprint": "f686acb0d276b37f305e333008cf480da068150a7f6d61a1295e263506e43fa3"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/vera_assurance/recovery.py"

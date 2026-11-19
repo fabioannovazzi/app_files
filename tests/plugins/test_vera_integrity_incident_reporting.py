@@ -106,7 +106,9 @@ def transport(tmp_path, monkeypatch, offline=False):
         output = io.StringIO()
         with monkeypatch.context() as child:
             child.setattr(sys, "argv", ["-c", command[-1]])
-            child.setattr(sys, "stdin", io.StringIO(options["input"]))
+            payload = json.loads(options["input"])
+            payload["settings"] = {"state_dir": str(state), "delivery": "automatic"}
+            child.setattr(sys, "stdin", io.StringIO(json.dumps(payload)))
             child.setattr(sys, "stdout", output)
             exec(command[-2], {})  # fixed, owned child program; never diagnostics
         return subprocess.CompletedProcess(command, 0, output.getvalue(), "")
@@ -301,6 +303,8 @@ def test_real_reporter_process_excludes_unindexed_stdlib_shadows(tmp_path, locat
         # The regular-file state fixture prevents registration/network access.
         "MPARANZA_INCIDENT_DELIVERY": "automatic",
     }
+    settings = tmp_path / "settings.json"
+    settings.write_text(json.dumps({"state_dir": str(state), "delivery": "automatic"}))
     if location == "pythonpath":
         environment["PYTHONPATH"] = str(shadow)
 
@@ -309,6 +313,8 @@ def test_real_reporter_process_excludes_unindexed_stdlib_shadows(tmp_path, locat
             sys.executable,
             "-B",
             str(root / "scripts/verified_execution.py"),
+            "--settings",
+            str(settings),
             "--module",
             "journal-sampling",
         ],

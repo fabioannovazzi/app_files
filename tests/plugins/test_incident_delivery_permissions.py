@@ -19,9 +19,9 @@ PRODUCTS = ("vera", "clara", "lucia")
 def restricted_report(module, monkeypatch, task_id=None):
     """Create real retained evidence through the public reporting entrypoint."""
     with monkeypatch.context() as local:
-        local.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+        local.setitem(module._SETTINGS, "delivery", "local-only")
         if task_id:
-            local.setenv("MPARANZA_INCIDENT_TASK_ID", task_id)
+            local.setitem(module._SETTINGS, "task_id", task_id)
         return module.report_failure(
             "journal-sampling", "execution", "Controlled failure"
         )
@@ -46,7 +46,7 @@ def test_new_automatic_task_delivers_without_releasing_local_only_history(
     restricted_report(module, monkeypatch, str(uuid4()) if with_task else None)
     original = retained_state(module)
     if with_task:
-        monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+        monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
 
     result = module.report_failure("journal-sampling", "execution", "New task failure")
 
@@ -61,9 +61,9 @@ def test_local_only_task_without_an_initial_failure_stays_local_on_resume(
     tmp_path, monkeypatch, product
 ):
     module, store, _ = client(tmp_path, monkeypatch, product)
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
     with monkeypatch.context() as local:
-        local.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+        local.setitem(module._SETTINGS, "delivery", "local-only")
         module.execution_identity("journal-sampling", ["run", "helper.py"])
     assert retained_state(module)["outbox"] == []
 
@@ -81,7 +81,7 @@ def test_resumed_local_only_task_keeps_new_reports_local(
     module, store, _ = client(tmp_path, monkeypatch, product)
     task_id = str(uuid4())
     restricted_report(module, monkeypatch, task_id)
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", task_id)
+    monkeypatch.setitem(module._SETTINGS, "task_id", task_id)
 
     result = module.report_failure("journal-sampling", "execution", "Second failure")
 
@@ -137,7 +137,7 @@ def test_legacy_global_mode_migrates_existing_queue_without_blocking_new_task(
     legacy["delivery_mode"] = "local-only"
     legacy["outbox"][0].pop("delivery_mode")
     path.write_text(json.dumps(legacy))
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
 
     current = module.report_failure("journal-sampling", "execution", "Current failure")
 
@@ -181,7 +181,7 @@ def test_authorized_exact_report_delivers_once_without_releasing_same_task_histo
     module, store, _ = client(tmp_path, monkeypatch, product)
     task_id = str(uuid4())
     report = restricted_report(module, monkeypatch, task_id)
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", task_id)
+    monkeypatch.setitem(module._SETTINGS, "task_id", task_id)
     module.report_failure("journal-sampling", "execution", "Another restricted report")
     module.authorize_report_delivery(authorization(module, report["report"], task_id))
     remaining = retained_state(module)["outbox"][1:]

@@ -1785,13 +1785,15 @@ from pathlib import Path
 from types import SimpleNamespace
 path=Path(sys.argv[1]); root=Path(sys.argv[2])
 os.environ['MPARANZA_INCIDENT_DELIVERY']='local-only'
-os.environ['MPARANZA_INCIDENT_STATE_DIR']=str(root/'local-diagnostics')
+
 os.environ['TEST_PRIVATE_VALUE']='PRIVATE_TECHNICAL_VALUE'
 def forbidden(*args,**kwargs):
     raise AssertionError('No network opener may be constructed')
 urllib.request.build_opener=forbidden
 spec=importlib.util.spec_from_file_location('isolated_launcher_test',path)
 launcher=importlib.util.module_from_spec(spec);spec.loader.exec_module(launcher)
+import operational_incidents
+operational_incidents.configure_settings({'delivery':'local-only','state_dir':str(root/'local-diagnostics')})
 launcher.prepare_execution_root=lambda *args,**kwargs: root
 launcher._IMPLEMENTATION.select_runtime=lambda *args: SimpleNamespace(requirement_root=root)
 launcher._IMPLEMENTATION.ensure_runtime=lambda *args,**kwargs: (True,root,'synthetic ready runtime')

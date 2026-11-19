@@ -14,7 +14,6 @@ __all__: list[str] = []
 
 
 def client(tmp_path, monkeypatch, product="vera"):
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     return incident_client(tmp_path, monkeypatch, product)
 
 
@@ -27,7 +26,7 @@ def test_current_failure_and_readiness_preserve_identical_historical_queue(
     tmp_path, monkeypatch, product
 ):
     module, store, _ = client(tmp_path, monkeypatch, product)
-    monkeypatch.delenv("MPARANZA_INCIDENT_TASK_ID", raising=False)
+    monkeypatch.delitem(module._SETTINGS, "task_id", raising=False)
 
     def offline(*_args):
         raise urllib.error.URLError("Controlled transport interruption")
@@ -42,7 +41,7 @@ def test_current_failure_and_readiness_preserve_identical_historical_queue(
     historical = retained_state(module)["outbox"]
     owner = module.reporting_credentials()
     task_id = str(uuid4())
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", task_id)
+    monkeypatch.setitem(module._SETTINGS, "task_id", task_id)
 
     current = module.report_failure(
         "journal-sampling", "dependency-setup", "Same technical failure"
@@ -67,12 +66,12 @@ def test_success_without_current_incident_does_not_revisit_older_failures(
 ):
     module, store, _ = client(tmp_path, monkeypatch)
     if historical_scope:
-        monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+        monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
     else:
-        monkeypatch.delenv("MPARANZA_INCIDENT_TASK_ID", raising=False)
+        monkeypatch.delitem(module._SETTINGS, "task_id", raising=False)
     module.report_failure("journal-sampling", "dependency-setup", "Older task")
     before = module._state_path().read_bytes()
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
     monkeypatch.setattr(
         module, "_post", lambda *_: pytest.fail("No current incident needs transport")
     )
@@ -89,12 +88,12 @@ def test_operation_identity_resumes_same_task_without_sharing_an_unbound_helper(
     module, _, _ = client(tmp_path, monkeypatch)
     first_task = str(uuid4())
     arguments = ["run", "scripts/check_dependencies.py"]
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", first_task)
+    monkeypatch.setitem(module._SETTINGS, "task_id", first_task)
     first = module.execution_identity("journal-sampling", arguments)
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
 
     other = module.execution_identity("journal-sampling", arguments)
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", first_task)
+    monkeypatch.setitem(module._SETTINGS, "task_id", first_task)
     resumed = module.execution_identity("journal-sampling", arguments)
 
     assert other["operation_id"] != first["operation_id"]
@@ -107,11 +106,11 @@ def test_current_progress_does_not_flush_older_incident_entries(tmp_path, monkey
     def offline(*_args):
         raise urllib.error.URLError("Controlled transport interruption")
 
-    monkeypatch.delenv("MPARANZA_INCIDENT_TASK_ID", raising=False)
+    monkeypatch.delitem(module._SETTINGS, "task_id", raising=False)
     monkeypatch.setattr(module, "_post", offline)
     module.report_failure("journal-sampling", "dependency-setup", "Older task")
     historical = retained_state(module)["outbox"]
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
     identity = module.execution_identity("journal-sampling", ["run", "checker.py"])
     monkeypatch.setattr(
         module, "_post", lambda *_: pytest.fail("Older queue must not be transmitted")
@@ -130,11 +129,11 @@ def test_current_scope_retry_delivers_its_queue_and_keeps_older_entries(
     def offline(*_args):
         raise urllib.error.URLError("Controlled transport interruption")
 
-    monkeypatch.delenv("MPARANZA_INCIDENT_TASK_ID", raising=False)
+    monkeypatch.delitem(module._SETTINGS, "task_id", raising=False)
     monkeypatch.setattr(module, "_post", offline)
     module.report_failure("journal-sampling", "dependency-setup", "Older task")
     historical = retained_state(module)["outbox"]
-    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    monkeypatch.setitem(module._SETTINGS, "task_id", str(uuid4()))
     current = module.report_failure(
         "journal-sampling", "dependency-setup", "Current task"
     )

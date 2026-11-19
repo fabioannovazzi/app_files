@@ -54,14 +54,23 @@ def cli(root, script, *args, success=True):
             "-I",
             "-B",
             "-c",
-            "import runpy,sys; from pathlib import Path; "
+            "import json,runpy,sys; from pathlib import Path; "
             "script=Path(sys.argv[1]); sys.path.insert(0,str(script.parent)); "
-            "sys.argv=sys.argv[1:]; "
+            "import operational_incidents; "
+            "operational_incidents.configure_settings(json.loads(sys.argv[2])); "
+            "sys.argv=[sys.argv[1],*sys.argv[3:]]; "
             "sys.addaudithook(lambda event,args: "
             "(_ for _ in ()).throw(RuntimeError('Network forbidden in acceptance')) "
             "if event in ('socket.connect','socket.getaddrinfo') else None); "
             "runpy.run_path(str(script),run_name='__main__')",
             str(root / "scripts" / script),
+            json.dumps(
+                {
+                    "delivery": "local-only",
+                    "state_dir": str(work_root / "stato reporting è"),
+                    "device_dir": str(work_root / "dispositivo è"),
+                }
+            ),
             *map(str, args),
         ],
         cwd=work_root,
@@ -71,9 +80,6 @@ def cli(root, script, *args, success=True):
                 for key, value in os.environ.items()
                 if key not in {"PYTHONPATH", "PYTHONHOME"}
             },
-            "MPARANZA_INCIDENT_DELIVERY": "local-only",
-            "MPARANZA_INCIDENT_STATE_DIR": str(work_root / "stato reporting è"),
-            "MPARANZA_INCIDENT_DEVICE_DIR": str(work_root / "dispositivo è"),
         },
         capture_output=True,
         text=True,
@@ -1064,11 +1070,7 @@ else:
             capture_output=True,
             text=True,
             timeout=30,
-            env={
-                **os.environ,
-                "MPARANZA_INCIDENT_DELIVERY": "local-only",
-                "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "isolated-state"),
-            },
+            env=dict(os.environ),
         )
         results.append(
             {
@@ -1109,19 +1111,23 @@ def test_full_mcp_discovery_or_reduced_absence_matches_distribution(
         {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}},
     ]
     declaration = json.loads(config.read_text())["mcpServers"]["lucia"]
+    settings = tmp_path / "mcp-settings.json"
+    write_json(
+        settings,
+        {
+            "delivery": "local-only",
+            "state_dir": str(tmp_path / "mcp-state"),
+            "device_dir": str(tmp_path / "mcp-device"),
+        },
+    )
     result = subprocess.run(
-        [node, *declaration["args"]],
+        [node, *declaration["args"], "--settings", str(settings)],
         cwd=installed,
         input="".join(json.dumps(m) + "\n" for m in messages),
         text=True,
         capture_output=True,
         timeout=30,
-        env={
-            **os.environ,
-            "MPARANZA_INCIDENT_DELIVERY": "local-only",
-            "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "mcp-state"),
-            "MPARANZA_INCIDENT_DEVICE_DIR": str(tmp_path / "mcp-device"),
-        },
+        env=dict(os.environ),
     )
     assert result.returncode == 0, result.stderr
     replies = [json.loads(line) for line in result.stdout.splitlines() if line.strip()]
