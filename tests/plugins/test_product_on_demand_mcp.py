@@ -73,12 +73,15 @@ def installation(tmp_path: Path, request) -> Path:
 
 
 class Session:
-    def __init__(self, root: Path, *, preload: Path | None = None):
+    def __init__(
+        self, root: Path, *, preload: Path | None = None, settings: Path | None = None
+    ):
         self.process = subprocess.Popen(
             [
                 "node",
                 *(["--require", str(preload)] if preload else []),
                 str(root / "scripts/on_demand_mcp.cjs"),
+                *(["--settings", str(settings)] if settings else []),
             ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -511,3 +514,60 @@ def test_app_entry_initializes_from_host_resolved_plugin_directory(
     assert json.loads(result.stdout)["result"]["serverInfo"]["name"] == product
     cowork = json.loads(project_claude_mcp(content))["mcpServers"][product]
     assert cowork["args"] == ["${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]
+
+
+def test_native_reporter_receives_on_demand_settings_and_session_cleanup(tmp_path):
+    from tests.plugins.test_incident_native_host import installed
+
+    root = installed(tmp_path, product="lucia")
+    for name in (
+        "on_demand_mcp.cjs",
+        "mcp_service_client.cjs",
+        "verify_mcp_package.cjs",
+    ):
+        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+    (root / "mcp-services.json").write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "luciaIncidentHost": {
+                        "command": "node",
+                        "args": ["./scripts/incident_host_mcp.cjs"],
+                    }
+                }
+            }
+        )
+    )
+    entries = {
+        p.relative_to(root).as_posix(): p.read_bytes()
+        for p in root.rglob("*")
+        if p.is_file()
+    }
+    add_product_mcp_catalog(entries)
+    (root / "mcp-catalog.json").write_bytes(entries["mcp-catalog.json"])
+    _seal(root)
+    settings = tmp_path / "settings.json"
+    state = tmp_path / "state"
+    settings.write_text(
+        json.dumps(
+            {
+                "state_dir": str(state),
+                "device_dir": str(tmp_path / "device"),
+                "delivery": "local-only",
+            }
+        )
+    )
+    session = Session(root, settings=settings)
+    try:
+        reply = session.call(
+            "tools/call",
+            {"name": "lucia_incident_host_context", "arguments": {}},
+            timeout=30,
+        )
+        assert not reply.get("error"), reply
+        assert not reply["result"].get("isError"), reply
+        assert (tmp_path / "device/identity.json").is_file()
+        assert len(list((state / "sessions").glob("*.json"))) == 1
+    finally:
+        session.close()
+    assert list((state / "sessions").glob("*.json")) == []

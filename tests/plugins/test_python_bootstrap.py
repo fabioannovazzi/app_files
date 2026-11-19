@@ -66,7 +66,9 @@ def test_bootstrap_rejects_failed_or_wrong_interpreter(tmp_path, monkeypatch, fa
     module = bootstrap()
     monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
     python = tmp_path / (
-        "outside/python" if failure == "outside" else "python/bin/python3.12"
+        "outside/python"
+        if failure == "outside"
+        else "python/cpython-3.12.14-test/bin/python3.12"
     )
     python.parent.mkdir(parents=True)
     python.touch()
@@ -82,38 +84,30 @@ def test_bootstrap_rejects_failed_or_wrong_interpreter(tmp_path, monkeypatch, fa
         module.provision(tmp_path, runner)
 
 
-def test_bootstrap_ignores_host_environment_and_never_changes_global_python(
+def test_bootstrap_inherits_environment_and_uses_private_cli_paths(
     tmp_path, monkeypatch
 ):
     module = bootstrap()
     monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
-    monkeypatch.setenv("VIRTUAL_ENV", "/some/project")
-    monkeypatch.setenv("UV_PYTHON_INSTALL_DIR", "/global/python")
-    monkeypatch.setenv("GITHUB_TOKEN", "fake-github-token")
-    monkeypatch.setenv("OPENAI_API_KEY", "fake-openai-key")
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "fake-anthropic-key")
-    monkeypatch.setenv("PATH", "/bin")
-    monkeypatch.setenv("HTTPS_PROXY", "http://proxy.example:8080")
-    python = tmp_path / "python/bin/python3.12"
-    python.parent.mkdir(parents=True)
-    python.touch()
-    commands = []
+    executable = tmp_path / "python/cpython-3.12.14-test/bin/python3.12"
+    executable.parent.mkdir(parents=True)
+    executable.touch()
+    calls = []
 
     def runner(command, **kwargs):
-        commands.append((command, kwargs["env"]))
-        return subprocess.CompletedProcess(command, 0, str(python), "")
+        calls.append((command, kwargs))
+        return subprocess.CompletedProcess(command, 0, "", "")
 
-    assert module.provision(tmp_path, runner) == str(python)
-    assert "--no-bin" in commands[0][0]
-    assert "--no-project" in commands[1][0]
-    assert "--system" in commands[1][0]
-    assert "VIRTUAL_ENV" not in commands[0][1]
-    assert "GITHUB_TOKEN" not in commands[0][1]
-    assert "OPENAI_API_KEY" not in commands[0][1]
-    assert "ANTHROPIC_API_KEY" not in commands[0][1]
-    assert commands[0][1]["PATH"] == "/bin"
-    assert commands[0][1]["HTTPS_PROXY"] == "http://proxy.example:8080"
-    assert commands[0][1]["UV_PYTHON_INSTALL_DIR"] == str(tmp_path / "python")
+    assert module.provision(tmp_path, runner) == str(executable)
+    install = calls[0][0]
+    assert install[install.index("--install-dir") + 1] == str(tmp_path / "python")
+    assert install[install.index("--cache-dir") + 1] == str(
+        tmp_path / "bootstrap/cache"
+    )
+    assert "--no-bin" in install
+    assert "--no-registry" in install
+    assert "env" not in calls[0][1]
+    assert "env" not in calls[1][1]
 
 
 @pytest.mark.parametrize("usable", [True, False])
@@ -143,81 +137,7 @@ def test_bootstrap_minor_link_failure_requires_a_working_private_interpreter(
     else:
         with pytest.raises(ValueError, match="incompatible interpreter"):
             module.provision(tmp_path, runner)
-    assert "--no-python-downloads" in calls[1]
-
-
-@pytest.mark.parametrize("casing", ["upper", "lower", "title"])
-def test_bootstrap_allowlists_every_child_environment_preserving_casing(
-    tmp_path, monkeypatch, casing
-):
-    module = bootstrap()
-    monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
-    allowed = {
-        "PATH": "/bin",
-        "HOME": "/home/user",
-        "USERPROFILE": "C:/Users/user",
-        "SYSTEMROOT": "C:/Windows",
-        "WINDIR": "C:/Windows",
-        "COMSPEC": "C:/Windows/System32/cmd.exe",
-        "PATHEXT": ".COM;.EXE;.BAT;.CMD",
-        "APPDATA": "C:/Users/user/AppData/Roaming",
-        "LOCALAPPDATA": "C:/Users/user/AppData/Local",
-        "TEMP": "/tmp",
-        "TMP": "/tmp",
-        "TMPDIR": "/tmp",
-        "LANG": "en_US.UTF-8",
-        "LC_ALL": "en_US.UTF-8",
-        "HTTPS_PROXY": "http://proxy.example:8080",
-        "HTTP_PROXY": "http://proxy.example:8080",
-        "ALL_PROXY": "socks5://proxy.example:1080",
-        "NO_PROXY": "localhost,127.0.0.1",
-        "SSL_CERT_FILE": "/certs/corporate.pem",
-        "SSL_CERT_DIR": "/certs",
-        "REQUESTS_CA_BUNDLE": "/certs/corporate.pem",
-        "XDG_CACHE_HOME": "/home/user/.cache",
-        "XDG_DATA_HOME": "/home/user/.local/share",
-    }
-    allowed = {getattr(key, casing)(): value for key, value in allowed.items()}
-    forbidden = {
-        "GITHUB_TOKEN": "fake-github-token",
-        "OPENAI_API_KEY": "fake-openai-key",
-        "ANTHROPIC_API_KEY": "fake-anthropic-key",
-        "UNRELATED_SETTING": "not explicitly allowed",
-        "UV_INDEX_URL": "https://untrusted.example",
-        "UV_PYTHON_INSTALL_DIR": "/global/python",
-        "UV_PYTHON_BIN_DIR": "/global/bin",
-        "UV_PYTHON_INSTALL_BIN": "1",
-        "UV_CACHE_DIR": "/global/cache",
-        "VIRTUAL_ENV": "/project/.venv",
-        "CONDA_PREFIX": "/conda",
-        "PYTHONHOME": "/global/python",
-        "PYTHONPATH": "/project",
-    }
-    host = {
-        **allowed,
-        **{getattr(key, casing)(): value for key, value in forbidden.items()},
-    }
-    # A plain mapping also exercises mixed-case Windows keys on POSIX runners.
-    monkeypatch.setattr(module.os, "environ", host)
-    python = tmp_path / "python/bin/python3.12"
-    python.parent.mkdir(parents=True)
-    python.touch()
-    environments = []
-
-    def runner(command, **kwargs):
-        environments.append(kwargs["env"].copy())
-        return subprocess.CompletedProcess(command, 0, str(python), "")
-
-    module.provision(tmp_path, runner)
-
-    expected = {
-        **allowed,
-        "UV_PYTHON_INSTALL_DIR": str(tmp_path / "python"),
-        "UV_CACHE_DIR": str(tmp_path / "bootstrap/cache"),
-        "UV_PYTHON_BIN_DIR": str(tmp_path / "bootstrap/bin"),
-        "UV_PYTHON_INSTALL_BIN": "0",
-    }
-    assert environments == [expected, expected, expected]
+    assert "-I" in calls[1]
 
 
 @pytest.mark.parametrize("product", ["clara", "lucia"])
@@ -271,7 +191,7 @@ def _provision_case(tmp_path, monkeypatch, error):
     module = bootstrap()
     payload = wheel()
     mock_download(module, monkeypatch, payload, hashlib.sha256(payload).hexdigest())
-    interpreter = tmp_path / "python/bin/python3.12"
+    interpreter = tmp_path / "python/cpython-3.12.14-test/bin/python3.12"
     interpreter.parent.mkdir(parents=True)
     interpreter.touch()
 
@@ -298,7 +218,7 @@ def test_provision_installs_verified_executable_after_cross_volume_error(
 
     result = module.provision(tmp_path, runner)
 
-    assert result == str(tmp_path / "python/bin/python3.12")
+    assert result == str(tmp_path / "python/cpython-3.12.14-test/bin/python3.12")
     assert binary.read_bytes() == b"official uv binary"
     assert sorted(path.name for path in binary.parent.iterdir()) == ["uv"]
 

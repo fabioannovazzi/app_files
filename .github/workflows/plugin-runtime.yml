@@ -100,6 +100,7 @@ jobs:
           tests/plugins/test_incident_native_host.py
           tests/plugins/test_native_incident_transport.py
           tests/plugins/test_incident_validation_detail.py
+          tests/plugins/test_explicit_incident_settings.py
           --cov --cov-config=tests/operational_incidents.coveragerc --cov-report=term-missing --cov-fail-under=80
       - name: Verify effective open-item projection coverage
         run: >-

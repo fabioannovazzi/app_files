@@ -103,12 +103,12 @@
       "on_violation": "Reject unsupported actions and keep the incident open."
     },
     {
-      "id": "helper-environment-allowlist",
-      "control": "Built-in recovery children receive the shared host/runtime environment allowlist, explicit named runtime/state locations and the recovery recursion guard. Unrelated user tokens and keys are not inherited.",
+      "id": "explicit-incident-recovery-settings",
+      "control": "Built-in recovery children inherit their process environment normally. Internal reporting state, host/session/task and recursion guard are passed as explicit arguments to the fixed helper wrapper; the incident helper does not read process environment settings. No new endpoint or report payload is introduced.",
       "implemented_by": [
         "scripts/operational_incidents.py"
       ],
-      "on_violation": "Undeclared environment names are absent from the child environment."
+      "on_violation": "Reject invalid UUIDs, delivery modes and symlinked internal storage paths; preserve the existing durable outbox."
     },
     {
       "id": "portable-diagnostic-run-binding",
@@ -131,13 +131,21 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
+    },
+    {
+      "id": "server-owned-explicit-reporting-settings",
+      "control": "The native server passes internal settings explicitly to the Python reporter. The on-demand server retains one private session settings file and passes its path to the incident host; workflow task UUIDs are bound per request. No user credential or custom production endpoint is requested. Production reporting uses the existing fixed Mparanza endpoints. Host permissions remain authoritative.",
+      "implemented_by": [
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
     }
   ],
   "review": {
     "reviewed_at": "2026-11-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "d339cc8bfda30c58245fa85b4cbbd4654b3e016f91572a616aa69670a4613e38"
+    "source_fingerprint": "8a5e7aa6c203cf3e6dab518303ac49da269cea7a67b80a94c762330cf7f3f6e5"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

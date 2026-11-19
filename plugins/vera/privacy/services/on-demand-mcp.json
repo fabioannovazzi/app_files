@@ -5,7 +5,8 @@
   "governed_paths": [
     ".mcp.json",
     "mcp-services.json",
-    "scripts/on_demand_mcp.cjs"
+    "scripts/on_demand_mcp.cjs",
+    "scripts/incident_host_mcp.cjs"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -48,6 +49,14 @@
         "scripts/on_demand_mcp.cjs"
       ],
       "on_violation": "Keep the existing Archive ownership checks; do not adopt another connection's temporary root or replace the permanent default."
+    },
+    {
+      "id": "server-owned-explicit-reporting-settings",
+      "control": "The native server passes internal settings explicitly to the Python reporter. The on-demand server retains one private session settings file and passes its path to the incident host; workflow task UUIDs are bound per request. No user credential or custom production endpoint is requested. Production reporting uses the existing fixed Mparanza endpoints. Host permissions remain authoritative.",
+      "implemented_by": [
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
     }
   ],
   "service_details": {
@@ -70,6 +79,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "6df278f1ed14dc674a68df639f6b01e3f1ad9e5216578a2a71d08a86331d565a"
+    "source_fingerprint": "9d729a4a41253384239b92679645dc5d9e4093b226820ff85959df3e4c146ec8"
   }
 }

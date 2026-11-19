@@ -2065,7 +2065,12 @@ def test_directory_listing_metadata_and_icon_survive_packaging(product, language
     entries = builder.claude_package_entries(package)
 
     manifest = json.loads(entries[".claude-plugin/plugin.json"])
-    assert manifest["shortDescription"] == canonical["interface"]["shortDescription"]
+    if product == "lucia":
+        assert "shortDescription" not in manifest
+    else:
+        assert (
+            manifest["shortDescription"] == canonical["interface"]["shortDescription"]
+        )
     assert manifest["documentationUrl"] == (
         f"https://mparanza.com/static/shared/{product}/index.html?lang={language}"
     )

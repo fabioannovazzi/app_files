@@ -160,11 +160,11 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "6b8cbc5b08a4c23271de61074f5fe435107c8afe3e648f117baba9f0cdfdab5f"
+      "sha256": "207b7cd59b0b183d9ad37c1b4e4c74c535d464020086120c0869cd930bb6d528"
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
+      "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -172,11 +172,11 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
+      "sha256": "7081f3f748edce13f06fe7bf3d6d8725c813451e6381b37e5cabceadb9c14bc7"
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
+      "sha256": "9a8ed6b433033ab40de913abde8d99e72e902755603783530a3a0c9e4b02d3ad"
     },
     {
       "path": "skills/mparanza-apertura-pratica/SKILL.md",
@@ -577,5 +577,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7b465ce74fd10fb3ef826b396550275c1130bd4b8965bc58d5b46c8a71e789bd"
+  "canonical_course_sha256": "ade77ad1d11e65954000457bc56e03892993fd7c8702dd0ec0397b7c64caeb70"
 }

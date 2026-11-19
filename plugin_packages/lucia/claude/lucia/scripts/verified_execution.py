@@ -1014,6 +1014,7 @@ def report_preparation_failure(
     stage: str = "installation-preparation",
     technical_code: str | None = None,
     technical_type: str | None = None,
+    settings: dict | None = None,
 ) -> None:
     """Report through independently index-verified code while keeping work blocked.
 
@@ -1097,7 +1098,9 @@ def report_preparation_failure(
                 "from pathlib import Path; "
                 "sys.path.insert(0, str(Path(sys.argv[1]).parent)); "
                 "reporter = runpy.run_path(sys.argv[1]); "
-                "receipt = reporter['report_failure'](**json.load(sys.stdin)); "
+                "payload = json.load(sys.stdin); "
+                "reporter['configure_settings'](payload['settings']); "
+                "receipt = reporter['report_failure'](**payload['report']); "
                 "receipt['outbox_path'] = reporter['local_context']()['outbox_path'] "
                 "if receipt['reporting'] in ('queued', 'delivered') else None; "
                 "sys.stdout.write(json.dumps(receipt))"
@@ -1115,32 +1118,36 @@ def report_preparation_failure(
                 ],
                 input=json.dumps(
                     {
-                        "workflow": module or "unknown",
-                        "stage": stage,
-                        "message": detail,
-                        "error_type": type(error).__name__,
-                        "exit_code": 1,
-                        "errno": getattr(error, "errno", None),
-                        "capture_state": "complete" if complete else "unavailable",
-                        "technical_diagnostics": [
-                            {
-                                "component": product_name(root) + "-runtime",
-                                "stage": stage,
-                                "error_type": technical_type or type(error).__name__,
-                                "error_code": technical_code
-                                or (
-                                    "execution.preparation-exception"
-                                    if frames
-                                    else "reporting.preflight-evidence-missing"
-                                ),
-                                "message": detail,
-                                "exit_code": 1,
-                                "errno": getattr(error, "errno", None),
-                                "evidence_source": "runtime-exception",
-                                "technical_frames": frames,
-                                "technical_facts": facts,
-                            }
-                        ],
+                        "settings": settings or {},
+                        "report": {
+                            "workflow": module or "unknown",
+                            "stage": stage,
+                            "message": detail,
+                            "error_type": type(error).__name__,
+                            "exit_code": 1,
+                            "errno": getattr(error, "errno", None),
+                            "capture_state": "complete" if complete else "unavailable",
+                            "technical_diagnostics": [
+                                {
+                                    "component": product_name(root) + "-runtime",
+                                    "stage": stage,
+                                    "error_type": technical_type
+                                    or type(error).__name__,
+                                    "error_code": technical_code
+                                    or (
+                                        "execution.preparation-exception"
+                                        if frames
+                                        else "reporting.preflight-evidence-missing"
+                                    ),
+                                    "message": detail,
+                                    "exit_code": 1,
+                                    "errno": getattr(error, "errno", None),
+                                    "evidence_source": "runtime-exception",
+                                    "technical_frames": frames,
+                                    "technical_facts": facts,
+                                }
+                            ],
+                        },
                     }
                 ),
                 text=True,
@@ -1192,13 +1199,23 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module")
+    parser.add_argument("--settings", type=Path)
     args = parser.parse_args(argv)
     root = Path(__file__).absolute().parents[1]
     try:
         prepared = prepare_execution_root(root, args.module)
     except (OSError, ValueError) as error:
         LOGGER.error("Preparazione di Vera bloccata: %s", error)
-        report_preparation_failure(root, args.module, error)
+        report_preparation_failure(
+            root,
+            args.module,
+            error,
+            settings=(
+                json.loads(args.settings.read_text(encoding="utf-8"))
+                if args.settings
+                else None
+            ),
+        )
         return 1
     # Preflight is a check, not a lease spanning unrelated shell processes.
     # Subsequent managed commands prepare their own scoped execution copy.

@@ -36,9 +36,9 @@ def test_native_report_pending_retry_receipt_completion_and_reopen(
     usage = importlib.import_module("workflow_usage")
     reports = importlib.import_module("model_data_report")
     stamps = importlib.import_module("notarized_run_receipt")
-    monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "private"))
-    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "computer"))
-    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "codex")
+    monkeypatch.setitem(incidents._SETTINGS, "state_dir", str(tmp_path / "private"))
+    monkeypatch.setitem(incidents._SETTINGS, "device_dir", str(tmp_path / "computer"))
+    monkeypatch.setitem(incidents._SETTINGS, "host", "codex")
     offline = True
     requests = []
 
@@ -60,7 +60,7 @@ def test_native_report_pending_retry_receipt_completion_and_reopen(
         incidents.urllib.request, "build_opener", lambda *_: Transport()
     )
     # The opener routes every request to this in-process FastAPI test service.
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
+    monkeypatch.setitem(incidents._SETTINGS, "delivery", "automatic")
     run_id = str(uuid4())
     usage.consent("allow")
     usage.start(run_id, PIPELINES[product], sample_kind="agent_test", host="codex")

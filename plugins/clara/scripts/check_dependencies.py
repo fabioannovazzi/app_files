@@ -13,7 +13,7 @@ from pathlib import Path
 
 from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
 from managed_python_runtime import ensure_runtime, reenter_base, run_verified_helper
-from operational_incidents import report_failure
+from operational_incidents import _SETTINGS, report_failure
 from verified_execution import (
     prepare_execution_root,
     release_execution_root,
@@ -352,7 +352,7 @@ def main(argv: list[str] | None = None) -> int:
                 )
             if not ready:
                 LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
-                if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                if not _SETTINGS.get("recovery_active"):
                     report_failure(
                         args.module or "clara-core", "dependency-setup", detail
                     )
@@ -378,7 +378,7 @@ def main(argv: list[str] | None = None) -> int:
             ready, target, detail = ensure_runtime(execution_root)
             if not ready:
                 LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
-                if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                if not _SETTINGS.get("recovery_active"):
                     report_failure(
                         args.module or "clara-core", "dependency-setup", detail
                     )

@@ -66,7 +66,8 @@
     "scripts/run_service_mcp.cjs",
     "scripts/incident_host_mcp.cjs",
     "scripts/incident_tool_schemas.json",
-    "scripts/archive_reporting_failure.py"
+    "scripts/archive_reporting_failure.py",
+    "scripts/workflow_usage.py"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -102,7 +103,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a69dd27ab0b19bb9b4133b01baece8134289a1a4b6f6a5ce72505c038f0a2859"
+    "source_fingerprint": "b915d8f08d3f77332c21168f5f989b91518e2a56880464a4eab0c10c0aa113fb"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -182,6 +183,15 @@
         "scripts/archive_emission_mcp.cjs"
       ],
       "on_violation": "Retain the actual pipeline output or operation error and separately expose an unavailable or incomplete reporting outcome. Save a content-free gap when storage permits; never claim that unsaved measurements or an unverified receipt passed."
+    },
+    {
+      "id": "explicit-receipt-test-overrides",
+      "control": "The receipt helper does not read an endpoint or delivery mode from the process environment. Production defaults to the fixed Mparanza receipt endpoint. Explicit test parameters permit only the existing validated loopback override or local-only suppression. Workflow retries pass the selected incident delivery mode explicitly.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py",
+        "scripts/workflow_usage.py"
+      ],
+      "on_violation": "Reject unapproved endpoint shapes and redirects; retain pending reports without invalidating completed professional work."
     }
   ],
   "service_id": "run-receipt-stamping"

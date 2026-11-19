@@ -96,7 +96,7 @@ def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_deliver
     submitted = []
 
     def reporting_process(command, **options):
-        submitted.append(json.loads(options["input"]))
+        submitted.append(json.loads(options["input"])["report"])
         return subprocess.CompletedProcess(
             command,
             0 if reporter_succeeds else 1,

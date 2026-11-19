@@ -45,7 +45,8 @@
     "scripts/privacy_contract.py",
     "scripts/incident_host_mcp.cjs",
     "scripts/incident_tool_schemas.json",
-    "scripts/operational_incidents.py"
+    "scripts/operational_incidents.py",
+    "scripts/workflow_usage.py"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -79,7 +80,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e75c9e708c0168638164a912aa205994f1593c475da4434008e440cb8d29adb3"
+    "source_fingerprint": "2df0415104f00db79973ff35ec33ea72fe25f389909d66003d61a7cd47f288c4"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -134,6 +135,15 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
+    },
+    {
+      "id": "explicit-receipt-test-overrides",
+      "control": "The receipt helper does not read an endpoint or delivery mode from the process environment. Production defaults to the fixed Mparanza receipt endpoint. Explicit test parameters permit only the existing validated loopback override or local-only suppression. Workflow retries pass the selected incident delivery mode explicitly.",
+      "implemented_by": [
+        "scripts/notarized_run_receipt.py",
+        "scripts/workflow_usage.py"
+      ],
+      "on_violation": "Reject unapproved endpoint shapes and redirects; retain pending reports without invalidating completed professional work."
     }
   ],
   "service_details": {

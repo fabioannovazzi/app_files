@@ -53,22 +53,65 @@ __all__ = [
     "verify_original_task",
     "host_identity",
     "link_host",
+    "configure_settings",
+    "load_settings",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
 SERVER = "https://mparanza.com/api/operational-incidents"
 ROOT = Path(__file__).resolve().parents[1]
 _LIMIT = 2 * 1024 * 1024
-_SESSION = (
-    str(UUID(os.environ["MPARANZA_INCIDENT_HOST_SESSION"]))
-    if os.environ.get("MPARANZA_INCIDENT_HOST_SESSION")
-    else str(uuid4())
-)
+_SESSION = str(uuid4())
+_SETTINGS: dict[str, Any] = {}
+
+
+def configure_settings(settings: dict[str, Any]) -> None:
+    """Bind explicit server-owned settings; never consult process environment."""
+    global _SESSION
+    allowed = {
+        "host_session",
+        "task_id",
+        "host",
+        "plugin_root",
+        "state_dir",
+        "device_dir",
+        "delivery",
+        "recovery_active",
+    }
+    if not isinstance(settings, dict) or set(settings) - allowed:
+        raise ValueError("Unknown incident settings")
+    value = dict(settings)
+    for key in ("host_session", "task_id"):
+        if value.get(key):
+            value[key] = str(UUID(value[key]))
+    if value.get("host", "codex") not in {"codex", "cowork"}:
+        raise ValueError("Invalid incident host")
+    if value.get("delivery", "automatic") not in {"automatic", "local-only"}:
+        raise ValueError("Invalid incident delivery mode")
+    for key in ("plugin_root", "state_dir", "device_dir"):
+        if key in value:
+            path = Path(value[key]).expanduser().absolute()
+            if any(item.is_symlink() for item in (path, *path.parents)):
+                raise ValueError(
+                    "Incident settings paths must not traverse symbolic links"
+                )
+            value[key] = str(path)
+    _SETTINGS.clear()
+    _SETTINGS.update(value)
+    if value.get("host_session"):
+        _SESSION = value["host_session"]
+
+
+def load_settings(path: Path) -> None:
+    """Load the JSON file explicitly selected by the native server or a test."""
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Incident settings must be an ordinary file")
+    configure_settings(json.loads(path.read_text(encoding="utf-8")))
 
 
 def _delivery_scope() -> str | None:
     """Keep an explicitly selected task separate from historical outbox work."""
-    value = os.environ.get("MPARANZA_INCIDENT_TASK_ID")
+    value = _SETTINGS.get("task_id")
     return str(UUID(value)) if value else None
 
 
@@ -155,26 +198,17 @@ def _queued_count(state: dict[str, Any]) -> int:
 
 
 def _host() -> str:
-    configured = os.environ.get("MPARANZA_INCIDENT_HOST")
-    if configured in {"codex", "cowork"}:
+    configured = _SETTINGS.get("host")
+    if configured:
         return configured
-    # Codex sets PLUGIN_ROOT and also CLAUDE_PLUGIN_ROOT for compatibility.
-    # Its explicit host variable must win so hooks retain the CLI's userID.
-    if os.environ.get("PLUGIN_ROOT"):
-        return "codex"
-    if (
-        os.environ.get("CLAUDE_PLUGIN_ROOT")
-        or not (ROOT / ".codex-plugin/plugin.json").is_file()
-    ):
-        return "cowork"
-    return "codex"
+    return "codex" if (ROOT / ".codex-plugin/plugin.json").is_file() else "cowork"
 
 
 def _state_path(*, create: bool = True) -> Path:
     base = (
         Path(
-            os.environ.get(
-                "MPARANZA_INCIDENT_STATE_DIR",
+            _SETTINGS.get(
+                "state_dir",
                 str(
                     Path.home()
                     / ".mparanza"
@@ -200,8 +234,8 @@ def _host_credentials() -> dict[str, str] | None:
     """Persist one random native-host proof; a Cowork guest is not a host device."""
     if _host() == "cowork" and platform.system() == "Linux":
         return None
-    configured = os.environ.get("MPARANZA_INCIDENT_DEVICE_DIR")
-    state_override = os.environ.get("MPARANZA_INCIDENT_STATE_DIR")
+    configured = _SETTINGS.get("device_dir")
+    state_override = _SETTINGS.get("state_dir")
     base = (
         Path(configured).expanduser()
         if configured
@@ -686,7 +720,7 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def _local_delivery_only() -> bool:
-    mode = os.environ.get("MPARANZA_INCIDENT_DELIVERY", "automatic")
+    mode = _SETTINGS.get("delivery", "automatic")
     if mode not in {"automatic", "local-only"}:
         raise ValueError("Unknown operational incident delivery mode")
     return mode == "local-only"
@@ -1988,20 +2022,32 @@ def check_incidents(
         ) as handle:
             error_path = Path(handle.name)
             try:
-                # Identity/report-only snapshots stay stdlib-only. Resolve this
-                # dependency only when a verified built-in recovery launches.
-                _HELPER_SCRIPTS = Path(__file__).resolve().parent
-                if not (_HELPER_SCRIPTS / "local_helper_environment.py").is_file():
-                    _HELPER_SCRIPTS = Path(__file__).resolve().parents[3] / "scripts"
-                sys.path.insert(0, str(_HELPER_SCRIPTS))
-                from local_helper_environment import local_helper_environment
-
+                # The child inherits proxy/runtime configuration normally. Internal
+                # reporting settings travel as an argument to this fixed wrapper.
+                recovery_program = (
+                    "import json, runpy, sys; "
+                    "from pathlib import Path; "
+                    "script = sys.argv.pop(1); settings = json.loads(sys.argv.pop(1)); "
+                    "sys.path.insert(0, str(Path(script).parent)); "
+                    "import operational_incidents as incidents; "
+                    "incidents.configure_settings(settings); "
+                    "sys.argv[0] = script; runpy.run_path(script, run_name='__main__')"
+                )
                 completed = subprocess.run(
                     [
                         sys.executable,
                         "-X",
                         "utf8",
-                        str(ROOT / script),
+                        "-c",
+                        recovery_program,
+                        str(Path(_SETTINGS.get("plugin_root", ROOT)) / script),
+                        json.dumps(
+                            {
+                                **_SETTINGS,
+                                "host_session": _SESSION,
+                                "recovery_active": True,
+                            }
+                        ),
                         *(
                             []
                             if receipt["workflow"]
@@ -2009,31 +2055,12 @@ def check_incidents(
                             else ["--module", receipt["workflow"]]
                         ),
                     ],
-                    cwd=ROOT,
+                    cwd=Path(_SETTINGS.get("plugin_root", ROOT)),
                     stdout=subprocess.DEVNULL,
                     stderr=handle,
                     text=True,
                     timeout=600,
                     check=False,
-                    env={
-                        **local_helper_environment(),
-                        **{
-                            key: os.environ[key]
-                            for key in (
-                                "MPARANZA_RUNTIME_ROOT",
-                                "CLAUDE_PLUGIN_DATA",
-                                "PLUGIN_DATA",
-                                "MPARANZA_INCIDENT_STATE_DIR",
-                                "MPARANZA_INCIDENT_DEVICE_DIR",
-                                "MPARANZA_INCIDENT_HOST",
-                                "MPARANZA_INCIDENT_HOST_SESSION",
-                                "MPARANZA_INCIDENT_DELIVERY",
-                                "MPARANZA_INCIDENT_TASK_ID",
-                            )
-                            if key in os.environ
-                        },
-                        "MPARANZA_INCIDENT_RECOVERY_ACTIVE": "1",
-                    },
                     encoding="utf-8",
                 )
             except (subprocess.TimeoutExpired, OSError):
@@ -2314,9 +2341,12 @@ def main() -> None:
             "authorize-report-delivery",
         ),
     )
+    parser.add_argument("--settings", type=Path)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--diagnostic", type=Path)
     args = parser.parse_args()
+    if args.settings:
+        load_settings(args.settings)
     if args.command == "authorize-report-delivery":
         if args.input is None:
             parser.error("--input requires the exact report delivery authorization")

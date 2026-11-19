@@ -542,9 +542,13 @@ def installed_client(setup, tmp_path, monkeypatch):
     scripts = Path(__file__).resolve().parents[3] / "plugins/vera/scripts"
     monkeypatch.syspath_prepend(str(scripts))
     usage = importlib.import_module("workflow_usage")
-    monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(tmp_path / "local-state"))
-    monkeypatch.setenv("MPARANZA_INCIDENT_DEVICE_DIR", str(tmp_path / "local-device"))
-    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+    monkeypatch.setitem(
+        usage.incidents._SETTINGS, "state_dir", str(tmp_path / "local-state")
+    )
+    monkeypatch.setitem(
+        usage.incidents._SETTINGS, "device_dir", str(tmp_path / "local-device")
+    )
+    monkeypatch.setitem(usage.incidents._SETTINGS, "delivery", "local-only")
     monkeypatch.setenv("VERA_REPORTING_STATE_DIR", str(tmp_path / "reporting-state"))
     monkeypatch.setattr(usage, "ROOT", scripts.parent)
 

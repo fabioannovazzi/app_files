@@ -13,7 +13,8 @@
     "modules/studio-archive/assets/archive-ui.js",
     "modules/studio-archive/assets/archive-host.js",
     "modules/studio-archive/mcp/archive_panel.cjs",
-    "modules/studio-archive/scripts/archive_panel.py"
+    "modules/studio-archive/scripts/archive_panel.py",
+    "scripts/incident_host_mcp.cjs"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -70,6 +71,14 @@
         "modules/studio-archive/scripts/archive_panel.py"
       ],
       "on_violation": "Reject an invalid or foreign selection; retain saved documents and receipts."
+    },
+    {
+      "id": "server-owned-explicit-reporting-settings",
+      "control": "The native server passes internal settings explicitly to the Python reporter. The on-demand server retains one private session settings file and passes its path to the incident host; workflow task UUIDs are bound per request. No user credential or custom production endpoint is requested. Production reporting uses the existing fixed Mparanza endpoints. Host permissions remain authoritative.",
+      "implemented_by": [
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
     }
   ],
   "service_details": {
@@ -92,6 +101,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "0dce0f803eb918629fa105d2e3f77dd907dafd2969e0645af812f140fa448b99"
+    "source_fingerprint": "a8669deda4a4476a4cd3aec60636651a0961c795680711ffc131e77ca360b629"
   }
 }

@@ -85,8 +85,24 @@ def call(
     ):
         # Only the fixture-owned loopback service exercises remote delivery.
         environment["MPARANZA_INCIDENT_DELIVERY"] = "automatic"
+    settings = device.parent / "incident-settings.json"
+    settings.write_text(
+        json.dumps(
+            {
+                "device_dir": str(device),
+                "state_dir": str(device.parent / "unused-task-state"),
+                "host": "codex",
+                "delivery": environment.get("MPARANZA_INCIDENT_DELIVERY", "local-only"),
+            }
+        )
+    )
     result = subprocess.run(
-        ["node", str(root / "scripts/incident_host_mcp.cjs")],
+        [
+            "node",
+            str(root / "scripts/incident_host_mcp.cjs"),
+            "--settings",
+            str(settings),
+        ],
         input=json.dumps(
             {
                 "jsonrpc": "2.0",

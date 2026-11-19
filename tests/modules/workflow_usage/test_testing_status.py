@@ -529,7 +529,7 @@ def test_native_usage_transport_registers_actual_computer_without_incident(
     from tests.plugins.test_operational_incident_client import client
 
     module, store, transport = client(tmp_path, monkeypatch)
-    monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "codex")
+    monkeypatch.setitem(module._SETTINGS, "host", "codex")
     owner = module.local_context()["credentials"]
 
     def post(operation, payload):
@@ -577,7 +577,7 @@ def test_missing_native_identity_does_not_block_usage_delivery(
     module, store, transport = client(tmp_path, monkeypatch)
     owner = module.local_context()["credentials"]
     if unavailable == "cowork_guest":
-        monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+        monkeypatch.setitem(module._SETTINGS, "host", "cowork")
         monkeypatch.setattr(module.platform, "system", lambda: "Linux")
     else:
 
