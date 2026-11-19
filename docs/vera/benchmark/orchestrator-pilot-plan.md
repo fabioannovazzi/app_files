@@ -140,3 +140,31 @@ finalized/completed, its closed report recorded three emissions without collecti
 errors, and server receipt verification returned `verified`. This supplements the
 earlier standalone and two-row prototype tests; installed native-panel and
 real-client practitioner acceptance are still separate future steps.
+
+## Opt-in milestone: truthful partial results
+
+A subsequent independent Sol-observed synthetic case used nine bank movements
+and eleven ledger rows, with a held-out answer key. The first native run retained
+all seven supported links correctly (four local, two contextual and one net
+settlement), with no false allocations. One ambiguity was explained and one
+no-counterpart movement was still unreviewed at the six-call limit. The controller
+took 118.135 seconds. A rejected answer consumed 31.945 seconds because separate
+accounting evidence was missing despite supported cash-link evidence.
+
+That run exposed incorrect summary counters: a reviewed doubt and an unreviewed
+movement were both counted as technical errors, the open-item flag was false,
+and the CLI called the review completed. The milestone correction separates
+movement dispositions from controller stop diagnostics, counts only actual
+reviewed groups, derives the open-item flag from outstanding relations and labels
+incomplete CLI exports accurately. Regression coverage checks the workbook,
+status JSON and reviewed counts after a cutoff with both a doubt and an untouched
+movement. Runtime/call limits, matching policy and opt-in selection are unchanged.
+
+A fresh native rerun on identical sources stopped after two evidence-format
+rejections rather than reproducing the seven links. Its controller took 58.543
+seconds and retained four correct local links, zero false links and five unreviewed
+movements. The corrected status and CLI reported exactly those dispositions and
+an incomplete review with open items. This confirms truthful partial delivery,
+not improved matching or repeatability. Redundant accounting-evidence friction
+and variable model completion remain known pilot limitations. Neither synthetic
+run establishes superiority over Accounting or previous Vera.

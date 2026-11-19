@@ -1011,6 +1011,13 @@ def test_orchestrator_partial_workbook_is_delivered_and_resume_uses_new_revision
     )
     assert Path(first["workbook"]).is_file()
     assert first["exhaustive"] is False
+    assert first["reviewed_bank_count"] == 0
+    first_status = json.loads(
+        (first["workbook"].parent / "grouped_review_status.json").read_text()
+    )
+    assert first_status["financial_reconciliation_has_open_items"] is True
+    assert first_status["primary_counts"]["unprocessed"] == 1
+    assert first_status["primary_counts"]["error"] == 0
     previous_bytes = first["workbook"].read_bytes()
     second = grouped.complete_grouped_review(
         reconciliation, output, review_strategy="orchestrator", resume_checkpoint=True
@@ -1019,3 +1026,57 @@ def test_orchestrator_partial_workbook_is_delivered_and_resume_uses_new_revision
     assert second["workbook"] != first["workbook"]
     assert first["workbook"].read_bytes() == previous_bytes
     assert len(worker.calls) == 2
+
+
+def test_pilot_cutoff_preserves_reviewed_doubt_and_unreviewed_movement(
+    tmp_path, monkeypatch
+):
+    from test_reconciliation_orchestrator import Worker, action, decision, search
+
+    bank = [
+        row("b", "-34.12", "Card ACME shop", day="2026-07-01"),
+        row("untouched", "-81.39", "Rental without counterpart", day="2026-07-22"),
+    ]
+    journal = [row("j", "-34.12", "Purchase ACME", day="2026-07-02")]
+    reconciliation, output, _ = _environment(
+        tmp_path, monkeypatch, bank=bank, journal=journal
+    )
+
+    def tentative(packet):
+        response = action(packet, "decide")
+        focused = dict(packet)
+        focused["bank_records"] = [
+            r for r in packet["bank_records"] if r["transaction_id"] == "b"
+        ]
+        response["groups"] = [decision(focused, status="doubtful")]
+        return response
+
+    worker = Worker([search, tentative])
+    monkeypatch.setattr(
+        sys.modules["semantic_review"], "run_isolated_native_worker", worker.invoke
+    )
+    monkeypatch.setattr(
+        sys.modules["semantic_review"], "discover_worker_selection", worker.select
+    )
+    result = grouped.complete_grouped_review(
+        reconciliation,
+        output,
+        review_strategy="orchestrator",
+        orchestrator_limits={"calls": 2},
+    )
+    status = json.loads(
+        (result["workbook"].parent / "grouped_review_status.json").read_text()
+    )
+    assert result["exhaustive"] is False
+    assert result["reviewed_bank_count"] == 1
+    assert result["human_review_count"] == 1
+    assert status["financial_reconciliation_has_open_items"] is True
+    assert status["primary_counts"]["human"] == 1
+    assert status["primary_counts"]["unprocessed"] == 1
+    assert status["primary_counts"]["error"] == 0
+    workbook = openpyxl.load_workbook(result["workbook"], data_only=True)
+    rows = list(workbook["Sintesi"].values)
+    assert any(r[0] == "Dubbi bancari residui" and r[1] == 1 for r in rows)
+    assert any(r[0] == "Non elaborati" and r[1] == 1 for r in rows)
+    assert any(r[0] == "Errori tecnici" and r[1] == 0 for r in rows)
+    workbook.close()

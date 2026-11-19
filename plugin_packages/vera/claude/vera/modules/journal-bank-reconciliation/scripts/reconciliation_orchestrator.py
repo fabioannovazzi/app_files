@@ -808,17 +808,20 @@ def run_orchestrator(
                 }
             ]
         )
-        summary = bf.summary(bank, groups, errors, complete=False)
-        # A model can finish with real doubts without having to escalate every row.
-        if reason == "finished":
-            doubtful = sum(
-                len(g["bank_ids"])
-                for g in groups
-                if g["bank_resolution"]["status"] == "doubtful"
-            )
-            summary["primary_counts"]["human"] = doubtful
-            summary["primary_counts"]["unprocessed"] -= doubtful
-            summary["review_complete"] = summary["primary_counts"]["unprocessed"] == 0
+        # A stopped controller does not undo reviewed doubts or turn untouched
+        # movements into reviewed technical errors. Keep stop diagnostics above
+        # separate from the disposition of each bank movement.
+        summary = bf.summary(bank, groups, complete=False)
+        doubtful = sum(
+            len(g["bank_ids"])
+            for g in groups
+            if g["bank_resolution"]["status"] == "doubtful"
+        )
+        summary["primary_counts"]["human"] = doubtful
+        summary["primary_counts"]["unprocessed"] -= doubtful
+        summary["review_complete"] = (
+            reason == "finished" and summary["primary_counts"]["unprocessed"] == 0
+        )
         result = {
             "schema_version": bf.PROTOCOL,
             "orchestrator_protocol": PROTOCOL,

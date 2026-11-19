@@ -18,6 +18,8 @@ on:
       - 'tests/scripts/test_static_website_checks.py'
       - 'requirements-static-checks.txt'
   workflow_dispatch:
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
 permissions:
   contents: read
 jobs:

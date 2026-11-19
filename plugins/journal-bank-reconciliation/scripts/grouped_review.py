@@ -834,8 +834,9 @@ def complete_grouped_review(
             "review_complete": totals["review_complete"],
             "workbook": str(workbook),
             "workbook_sha256": hashlib.sha256(workbook.read_bytes()).hexdigest(),
-            "financial_reconciliation_has_open_items": totals["primary_counts"]["human"]
-            > 0,
+            "financial_reconciliation_has_open_items": any(
+                item["status"] != "concordant" for item in relations
+            ),
             "primary_counts": totals["primary_counts"],
             "secondary_counts": totals["secondary_counts"],
         },
@@ -853,7 +854,9 @@ def complete_grouped_review(
         ),
         "batches": canonical["attempts"],
         "exhaustive": totals["review_complete"],
-        "reviewed_bank_count": len(bank) - totals["primary_counts"]["unprocessed"],
+        "reviewed_bank_count": len(
+            {i for group in canonical["groups"] for i in group["bank_ids"]}
+        ),
         "human_review_count": totals["primary_counts"]["human"],
         "workbook": workbook,
         "result": output / "grouped_reconciliation_result.json",
