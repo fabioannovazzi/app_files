@@ -5720,6 +5720,7 @@ def run_semantic_resolution_pipeline(
     worker_selection: Mapping[str, Any] | None = None,
     purpose: str = "bank_open_items",
     resume_checkpoint: bool = False,
+    review_strategy: str = "staged",
 ) -> dict[str, Any]:
     """Complete the same grouped review and final workbook on every normal run.
 
@@ -5739,6 +5740,7 @@ def run_semantic_resolution_pipeline(
         codex_bin=codex_bin,
         purpose=purpose,
         resume_checkpoint=resume_checkpoint,
+        review_strategy=review_strategy,
     )
     result["required_resolution_level"] = required_resolution_level
     return result
@@ -5799,6 +5801,12 @@ def _parser() -> argparse.ArgumentParser:
             "Minimum certainty that removes a bank movement from human review. "
             "Defaults to perfect_match, retaining semantic residuals for draft review."
         ),
+    )
+    run_all.add_argument(
+        "--review-strategy",
+        choices=("staged", "orchestrator"),
+        default="staged",
+        help="Use the bounded model-directed reconciliation pilot or the existing staged review.",
     )
     run_all.add_argument("--codex-bin", type=Path)
     run_all.add_argument(
@@ -5937,6 +5945,7 @@ def main() -> int:
                 required_resolution_level=args.required_level,
                 purpose=args.purpose,
                 resume_checkpoint=args.resume_checkpoint,
+                review_strategy=args.review_strategy,
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
                 worker_selection=_load_cli_worker_selection(args),
@@ -5955,7 +5964,7 @@ def main() -> int:
             result["human_review_count"],
             result["exhaustive"],
         )
-        for batch in result["batches"]:
+        for attempt_number, batch in enumerate(result["batches"], 1):
             log_execution_status(
                 args.output_dir,
                 "worker attempt evidence: %s",
@@ -5965,10 +5974,21 @@ def main() -> int:
                         "status": batch["status"],
                     }
                     if "directory" in batch
-                    else {
-                        "worker_run": str(batch["worker_run"]),
-                        "launch_receipt": str(batch["launch_receipt"]),
-                    }
+                    else (
+                        {
+                            "directory": str(
+                                args.output_dir
+                                / "orchestrator-attempts"
+                                / f"{attempt_number:05d}"
+                            ),
+                            "status": batch["status"],
+                        }
+                        if "packet" in batch
+                        else {
+                            "worker_run": str(batch["worker_run"]),
+                            "launch_receipt": str(batch["launch_receipt"]),
+                        }
+                    )
                 ),
             )
         log_execution_status(

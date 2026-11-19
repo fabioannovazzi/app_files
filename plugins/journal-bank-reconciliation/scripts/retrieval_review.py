@@ -30,7 +30,12 @@ UTF8_PREDECESSOR = "6f5e92fba434fe34a5cdb7d241c26d8f3de73ff29b3acdc1d70d49682094
 FULL_HISTORY_PREDECESSOR = (
     "b7d1e9cd267729ab661bfe19c12aa3fd4ebd658d607fff4c40633cfbb78e240f"
 )
+# Pre-residual-pass source digest: replay only; new runs use evidence version 3.
+RESIDUAL_PREDECESSOR = (
+    "a7a58410adad9e6d1008b14bf398511bc3c63ba06e0bdfa3167ef5c2250eda95"
+)
 REPLAY_IMPLEMENTATIONS = (
+    RESIDUAL_PREDECESSOR,
     "af2bf55103a93775ee563948f177f3777087c8ee71d02b8d47de656ed54fffe1",
     LEGACY_IMPLEMENTATION,
     UTF8_PREDECESSOR,
@@ -684,7 +689,7 @@ def _run_review(
         if state_path.is_file() and not state_path.is_symlink()
         else None
     )
-    local_evidence_version = 2
+    local_evidence_version = 3
     if saved_state is not None:
         local_matches = saved_state.get("local_matches")
         local_evidence_version = saved_state.get("local_evidence_version", 1)

@@ -1347,7 +1347,7 @@ def test_audit_mcp_rejects_expanded_tree_before_every_public_surface(
         )
 
     assert raised.value.stdout == ""
-    assert "exact 26-file contract" in raised.value.stderr
+    assert "exact implementation contract" in raised.value.stderr
 
 
 @pytest.mark.parametrize(
@@ -1411,7 +1411,7 @@ def test_audit_mcp_rejects_post_start_expansion_before_next_public_surface(
 
     assert returncode != 0
     assert remaining_stdout == ""
-    assert "exact 26-file contract" in stderr
+    assert "exact implementation contract" in stderr
 
 
 def test_open_item_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
@@ -1788,8 +1788,8 @@ def test_skill_mentions_browser_review_and_mcp_tools() -> None:
     assert manifest["apps"] == "./.app.json"
     assert "scripts/review_server.py" in skill_text
     assert "artifact_card.md" in skill_text
-    assert "local browser review server" in skill_text
-    assert "review surface" in skill_text
+    assert "browser review server" in skill_text
+    assert "vera_open_review" in skill_text
     assert "validate_open_item_reconciliation_review" in skill_text
     assert "render_open_item_reconciliation_review" in skill_text
     assert "review_payload_path" in skill_text

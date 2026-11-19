@@ -112,6 +112,9 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
   ["implementation.plugin.scripts.evidence_retrieval_py", "implementation", "scripts/evidence_retrieval.py"],
   ["implementation.plugin.scripts.retrieval_review_py", "implementation", "scripts/retrieval_review.py"],
   ["implementation.plugin.scripts.local_cash_links_py", "implementation", "scripts/local_cash_links.py"],
+  ["implementation.plugin.scripts.reconciliation_actions_py", "implementation", "scripts/reconciliation_actions.py"],
+  ["implementation.plugin.scripts.reconciliation_expression_py", "implementation", "scripts/reconciliation_expression.py"],
+  ["implementation.plugin.scripts.reconciliation_orchestrator_py", "implementation", "scripts/reconciliation_orchestrator.py"],
   ["implementation.plugin.scripts.bank_first_policy_json", "implementation", "scripts/bank_first_policy.json"],
   [
     "implementation.plugin.scripts.grouped_review_py",

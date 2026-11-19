@@ -150,7 +150,7 @@ def admission(
     *,
     local_matches: list[dict[str, Any]] | None = None,
     purpose: str = "bank_open_items",
-    local_evidence_version: int = 2,
+    local_evidence_version: int = 3,
 ) -> dict[str, Any]:
     """Admit explicit complete identities before any candidate is consumed.
 
@@ -170,7 +170,7 @@ def admission(
             relationship,
             local_matches,
             purpose,
-            evidence_version=local_evidence_version,
+            evidence_version=min(local_evidence_version, 2),
         )
     locally_used = {
         side: {i for g in local for i in g[side + "_ids"]}
@@ -307,6 +307,14 @@ def admission(
             }
         content["evidence_sha256"] = digest(content)
         (accepted if content["evidence_class"] == "sure" else probable).append(content)
+    if local_matches is not None and local_evidence_version >= 3:
+        from local_cash_links import residual_cash_passes
+
+        extra, aggregate_candidates = residual_cash_passes(
+            list(b.values()), list(j.values()), relationship, accepted, purpose
+        )
+        accepted.extend(extra)
+        probable.extend(aggregate_candidates)
     used_b = {i for group in accepted for i in group["bank_ids"]}
     used_j = {i for group in accepted for i in group["journal_ids"]}
     # Indexed exact mechanical lookup preserves the old candidate predicate;
@@ -1095,7 +1103,16 @@ def validate_response(
             journal_signs = {
                 cents(records["journal"][i]["amount_signed"]) > 0 for i in journal_ids
             }
-            if direction == "same_sign" and len(bank_signs | journal_signs) != 1:
+            net_cash_group = (
+                packet.get("allow_net_cash_groups") is True
+                and bank_sum == journal_sum
+                and bank_sum != 0
+            )
+            if (
+                direction == "same_sign"
+                and len(bank_signs | journal_signs) != 1
+                and not net_cash_group
+            ):
                 raise ValueError("Cash link crosses the reviewed signed direction")
             if direction == "opposite_sign" and (
                 len(bank_signs) != 1
@@ -1191,7 +1208,7 @@ def validate_response(
             partita_identity=False,
         )
         result.append(group)
-    if focus - used_bank:
+    if focus - used_bank and not packet.get("allow_partial_focus"):
         raise ValueError("The model omitted a focus bank movement")
     return result
 
@@ -1233,6 +1250,10 @@ def validate_receipt(
     prompt_text: str,
     schema: Mapping[str, Any],
     selection: Mapping[str, Any],
+    *,
+    projection_validator: (
+        Callable[[Mapping[str, Any], str, Mapping[str, Any]], bool] | None
+    ) = None,
 ) -> None:
     """Replay actual capsule evidence, without inventing observed model identity."""
     if receipt.get("content_sha256") != digest(
@@ -1269,14 +1290,20 @@ def validate_receipt(
         ).hexdigest()
     ):
         raise ValueError("Native prompt/schema binding changed")
-    if schema != output_schema(packet) or not prompt_text.endswith(
-        json.dumps(
-            worker_packet(packet),
-            ensure_ascii=False,
-            allow_nan=False,
-            separators=(",", ":"),
+    projection_valid = (
+        projection_validator(packet, prompt_text, schema)
+        if projection_validator is not None
+        else schema == output_schema(packet)
+        and prompt_text.endswith(
+            json.dumps(
+                worker_packet(packet),
+                ensure_ascii=False,
+                allow_nan=False,
+                separators=(",", ":"),
+            )
         )
-    ):
+    )
+    if not projection_valid:
         raise ValueError(
             "Native reference projection differs from canonical source packet"
         )
@@ -1473,6 +1500,12 @@ def replay_retained(
     domain_validator: Callable[..., Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Rebuild shared conclusions from source rows and native receipts only."""
+    if result.get("orchestrator_protocol"):
+        from reconciliation_orchestrator import replay_result
+
+        return replay_result(
+            result, bank, journal, relationship, domain_validator=domain_validator
+        )
     if result.get("retrieval_protocol"):
         from retrieval_review import replay_result
 
