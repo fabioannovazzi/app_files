@@ -222,9 +222,10 @@ def _environment(
         journal
         if journal is not None
         else [
-            row("j1", "-158.60"),
-            row("j2", "-0.71", "Oneri"),
-            row("j3", "-100", "Pagamento Beta"),
+            # Keep the retrieval/retry fixture genuinely outside same-day passes.
+            row("j1", "-158.60", day="2026-10-02"),
+            row("j2", "-0.71", "Oneri", day="2026-10-02"),
+            row("j3", "-100", "Pagamento Beta", day="2026-10-02"),
         ]
     )
     _write_csv(reconciliation / "normalized_bank.csv", bank, fields=list(row("b", "1")))
@@ -964,3 +965,20 @@ def test_grouped_review_rejects_changed_retained_protocol_events(
         grouped.complete_grouped_review(reconciliation, output)
 
     assert len(calls) == 3
+
+
+def test_same_day_residual_pass_delivers_and_replays_without_model(
+    tmp_path, monkeypatch
+):
+    reconciliation, output, calls = _environment(
+        tmp_path,
+        monkeypatch,
+        bank=[row("new-bank", "-23.47")],
+        journal=[row("new-ledger", "-23.47")],
+    )
+    result = grouped.complete_grouped_review(reconciliation, output)
+    replay = grouped.complete_grouped_review(reconciliation, output)
+    assert calls == []
+    assert result["summary"]["concordant_bank_count"] == 1
+    assert Path(result["workbook"]).is_file()
+    assert replay["summary"] == result["summary"]

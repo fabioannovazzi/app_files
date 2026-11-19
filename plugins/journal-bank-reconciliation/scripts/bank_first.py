@@ -150,7 +150,7 @@ def admission(
     *,
     local_matches: list[dict[str, Any]] | None = None,
     purpose: str = "bank_open_items",
-    local_evidence_version: int = 2,
+    local_evidence_version: int = 3,
 ) -> dict[str, Any]:
     """Admit explicit complete identities before any candidate is consumed.
 
@@ -170,7 +170,7 @@ def admission(
             relationship,
             local_matches,
             purpose,
-            evidence_version=local_evidence_version,
+            evidence_version=min(local_evidence_version, 2),
         )
     locally_used = {
         side: {i for g in local for i in g[side + "_ids"]}
@@ -307,6 +307,14 @@ def admission(
             }
         content["evidence_sha256"] = digest(content)
         (accepted if content["evidence_class"] == "sure" else probable).append(content)
+    if local_matches is not None and local_evidence_version >= 3:
+        from local_cash_links import residual_cash_passes
+
+        extra, aggregate_candidates = residual_cash_passes(
+            list(b.values()), list(j.values()), relationship, accepted, purpose
+        )
+        accepted.extend(extra)
+        probable.extend(aggregate_candidates)
     used_b = {i for group in accepted for i in group["bank_ids"]}
     used_j = {i for group in accepted for i in group["journal_ids"]}
     # Indexed exact mechanical lookup preserves the old candidate predicate;

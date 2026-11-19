@@ -118,7 +118,7 @@ def bad_answer(packet, **_):
 def test_invalid_first_stage_answers_escalate_without_accepting_or_replaying_them(
     tmp_path,
 ):
-    bank, journal = [row("b1")], [row("j1")]
+    bank, journal = [row("b1")], [row("j1", transaction_date="2026-01-09")]
     native = NativeFixture({})
     native.respond = lambda packet, **_: (
         bad_answer(packet) if packet["stage"] == "luna" else answer(packet, linked=True)
@@ -144,7 +144,13 @@ def test_stronger_stage_failures_remain_bounded_and_do_not_become_matches(tmp_pa
     native = NativeFixture({})
     native.respond = bad_answer
 
-    result = execute(tmp_path, native, [row("b1")], [row("j1")], local_matches=[])
+    result = execute(
+        tmp_path,
+        native,
+        [row("b1")],
+        [row("j1", transaction_date="2026-01-09")],
+        local_matches=[],
+    )
 
     assert [p["stage"] for p in native.calls] == ["luna"] * 3 + ["sol"] * 3
     assert result["errors"][0]["stage"] == "sol"
@@ -183,7 +189,7 @@ def test_recovery_after_evidence_search_preserves_valid_search_replay(tmp_path):
         return bad_answer(packet)
 
     native.respond = respond
-    bank, journal = [row("b1")], [row("j1")]
+    bank, journal = [row("b1")], [row("j1", transaction_date="2026-01-09")]
     result = execute(tmp_path, native, bank, journal, local_matches=[])
 
     assert result["errors"] == []

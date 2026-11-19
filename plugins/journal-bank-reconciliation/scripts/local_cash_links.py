@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
-__all__ = ["admit_local_matches", "review_population"]
+__all__ = ["admit_local_matches", "review_population", "residual_cash_passes"]
 
 
 def admit_local_matches(
@@ -114,3 +114,142 @@ def review_population(
         [row for row in bank if row["transaction_id"] not in used["bank"]],
         [row for row in journal if row["transaction_id"] not in used["journal"]],
     )
+
+
+def residual_cash_passes(
+    bank: Sequence[Mapping[str, Any]],
+    journal: Sequence[Mapping[str, Any]],
+    relationship: Mapping[str, Any],
+    accepted: Sequence[Mapping[str, Any]],
+    purpose: str,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Exact residual cash proposals, with semantic aggregates left unallocated.
+
+    Date/amount conservation and disjoint membership are mechanical. These
+    links do not establish invoice identity or correct accounting treatment.
+    """
+    from collections import defaultdict
+    from datetime import date
+    from itertools import combinations
+
+    import bank_first as bf
+
+    if (
+        relationship.get("open_item_allocation_authorized")
+        or relationship.get("direction_policy", "same_sign") != "same_sign"
+    ):
+        return [], []
+    used = {
+        side: {i for g in accepted for i in g[side + "_ids"]}
+        for side in ("bank", "journal")
+    }
+    buckets = {side: defaultdict(list) for side in used}
+    for side, rows in (("bank", bank), ("journal", journal)):
+        for row in rows:
+            if row["transaction_id"] in used[side]:
+                continue
+            scope = bf._scope(row, relationship)
+            try:
+                day = date.fromisoformat(str(row.get("transaction_date", "")))
+            except ValueError:
+                continue
+            amount = bf.cents(row["amount_signed"])
+            if all(scope) and amount:
+                buckets[side][(scope, day.isoformat(), amount)].append(row)
+
+    def compatible(left, right):
+        # A conflicting explicit identity must not be overridden by arithmetic.
+        for field in ("party_ref", "reference"):
+            a = {str(r[field]).strip() for r in left if r.get(field)}
+            b = {str(r[field]).strip() for r in right if r.get(field)}
+            if a and b and a != b:
+                return False
+        return True
+
+    local = []
+    for key in sorted(buckets["bank"].keys() & buckets["journal"].keys()):
+        left, right = buckets["bank"][key], buckets["journal"][key]
+        if len(left) != len(right) or not compatible(left, right):
+            continue
+        repeated = len(left) > 1
+        if repeated and (
+            relationship.get("relationship_shape") != "many_to_many"
+            or not all(
+                any(
+                    token in str(r.get("description", "")).casefold()
+                    for token in ("commission", "bank fee", "bank charge")
+                )
+                for r in left
+            )
+        ):
+            continue
+        # Connected edges express group membership, not arbitrary individual pairs.
+        edges = [
+            {
+                "bank_transaction_id": l["transaction_id"],
+                "journal_transaction_id": right[0]["transaction_id"],
+            }
+            for l in left
+        ]
+        edges += [
+            {
+                "bank_transaction_id": left[0]["transaction_id"],
+                "journal_transaction_id": r["transaction_id"],
+            }
+            for r in right[1:]
+        ]
+        group = admit_local_matches(left, right, relationship, edges, purpose)[0]
+        group["rule_id"] = (
+            "residual_same_day_fee_group.v1"
+            if repeated
+            else "residual_same_day_unique.v1"
+        )
+        group["evidence_sha256"] = bf.digest(
+            {k: v for k, v in group.items() if k != "evidence_sha256"}
+        )
+        local.append(group)
+        for side in used:
+            used[side].update(group[side + "_ids"])
+
+    residual = {side: defaultdict(list) for side in used}
+    for side in used:
+        for (scope, day, amount), rows in buckets[side].items():
+            residual[side][(scope, day, amount > 0)].extend(
+                r for r in rows if r["transaction_id"] not in used[side]
+            )
+    probable = []
+    # Bound combinatorial work; skipped dense populations remain in semantic scope.
+    budget = 4096
+    for source, target in (("bank", "journal"), ("journal", "bank")):
+        for key in sorted(residual[source].keys() & residual[target].keys()):
+            for row in sorted(residual[target][key], key=lambda r: r["transaction_id"]):
+                pool = sorted(
+                    (
+                        r
+                        for r in residual[source][key]
+                        if abs(bf.cents(r["amount_signed"]))
+                        < abs(bf.cents(row["amount_signed"]))
+                    ),
+                    key=lambda r: r["transaction_id"],
+                )
+                for size in (2, 3):
+                    for combo in combinations(pool, size):
+                        if budget == 0:
+                            return local, probable
+                        budget -= 1
+                        if sum(bf.cents(r["amount_signed"]) for r in combo) != bf.cents(
+                            row["amount_signed"]
+                        ):
+                            continue
+                        if not compatible(combo, [row]):
+                            continue
+                        probable.append(
+                            {
+                                source + "_ids": [r["transaction_id"] for r in combo],
+                                target + "_ids": [row["transaction_id"]],
+                                "rule_id": "residual_same_day_subset_candidate.v1",
+                                "evidence_class": "probable",
+                                "reasons": ["exact_sum_does_not_establish_identity"],
+                            }
+                        )
+    return local, probable
