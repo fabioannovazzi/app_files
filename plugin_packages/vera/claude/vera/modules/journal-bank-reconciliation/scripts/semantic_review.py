@@ -5958,7 +5958,8 @@ def main() -> int:
             return 2
         log_execution_status(
             args.output_dir,
-            "semantic pipeline completed: batches=%s reviewed=%s human_review=%s exhaustive=%s",
+            "semantic pipeline %s: batches=%s reviewed=%s human_review=%s exhaustive=%s",
+            "completed" if result["exhaustive"] else "incomplete",
             result["batch_count"],
             result["reviewed_bank_count"],
             result["human_review_count"],

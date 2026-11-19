@@ -513,8 +513,9 @@ def test_small_context_budget_delivers_partial_without_model_call(tmp_path):
     assert worker.calls == []
 
 
+@pytest.mark.parametrize("exhaustive", [True, False])
 def test_public_run_all_logs_pilot_attempts_and_delivers_without_key_error(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, exhaustive
 ):
     import semantic_review as semantic
 
@@ -545,7 +546,7 @@ def test_public_run_all_logs_pilot_attempts_and_delivers_without_key_error(
             batches=canonical["attempts"],
             reviewed_bank_count=1,
             human_review_count=0,
-            exhaustive=True,
+            exhaustive=exhaustive,
             workbook=tmp_path / "result.xlsx",
             model_tokens=None,
         )
@@ -557,6 +558,11 @@ def test_public_run_all_logs_pilot_attempts_and_delivers_without_key_error(
     assert semantic.main() == 0
     assert any("orchestrator-attempts" in str(line) for line in logs)
     assert any("final reconciliation workbook" in str(line) for line in logs)
+    assert any(
+        "semantic pipeline %s" in str(line[1])
+        and line[2] == ("completed" if exhaustive else "incomplete")
+        for line in logs
+    )
 
 
 def approve_candidates(packet):
