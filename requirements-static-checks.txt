@@ -1,0 +1,5 @@
+# Focused website/CI-routing validation; not a product runtime dependency.
+beautifulsoup4==4.13.3
+playwright>=1.48.0
+PyYAML>=6.0
+pytest>=8.0
