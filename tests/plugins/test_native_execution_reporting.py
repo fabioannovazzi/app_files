@@ -41,7 +41,7 @@ def submit_native_arguments(
     monkeypatch.setattr(module, "_jobs", lambda: jobs)
 
     def completed_worker(command, **kwargs):
-        job = Path(command[-1])
+        job = Path(command[command.index("--execute") + 1])
         (job / "result.json").write_text(
             json.dumps({"state": "completed", "returncode": 0})
         )
