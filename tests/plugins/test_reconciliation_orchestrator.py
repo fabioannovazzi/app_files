@@ -57,6 +57,8 @@ def action(packet, kind, **extra):
         expression="",
         query=None,
         groups=[],
+        candidate_indices=[],
+        evidence_fields={"bank": [], "journal": []},
         rationale="Inspect useful evidence",
         working_note="",
         **extra,
@@ -555,3 +557,130 @@ def test_public_run_all_logs_pilot_attempts_and_delivers_without_key_error(
     assert semantic.main() == 0
     assert any("orchestrator-attempts" in str(line) for line in logs)
     assert any("final reconciliation workbook" in str(line) for line in logs)
+
+
+def approve_candidates(packet):
+    a = action(packet, "decide_candidates")
+    a["candidate_indices"] = [
+        c["candidate_index"] for c in packet["probable_candidates"]
+    ]
+    a["evidence_fields"] = {"bank": ["description"], "journal": ["description"]}
+    a["rationale"] = (
+        "Each selected membership has compatible source descriptions and an exact cash balance."
+    )
+    return a
+
+
+def test_compact_approval_keeps_individual_links_and_literal_evidence(tmp_path):
+    worker = Worker([search, approve_candidates])
+    result = run(tmp_path, worker)
+    group = result["groups"][0]
+    assert group["bank_ids"] == ["b"] and group["journal_ids"] == ["j"]
+    assert group["bank_resolution"]["evidence"][0]["quote"] == BANK[0]["description"]
+    assert orch.replay_result(result, BANK, JOURNAL, REL) == result["groups"]
+
+
+def test_compact_approval_cannot_accept_competing_candidates_together(tmp_path):
+    bank = [*BANK, {**BANK[0], "transaction_id": "b2"}]
+    worker = Worker([search, approve_candidates, lambda p: action(p, "finish")])
+    result = orch.run_orchestrator(
+        bank,
+        JOURNAL,
+        tmp_path,
+        source_binding={"workflow": "journal-bank-reconciliation"},
+        relationship=REL,
+        local_matches=[],
+        invoke=worker.invoke,
+        select=worker.select,
+    )
+    assert result["groups"] == []
+    assert result["attempts"][1]["status"] == "rejected"
+
+
+def test_compact_approval_cannot_use_amounts_alone_as_semantic_evidence(tmp_path):
+    def monetary(packet):
+        a = approve_candidates(packet)
+        a["evidence_fields"] = {"bank": ["amount_signed"], "journal": ["amount_signed"]}
+        return a
+
+    worker = Worker([search, monetary, lambda p: action(p, "finish")])
+    result = run(tmp_path, worker)
+    assert result["groups"] == []
+    assert result["attempts"][1]["status"] == "rejected"
+
+
+def test_compact_approval_cannot_approve_unseen_group_members(tmp_path):
+    journal = [
+        {**JOURNAL[0], "transaction_id": f"j{i}", "amount_signed": "-1.00"}
+        for i in range(70)
+    ]
+    bank = [{**BANK[0], "amount_signed": "-70.00"}]
+
+    def discover_group(p):
+        a = action(p, "generate")
+        a["expression"] = (
+            "[{'bank_ids':[b['transaction_id'] for b in bank], 'journal_ids':[j['transaction_id'] for j in journal]}]"
+        )
+        return a
+
+    worker = Worker([discover_group, approve_candidates, lambda p: action(p, "finish")])
+    result = orch.run_orchestrator(
+        bank,
+        journal,
+        tmp_path,
+        source_binding={"workflow": "journal-bank-reconciliation"},
+        relationship=REL,
+        local_matches=[],
+        invoke=worker.invoke,
+        select=worker.select,
+    )
+    assert result["groups"] == []
+    assert "not fully visible" in result["attempts"][1]["error"]
+
+
+def test_generated_candidate_batch_resolves_25_rows_without_25_verbose_decisions(
+    tmp_path,
+):
+    bank = [
+        {
+            **BANK[0],
+            "transaction_id": f"b{i}",
+            "beneficiary": f"Supplier {i}",
+            "description": f"Payment Supplier {i}",
+        }
+        for i in range(25)
+    ]
+    journal = [
+        {
+            **JOURNAL[0],
+            "transaction_id": f"j{i}",
+            "beneficiary": f"Supplier {i}",
+            "description": f"Invoice Supplier {i}",
+        }
+        for i in reversed(range(25))
+    ]
+
+    def discover_names(p):
+        a = action(p, "generate")
+        a["expression"] = (
+            "[{'bank_ids':[b['transaction_id']], 'journal_ids':[j['transaction_id']]} for b in bank for j in journal if b['cents']==j['cents'] and b['beneficiary'].casefold()==j['beneficiary'].casefold()]"
+        )
+        return a
+
+    worker = Worker([discover_names, approve_candidates])
+    result = orch.run_orchestrator(
+        bank,
+        journal,
+        tmp_path,
+        source_binding={"workflow": "journal-bank-reconciliation"},
+        relationship=REL,
+        local_matches=[],
+        invoke=worker.invoke,
+        select=worker.select,
+    )
+    assert len(worker.calls) == 2
+    assert len(result["groups"]) == 25
+    assert {(g["bank_ids"][0], g["journal_ids"][0]) for g in result["groups"]} == {
+        (f"b{i}", f"j{i}") for i in range(25)
+    }
+    assert result["summary"]["review_complete"] is True

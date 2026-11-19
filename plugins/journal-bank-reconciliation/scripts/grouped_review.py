@@ -846,7 +846,8 @@ def complete_grouped_review(
             a["status"] == "validated"
             or (
                 a["status"] == "accepted"
-                and a.get("response", {}).get("action") == "decide"
+                and a.get("response", {}).get("action")
+                in {"decide", "decide_candidates"}
             )
             for a in canonical["attempts"]
         ),

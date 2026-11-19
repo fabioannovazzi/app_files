@@ -52,9 +52,9 @@ remains unchanged. The three new modules separate local discovery, restricted
 expression interpretation and the next-action controller. The package's Python
 and MCP implementation inventories include all three modules.
 
-Engineering validation: 190 focused tests pass, with 87.61% aggregate coverage
-across ten reconciliation modules (new controller 90%, action tools 86%,
-expression interpreter 84%). This covers source changes, native diagnostic
+Engineering validation: 195 focused tests pass, with 87.76% aggregate coverage
+across ten reconciliation modules (new controller 89%, action tools 86%,
+expression interpreter 85%). This covers source changes, native diagnostic
 changes, rejected decisions, repeated allocations, mixed-sign net settlements,
 no-code semantic links, tentative alternatives, public CLI delivery/logging, context/call budgets, missing
 model capability, native-host pending/resume, local candidate expressions,
@@ -106,3 +106,37 @@ Production deployment, installed-plugin changes and Marketplace publication are
 not part of this implementation delivery and remain on hold. PR CI must be
 checked on the final commit before merging. The implementation and tests are
 reviewed by the agent; no code review is requested from the user.
+
+
+## Batch-size correction in the unreleased pilot
+
+A subsequent 25-transaction residual test exposed a real defect in v1: verbose
+per-row decision JSON exceeded the 45-second call budget, accepting zero links.
+The v2 pilot adds compact explicit semantic approvals of visible candidates and
+caps detailed responses at four groups. It expands each selected candidate into
+an individual decision with literal source evidence, validating every group
+through the same source, signed-sum and non-reuse checks. Candidate discovery by
+itself still cannot accept a match. The prototype protocol changed before any
+practitioner deployment; earlier synthetic v1 artifacts remain retained, not
+silently rewritten or represented as v2 acceptance.
+
+On the identical 25-row synthetic inputs, the actual native model generated a
+general beneficiary/amount comparison expression and then explicitly approved
+the visible candidates with selected description, beneficiary and date evidence.
+All 25 individual pairings matched the independent synthetic ground truth,
+including reversed ledger ordering. Two calls took 18.0 seconds (8.329 and 8.778
+seconds inside the workers), with no hard-coded pairs, identifiers or amounts.
+This demonstrates useful batch progress and actual model-authored code execution;
+it is not a broad accuracy benchmark. Regression cases reject competing candidate
+approvals, unseen group members and amount-only semantic evidence.
+
+The corrected v2 route also passed a full synthetic Archive run through real CSV
+intake, source qualification/receipts and the public command. Twenty-five
+independently authored source pairings, with reversed ledger ordering and no
+reference codes, were all retained as separate correct links. The native actions
+were inspect, generate and decide_candidates: 26.35 seconds controller time and
+24.856 seconds in workers. Cached reopening made no additional call. The run was
+finalized/completed, its closed report recorded three emissions without collection
+errors, and server receipt verification returned `verified`. This supplements the
+earlier standalone and two-row prototype tests; installed native-panel and
+real-client practitioner acceptance are still separate future steps.

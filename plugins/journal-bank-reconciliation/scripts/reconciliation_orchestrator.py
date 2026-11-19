@@ -19,7 +19,7 @@ from local_cash_links import review_population
 from reconciliation_actions import catalogue, discover
 
 __all__ = ["run_orchestrator", "replay_result"]
-PROTOCOL = "vera.reconciliation_orchestrator.v1"
+PROTOCOL = "vera.reconciliation_orchestrator.v2"
 DEFAULT_LIMITS = {
     "calls": 6,
     "seconds": 120,
@@ -31,11 +31,20 @@ DEFAULT_LIMITS = {
 def _schema(packet):
     groups = copy.deepcopy(bf.output_schema()["properties"]["groups"])
     groups["minItems"] = 0
+    groups["maxItems"] = 4
     props = {
         "packet_sha256": {"type": "string", "enum": [packet["packet_sha256"]]},
         "action": {
             "type": "string",
-            "enum": ["inspect", "run", "generate", "decide", "escalate", "finish"],
+            "enum": [
+                "inspect",
+                "run",
+                "generate",
+                "decide",
+                "decide_candidates",
+                "escalate",
+                "finish",
+            ],
         },
         "bank_ids": {"type": "array", "items": {"type": "string"}, "maxItems": 25},
         "journal_ids": {"type": "array", "items": {"type": "string"}, "maxItems": 64},
@@ -44,6 +53,20 @@ def _schema(packet):
         "expression": {"type": "string", "maxLength": 16384},
         "query": {"anyOf": [query_schema(), {"type": "null"}]},
         "groups": groups,
+        "candidate_indices": {
+            "type": "array",
+            "items": {"type": "integer", "minimum": 0, "maximum": 63},
+            "maxItems": 64,
+        },
+        "evidence_fields": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                side: {"type": "array", "items": {"type": "string"}, "maxItems": 8}
+                for side in ("bank", "journal")
+            },
+            "required": ["bank", "journal"],
+        },
         "rationale": {"type": "string", "minLength": 1, "maxLength": 2400},
         "working_note": {"type": "string", "maxLength": 2400},
     }
@@ -79,6 +102,14 @@ def _prompt(packet):
         "For net settlements, mixed-sign components are allowed only when the signed totals "
         "balance exactly and your cited source evidence supports the settlement relationship. "
         "Use empty arrays/strings/null for unused action fields. Only decide may contain groups. "
+        "Keep detailed decide responses to at most four groups to fit the call deadline. "
+        "For many links with a shared evidence basis, prefer discover/generate then decide_candidates: "
+        "review each visible candidate membership, select its candidate_index, name the populated "
+        "non-monetary evidence_fields for each side, and give the shared semantic rationale. "
+        "This explicitly approves those individual cash links, not one combined total. The controller "
+        "copies the selected literal source fields into each decision and validates every link. "
+        "Only approve candidates whose complete membership is visible; inspect missing evidence first. "
+        "Do not approve competing alternatives together. Use decide for doubts or differing rationales. "
         "For cash-only purpose, accounting complete means the cash link is supported, not that the "
         "expense treatment has been audited.\n" + json.dumps(packet, ensure_ascii=False)
     )
@@ -137,6 +168,10 @@ def _packet(
         if set(c["bank_ids"]) & set(selected_b)
         and set(c["journal_ids"]) <= unreserved_journal_ids
     ][:64]
+    candidates = [
+        {**candidate, "candidate_index": index}
+        for index, candidate in enumerate(candidates)
+    ]
     selected_j = list(
         dict.fromkeys([*selected_j, *[i for c in candidates for i in c["journal_ids"]]])
     )[:64]
@@ -179,6 +214,85 @@ def _packet(
         "last_error": memory.get("error"),
     }
     return {**packet, "packet_sha256": bf.digest(packet)}
+
+
+def _candidate_decisions(response: dict, packet: dict) -> list[dict]:
+    """Expand explicit semantic approvals without repeating model-authored JSON.
+
+    Only visible candidate memberships can be selected. Literal evidence is copied
+    from fields chosen by the model, then every expanded group passes the ordinary
+    source, evidence, scope, arithmetic and ownership validators.
+    """
+    indices = response["candidate_indices"]
+    if not indices or len(set(indices)) != len(indices):
+        raise ValueError("Select distinct visible candidates for semantic approval")
+    records = {
+        side: bf._records(packet[side + "_records"]) for side in ("bank", "journal")
+    }
+    fields = response["evidence_fields"]
+    if any(
+        not fields[side] or len(set(fields[side])) != len(fields[side])
+        for side in records
+    ):
+        raise ValueError(
+            "Candidate approval needs distinct evidence fields on both sides"
+        )
+    groups = []
+    for index in indices:
+        if index >= len(packet["probable_candidates"]):
+            raise ValueError("Unknown candidate index")
+        candidate = packet["probable_candidates"][index]
+        evidence = []
+        for side in records:
+            for identifier in candidate[side + "_ids"]:
+                if identifier not in records[side]:
+                    raise ValueError(
+                        "Candidate membership is not fully visible; inspect it first"
+                    )
+                for field in fields[side]:
+                    value = records[side][identifier].get(field)
+                    if (
+                        field not in bf.FIELDS
+                        or value is None
+                        or not str(value).strip()
+                    ):
+                        raise ValueError(
+                            "Selected evidence field is absent from candidate source"
+                        )
+                    evidence.append(
+                        dict(
+                            side=side,
+                            transaction_id=identifier,
+                            field=field,
+                            quote=str(value),
+                        )
+                    )
+        resolution = dict(
+            status="resolved",
+            scope="Cash link",
+            explanation=response["rationale"],
+            evidence=evidence,
+            questions=[],
+        )
+        groups.append(
+            dict(
+                bank_ids=candidate["bank_ids"],
+                journal_ids=candidate["journal_ids"],
+                bank_resolution=resolution,
+                accounting_resolution=dict(
+                    status="complete",
+                    scope="Cash reconciliation only",
+                    explanation="Cash link supported; expense treatment and invoice closure are not assessed.",
+                    evidence=evidence,
+                    questions=[],
+                ),
+                allocations=[],
+                proposed_account_codes=[],
+                account_codes_are_alternatives=False,
+                change_basis="additional_analysis_of_supplied_evidence",
+            )
+        )
+    return groups
 
 
 def _apply(response, packet, bank, journal, groups, memory, relationship, index):
@@ -251,10 +365,15 @@ def _apply(response, packet, bank, journal, groups, memory, relationship, index)
         memory.pop("journal_ids", None)
         if response["bank_ids"]:
             memory["bank_ids"] = response["bank_ids"]
-    elif action == "decide":
+    elif action in {"decide", "decide_candidates"}:
+        decisions = (
+            _candidate_decisions(response, packet)
+            if action == "decide_candidates"
+            else response["groups"]
+        )
         additions = bf.validate_response(
             packet,
-            {"packet_sha256": packet["packet_sha256"], "groups": response["groups"]},
+            {"packet_sha256": packet["packet_sha256"], "groups": decisions},
         )
         # The pilot never silently turns a monetary difference into a completed match.
         for group in additions:
