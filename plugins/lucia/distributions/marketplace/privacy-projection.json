@@ -5,6 +5,7 @@
     "paths": {
       "privacy/services/operational-incidents.json": [
         ".mcp.json",
+        "control:server-owned-explicit-reporting-settings",
         "scripts/incident_host_mcp.cjs",
         "scripts/incident_tool_schemas.json",
         "scripts/onboarding_session_start.py"
