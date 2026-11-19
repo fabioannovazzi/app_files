@@ -567,6 +567,8 @@ def complete_grouped_review(
     codex_bin: Path | None = None,
     purpose: str = "bank_open_items",
     resume_checkpoint: bool = False,
+    review_strategy: str = "staged",
+    orchestrator_limits: Mapping[str, int] | None = None,
 ) -> dict[str, Any]:
     """The normal route uses the shared bank-first state, including strict rows."""
     import bank_first
@@ -606,7 +608,17 @@ def complete_grouped_review(
         for row in _csv(reconciliation / "reconciliation_matches.csv")
     ]
     source_check()
-    canonical = bank_first.run_bank_first(
+    if review_strategy not in {"staged", "orchestrator"}:
+        raise ValueError("Unknown reconciliation review strategy")
+    if review_strategy == "orchestrator":
+        from reconciliation_orchestrator import run_orchestrator
+
+        controller = run_orchestrator
+        controller_options = {"limits": orchestrator_limits}
+    else:
+        controller = bank_first.run_bank_first
+        controller_options = {}
+    canonical = controller(
         bank,
         journal,
         output,
@@ -618,8 +630,9 @@ def complete_grouped_review(
         purpose=purpose,
         resume_checkpoint=resume_checkpoint,
         local_matches=local_matches,
+        **controller_options,
     )
-    if canonical["errors"]:
+    if canonical["errors"] and review_strategy != "orchestrator":
         _write(
             output / "grouped_review_status.json",
             {
@@ -637,6 +650,21 @@ def complete_grouped_review(
             )
         )
     source_check()
+    if review_strategy == "orchestrator":
+        # Each resumed delivery is immutable; valid partial work is deliverable.
+        revision = canonical["orchestrator_state"]["revision"]
+        delivery = output / "orchestrator-deliveries" / f"revision-{revision:04d}"
+        delivery.mkdir(parents=True, exist_ok=True)
+        _write(
+            output / "orchestrator_delivery.json",
+            {
+                "revision": revision,
+                "directory": str(delivery),
+                "stop_reason": canonical["stop_reason"],
+                "review_complete": canonical["summary"]["review_complete"],
+            },
+        )
+        output = delivery
     usages = [a.get("usage") for a in canonical["attempts"]]
     tokens = (
         {
@@ -688,6 +716,28 @@ def complete_grouped_review(
             "difference",
             str(Decimal(item["bank_sum"]) - Decimal(item["journal_sum"])),
         )
+        if review_strategy == "orchestrator" and group.get("candidate_journal_ids"):
+            labels = {
+                row["transaction_id"]: f"C{index:03d}"
+                for index, row in enumerate(journal, 1)
+            }
+            candidate_total = sum(
+                (
+                    Decimal(row["amount_signed"])
+                    for row in journal
+                    if row["transaction_id"] in group["candidate_journal_ids"]
+                ),
+                Decimal(0),
+            )
+            item["candidate_difference"] = str(
+                Decimal(item["bank_sum"]) - candidate_total
+            )
+            item["rationale"] += "\nCollegamento proposto, non riservato: " + ", ".join(
+                labels[i] for i in group["candidate_journal_ids"]
+            )
+            item["difference"] = str(
+                Decimal(item["bank_sum"]) - Decimal(item["journal_sum"])
+            )
         relations.append(item)
     used_bank = {i for g in relations for i in g["bank_ids"]}
     used_journal = {i for g in relations for i in g["journal_ids"]}
@@ -710,7 +760,12 @@ def complete_grouped_review(
                         else "Fonte contabile non riservata"
                     ),
                     "rationale": (
-                        "Consultare gli errori tecnici"
+                        (
+                            "Movimento non ancora concluso; stato della lavorazione: "
+                            + canonical.get("stop_reason", "incomplete")
+                            if review_strategy == "orchestrator"
+                            else "Consultare gli errori tecnici"
+                        )
                         if side == "bank"
                         else "Nessun collegamento bancario accertato; eventuali candidati restano contesto."
                     ),
@@ -787,7 +842,14 @@ def complete_grouped_review(
     )
     _register_result_lineage(output, bank, journal, evidence)
     return {
-        "batch_count": sum(a["status"] == "validated" for a in canonical["attempts"]),
+        "batch_count": sum(
+            a["status"] == "validated"
+            or (
+                a["status"] == "accepted"
+                and a.get("response", {}).get("action") == "decide"
+            )
+            for a in canonical["attempts"]
+        ),
         "batches": canonical["attempts"],
         "exhaustive": totals["review_complete"],
         "reviewed_bank_count": len(bank),

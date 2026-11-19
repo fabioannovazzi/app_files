@@ -982,3 +982,38 @@ def test_same_day_residual_pass_delivers_and_replays_without_model(
     assert result["summary"]["concordant_bank_count"] == 1
     assert Path(result["workbook"]).is_file()
     assert replay["summary"] == result["summary"]
+
+
+def test_orchestrator_partial_workbook_is_delivered_and_resume_uses_new_revision(
+    tmp_path, monkeypatch
+):
+    from test_reconciliation_orchestrator import Worker, decide, search
+
+    bank = [row("b", "-34.12", "Card ACME shop", day="2026-07-01")]
+    journal = [row("j", "-34.12", "Purchase ACME", day="2026-07-02")]
+    reconciliation, output, _ = _environment(
+        tmp_path, monkeypatch, bank=bank, journal=journal
+    )
+    worker = Worker([search, decide])
+    monkeypatch.setattr(
+        sys.modules["semantic_review"], "run_isolated_native_worker", worker.invoke
+    )
+    monkeypatch.setattr(
+        sys.modules["semantic_review"], "discover_worker_selection", worker.select
+    )
+    first = grouped.complete_grouped_review(
+        reconciliation,
+        output,
+        review_strategy="orchestrator",
+        orchestrator_limits={"calls": 1},
+    )
+    assert Path(first["workbook"]).is_file()
+    assert first["exhaustive"] is False
+    previous_bytes = first["workbook"].read_bytes()
+    second = grouped.complete_grouped_review(
+        reconciliation, output, review_strategy="orchestrator", resume_checkpoint=True
+    )
+    assert second["exhaustive"] is True
+    assert second["workbook"] != first["workbook"]
+    assert first["workbook"].read_bytes() == previous_bytes
+    assert len(worker.calls) == 2
