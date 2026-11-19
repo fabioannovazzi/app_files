@@ -52,11 +52,11 @@ remains unchanged. The three new modules separate local discovery, restricted
 expression interpretation and the next-action controller. The package's Python
 and MCP implementation inventories include all three modules.
 
-Engineering validation: 189 focused tests pass, with 87.61% aggregate coverage
+Engineering validation: 190 focused tests pass, with 87.61% aggregate coverage
 across ten reconciliation modules (new controller 90%, action tools 86%,
 expression interpreter 84%). This covers source changes, native diagnostic
 changes, rejected decisions, repeated allocations, mixed-sign net settlements,
-no-code semantic links, tentative alternatives, context/call budgets, missing
+no-code semantic links, tentative alternatives, public CLI delivery/logging, context/call budgets, missing
 model capability, native-host pending/resume, local candidate expressions,
 filesystem capability escapes and preserved workbook revisions. A further 103
 open-item, invoice-boundary and privacy-source tests pass; stale test wording was

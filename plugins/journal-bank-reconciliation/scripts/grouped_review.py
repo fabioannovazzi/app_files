@@ -852,7 +852,7 @@ def complete_grouped_review(
         ),
         "batches": canonical["attempts"],
         "exhaustive": totals["review_complete"],
-        "reviewed_bank_count": len(bank),
+        "reviewed_bank_count": len(bank) - totals["primary_counts"]["unprocessed"],
         "human_review_count": totals["primary_counts"]["human"],
         "workbook": workbook,
         "result": output / "grouped_reconciliation_result.json",

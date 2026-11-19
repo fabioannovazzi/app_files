@@ -5964,7 +5964,7 @@ def main() -> int:
             result["human_review_count"],
             result["exhaustive"],
         )
-        for batch in result["batches"]:
+        for attempt_number, batch in enumerate(result["batches"], 1):
             log_execution_status(
                 args.output_dir,
                 "worker attempt evidence: %s",
@@ -5974,10 +5974,21 @@ def main() -> int:
                         "status": batch["status"],
                     }
                     if "directory" in batch
-                    else {
-                        "worker_run": str(batch["worker_run"]),
-                        "launch_receipt": str(batch["launch_receipt"]),
-                    }
+                    else (
+                        {
+                            "directory": str(
+                                args.output_dir
+                                / "orchestrator-attempts"
+                                / f"{attempt_number:05d}"
+                            ),
+                            "status": batch["status"],
+                        }
+                        if "packet" in batch
+                        else {
+                            "worker_run": str(batch["worker_run"]),
+                            "launch_receipt": str(batch["launch_receipt"]),
+                        }
+                    )
                 ),
             )
         log_execution_status(

@@ -509,3 +509,49 @@ def test_small_context_budget_delivers_partial_without_model_call(tmp_path):
     result = run(tmp_path, worker, limits={"context_bytes": 100})
     assert result["stop_reason"] == "context_limit"
     assert worker.calls == []
+
+
+def test_public_run_all_logs_pilot_attempts_and_delivers_without_key_error(
+    tmp_path, monkeypatch
+):
+    import semantic_review as semantic
+
+    worker = Worker([search, decide])
+    canonical = run(tmp_path / "controller", worker)
+    logs = []
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "semantic_review.py",
+            "run-all",
+            str(tmp_path / "reconciliation"),
+            "--output-dir",
+            str(tmp_path / "controller"),
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+            "--review-strategy",
+            "orchestrator",
+        ],
+    )
+    monkeypatch.setattr(semantic, "_load_cli_client_engagement", lambda args: {})
+
+    def completed(*args, **kwargs):
+        assert kwargs["review_strategy"] == "orchestrator"
+        return dict(
+            batch_count=1,
+            batches=canonical["attempts"],
+            reviewed_bank_count=1,
+            human_review_count=0,
+            exhaustive=True,
+            workbook=tmp_path / "result.xlsx",
+            model_tokens=None,
+        )
+
+    monkeypatch.setattr(semantic, "run_semantic_resolution_pipeline", completed)
+    monkeypatch.setattr(
+        semantic, "log_execution_status", lambda *args: logs.append(args)
+    )
+    assert semantic.main() == 0
+    assert any("orchestrator-attempts" in str(line) for line in logs)
+    assert any("final reconciliation workbook" in str(line) for line in logs)
