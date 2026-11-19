@@ -799,6 +799,7 @@ def _worker_environment() -> dict[str, str]:
     if platform.system() == "Windows":
         # Windows loader, profile and temporary-file discovery; no inherited API keys.
         allowed_names += (
+            "SystemDrive",
             "SystemRoot",
             "SYSTEMROOT",
             "WINDIR",

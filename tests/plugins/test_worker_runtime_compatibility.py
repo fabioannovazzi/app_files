@@ -343,12 +343,15 @@ def test_native_current_runtime_isolation_without_model_or_credentials(
     assert result["codex_version_inside_boundary"].startswith("codex-cli ")
 
 
-def test_windows_worker_child_uses_the_verified_codex_home(monkeypatch, tmp_path):
+def test_windows_worker_child_uses_verified_home_and_mxc_system_drive(monkeypatch, tmp_path):
     semantic = load_semantic_review()
     monkeypatch.setattr(platform, "system", lambda: "Windows")
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
     monkeypatch.setenv("CODEX_HOME", str(tmp_path / "unverified"))
-    assert semantic._worker_environment()["CODEX_HOME"] == str(tmp_path / ".codex")
+    monkeypatch.setenv("SystemDrive", "D:")
+    environment = semantic._worker_environment()
+    assert environment["CODEX_HOME"] == str(tmp_path / ".codex")
+    assert environment["SystemDrive"] == "D:"
 
 
 def test_worker_readiness_probes_private_schema_and_cleans_capsule(

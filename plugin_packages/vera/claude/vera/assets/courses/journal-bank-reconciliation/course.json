@@ -124,7 +124,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "4b6616ef6548258e3596ad6da53971f9daf8b74656aa3d7c5b0aecbd27b188e2"
+      "sha256": "a064cce8e1a757d52fa08966af58b389829893c45bad152e5a9f6e2745b76710"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
@@ -657,5 +657,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "0332582179c05704b71dad0c899e433a9ce89d9d611ef7771580f748fae20b9c"
+  "canonical_course_sha256": "e3b6edc1db35d235ea28d8645cfa57561665bb90cee58f12f08dbd433ddf366c"
 }
