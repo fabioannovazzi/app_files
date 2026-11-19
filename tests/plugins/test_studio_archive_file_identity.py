@@ -129,3 +129,36 @@ def test_rejects_bytes_changed_during_read(ledger, tmp_path, monkeypatch, operat
     with pytest.raises(ledger.LedgerError, match="changed"):
         perform(ledger, path, operation)
     assert not (tmp_path / "copied.bin").exists()
+
+
+def test_deep_unicode_source_staging_receipt_and_reopen(ledger, tmp_path):
+    parent = tmp_path
+    for _ in range(5):
+        parent /= "documenti-contabilità-" * 3
+    ledger._io_path(parent).mkdir(parents=True)
+    source = parent / "estratto.bin"
+    snapshot = parent / "copia.bin"
+    receipt = parent / "ricevuta.json"
+    ledger._io_path(source).write_bytes(b"synthetic bank source")
+
+    size, digest = ledger._stable_copy(source, snapshot)
+    ledger._write_json(receipt, {"size": size, "digest": digest})
+
+    assert ledger._read_json(receipt, label="receipt") == {
+        "size": 21,
+        "digest": hashlib.sha256(b"synthetic bank source").hexdigest(),
+    }
+    assert ledger._stable_file_identity(snapshot, label="saved source") == (
+        size,
+        digest,
+    )
+
+
+@pytest.mark.skipif(
+    os.name != "nt", reason="Requires native Windows UNC path semantics"
+)
+def test_unc_long_path_preserves_server_and_share(ledger):
+    ordinary = Path(r"\\server\share") / ("x" * 110) / ("y" * 110) / "ricevuta.json"
+    extended = ledger._io_path(ordinary)
+    assert str(extended) == "\\\\?\\UNC\\" + str(ordinary)[2:]
+    assert ledger._io_path(extended) == extended

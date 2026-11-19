@@ -193,6 +193,41 @@ def test_runtime_updates_do_not_bypass_failed_boundary_or_missing_capabilities(
         )
 
 
+def test_failed_schema_probe_retains_exact_local_process_evidence(
+    tmp_path, monkeypatch
+):
+    import json
+
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic, "_seatbelt_prefix", lambda **kwargs: ["probe"])
+    monkeypatch.setattr(
+        semantic,
+        "_run_captured_process",
+        lambda *a, **kw: {
+            "return_code": 3,
+            "stdout": b"partial",
+            "stderr": bytes([255, 0, 10]),
+        },
+    )
+    with pytest.raises(ValueError, match="exact schema canary"):
+        semantic._qualification_canaries(
+            semantic_dir=tmp_path,
+            profile_path=tmp_path / "policy",
+            schema_path=tmp_path / "schema",
+            schema_bytes=b"{}",
+            capsule=tmp_path,
+            state_dir=tmp_path,
+            log_dir=tmp_path,
+            boundary_inputs={},
+            executables={"host_profile": semantic._resolve_host_profile()},
+        )
+    [receipt] = tmp_path.glob("schema-canary-*.json")
+    record = json.loads(receipt.read_text())
+    assert record["return_code"] == 3
+    assert bytes.fromhex(record["stdout_hex"]) == b"partial"
+    assert bytes.fromhex(record["stderr_hex"]) == bytes([255, 0, 10])
+
+
 def test_missing_runtime_executable_has_a_specific_diagnostic(tmp_path: Path) -> None:
     semantic = load_semantic_review()
 

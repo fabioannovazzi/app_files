@@ -4761,7 +4761,7 @@ def _retained_scope_root(
         directories.add((_archive_profile(state) or state) / "work-bindings")
     except (OSError, ValueError, ArchiveError):
         pass  # Independent bindings still identify previously opened work.
-    roots: set[Path] = set()
+    roots: dict[Path, Path] = {}
     for path in (
         path for directory in directories for path in directory.glob("*.json")
     ):
@@ -4784,9 +4784,15 @@ def _retained_scope_root(
             continue
         root = _retained_run_root(state, selected_client, selected_engagement, run_id)
         if root is not None:
-            roots.add(root.resolve())
+            roots[root.resolve()] = (
+                ledger._run_root(root, selected_engagement, run_id) / "context.json"
+            )
     if len(roots) > 1:
-        raise ArchiveError("Selected retained identity has multiple live locations.")
+        choices = "\n".join(str(roots[root]) for root in sorted(roots))
+        raise ArchiveError(
+            "Selected retained identity has multiple live locations. "
+            "Select a saved context with --context before the command:\n" + choices
+        )
     return next(iter(roots), None)
 
 

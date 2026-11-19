@@ -2896,7 +2896,29 @@ def _qualification_canaries(
         timeout_seconds=CANARY_TIMEOUT_SECONDS,
     )
     if allowed["return_code"] != 0 or allowed["stdout"] != schema_bytes:
-        raise ValueError("Native sandbox did not permit the exact schema canary")
+        # Raw diagnostics stay in the private run directory. The exception
+        # can reach incident reporting, so include only the local filename.
+        with tempfile.NamedTemporaryFile(
+            dir=semantic_dir,
+            prefix="schema-canary-",
+            suffix=".json",
+            mode="w",
+            encoding="utf-8",
+            delete=False,
+        ) as evidence:
+            json.dump(
+                {
+                    "return_code": allowed["return_code"],
+                    "stdout_hex": allowed["stdout"].hex(),
+                    "stderr_hex": allowed["stderr"].hex(),
+                    "expected_sha256": hashlib.sha256(schema_bytes).hexdigest(),
+                },
+                evidence,
+            )
+        raise ValueError(
+            "Native sandbox did not permit the exact schema canary. "
+            f"Local diagnostic: {Path(evidence.name).name}"
+        )
 
     sentinel_path = semantic_dir / f".luna-outside-canary.{secrets.token_hex(16)}"
     sentinel_bytes = secrets.token_bytes(48)
@@ -3020,6 +3042,38 @@ def _qualification_canaries(
             else {}
         ),
     }
+
+
+def probe_worker_readiness(directory: Path, codex_bin: Path | None) -> dict[str, Any]:
+    """Exercise the worker's real capability checks using only a synthetic schema."""
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    directory = directory.resolve(strict=True)
+    executables = _qualified_executables(codex_bin)
+    boundary = _codex_home_boundary_inputs()
+    schema = _json_bytes(
+        {"type": "object", "properties": {}, "additionalProperties": False}
+    )
+    with tempfile.TemporaryDirectory(dir=directory, prefix=".readiness-") as temp:
+        capsule = Path(temp)
+        schema_path = capsule / OUTPUT_SCHEMA_NAME
+        schema_path.write_bytes(schema)
+        profile = capsule / "seatbelt.sb"
+        profile.write_text(SEATBELT_PROFILE, encoding="utf-8")
+        state = capsule / "state"
+        logs = capsule / "log"
+        state.mkdir(mode=0o700)
+        logs.mkdir(mode=0o700)
+        return _qualification_canaries(
+            semantic_dir=directory,
+            profile_path=profile,
+            schema_path=schema_path,
+            schema_bytes=schema,
+            capsule=capsule,
+            state_dir=state,
+            log_dir=logs,
+            boundary_inputs=boundary,
+            executables=executables,
+        )
 
 
 def _worker_inner_argv(
@@ -5757,6 +5811,7 @@ def _parser() -> argparse.ArgumentParser:
         help="Inspect qualified host prerequisites without reading client files or credentials.",
     )
     host_status.add_argument("--codex-bin", type=Path)
+    host_status.add_argument("--probe-dir", type=Path)
     prepare = subparsers.add_parser("prepare", help="Prepare a bounded worker packet.")
     prepare.add_argument("reconciliation_dir", type=Path)
     prepare.add_argument("--output-dir", type=Path, required=True)
@@ -5901,6 +5956,14 @@ def main() -> int:
     args = _parser().parse_args()
     configure_logging(args.verbose)
     if args.command == "host-status":
+        if args.probe_dir is not None:
+            try:
+                result = probe_worker_readiness(args.probe_dir, args.codex_bin)
+            except (OSError, ValueError) as exc:
+                LOGGER.error("Worker readiness failed: %s", exc)
+                return 2
+            LOGGER.info("%s", json.dumps(result, sort_keys=True))
+            return 0
         result = inspect_execution_host(args.codex_bin)
         LOGGER.info("%s", json.dumps(result, sort_keys=True))
         return 0 if result["status"] == "prerequisites_match" else 2

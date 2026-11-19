@@ -66,4 +66,4 @@ jobs:
           tests/plugins/test_worker_runtime_compatibility.py
           tests/plugins/test_bank_pdf_recovery.py
           tests/plugins/test_archive_reporting_recovery.py
-          -k 'updated_executable or executable_change_during_execution or executable_hash_tolerates or bank_recovery_reaches_reconciliation or wrong_bank_closing or local_report_failure_returns_committed_status'
+          -k 'updated_executable or executable_change_during_execution or failed_schema_probe_retains or executable_hash_tolerates or bank_recovery_reaches_reconciliation or wrong_bank_closing or local_report_failure_returns_committed_status'
