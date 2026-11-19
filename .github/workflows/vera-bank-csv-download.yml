@@ -2,8 +2,40 @@ name: Vera bank CSV download
 
 on:
   pull_request:
+    paths-ignore:
+      - 'static/**/*.html'
+      - 'static/**/*.css'
+      - 'static/**/*.png'
+      - 'static/**/*.jpg'
+      - 'static/**/*.jpeg'
+      - 'static/**/*.webp'
+      - 'static/**/*.svg'
+      - 'static/**/*.ico'
+      - 'static/**/*.woff'
+      - 'static/**/*.woff2'
+      - 'static/**/*.ttf'
+      - 'static/**/*.pdf'
+      - 'static/shared/vera/benchmark/**'
+      - 'static/shared/vera/benchmark-2/**'
+      - 'AGENTS.md'
   push:
     branches: [main]
+    paths-ignore:
+      - 'static/**/*.html'
+      - 'static/**/*.css'
+      - 'static/**/*.png'
+      - 'static/**/*.jpg'
+      - 'static/**/*.jpeg'
+      - 'static/**/*.webp'
+      - 'static/**/*.svg'
+      - 'static/**/*.ico'
+      - 'static/**/*.woff'
+      - 'static/**/*.woff2'
+      - 'static/**/*.ttf'
+      - 'static/**/*.pdf'
+      - 'static/shared/vera/benchmark/**'
+      - 'static/shared/vera/benchmark-2/**'
+      - 'AGENTS.md'
 
 permissions:
   contents: read
