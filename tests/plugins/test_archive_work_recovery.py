@@ -232,6 +232,14 @@ def test_worker_recovers_exact_admitted_input_without_discarding_changed_bytes(
         )
 
 
+def test_restore_accepts_new_nested_destination_parents(case, tmp_path):
+    core, _, state, _, cid, eid, rid, _ = started(case)
+    core.checkpoint_studio_client_workflow(cid, eid, rid, state_dir=state)
+    destination = tmp_path / "Nuovo" / "Contabilità" / "Recovered"
+    core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
+    assert any(destination.rglob("context.json"))
+
+
 def test_restore_does_not_overwrite_an_existing_destination(case, tmp_path):
     core, studio, state, root, cid, eid, rid, prepared = started(case)
     destination = tmp_path / "Existing client"
