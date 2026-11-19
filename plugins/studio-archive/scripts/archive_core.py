@@ -3803,6 +3803,7 @@ def prepare_studio_client_workflow(
     purpose: str | None = None,
     idempotency_key: str | None = None,
     new_run: bool = False,
+    continue_from_run: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Prepare an exact, recoverable, idempotent customer-folder run."""
@@ -3847,6 +3848,38 @@ def prepare_studio_client_workflow(
         client_id, scope = matches[0]
         client_root = _resolve_scope_root(current.archive_root, scope)
     try:
+        if continue_from_run is not None:
+            if input_ids or upstream_artifacts or not idempotency_key:
+                raise ArchiveError(
+                    "Continuation uses the original sources and requires a fresh retry key."
+                )
+            original = ledger.load_run(client_root, engagement_id, continue_from_run)
+            if original["run"]["workflow_id"] != workflow_id:
+                raise ArchiveError("Continuation must select the original workflow.")
+            inputs = original["input_manifest"]["inputs"]
+            input_ids = [row["binding_id"] for row in inputs if row["kind"] == "import"]
+            upstream_artifacts = [
+                {
+                    **(
+                        {"engagement_id": row["upstream_engagement_id"]}
+                        if "upstream_engagement_id" in row
+                        else {}
+                    ),
+                    "run_id": row["upstream_run_id"],
+                    "artifact_id": row["upstream_artifact_id"],
+                    "role": row["role"],
+                }
+                for row in inputs
+                if row["kind"] == "upstream_artifact"
+            ]
+            # Scope retries to this verified historical run. A distinct run
+            # receives the current package when its first helper starts.
+            idempotency_key = hashlib.sha256(
+                (continue_from_run + "\0" + idempotency_key).encode()
+            ).hexdigest()
+            new_run = True
+            label = label or original["run"]["label"]
+            purpose = purpose or original["run"]["purpose"]
         ledger.incarichi().begin(
             client_root,
             engagement_id,

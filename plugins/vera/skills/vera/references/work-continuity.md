@@ -300,8 +300,8 @@ keep availability/projection fields out of the saved fields.
 
 Check the native job's installed and executing versions. A saved Archive run
 keeps its original package across reconnects. When a correction requires a newer
-package, use the selected engagement's prepare-workflow with the same admitted
-source IDs, --new-run and a new idempotency key. Preserve the old run and its
+package, use the selected engagement's prepare-workflow with --continue-from-run, the original
+run ID and a new --idempotency-key. Preserve the old run and its
 receipts. Verify source hashes, inspect the new job's executing version and
 replay source and mapping checks before reusing any prior result. Report which
 run produced the workbook. When multiple locations are listed, select the

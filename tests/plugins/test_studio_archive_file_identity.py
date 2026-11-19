@@ -162,3 +162,24 @@ def test_unc_long_path_preserves_server_and_share(ledger):
     extended = ledger._io_path(ordinary)
     assert str(extended) == "\\\\?\\UNC\\" + str(ordinary)[2:]
     assert ledger._io_path(extended) == extended
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Requires a native Windows share")
+def test_available_loopback_unc_share_stages_and_reopens_unicode_receipt(
+    ledger, tmp_path
+):
+    # Only address this runner's own temporary directory, via its local disk share.
+    if len(tmp_path.drive) != 2:
+        pytest.skip("Runner temp directory is not drive-backed")
+    share = Path(f"//localhost/{tmp_path.drive[0]}$/").joinpath(*tmp_path.parts[1:])
+    if not share.is_dir():
+        pytest.skip("Runner does not expose its loopback disk share")
+    parent = share.joinpath(*(["Documenti di contabilità" * 3] * 4))
+    ledger._io_path(parent).mkdir(parents=True)
+    source, copied = parent / "fonte.bin", parent / "copia.bin"
+    ledger._io_path(source).write_bytes(b"synthetic UNC input")
+    byte_count, digest = ledger._stable_copy(source, copied)
+    receipt = parent / "ricevuta.json"
+    ledger._write_json(receipt, {"digest": digest})
+    assert ledger._read_json(receipt, label="receipt")["digest"] == digest
+    assert ledger._stable_file_identity(copied, label="saved") == (byte_count, digest)
