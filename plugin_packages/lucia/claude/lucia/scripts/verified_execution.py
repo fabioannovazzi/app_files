@@ -44,6 +44,7 @@ __all__ = [
     "acquire_execution_lease",
     "recover_abandoned_execution_roots",
     "report_preparation_failure",
+    "current_incident_settings",
     "main",
 ]
 
@@ -1006,6 +1007,12 @@ class InstallationContentMismatch(ValueError):
         super().__init__(f"Installation content mismatch: {name}")
 
 
+def current_incident_settings() -> dict:
+    """Copy already-bound settings without importing unverified reporting code."""
+    reporter = sys.modules.get("operational_incidents")
+    return dict(vars(reporter).get("_SETTINGS", {})) if reporter is not None else {}
+
+
 def report_preparation_failure(
     root: Path,
     module: str | None,
@@ -1022,6 +1029,8 @@ def report_preparation_failure(
     The reporter uses only stdlib; snapshot it and product metadata before loading
     so altered workflow code and host-cache aliases never execute for telemetry.
     """
+    if settings is None:
+        settings = current_incident_settings()
     try:
         manifest, _ = _read_regular(root / MANIFEST)
         expected = _manifest(manifest)
@@ -1175,7 +1184,7 @@ def report_preparation_failure(
             "Incident reporting verification unavailable: %s",
             type(reporting_error).__name__,
         )
-    if os.environ.get("MPARANZA_INCIDENT_DELIVERY") == "local-only":
+    if settings.get("delivery") == "local-only":
         LOGGER.error(
             "VERA_LOCAL_INCIDENT: workflow=%s stage=installation-preparation error_type=%s. "
             "Retain local evidence; incident transmission is disabled for this execution.",

@@ -34,7 +34,7 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 
 ## Observed verification
 
-- Incident CI suite: 610 passed, 8 platform-dependent skips; coverage 83.45%.
+- Incident CI suite: 610 passed, 8 platform-dependent skips; coverage 83.41%.
 - Workflow usage, receipt service and on-demand MCP suite: 287 passed.
 - Receipt and Python bootstrap focused suite: 40 passed.
 - Shared runtime/launcher suite: 243 passed, 9 all-product archive comparisons
@@ -44,13 +44,20 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 - Lucia package build: all host versions aligned at 0.1.258. Claude Code 2.1.328
   strict validation passed. The three generated helpers contain no `os.environ`
   or `getenv(` references. Repository archive: 127.75 MiB, below the 230 MiB guard.
-- Lucia Codex package tests: 36 passed.
+- Lucia Codex package tests: 36 passed. Native execution tests: 41 passed.
+- Scoped CI artifact drift guard: seven regressions passed. CI still builds all
+  products for testing; it rejects every source drift and artifact drift for any
+  product whose version or packaged files changed in the PR. Unreleased siblings
+  are build-only previews. Their generated public ZIPs travel in the CI artifact
+  so downstream parity checks compare the same build, without committing them.
 - New tests cover explicit settings files, identity reuse, ignored environment
   overrides, UUID/path rejection, native on-demand forwarding/session cleanup and
   recovery settings across base-Python reentry.
 
 ## Encountered blocks and their disposition
 
+- Native process-control and nested macOS sandbox tests cannot run inside the
+  chat sandbox: the host-context rerun passed all 59 focused tests.
 - Sandbox denied localhost listeners: reran the same isolated integration tests
   with the required host permission; no production endpoint substitution.
 - Sandbox denied the initial pinned-wheel download: permitted the fixed download
@@ -63,9 +70,24 @@ versions are not updated. No OpenAI Marketplace submission or publication.
 - A local all-product archive test cannot compare missing/unrebuilt Vera and Clara
   ZIPs. Local release parity targets Lucia; CI builds its own test archives.
 
+- Initial Windows/macOS CI native execution tests still supplied task/delivery
+  settings through the environment. The native host and detached workers now
+  propagate explicit settings, and their fixtures use isolated directories.
+- Initial CI required committing all three rebuilt packages. Its drift guard now
+  distinguishes released products from build-only sibling previews while retaining
+  source and released-artifact checks.
+
 - The optional local update-notification cache check fails for unchanged Clara:
   public manifest 0.1.248 versus installed curated cache 0.1.407 (17 tests passed,
   one skipped). No Clara publication or public-version change is part of this task.
+
+- Before all fixtures were migrated, the first integrity-test run used default
+  local diagnostic state. Eight receipts matching the synthetic fixture hashes
+  were subsequently observed there (five Codex, three Cowork). They are retained;
+  no unrelated local history was deleted. Captured logs do not establish every
+  possible remote delivery from that initial run. The affected fixtures now pass
+  explicit isolated settings. Preflight and launcher delivery messages now use the
+  same explicit settings as the reporter, including base-Python reentry.
 
 Strict manifest validation is not the directory's safety scan or policy review.
 Fabio must select **Check for new commits** on Lucia's directory page after merge.

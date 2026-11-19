@@ -65,7 +65,7 @@ function main(root = path.resolve(__dirname, "..")) {
     if (closing) throw new Error(`${product} connection is closing`);
     if (!services.has(name)) {
       const original = configurations[name];
-      const config = original?.args?.some(value => value.endsWith("incident_host_mcp.cjs"))
+      const config = original?.args?.some(value => ["incident_host_mcp.cjs", "native_execution_mcp.cjs"].some(script => value.endsWith(script)))
         ? { ...original, args: [...original.args, "--settings", reportingSettingsPath()] } : original;
       if (!config) throw new Error(`Missing ${product} service: ${name}`);
       const client = new ServiceClient(root, name, config, {

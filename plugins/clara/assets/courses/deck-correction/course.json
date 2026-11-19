@@ -225,7 +225,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
+      "sha256": "9c3385e2cefed04cfff5d5aac334f7cf5599808b2cd56eb81101e4d12d6af6fb"
     },
     {
       "path": "scripts/match_feedback_frames_to_deck_slides.py",
@@ -280,7 +280,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "7081f3f748edce13f06fe7bf3d6d8725c813451e6381b37e5cabceadb9c14bc7"
+      "sha256": "9f9240fb4d39ead6b9bb77f48a2766cd4baca9c02cf2c72afd2feb0d8d27db86"
     },
     {
       "path": "scripts/verify_deck_revision_output.py",

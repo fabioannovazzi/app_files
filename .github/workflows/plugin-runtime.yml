@@ -61,7 +61,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -395,7 +395,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -462,7 +462,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - name: Set local taxonomy fixture paths
         run: |
           echo "TEACHING_TAXONOMY_CATALOGUE=$RUNNER_TEMP/teaching-bilancio-catalogue.json" >> "$GITHUB_ENV"
@@ -749,7 +749,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -829,7 +829,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -918,7 +918,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -945,7 +945,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -980,7 +980,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -1071,7 +1071,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -1290,7 +1290,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: product-archives
-          path: plugin_packages
+          path: .
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

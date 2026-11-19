@@ -181,7 +181,7 @@
     "reviewed_at": "2026-11-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "4b68b0fada30b558ad13abc120508771cf1acc3ff9ede3a027362cee0b894659"
+    "source_fingerprint": "f686acb0d276b37f305e333008cf480da068150a7f6d61a1295e263506e43fa3"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/vera_assurance/recovery.py"

@@ -1027,3 +1027,39 @@ def test_reaper_retains_legacy_owner_only_lease_records(tmp_path, monkeypatch):
     assert lease is not None
     os.close(lease)
     recovery.release_execution_root(root)
+
+
+def test_preparation_failure_uses_bound_settings_without_environment(
+    tmp_path, monkeypatch, caplog
+):
+    """A recovery handoff must keep local-only diagnostics local in preflight too."""
+    from types import SimpleNamespace
+
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    (root / "scripts").mkdir()
+    for name in (
+        "verified_execution.py",
+        "operational_incidents.py",
+        "reporting_product.py",
+    ):
+        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+    write_index(root)
+    settings = {"delivery": "local-only", "state_dir": str(tmp_path / "incidents")}
+    monkeypatch.setitem(
+        sys.modules, "operational_incidents", SimpleNamespace(_SETTINGS=settings)
+    )
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
+    submitted = []
+
+    def reporting_process(command, **options):
+        submitted.append(json.loads(options["input"]))
+        return subprocess.CompletedProcess(command, 0, '{"reporting":"queued"}', "")
+
+    monkeypatch.setattr(recovery.subprocess, "run", reporting_process)
+
+    recovery.report_preparation_failure(root, "journal-sampling", ValueError("test"))
+
+    assert submitted[0]["settings"] == settings
+    assert "VERA_LOCAL_INCIDENT" in caplog.text
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" not in caplog.text
