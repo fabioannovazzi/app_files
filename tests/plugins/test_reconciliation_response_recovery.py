@@ -118,7 +118,7 @@ def bad_answer(packet, **_):
 def test_invalid_first_stage_answers_escalate_without_accepting_or_replaying_them(
     tmp_path,
 ):
-    bank, journal = [row("b1")], [row("j1")]
+    bank, journal = [row("b1")], [row("j1", transaction_date="2026-01-09")]
     native = NativeFixture({})
     native.respond = lambda packet, **_: (
         bad_answer(packet) if packet["stage"] == "luna" else answer(packet, linked=True)
@@ -144,7 +144,13 @@ def test_stronger_stage_failures_remain_bounded_and_do_not_become_matches(tmp_pa
     native = NativeFixture({})
     native.respond = bad_answer
 
-    result = execute(tmp_path, native, [row("b1")], [row("j1")], local_matches=[])
+    result = execute(
+        tmp_path,
+        native,
+        [row("b1")],
+        [row("j1", transaction_date="2026-01-09")],
+        local_matches=[],
+    )
 
     assert [p["stage"] for p in native.calls] == ["luna"] * 3 + ["sol"] * 3
     assert result["errors"][0]["stage"] == "sol"
@@ -183,7 +189,7 @@ def test_recovery_after_evidence_search_preserves_valid_search_replay(tmp_path):
         return bad_answer(packet)
 
     native.respond = respond
-    bank, journal = [row("b1")], [row("j1")]
+    bank, journal = [row("b1")], [row("j1", transaction_date="2026-01-09")]
     result = execute(tmp_path, native, bank, journal, local_matches=[])
 
     assert result["errors"] == []
@@ -257,7 +263,10 @@ def test_verified_response_format_failures_escalate_then_resume(tmp_path):
     assert calls == []
 
 
-def test_historical_local_evidence_projection_replays_unchanged(tmp_path, monkeypatch):
+@pytest.mark.parametrize("version", [1, 2])
+def test_historical_local_evidence_projection_replays_unchanged(
+    tmp_path, monkeypatch, version
+):
     import retrieval_review as rr
 
     bank, journal = [row("b1", reference="PAY123")], [row("j1", reference="PAY123")]
@@ -265,7 +274,7 @@ def test_historical_local_evidence_projection_replays_unchanged(tmp_path, monkey
     original = rr.bf.admission
 
     def legacy(*args, **kwargs):
-        return original(*args, **{**kwargs, "local_evidence_version": 1})
+        return original(*args, **{**kwargs, "local_evidence_version": version})
 
     with monkeypatch.context() as old:
         old.setattr(rr.bf, "admission", legacy)
@@ -274,12 +283,16 @@ def test_historical_local_evidence_projection_replays_unchanged(tmp_path, monkey
             tmp_path, NativeFixture({}), bank, journal, local_matches=[pair]
         )
     # The released 0.1.653 result/state predate the version field.
-    retained.pop("local_evidence_version")
+    retained["local_evidence_version"] = version
+    if version == 1:
+        retained.pop("local_evidence_version")
     retained["content_sha256"] = bf.digest(
         {k: v for k, v in retained.items() if k != "content_sha256"}
     )
     state = bf._read(tmp_path / "bank_first_state.json")
-    state.pop("local_evidence_version")
+    state["local_evidence_version"] = version
+    if version == 1:
+        state.pop("local_evidence_version")
     bf._save(tmp_path / "bank_first_state.json", state)
     native = NativeFixture({})
 

@@ -339,7 +339,7 @@ def export_final_workbook(
         sheet.write_number(11, 1, len(bank), integer)
         sheet.write(12, 0, "Righe del partitario", text)
         sheet.write_number(12, 1, len(journal), integer)
-        sheet.write(13, 0, "Abbinamenti rigorosi conservati", text)
+        sheet.write(13, 0, "Collegamenti locali conservati", text)
         sheet.write_number(13, 1, summary["strict_match_count"], integer)
         for index, status in enumerate(LABELS, 14):
             count = summary["bank_status_counts"].get(status, 0)
@@ -369,7 +369,7 @@ def export_final_workbook(
                 "deterministic": "Regole certe",
                 "luna": "Risolti dal modello iniziale",
                 "sol": "Risolti da Sol",
-                "human": "Dubbi bancari residui dopo Sol",
+                "human": "Dubbi bancari residui",
                 "error": "Errori tecnici",
                 "unprocessed": "Non elaborati",
             }
@@ -447,8 +447,8 @@ def export_final_workbook(
             detail.print_area(0, 0, len(relations) + 4, 17)
             row = 43
             for scope, label in (
-                ("bank", "Dubbi bancari residui dopo Sol"),
-                ("accounting", "Questioni contabili residue dopo Sol"),
+                ("bank", "Dubbi bancari residui"),
+                ("accounting", "Questioni contabili residue"),
             ):
                 sheet.write_row(
                     row, 0, [label, "Movimenti", "Motivo", "Domande"], header

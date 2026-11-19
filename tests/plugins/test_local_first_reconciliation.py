@@ -114,7 +114,10 @@ def test_accounting_mandate_keeps_local_cash_link_and_still_reviews_treatment(
 
 def test_every_focused_small_candidate_set_is_available_without_rediscovery(tmp_path):
     bank = [row(f"b{i}", "Payment", str(-10 - i)) for i in range(5)]
-    journal = [row(f"j{i}", "Recorded payment", str(-10 - i)) for i in range(5)]
+    journal = [
+        row(f"j{i}", "Recorded payment", str(-10 - i), transaction_date="2026-01-09")
+        for i in range(5)
+    ]
     native = NativeFixture({})
 
     def respond(packet, **_):
@@ -140,7 +143,7 @@ def test_sol_adds_missing_link_even_after_first_stage_claims_accounting_complete
     tmp_path,
 ):
     bank = [row("b1", "Payment")]
-    journal = [row("j1", "Recorded payment")]
+    journal = [row("j1", "Recorded payment", transaction_date="2026-01-09")]
     native = NativeFixture({})
 
     def respond(packet, **_):
