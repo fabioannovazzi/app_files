@@ -139,3 +139,9 @@ verifier accepts all 58 kits and 258 locales against that JUnit; 36 verifier
 regressions pass. See `lucia-runtime-course-source-review-2026-11-19.json`.
 Final-head CI remains required. No runtime or package bytes changed in this
 evidence update.
+
+The evidence-only follow-up exposed stale privacy source fingerprints because
+the onboarding/teaching registers include the editorial review files. Refreshed
+only those Vera/Clara source fingerprints and derived contracts. Privacy and
+course compiler checks pass; rebuilding Lucia leaves its tracked package bytes
+unchanged. This recovered build block did not affect professional pipeline output.
