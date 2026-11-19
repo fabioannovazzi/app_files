@@ -251,6 +251,60 @@ invoked by the user; Vera does not dispatch them.
 
 # Journal-Bank Reconciliation
 
+## Model-directed cash reconciliation pilot
+
+For a requested fast, model-directed bank-to-ledger reconciliation, use the
+maintained `run-all` entry with `--purpose bank_open_items --review-strategy
+orchestrator`. This is an explicit pilot strategy; omitting the strategy retains
+the staged workflow described below. Bookkeeping/audit purposes continue to use
+that staged workflow. Never substitute hand-authored final decisions.
+
+The pilot preserves local matches and lets the model choose scoped searches,
+local date/reference/group/reversal discovery, a restricted data-only discovery
+expression, semantic decisions, escalation or finishing. It can support a cash
+link from amounts, timing and descriptions without identical codes. Equal totals
+alone are insufficient; citations, exact signed sums, source scope and unique
+ownership remain checked. Supported links, unreserved tentative alternatives and
+unprocessed rows are displayed separately. A matched cash movement does not
+certify invoice closure or expense treatment.
+
+For similar supported candidates, the model may use `decide_candidates` to
+select visible candidate indices, source evidence fields and a shared semantic
+rationale. The controller expands this into separate cash-link decisions with
+literal source evidence, and validates every membership, signed sum and allocation.
+This avoids repeating verbose decision JSON for each row; it never accepts an
+unseen candidate, competing allocations or a grand total in place of individual
+matches. Detailed `decide` responses are capped at four groups per call; larger
+visible candidate sets can use the compact route. Generated routines still only
+discover candidates, and semantic approval remains an explicit model action.
+
+The default run allows six calls and 120 seconds, with at most 45 seconds per
+call. A packet contains at most 25 focus bank rows and 64 selected ledger rows
+within a 96 KiB prompt/schema cap. Searches and local expressions operate on
+unreserved source rows and disclose truncation. Expressions cannot import,
+access files/network, mutate sources or accept matches; embedded case IDs,
+amounts and counterparty constants are rejected. Semantic acceptance remains
+model judgment under the existing mechanical validators.
+
+Deliver the workbook returned by `run-all`, including a partial result if a
+technical budget or worker failure stops investigation. State what remains
+unprocessed separately from genuine professional doubt. Saved work reopens
+without model calls; use `--resume-checkpoint` only to continue an unfinished
+investigation, keeping the same strategy and inputs. Each resumed delivery gets
+a new revision and preserves the earlier workbook. The pilot has a lifetime
+limit of 32 completed attempts and 600 active seconds; repeated unchanged actions
+are rejected. Missing model capability retains useful local work; it does not
+prove that a row needs professional judgment. Inspect the exact stop reason.
+
+The model receives actual selected transaction descriptions, amounts, dates,
+references, source IDs and available posting excerpts, plus candidates, notes
+and tool diagnostics. Completed cash links are removed from subsequent searches.
+These data are not anonymized. The existing host model launcher and reporting
+route remain in use; generated expressions execute locally in a restricted
+interpreter, not a general Python process. Do not claim local-only processing,
+broad accuracy, or tested host support beyond the recorded acceptance evidence.
+
+
 The normal final route preserves source-replayed local journal-bank matches,
 then investigates residual relationships in small groups with iterative evidence
 search and escalation to the stronger native model. Shared codes or exact names

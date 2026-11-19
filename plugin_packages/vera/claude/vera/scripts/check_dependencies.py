@@ -114,9 +114,9 @@ def main(argv: list[str] | None = None) -> int:
             requirements=args.requirements,
         )
         if not ready:
-            from operational_incidents import report_failure
+            from operational_incidents import _SETTINGS, report_failure
 
-            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+            if not _SETTINGS.get("recovery_active"):
                 report_failure(
                     args.module,
                     "dependency-setup",

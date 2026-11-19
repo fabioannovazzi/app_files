@@ -298,6 +298,21 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/local_cash_links.py",
     ),
     (
+        "implementation.plugin.scripts.reconciliation_actions_py",
+        "implementation",
+        "scripts/reconciliation_actions.py",
+    ),
+    (
+        "implementation.plugin.scripts.reconciliation_expression_py",
+        "implementation",
+        "scripts/reconciliation_expression.py",
+    ),
+    (
+        "implementation.plugin.scripts.reconciliation_orchestrator_py",
+        "implementation",
+        "scripts/reconciliation_orchestrator.py",
+    ),
+    (
         "implementation.plugin.scripts.bank_first_policy_json",
         "implementation",
         "scripts/bank_first_policy.json",
