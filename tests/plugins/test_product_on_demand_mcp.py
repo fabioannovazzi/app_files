@@ -517,9 +517,20 @@ def test_app_entry_initializes_from_host_resolved_plugin_directory(
 
 
 def test_native_reporter_receives_on_demand_settings_and_session_cleanup(tmp_path):
-    from tests.plugins.test_incident_native_host import installed
-
-    root = installed(tmp_path, product="lucia")
+    root = tmp_path / "installed"
+    (root / "scripts").mkdir(parents=True)
+    (root / ".codex-plugin").mkdir()
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "lucia", "version": "0.1.258"})
+    )
+    for name in (
+        "incident_host_mcp.cjs",
+        "operational_incidents.py",
+        "reporting_product.py",
+        "technical_runner.py",
+        "incident_tool_schemas.json",
+    ):
+        shutil.copyfile(ROOT / "plugins/lucia/scripts" / name, root / "scripts" / name)
     for name in (
         "on_demand_mcp.cjs",
         "mcp_service_client.cjs",

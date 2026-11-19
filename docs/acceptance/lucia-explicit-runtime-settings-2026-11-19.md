@@ -95,6 +95,11 @@ versions are not updated. No OpenAI Marketplace submission or publication.
   Packaged on-demand Archive fixtures also pass explicit settings, and both
   native UI cases pass in the host context after sandboxed server-start failures.
 
+- The new on-demand forwarding regression initially imported a server integration
+  fixture and therefore required FastAPI in a minimal packaging job. It now builds
+  its own small client fixture. The targeted test passes with FastAPI imports
+  explicitly denied, and the complete on-demand suite passes all 94 tests.
+
 - The optional local update-notification cache check fails for unchanged Clara:
   public manifest 0.1.248 versus installed curated cache 0.1.407 (17 tests passed,
   one skipped). No Clara publication or public-version change is part of this task.
