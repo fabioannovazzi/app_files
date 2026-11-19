@@ -61,7 +61,8 @@ def verify_vera_execution_zip(archive_path: Path, plugin_root: str) -> None:
     known integrity failures cannot generate synthetic customer incidents.
     """
     with tempfile.TemporaryDirectory(prefix="vera-release-integrity-") as temporary:
-        staging = Path(temporary).resolve()
+        staging = Path(temporary).resolve() / "package"
+        staging.mkdir()
         with ZipFile(archive_path) as archive:
             for entry in archive.infolist():
                 destination = (staging / entry.filename).resolve()
@@ -105,16 +106,36 @@ def verify_vera_execution_zip(archive_path: Path, plugin_root: str) -> None:
         # Keep unexpected CLI incident reports local to this build fixture.
         environment = {
             **local_helper_environment(),
-            "MPARANZA_INCIDENT_STATE_DIR": str(staging / "incidents"),
             "https_proxy": "http://127.0.0.1:9",
             "HTTPS_PROXY": "http://127.0.0.1:9",
             "no_proxy": "",
             "NO_PROXY": "",
         }
+        settings = staging.parent / "reporting-settings.json"
+        settings.write_text(
+            json.dumps(
+                {
+                    "delivery": "local-only",
+                    "state_dir": str(staging.parent / "incidents"),
+                    "device_dir": str(staging.parent / "device"),
+                    "plugin_root": str(root),
+                }
+            ),
+            encoding="utf-8",
+        )
         for module in ASSURED_MODULES:
             try:
                 result = subprocess.run(
-                    [sys.executable, "-I", "-B", str(verifier), "--module", module],
+                    [
+                        sys.executable,
+                        "-I",
+                        "-B",
+                        str(verifier),
+                        "--settings",
+                        str(settings),
+                        "--module",
+                        module,
+                    ],
                     cwd=root,
                     env=environment,
                     capture_output=True,

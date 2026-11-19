@@ -59,14 +59,16 @@ async function build(root, runtime) {
     ? JSON.parse(fs.readFileSync(path.join(root, "ui/review-routes.json"), "utf8")) : null;
   const services = [];
   const names = { tools: new Set(), resources: new Set(), prompts: new Set() };
-  for (const [name, config] of Object.entries(configs)) {
+  const settingsPath = path.join(runtime, "catalog-reporting-settings.json");
+  fs.writeFileSync(settingsPath, JSON.stringify({ delivery: "local-only",
+    state_dir: path.join(runtime, "incidents"), device_dir: path.join(runtime, "device") }), { mode: 0o600 });
+  for (const [name, original] of Object.entries(configs)) {
+    const config = original.args?.some(value => ["incident_host_mcp.cjs", "native_execution_mcp.cjs"].some(script => value.endsWith(script)))
+      ? { ...original, args: [...original.args, "--settings", settingsPath] } : original;
     const client = new ServiceClient(root, name, config, { env: {
       PATH: process.env.PATH, SystemRoot: process.env.SystemRoot,
       HOME: runtime, USERPROFILE: runtime, MPARANZA_RUNTIME_ROOT: runtime,
-      MPARANZA_INCIDENT_STATE_DIR: path.join(runtime, "incidents"),
-      MPARANZA_INCIDENT_DEVICE_DIR: path.join(runtime, "device"),
       VERA_REPORTING_STATE_DIR: path.join(runtime, "reporting"),
-      MPARANZA_INCIDENT_DELIVERY: "local-only",
     } });
     try {
       const initialize = await client.initialize({

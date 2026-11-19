@@ -15,7 +15,8 @@ import pytest
 # collection or execution.
 sys.dont_write_bytecode = True
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
-# Local pytest runs must retain failures without creating customer incidents too.
+# Legacy helpers still consume this flag. Current reporters require explicit
+# configure_settings/--settings in each fixture; this flag does not isolate them.
 os.environ["MPARANZA_INCIDENT_DELIVERY"] = "local-only"
 
 ROOT = Path(__file__).resolve().parents[1]

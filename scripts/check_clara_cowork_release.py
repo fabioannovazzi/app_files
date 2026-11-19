@@ -24,6 +24,9 @@ from pathlib import Path
 from typing import Any
 from zipfile import BadZipFile, ZipFile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from plugin_test_reporting import script_command  # noqa: E402
+
 __all__ = [
     "main",
     "extract_package",
@@ -244,8 +247,6 @@ class CheckRun:
             }
         }
         self.env.update(
-            # Candidate failures are test evidence, never customer incidents.
-            MPARANZA_INCIDENT_DELIVERY="local-only",
             PYTHONNOUSERSITE="1",
             PYTHONDONTWRITEBYTECODE="1",
             CLAUDE_PLUGIN_DATA=str(output / "managed"),
@@ -279,6 +280,8 @@ class CheckRun:
         expected_error: str = "",
     ) -> bool:
         """Record real failures and timeouts; a negative check must actually reject."""
+        if len(args) > 1 and args[1].endswith(".py"):
+            args = script_command(args[0], self.root, self.output, *args[1:])
         started = time.monotonic()
         try:
             result = subprocess.run(

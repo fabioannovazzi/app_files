@@ -112,6 +112,18 @@ versions are not updated. No OpenAI Marketplace submission or publication.
   explicit isolated settings. Preflight and launcher delivery messages now use the
   same explicit settings as the reporter, including base-Python reentry.
 
+- Auditing the acceptance runners found obsolete environment-only delivery
+  controls. The Clara package gate, distribution acceptance, shared cold-start
+  runner, catalogue builder and Vera release verifier now pass explicit local
+  settings. A real synthetic failure with network forbidden proves that the gate
+  retains its diagnostic queue and failure log locally. The Vera settings file
+  sits outside the sealed package, preserving inventory verification. The exact
+  CI-built Vera Cowork ZIP passes all six verifier CLIs with those settings;
+  66 gate/archive-prerequisite tests and all 94 catalogue tests pass.
+- The earlier full Clara candidate acceptance completed successfully on Linux
+  Python 3.10, macOS Python 3.12, and Windows Python 3.10/3.12. The updated runners
+  are checked again by the final commit's CI.
+
 Strict manifest validation is not the directory's safety scan or policy review.
 Fabio must select **Check for new commits** on Lucia's directory page after merge.
 These results do not certify installation in an existing customer chat.

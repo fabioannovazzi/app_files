@@ -14,6 +14,9 @@ from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from plugin_test_reporting import script_command  # noqa: E402
+
 __all__ = ["main"]
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURES = ROOT / "tests/fixtures/clara_distribution"
@@ -54,9 +57,6 @@ def main() -> int:
     environment = dict(
         os.environ,
         PYTHONDONTWRITEBYTECODE="1",
-        MPARANZA_INCIDENT_DELIVERY="local-only",
-        MPARANZA_INCIDENT_STATE_DIR=str(output / "incident-state"),
-        MPARANZA_INCIDENT_DEVICE_DIR=str(output / "device-state"),
     )
 
     def command(
@@ -64,16 +64,13 @@ def main() -> int:
     ) -> subprocess.CompletedProcess[str]:
         label = ("retry-" + label) if args.reports_only else label
         result = subprocess.run(
-            [
+            script_command(
                 str(args.helper_python),
-                "-I",
-                "-B",
-                "-c",
-                "import runpy,sys; from pathlib import Path; p=sys.argv.pop(1); "
-                "sys.path.insert(0,str(Path(p).parent)); runpy.run_path(p,run_name='__main__')",
+                installed,
+                output,
                 str(installed / relative),
                 *map(str, arguments),
-            ],
+            ),
             cwd=installed,
             env=environment,
             capture_output=True,
