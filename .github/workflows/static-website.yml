@@ -27,7 +27,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -41,4 +41,6 @@ jobs:
       - name: Check affected pages
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before || 'HEAD~1' }}
-        run: python scripts/validate_static_website.py --base "$BASE_SHA" --browser
+        run: |
+          git cat-file -e "$BASE_SHA^{commit}" || git fetch --depth 1 origin "$BASE_SHA"
+          python scripts/validate_static_website.py --base "$BASE_SHA" --browser
