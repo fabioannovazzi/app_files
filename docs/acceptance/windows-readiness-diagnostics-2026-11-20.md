@@ -83,3 +83,14 @@ performed from this development Mac.
   full scan reported three pre-existing low-severity subprocess findings.
 - Generated Codex catalogues for all three products contain their exact
   product-prefixed incident_diagnose_state operation.
+
+- Broader affected reconciliation/reporting suite: 732 passed, 1 skipped.
+- All Vera 0.1.660, Clara 0.1.430 and Lucia 0.1.260 host packages built and
+  aligned. Codex source-drift checks passed for all three products. The nine
+  Codex/ChatGPT-upload/Cowork archives contain the native state operation.
+  Initial ad-hoc archive inspection assumed a prefixed path for upload ZIPs;
+  corrected inspection used their actual root layout and passed.
+- Source secret scan: one commit scanned, no leaks found.
+- Privacy register validation and generated-contract drift checks passed for
+  all three products. Fresh-session privacy-report delivery and receipt stamping
+  were not exercised; no professional pipeline ran in this diagnostics task.
