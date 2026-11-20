@@ -111,3 +111,10 @@ to differ only in review metadata. Conflicting contracts/catalogues were
 regenerated from the merged source, preserving the current release content.
 Automatic review rejected wholesale selection of conflicting branch files;
 regeneration resolved those conflicts without discarding substantive main data.
+
+The complete 30-file CI type check also found an inferred string-only dictionary
+in the new canary reader, which returns both redacted strings and byte counts.
+An explicit `dict[str, str | int]` annotation fixes that error without changing
+runtime behavior. All 30 files then passed mypy, and nine diagnostic-reader
+regressions passed. The annotation changes source fingerprints; the two affected
+Vera privacy records and generated release artifacts were refreshed accordingly.

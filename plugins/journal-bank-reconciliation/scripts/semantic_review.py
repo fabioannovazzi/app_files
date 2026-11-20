@@ -2930,7 +2930,7 @@ def read_canary_diagnostic(directory: Path, name: str) -> dict[str, Any]:
         or re.fullmatch(r"[a-f0-9]{64}", value["expected_sha256"]) is None
     ):
         raise ValueError("Invalid canary diagnostic metadata")
-    streams = {}
+    streams: dict[str, str | int] = {}
     for key in ("stdout", "stderr"):
         encoded = value[key + "_hex"]
         if (
