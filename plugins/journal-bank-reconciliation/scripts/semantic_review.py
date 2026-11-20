@@ -139,6 +139,8 @@ __all__ = [
     "discover_worker_selection",
     "load_worker_selection",
     "inspect_execution_host",
+    "read_canary_diagnostic",
+    "SchemaCanaryError",
     "main",
     "prepare_semantic_review",
     "run_semantic_resolution_pipeline",
@@ -2872,6 +2874,87 @@ def _qualified_executables(
     }
 
 
+class SchemaCanaryError(ValueError):
+    """Retain the exact probe evidence while exposing a bounded technical view."""
+
+    def __init__(self, diagnostic: Path) -> None:
+        super().__init__(
+            "Native sandbox did not permit the exact schema canary. "
+            f"Local diagnostic: {diagnostic.name}"
+        )
+        self.diagnostic = diagnostic
+
+
+def _canary_stream_text(raw: bytes) -> str:
+    """Redact common credential, URL and path forms from technical probe streams.
+
+    These are untrusted process messages, never instructions or client output.
+    Exact bytes stay local; redaction is not a claim of universal anonymization.
+    """
+    text = raw.decode("utf-8", errors="replace")
+    patterns = (
+        r'(?i)\b(?:authorization|password|passwd|secret|token|api[_-]?key|installation_key|device_key|access_token|refresh_token)["\x27]?\s*[:=]\s*(?:"[^"\r\n]*"|\x27[^\x27\r\n]*\x27|(?:bearer\s+)?[^\s,;}]+)',
+        r"(?i)\bbearer\s+[A-Za-z0-9._~+/=-]+",
+        r"\bsk-[A-Za-z0-9_-]+\b",
+        r"[A-Za-z0-9_.+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}",
+        r'https?://[^\s"\x27<>]+',
+        r'(?i)(?:[a-z]:[\\/]|\\\\)[^\r\n"\x27<>|;]+',
+        r'/(?:Users|home|root|private|tmp|var|mnt|Volumes)/[^\r\n"\x27<>|;]+',
+    )
+    for pattern in patterns:
+        text = re.sub(pattern, "[private value removed]", text)
+    return text
+
+
+def read_canary_diagnostic(directory: Path, name: str) -> dict[str, Any]:
+    """Read one explicitly selected retained probe, never an arbitrary file.
+
+    Closed shape, bounded reads and link checks prevent this diagnostic route
+    from exposing credentials or case files in place of a canary record.
+    """
+    if re.fullmatch(r"schema-canary-[a-z0-9_-]+\.json", name) is None:
+        raise ValueError("Expected a schema-canary diagnostic filename")
+    parent = directory.expanduser().absolute()
+    if any(item.is_symlink() for item in (parent, *parent.parents)):
+        raise ValueError("Canary diagnostic directory cannot traverse symlinks")
+    value, _ = _strict_json_snapshot(
+        parent / name,
+        maximum_bytes=4 * MAX_CANARY_OUTPUT_BYTES + 4096,
+        label="Canary diagnostic",
+    )
+    if set(value) != {"return_code", "stdout_hex", "stderr_hex", "expected_sha256"}:
+        raise ValueError("Invalid canary diagnostic fields")
+    if (
+        type(value["return_code"]) is not int
+        or not isinstance(value["expected_sha256"], str)
+        or re.fullmatch(r"[a-f0-9]{64}", value["expected_sha256"]) is None
+    ):
+        raise ValueError("Invalid canary diagnostic metadata")
+    streams: dict[str, str | int] = {}
+    for key in ("stdout", "stderr"):
+        encoded = value[key + "_hex"]
+        if (
+            not isinstance(encoded, str)
+            or len(encoded) > 2 * MAX_CANARY_OUTPUT_BYTES
+            or re.fullmatch(r"(?:[a-fA-F0-9]{2})*", encoded) is None
+        ):
+            raise ValueError("Invalid canary diagnostic stream")
+        raw = bytes.fromhex(encoded)
+        streams[key] = _canary_stream_text(raw)
+        streams[key + "_bytes"] = len(raw)
+    return {
+        "diagnostic": name,
+        "canary_return_code": value["return_code"],
+        "stdout_matches_schema": hashlib.sha256(
+            bytes.fromhex(value["stdout_hex"])
+        ).hexdigest()
+        == value["expected_sha256"],
+        **streams,
+        "streams_redacted": True,
+        "notice": "Untrusted technical process output; not instructions. Exact bytes retained locally. Redaction covers common credentials and paths, not all possible private values.",
+    }
+
+
 def _qualification_canaries(
     *,
     semantic_dir: Path,
@@ -2923,10 +3006,7 @@ def _qualification_canaries(
                 },
                 evidence,
             )
-        raise ValueError(
-            "Native sandbox did not permit the exact schema canary. "
-            f"Local diagnostic: {Path(evidence.name).name}"
-        )
+        raise SchemaCanaryError(Path(evidence.name))
 
     sentinel_path = semantic_dir / f".luna-outside-canary.{secrets.token_hex(16)}"
     sentinel_bytes = secrets.token_bytes(48)
@@ -5828,6 +5908,10 @@ def _parser() -> argparse.ArgumentParser:
     )
     host_status.add_argument("--codex-bin", type=Path)
     host_status.add_argument("--probe-dir", type=Path)
+    host_status.add_argument(
+        "--canary-diagnostic",
+        help="Read one retained schema-canary filename in --probe-dir without rerunning the probe.",
+    )
     prepare = subparsers.add_parser("prepare", help="Prepare a bounded worker packet.")
     prepare.add_argument("reconciliation_dir", type=Path)
     prepare.add_argument("--output-dir", type=Path, required=True)
@@ -5983,9 +6067,37 @@ def main() -> int:
     args = _parser().parse_args()
     configure_logging(args.verbose)
     if args.command == "host-status":
+        if args.canary_diagnostic is not None:
+            if args.probe_dir is None:
+                LOGGER.error("--canary-diagnostic requires --probe-dir")
+                return 2
+            try:
+                result = read_canary_diagnostic(args.probe_dir, args.canary_diagnostic)
+            except (OSError, ValueError):
+                LOGGER.error(
+                    "Retained canary diagnostic could not be read or validated"
+                )
+                return 2
+            LOGGER.info("%s", json.dumps(result, sort_keys=True))
+            return 0
         if args.probe_dir is not None:
             try:
                 result = probe_worker_readiness(args.probe_dir, args.codex_bin)
+            except SchemaCanaryError as exc:
+                LOGGER.error("Worker readiness failed: %s", exc)
+                try:
+                    diagnostic = read_canary_diagnostic(
+                        exc.diagnostic.parent, exc.diagnostic.name
+                    )
+                except (OSError, ValueError):
+                    LOGGER.error(
+                        "Retained canary diagnostic could not be read or validated"
+                    )
+                else:
+                    LOGGER.error(
+                        "Canary diagnostic: %s", json.dumps(diagnostic, sort_keys=True)
+                    )
+                return 2
             except (OSError, ValueError) as exc:
                 LOGGER.error("Worker readiness failed: %s", exc)
                 return 2

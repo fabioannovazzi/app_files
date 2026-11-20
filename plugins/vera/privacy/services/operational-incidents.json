@@ -138,12 +138,21 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
+    },
+    {
+      "id": "read-only-state-diagnosis",
+      "control": "The explicit native incident_diagnose_state operation returns only own reporter state access status, size, BOM flags, UTF-8 validity and JSON parser coordinates or syntax-only object status. No credential values, raw state, parser messages/snippets or paths are returned. It creates no state, lock or identity and performs no migration, reset, write or network request. Normal JSON read exceptions also expose numeric coordinates, character count and BOM flag through existing technical_facts. A readable JSON object does not verify identity or outbox validity.",
+      "implemented_by": [
+        "scripts/operational_incidents.py",
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Return unavailable metadata without exposing contents or changing state."
     }
   ],
   "review": {
-    "reviewed_at": "2026-11-12",
+    "reviewed_at": "2026-11-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "4c8208492ae46512c01e223b3a9b8b7e451d7f5a710573783d89ceb0672aef36"
+    "source_fingerprint": "58e1369407295707a60018b442a88f9034aa84cce4f18a94c4950019bbef48b3"
   }
 }

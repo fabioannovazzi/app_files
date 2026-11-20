@@ -343,7 +343,9 @@ def test_native_current_runtime_isolation_without_model_or_credentials(
     assert result["codex_version_inside_boundary"].startswith("codex-cli ")
 
 
-def test_windows_worker_child_uses_verified_home_and_mxc_system_drive(monkeypatch, tmp_path):
+def test_windows_worker_child_uses_verified_home_and_mxc_system_drive(
+    monkeypatch, tmp_path
+):
     semantic = load_semantic_review()
     monkeypatch.setattr(platform, "system", lambda: "Windows")
     monkeypatch.setattr(Path, "home", lambda: tmp_path)
@@ -369,3 +371,296 @@ def test_worker_readiness_probes_private_schema_and_cleans_capsule(
     monkeypatch.setattr(semantic, "_qualification_canaries", probe)
     outcome = semantic.probe_worker_readiness(tmp_path, None)
     assert not outcome["capsule"].exists()
+
+
+def test_retained_canary_diagnostic_returns_exit_and_redacted_streams(tmp_path):
+    import json
+
+    semantic = load_semantic_review()
+    name = "schema-canary-existing.json"
+    stderr = b'Access denied C:\\Users\\private\\probe.json\ntoken=PRIVATE_TOKEN\n{"installation_key":"PRIVATE_KEY"}\n'
+    record = {
+        "return_code": 5,
+        "stdout_hex": b"{}".hex(),
+        "stderr_hex": stderr.hex(),
+        "expected_sha256": hashlib.sha256(b"{}").hexdigest(),
+    }
+    path = tmp_path / name
+    path.write_text(json.dumps(record))
+    original = path.read_bytes()
+
+    result = semantic.read_canary_diagnostic(tmp_path, name)
+
+    assert result["canary_return_code"] == 5
+    assert result["stdout_matches_schema"] is True
+    assert result["stdout"] == "{}"
+    assert "Access denied" in result["stderr"]
+    assert "PRIVATE_TOKEN" not in json.dumps(result)
+    assert "PRIVATE_KEY" not in json.dumps(result)
+    assert "Users" not in result["stderr"]
+    assert path.read_bytes() == original
+
+
+@pytest.mark.parametrize(
+    "name", ["../state.json", "state.json", "schema-canary-../state.json"]
+)
+def test_canary_diagnostic_rejects_other_file_names(tmp_path, name):
+    semantic = load_semantic_review()
+
+    with pytest.raises(ValueError, match="filename"):
+        semantic.read_canary_diagnostic(tmp_path, name)
+
+
+def test_canary_diagnostic_rejects_symlink_to_private_state(tmp_path):
+    semantic = load_semantic_review()
+    private = tmp_path / "state.json"
+    private.write_text('{"installation_key":"PRIVATE_KEY"}')
+    (tmp_path / "schema-canary-link.json").symlink_to(private)
+
+    with pytest.raises(ValueError, match="symlink"):
+        semantic.read_canary_diagnostic(tmp_path, "schema-canary-link.json")
+
+
+def test_host_status_failure_delivers_canary_details_without_second_file_read(
+    tmp_path, monkeypatch, caplog
+):
+    import json
+    import logging
+    import sys
+
+    semantic = load_semantic_review()
+    path = tmp_path / "schema-canary-failed.json"
+    path.write_text(
+        json.dumps(
+            {
+                "return_code": 7,
+                "stdout_hex": "",
+                "stderr_hex": b"sandbox setup failed".hex(),
+                "expected_sha256": hashlib.sha256(b"{}").hexdigest(),
+            }
+        )
+    )
+
+    def fail(*args):
+        raise semantic.SchemaCanaryError(path)
+
+    monkeypatch.setattr(semantic, "probe_worker_readiness", fail)
+    monkeypatch.setattr(
+        sys, "argv", ["semantic_review.py", "host-status", "--probe-dir", str(tmp_path)]
+    )
+    caplog.set_level(logging.ERROR)
+
+    result = semantic.main()
+
+    assert result == 2
+    assert '"canary_return_code": 7' in caplog.text
+    assert "sandbox setup failed" in caplog.text
+
+
+def test_host_status_reads_retained_diagnostic_without_probe(
+    tmp_path, monkeypatch, caplog
+):
+    import json
+    import logging
+    import sys
+
+    semantic = load_semantic_review()
+    name = "schema-canary-prior.json"
+    (tmp_path / name).write_text(
+        json.dumps(
+            {
+                "return_code": 0,
+                "stdout_hex": b"unexpected".hex(),
+                "stderr_hex": "",
+                "expected_sha256": hashlib.sha256(b"{}").hexdigest(),
+            }
+        )
+    )
+    monkeypatch.setattr(
+        semantic,
+        "probe_worker_readiness",
+        lambda *args: pytest.fail("must not rerun probe"),
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "semantic_review.py",
+            "host-status",
+            "--probe-dir",
+            str(tmp_path),
+            "--canary-diagnostic",
+            name,
+        ],
+    )
+    caplog.set_level(logging.INFO)
+
+    result = semantic.main()
+
+    assert result == 0
+    assert '"stdout_matches_schema": false' in caplog.text
+    assert '"canary_return_code": 0' in caplog.text
+
+
+@pytest.mark.parametrize(
+    "damage", ["extra_field", "invalid_hex", "boolean_exit", "oversize"]
+)
+def test_canary_diagnostic_rejects_malformed_or_oversized_record(tmp_path, damage):
+    import json
+
+    semantic = load_semantic_review()
+    record = {
+        "return_code": 2,
+        "stdout_hex": "",
+        "stderr_hex": "",
+        "expected_sha256": hashlib.sha256(b"{}").hexdigest(),
+    }
+    modifications = {
+        "extra_field": {"credentials": "PRIVATE_KEY"},
+        "invalid_hex": {"stderr_hex": "not-hex"},
+        "boolean_exit": {"return_code": True},
+        "oversize": {"stderr_hex": "00" * (semantic.MAX_CANARY_OUTPUT_BYTES + 1)},
+    }
+    record.update(modifications[damage])
+    name = "schema-canary-invalid.json"
+    (tmp_path / name).write_text(json.dumps(record))
+
+    with pytest.raises(ValueError, match="Invalid canary diagnostic"):
+        semantic.read_canary_diagnostic(tmp_path, name)
+
+
+def test_host_status_canary_failure_with_private_home_keeps_credentials_out_of_reply(
+    tmp_path, monkeypatch, caplog
+):
+    import json
+    import logging
+    import sys
+
+    semantic = load_semantic_review()
+    home = tmp_path / ".codex"
+    home.mkdir()
+    auth = home / "auth.json"
+    auth.write_text('{"access_token":"PRIVATE_AUTH"}')
+    auth.chmod(0o600)
+    identity = home / "installation_id"
+    identity.write_text("00000000-0000-4000-8000-000000000001")
+    identity.chmod(0o644)
+    monkeypatch.setattr(Path, "home", lambda: tmp_path)
+    monkeypatch.setattr(
+        semantic,
+        "_qualified_executables",
+        lambda _: {"host_profile": semantic._resolve_host_profile()},
+    )
+    monkeypatch.setattr(
+        semantic, "_seatbelt_prefix", lambda **kwargs: ["synthetic-canary"]
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_run_captured_process",
+        lambda *args, **kwargs: {
+            "return_code": 19,
+            "stdout": b"",
+            "stderr": b"sandbox setup failed",
+        },
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "semantic_review.py",
+            "host-status",
+            "--probe-dir",
+            str(tmp_path / "diagnostics"),
+        ],
+    )
+    caplog.set_level(logging.ERROR)
+
+    result = semantic.main()
+
+    assert result == 2
+    assert '"canary_return_code": 19' in caplog.text
+    assert "PRIVATE_AUTH" not in caplog.text
+    assert "access_token" not in caplog.text
+    assert auth.read_text() == '{"access_token":"PRIVATE_AUTH"}'
+    assert list((tmp_path / "diagnostics").glob(".readiness-*")) == []
+    [record] = (tmp_path / "diagnostics").glob("schema-canary-*.json")
+    assert json.loads(record.read_text())["return_code"] == 19
+
+
+@pytest.mark.parametrize("missing_directory", [True, False])
+def test_host_status_retained_diagnostic_unavailable_is_not_readiness_success(
+    tmp_path, monkeypatch, caplog, missing_directory
+):
+    import sys
+
+    semantic = load_semantic_review()
+    arguments = [
+        "semantic_review.py",
+        "host-status",
+        "--canary-diagnostic",
+        "schema-canary-missing.json",
+    ]
+    if not missing_directory:
+        arguments.extend(["--probe-dir", str(tmp_path)])
+    monkeypatch.setattr(sys, "argv", arguments)
+    monkeypatch.setattr(
+        semantic,
+        "probe_worker_readiness",
+        lambda *args: pytest.fail("must not launch probe"),
+    )
+
+    result = semantic.main()
+
+    assert result == 2
+    assert "ERROR" in caplog.text
+
+
+def test_host_status_success_delivers_probe_checks_and_no_failure(
+    tmp_path, monkeypatch, caplog
+):
+    import logging
+    import sys
+
+    semantic = load_semantic_review()
+    monkeypatch.setattr(
+        semantic,
+        "probe_worker_readiness",
+        lambda *args: {
+            "exact_schema_read_succeeded": True,
+            "outside_capsule_read_denied": True,
+        },
+    )
+    monkeypatch.setattr(
+        sys, "argv", ["semantic_review.py", "host-status", "--probe-dir", str(tmp_path)]
+    )
+    caplog.set_level(logging.INFO)
+
+    result = semantic.main()
+
+    assert result == 0
+    assert '"exact_schema_read_succeeded": true' in caplog.text
+    assert '"outside_capsule_read_denied": true' in caplog.text
+    assert "Worker readiness failed" not in caplog.text
+
+
+def test_host_status_missing_diagnostic_preserves_original_failure(
+    tmp_path, monkeypatch, caplog
+):
+    import sys
+
+    semantic = load_semantic_review()
+
+    def fail(*args):
+        raise semantic.SchemaCanaryError(tmp_path / "schema-canary-unreadable.json")
+
+    monkeypatch.setattr(semantic, "probe_worker_readiness", fail)
+    monkeypatch.setattr(
+        sys, "argv", ["semantic_review.py", "host-status", "--probe-dir", str(tmp_path)]
+    )
+
+    result = semantic.main()
+
+    assert result == 2
+    assert "Worker readiness failed" in caplog.text
+    assert "Retained canary diagnostic could not be read" in caplog.text
+    assert "canary_return_code" not in caplog.text
