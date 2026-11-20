@@ -21,11 +21,157 @@ from reconciliation_actions import catalogue, discover
 __all__ = ["run_orchestrator", "replay_result"]
 PROTOCOL = "vera.reconciliation_orchestrator.v2"
 DEFAULT_LIMITS = {
-    "calls": 6,
-    "seconds": 120,
+    "calls": 8,
+    "seconds": 240,
     "call_seconds": 45,
     "context_bytes": 98304,
 }
+
+
+def _search_key(response, bank, journal):
+    """Canonical source-bound cache key: row order and unused fields are irrelevant."""
+    action = response["action"]
+    parameters = {"action": action}
+    if action in {"run", "generate"}:
+        parameters.update(
+            routine=(
+                "generated_expression" if action == "generate" else response["routine"]
+            ),
+            window_days=response["window_days"],
+            expression=response["expression"] if action == "generate" else "",
+        )
+    else:
+        parameters["query"] = response["query"]
+    return bf.digest(
+        {
+            "parameters": parameters,
+            "bank": sorted(bank, key=lambda r: r["transaction_id"]),
+            "journal": sorted(journal, key=lambda r: r["transaction_id"]),
+        }
+    )
+
+
+def _preflight(bank, journal, relationship, admitted):
+    """Run mechanically checkable discovery once; never infer acceptance from sums."""
+    groups = [bf._deterministic(g) for g in admitted["sure"]]
+    b, j = _remaining(bank, journal, groups)
+    history = {}
+    for routine in ("date_window", "reference_normalized", "subset_sum"):
+        response = dict(action="run", routine=routine, window_days=7, expression="")
+        result = discover(
+            routine, b, j, relationship, window_days=7, operations=100_000
+        )
+        history[_search_key(response, b, j)] = dict(
+            routine=routine,
+            bank_ids=[r["transaction_id"] for r in b],
+            journal_ids=[r["transaction_id"] for r in j],
+            result=result,
+        )
+    return history
+
+
+def _compact_reviews(response, packet):
+    """Expand model-authored open dispositions, retaining literal source citations."""
+    records = bf._records(packet["bank_records"])
+    reviews = response["open_reviews"]
+    if not reviews or len({r["bank_id"] for r in reviews}) != len(reviews):
+        raise ValueError("Provide distinct open movement dispositions")
+    groups = []
+    for review in reviews:
+        identifier = review["bank_id"]
+        if identifier not in records or not review["document_request"].strip():
+            raise ValueError(
+                "Open review requires a visible movement and specific evidence request"
+            )
+        evidence = []
+        for field in review["evidence_fields"]:
+            value = records[identifier].get(field)
+            if field not in bf.FIELDS or value is None or not str(value).strip():
+                raise ValueError("Open review cites an absent source field")
+            evidence.append(
+                dict(
+                    side="bank",
+                    transaction_id=identifier,
+                    field=field,
+                    quote=str(value),
+                )
+            )
+        if not evidence:
+            raise ValueError("Open review needs source evidence")
+        resolution = dict(
+            status="doubtful",
+            scope="bank_cash_link_only",
+            explanation=review["explanation"],
+            evidence=evidence,
+            questions=[review["document_request"]],
+        )
+        groups.append(
+            dict(
+                bank_ids=[identifier],
+                journal_ids=[],
+                bank_resolution=resolution,
+                accounting_resolution=dict(
+                    status="unknown",
+                    scope="account_level_only",
+                    explanation="Trattamento da verificare sul documento richiesto.",
+                    evidence=evidence,
+                    questions=[review["document_request"]],
+                ),
+                allocations=[],
+                proposed_account_codes=[],
+                account_codes_are_alternatives=False,
+                change_basis="unresolved",
+            )
+        )
+    return groups
+
+
+def _accounting_notes(response, packet, groups, memory):
+    """Review document questions without changing cash membership or allocations."""
+    notes = response["accounting_notes"]
+    expected = {g["bank_ids"][0] for g in packet["linked_groups"]}
+    reviewed = response["reviewed_group_ids"]
+    if len(reviewed) != len(expected) or set(reviewed) != expected:
+        raise ValueError("Acknowledge each visible cash group exactly once")
+    if (
+        len({n["group_id"] for n in notes}) != len(notes)
+        or not {n["group_id"] for n in notes} <= expected
+    ):
+        raise ValueError("Accounting notes must name distinct visible groups")
+    records = {s: bf._records(packet[s + "_records"]) for s in ("bank", "journal")}
+    by_id = {n["group_id"]: n for n in notes}
+    result = copy.deepcopy(groups)
+    for group in result:
+        note = by_id.get(group["bank_ids"][0])
+        if group["bank_ids"][0] not in expected:
+            continue
+        if note is None:
+            # Explicit model acknowledgement means no specific issue identified,
+            # never an inferred approval of invoices or expense treatment.
+            group["accounting_resolution"] = dict(
+                status="complete",
+                scope="document_questions_only_not_expense_approval",
+                explanation="Nessuna questione specifica rilevata nelle fonti esaminate; fatture e trattamento del costo non approvati.",
+                evidence=group["bank_resolution"]["evidence"],
+                questions=[],
+            )
+            continue
+        own_records = {
+            s: {i: records[s][i] for i in group[s + "_ids"]} for s in records
+        }
+        if not bf._check_citations(note["evidence"], own_records):
+            raise ValueError(
+                "Accounting review needs this group's non-monetary source evidence"
+            )
+        group["accounting_resolution"] = dict(
+            status="partial" if note["questions"] else "complete",
+            scope="document_questions_only_not_expense_approval",
+            explanation=note["explanation"],
+            evidence=note["evidence"],
+            questions=note["questions"],
+        )
+    memory["notes_reviewed"] = sorted(set(memory.get("notes_reviewed", [])) | expected)
+    return result
 
 
 def _schema(packet):
@@ -70,6 +216,58 @@ def _schema(packet):
         "rationale": {"type": "string", "minLength": 1, "maxLength": 2400},
         "working_note": {"type": "string", "maxLength": 2400},
     }
+    if packet.get("controller_version") == 2:
+        # Cash matching and document review are separate model judgments. Do not
+        # request a redundant accounting-completeness declaration during matching.
+        group_schema = props["groups"]["items"]
+        group_schema["properties"].pop("accounting_resolution")
+        group_schema["required"].remove("accounting_resolution")
+        citation = bf.output_schema()["properties"]["groups"]["items"]["properties"][
+            "accounting_resolution"
+        ]["properties"]["evidence"]
+
+        def items(properties):
+            return dict(
+                type="array",
+                maxItems=25,
+                items=dict(
+                    type="object",
+                    additionalProperties=False,
+                    properties=properties,
+                    required=list(properties),
+                ),
+            )
+
+        text = dict(type="string", minLength=1, maxLength=1200)
+        props["open_reviews"] = items(
+            dict(
+                bank_id=dict(type="string"),
+                explanation=text,
+                evidence_fields=dict(
+                    type="array",
+                    minItems=1,
+                    maxItems=8,
+                    items=dict(type="string", enum=list(bf.FIELDS)),
+                ),
+                document_request=text,
+            )
+        )
+        props["reviewed_group_ids"] = dict(
+            type="array", maxItems=25, items=dict(type="string")
+        )
+        props["accounting_notes"] = items(
+            dict(
+                group_id=dict(type="string"),
+                explanation=text,
+                evidence=citation,
+                questions=dict(type="array", maxItems=4, items=text),
+            )
+        )
+        props["action"]["enum"] += ["review_open", "review_notes"]
+        if packet["review_phase"] == "final_review":
+            props["action"]["enum"] = ["review_open", "decide", "escalate"]
+        elif packet["review_phase"] == "accounting_notes":
+            props["action"]["enum"] = ["review_notes", "escalate"]
     return {
         "type": "object",
         "additionalProperties": False,
@@ -79,7 +277,30 @@ def _schema(packet):
 
 
 def _prompt(packet):
-    return (
+    guidance = ""
+    if packet.get("controller_version") == 2:
+        guidance = (
+            "Write explanations and document requests in Italian. In detailed decide groups, provide only "
+            "the cash-link decision; accounting_resolution is intentionally absent from this phase's schema. "
+            "Document questions are reviewed separately after cash dispositions. Standard date/reference/exact-sum searches "
+            "already ran locally. search_history records scope, completeness and results across retries. "
+            "Never repeat them. A truncated search is not proof of absence. If standard searches are empty, "
+            "use review_open unless a specific plausible alternative warrants a NEW bounded investigation. "
+            "An unsuccessful or cached additional search advances to final review. In final_review, give EVERY "
+            "visible open bank movement a disposition using review_open: cite populated fields, explain "
+            "the unsupported link or missing booking, and request the particular invoice, merchant receipt, "
+            "settlement detail or ledger evidence that would resolve it. Do not mark it matched. "
+            "In accounting_notes, review each linked_groups entry using review_notes. Acknowledge ALL visible "
+            "group first-bank IDs in reviewed_group_ids; include accounting_notes ONLY for specific issues, "
+            "not one repetitive note per clean group. Cash links remain fixed. "
+            "Compare merchant identity, references and accounting descriptions on both sides. Flag supported "
+            "discrepancies (including fees versus stamp duty) as specific questions naming the document to request. "
+            "Cite literal supplied source fields. Do not invent an invoice error or assert an expense classification "
+            "is verified from a bank match. If no specific issue is supported, acknowledge the group without "
+            "an exception note. Do not request every invoice generically. Keep notes concise and actionable. "
+            "Use empty reviewed_group_ids/open_reviews/accounting_notes except for their respective actions. "
+        )
+    return guidance + (
         "You direct a bank-to-ledger reconciliation. Choose the most useful next action, "
         "using local tools for calculations and your semantic judgment for meaning. "
         "Do not demand exact codes or absolute certainty when dates, amounts, descriptions "
@@ -213,6 +434,73 @@ def _packet(
         "working_note": memory.get("working_note", ""),
         "last_error": memory.get("error"),
     }
+    if memory.get("controller_version") == 2:
+        history = memory.get("search_history", {})
+        unexamined = [r for r in remaining if r["transaction_id"] not in examined]
+        selected_groups = []
+        if not unexamined:
+            for group in groups:
+                if group.get("allocation_state") != "reserved" or group["bank_ids"][
+                    0
+                ] in memory.get("notes_reviewed", []):
+                    continue
+                if len(selected_groups) >= memory.get("notes_group_limit", 25):
+                    break
+                if (
+                    sum(len(g["bank_ids"]) for g in selected_groups)
+                    + len(group["bank_ids"])
+                    > 25
+                    or sum(len(g["journal_ids"]) for g in selected_groups)
+                    + len(group["journal_ids"])
+                    > 64
+                ):
+                    break
+                selected_groups.append(group)
+            phase = "accounting_notes"
+            selected_b = [i for g in selected_groups for i in g["bank_ids"]]
+            selected_j = [i for g in selected_groups for i in g["journal_ids"]]
+            packet.update(
+                eligible_bank_ids=selected_b,
+                focus=[
+                    dict(bank_ids=g["bank_ids"], question_scope="accounting")
+                    for g in selected_groups
+                ],
+                bank_records=[bf._project(b[i]) for i in selected_b],
+                journal_records=[bf._project(j[i]) for i in selected_j],
+                prior_conclusions=[],
+                probable_candidates=[],
+            )
+        else:
+            # Empty bounded discovery is a reason to request dispositions, not to invent matches.
+            supported_candidates = [
+                c
+                for c in candidates
+                if c.get("bank_cents") == c.get("journal_cents") and "bank_cents" in c
+            ]
+            phase = (
+                "investigation"
+                if (supported_candidates or not memory.get("last_action"))
+                and not memory.get("final_review")
+                else "final_review"
+            )
+        packet.update(
+            controller_version=2,
+            review_phase=phase,
+            linked_groups=[
+                {k: g[k] for k in ("bank_ids", "journal_ids")} for g in selected_groups
+            ],
+            search_history=[
+                dict(
+                    search_key=k,
+                    routine=v.get("routine", "inspect"),
+                    bank_ids=v["bank_ids"],
+                    journal_ids=v["journal_ids"],
+                    candidate_count=len(v["result"].get("candidates", [])),
+                    truncated=v["result"].get("truncated", False),
+                )
+                for k, v in history.items()
+            ],
+        )
     return {**packet, "packet_sha256": bf.digest(packet)}
 
 
@@ -295,7 +583,17 @@ def _candidate_decisions(response: dict, packet: dict) -> list[dict]:
     return groups
 
 
-def _apply(response, packet, bank, journal, groups, memory, relationship, index):
+def _apply(
+    response,
+    packet,
+    bank,
+    journal,
+    groups,
+    memory,
+    relationship,
+    index,
+    retained_result=None,
+):
     import jsonschema
 
     try:
@@ -340,7 +638,30 @@ def _apply(response, packet, bank, journal, groups, memory, relationship, index)
                 },
                 relationship,
             )
-            result = scoped_index.search(query)
+            key = _search_key(response, available_b, available_j)
+            cached = (
+                memory.get("search_history", {}).get(key)
+                if memory.get("controller_version") == 2
+                else None
+            )
+            result = (
+                copy.deepcopy(retained_result)
+                if retained_result is not None
+                else (
+                    copy.deepcopy(cached["result"])
+                    if cached
+                    else scoped_index.search(query)
+                )
+            )
+            if memory.get("controller_version") == 2:
+                memory.setdefault("search_history", {})[key] = dict(
+                    routine="inspect",
+                    bank_ids=[r["transaction_id"] for r in available_b],
+                    journal_ids=[r["transaction_id"] for r in available_j],
+                    result=copy.deepcopy(result),
+                )
+                if cached or not result["records"]:
+                    memory["final_review"] = True
             side = query["side"]
             memory[side + "_ids"] = [r["transaction_id"] for r in result["records"]]
         for side in populations:
@@ -352,25 +673,70 @@ def _apply(response, packet, bank, journal, groups, memory, relationship, index)
             "selected_journal": memory.get("journal_ids", []),
         }
     elif action in {"run", "generate"}:
-        result = discover(
-            "generated_expression" if action == "generate" else response["routine"],
-            selected["bank"],
-            selected["journal"],
-            relationship,
-            window_days=response["window_days"],
-            expression=response["expression"],
-            operations=100_000,
+        key = _search_key(response, selected["bank"], selected["journal"])
+        cached = (
+            memory.get("search_history", {}).get(key)
+            if memory.get("controller_version") == 2
+            else None
         )
+        result = (
+            copy.deepcopy(retained_result)
+            if retained_result is not None
+            else (
+                copy.deepcopy(cached["result"])
+                if cached
+                else discover(
+                    (
+                        "generated_expression"
+                        if action == "generate"
+                        else response["routine"]
+                    ),
+                    selected["bank"],
+                    selected["journal"],
+                    relationship,
+                    window_days=response["window_days"],
+                    expression=response["expression"],
+                    operations=100_000,
+                )
+            )
+        )
+        if memory.get("controller_version") == 2:
+            memory.setdefault("search_history", {})[key] = dict(
+                routine=response["routine"],
+                bank_ids=[r["transaction_id"] for r in selected["bank"]],
+                journal_ids=[r["transaction_id"] for r in selected["journal"]],
+                result={
+                    k: v for k, v in copy.deepcopy(result).items() if k != "cache_hit"
+                },
+            )
+            if cached or not result["candidates"]:
+                memory["final_review"] = True
+            result["cache_hit"] = bool(cached)
         memory["candidates"] = result["candidates"]
         memory.pop("journal_ids", None)
         if response["bank_ids"]:
             memory["bank_ids"] = response["bank_ids"]
-    elif action in {"decide", "decide_candidates"}:
+    elif action in {"decide", "decide_candidates", "review_open"}:
         decisions = (
-            _candidate_decisions(response, packet)
-            if action == "decide_candidates"
-            else response["groups"]
+            _compact_reviews(response, packet)
+            if action == "review_open"
+            else (
+                _candidate_decisions(response, packet)
+                if action == "decide_candidates"
+                else response["groups"]
+            )
         )
+        if action == "decide" and memory.get("controller_version") == 2:
+            decisions = copy.deepcopy(decisions)
+            for decision in decisions:
+                cash = decision["bank_resolution"]
+                decision["accounting_resolution"] = dict(
+                    status="unknown",
+                    scope="document_review_pending",
+                    explanation="Il collegamento di cassa non verifica fattura, identità commerciale o classificazione del costo.",
+                    evidence=cash["evidence"],
+                    questions=["Revisione documentale separata ancora da completare."],
+                )
         additions = bf.validate_response(
             packet,
             {"packet_sha256": packet["packet_sha256"], "groups": decisions},
@@ -401,12 +767,25 @@ def _apply(response, packet, bank, journal, groups, memory, relationship, index)
                 if g["allocation_state"] == "reserved"
             ),
         }
+    elif action == "review_notes":
+        groups = _accounting_notes(response, packet, groups, memory)
+        result = {
+            "accounting_groups_reviewed": len(response["reviewed_group_ids"]),
+            "exception_notes": len(response["accounting_notes"]),
+        }
     elif action == "escalate":
         if memory.get("stage") == "sol":
             raise ValueError("Already using the stronger review stage")
         memory["stage"] = "sol"
         result = {"stage": "sol"}
     elif action == "finish":
+        if memory.get("controller_version") == 2 and any(
+            r["transaction_id"] not in {i for g in groups for i in g["bank_ids"]}
+            for r in bank
+        ):
+            raise ValueError(
+                "Finish requires an explicit disposition for every bank movement"
+            )
         memory["finished"] = True
         result = {"reason": response["rationale"]}
     memory["last_action"] = {
@@ -438,6 +817,20 @@ def _binding(bank, journal, relationship, source_binding, purpose, local_matches
 def _replay(state, bank, journal, relationship, admitted, source_binding, purpose):
     groups = [bf._deterministic(g) for g in admitted["sure"]]
     memory: dict[str, Any] = {}
+    if state.get("controller_version") == 2:
+        history = copy.deepcopy(state["preflight"])
+        candidates = list(admitted["probable_candidates"])
+        for entry in history.values():
+            candidates.extend(entry["result"]["candidates"])
+        unique = {
+            bf.digest({s: c[s] for s in ("bank_ids", "journal_ids")}): c
+            for c in candidates
+        }
+        memory = dict(
+            controller_version=2,
+            search_history=history,
+            candidates=list(unique.values()),
+        )
     review_b, review_j = review_population(bank, journal, admitted)
     index = EvidenceIndex(review_b, review_j, source_binding, relationship)
     for event in state["events"]:
@@ -477,11 +870,19 @@ def _replay(state, bank, journal, relationship, admitted, source_binding, purpos
                 memory,
                 relationship,
                 index,
+                retained_result=(
+                    event["result"]
+                    if state.get("controller_version") == 2
+                    and event["response"]["action"] in {"run", "generate", "inspect"}
+                    else None
+                ),
             )
             if result != event["result"]:
                 raise ValueError("Local action replay differs")
         else:
             memory["error"] = event["error"]
+            if "next_notes_group_limit" in event:
+                memory["notes_group_limit"] = event["next_notes_group_limit"]
     return groups, memory, index
 
 
@@ -559,6 +960,7 @@ def run_orchestrator(
     select=None,
     limits=None,
     resume_checkpoint=False,
+    controller_version=2,
     **_,
 ):
     """Execute bounded next actions and always retain valid partial work."""
@@ -600,6 +1002,7 @@ def run_orchestrator(
                 "elapsed_seconds": 0,
                 "revision": 0,
                 "local_evidence_version": 4,
+                "controller_version": controller_version,
             }
         )
         admitted = bf.admission(
@@ -616,6 +1019,9 @@ def run_orchestrator(
             raise ValueError("Orchestrator checkpoint changed")
         if state["binding"] != binding:
             raise ValueError("Cannot resume against different sources")
+        if state.get("controller_version") == 2 and "preflight" not in state:
+            state["preflight"] = _preflight(bank, journal, relationship, admitted)
+            bf._save(path, state)
         _verify_artifacts(output, state["events"])
         groups, memory, index = _replay(
             state, bank, journal, relationship, admitted, source_binding, purpose
@@ -644,7 +1050,20 @@ def run_orchestrator(
                 reason = "lifetime_budget_exhausted"
                 break
             remaining, _ = _remaining(bank, journal, groups)
-            if not remaining:
+            if state.get("controller_version") == 2:
+                examined = {i for g in groups for i in g["bank_ids"]}
+                pending_notes = [
+                    g
+                    for g in groups
+                    if g.get("allocation_state") == "reserved"
+                    and g["bank_ids"][0] not in memory.get("notes_reviewed", [])
+                ]
+                if (
+                    all(r["transaction_id"] in examined for r in bank)
+                    and not pending_notes
+                ):
+                    break
+            elif not remaining:
                 break
             elapsed = time.monotonic() - start
             if calls >= limits["calls"] or elapsed >= limits["seconds"]:
@@ -744,7 +1163,7 @@ def run_orchestrator(
                         ],
                     }
                 )
-                if any(
+                if state.get("controller_version") != 2 and any(
                     e.get("action_signature") == signature and e["status"] == "accepted"
                     for e in state["events"][-3:]
                 ):
@@ -782,6 +1201,21 @@ def run_orchestrator(
                 if event["status"] == "started":
                     event["status"] = "technical_error"
                     reason = "technical_error"
+                    # A timed-out document batch can be retried more narrowly.
+                    # Retain the adjustment on the event so older checkpoints
+                    # replay their original packets unchanged.
+                    if (
+                        packet.get("review_phase") == "accounting_notes"
+                        and len(packet.get("linked_groups", [])) > 1
+                        and any(
+                            term in str(error).casefold()
+                            for term in ("time limit", "timed out", "timeout")
+                        )
+                    ):
+                        smaller = max(1, len(packet["linked_groups"]) // 2)
+                        event["next_notes_group_limit"] = smaller
+                        memory["notes_group_limit"] = smaller
+                        reason = "finished"
                 elif state["events"] and state["events"][-1]["status"] == "rejected":
                     reason = "repeated_invalid_action"
             event["artifact_sha256"] = {
@@ -825,6 +1259,18 @@ def run_orchestrator(
         )
         summary["primary_counts"]["human"] = doubtful
         summary["primary_counts"]["unprocessed"] -= doubtful
+        if state.get("controller_version") == 2:
+            summary["cash_review_complete"] = (
+                summary["primary_counts"]["unprocessed"] == 0
+            )
+            summary["accounting_notes_reviewed_groups"] = len(
+                memory.get("notes_reviewed", [])
+            )
+            summary["accounting_notes_complete"] = all(
+                g["bank_ids"][0] in memory.get("notes_reviewed", [])
+                for g in groups
+                if g.get("allocation_state") == "reserved"
+            )
         summary["review_complete"] = (
             reason == "finished" and summary["primary_counts"]["unprocessed"] == 0
         )
@@ -851,7 +1297,15 @@ def run_orchestrator(
                     for g in groups
                     if g["bank_resolution"]["status"] == "doubtful"
                 ],
-                "accounting": [],
+                "accounting": [
+                    dict(
+                        bank_ids=g["bank_ids"],
+                        questions=g["accounting_resolution"]["questions"],
+                        reason=g["accounting_resolution"]["explanation"],
+                    )
+                    for g in groups
+                    if g["accounting_resolution"]["questions"]
+                ],
             },
         }
         result["content_sha256"] = bf.digest(result)

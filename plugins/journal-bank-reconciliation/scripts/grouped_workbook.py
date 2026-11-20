@@ -416,15 +416,18 @@ def export_final_workbook(
                     "Questioni contabili",
                     "Conti proposti (alternative indicate)",
                     "Assegnazione evidenza",
+                    "Fonti delle questioni contabili",
                 ],
                 header,
             )
             detail.set_column(10, 13, 24)
             detail.set_column(14, 16, 60)
             detail.set_column(17, 17, 20)
+            detail.set_column(18, 18, 75)
             for index, group in enumerate(relations, 5):
                 if not group.get("bank_resolution"):
                     continue
+                note_lines = 1
                 for column, value in enumerate(
                     (
                         group["bank_resolution"]["status"],
@@ -440,12 +443,42 @@ def export_final_workbook(
                             else ""
                         ),
                         group.get("allocation_state", ""),
+                        (
+                            "\n".join(
+                                f"{(bank_labels if e['side'] == 'bank' else journal_labels).get(e['transaction_id'], e['transaction_id'])} · {e['field']}: {e['quote']}"
+                                for e in group["accounting_resolution"]["evidence"]
+                            )
+                            if group["accounting_resolution"]["questions"]
+                            else ""
+                        ),
                     ),
                     10,
                 ):
                     detail.write_string(index, column, str(value), text)
-            detail.autofilter(4, 0, max(4, len(relations) + 4), 17)
-            detail.print_area(0, 0, len(relations) + 4, 17)
+                    if column in (14, 15, 18):
+                        width = 70 if column == 18 else 55
+                        note_lines = max(
+                            note_lines,
+                            sum(
+                                max(1, (len(line) + width - 1) // width)
+                                for line in str(value).splitlines()
+                            ),
+                        )
+                caption_lines = max(
+                    sum(
+                        len(_movement_caption(records[i], labels[i]).splitlines())
+                        for i in group[key]
+                    )
+                    for key, records, labels in (
+                        ("bank_ids", bank_by_id, bank_labels),
+                        ("journal_ids", journal_by_id, journal_labels),
+                    )
+                )
+                detail.set_row(
+                    index, min(409, max(72, caption_lines * 16, note_lines * 16))
+                )
+            detail.autofilter(4, 0, max(4, len(relations) + 4), 18)
+            detail.print_area(0, 0, len(relations) + 4, 18)
             row = 43
             for scope, label in (
                 ("bank", "Dubbi bancari residui"),
