@@ -569,6 +569,7 @@ def complete_grouped_review(
     resume_checkpoint: bool = False,
     review_strategy: str = "staged",
     orchestrator_limits: Mapping[str, int] | None = None,
+    balance_evidence: Path | None = None,
 ) -> dict[str, Any]:
     """The normal route uses the shared bank-first state, including strict rows."""
     import bank_first
@@ -589,6 +590,23 @@ def complete_grouped_review(
     bank, journal = _csv(reconciliation / "normalized_bank.csv"), _csv(
         reconciliation / "normalized_journal.csv"
     )
+    from balance_bridge import build_balance_bridge, read_balance_evidence
+
+    balances = None
+    if purpose == "bank_open_items":
+        retained_balances = output / "balance_bridge_evidence.json"
+        selected_balances = balance_evidence or (
+            retained_balances if retained_balances.exists() else None
+        )
+        try:
+            balances = read_balance_evidence(
+                selected_balances, roots, {"bank": bank, "journal": journal}
+            )
+            if selected_balances and selected_balances != retained_balances:
+                output.mkdir(parents=True, exist_ok=True)
+                _write(retained_balances, _read(selected_balances))
+        except (ValueError, KeyError, TypeError, OSError) as error:
+            balances = {"missing": [f"Evidenza saldi non verificata: {error}"]}
     evidence = extract_grouped_source_evidence(journal, roots)
     for row in journal:
         if row["transaction_id"] in evidence:
@@ -777,6 +795,43 @@ def complete_grouped_review(
                     "method": "unprocessed" if side == "bank" else "source_only",
                 }
             )
+    admission_version = canonical.get(
+        "local_evidence_version",
+        canonical.get("orchestrator_state", {}).get("local_evidence_version", 3),
+    )
+    if purpose == "bank_open_items" and admission_version >= 4:
+        admitted = bank_first.admission(
+            bank,
+            journal,
+            replay["relationship_policy"],
+            local_matches=local_matches,
+            purpose=purpose,
+            local_evidence_version=admission_version,
+        )
+        labels = {r["transaction_id"]: f"C{i:03d}" for i, r in enumerate(journal, 1)}
+        for relation in relations:
+            if (
+                relation.get("allocation_state") == "reserved"
+                or not relation["bank_ids"]
+            ):
+                continue
+            candidates = [
+                c
+                for c in admitted["probable_candidates"]
+                if c.get("difference")
+                and c["bank_ids"] == relation["bank_ids"]
+                and not (set(c["journal_ids"]) & used_journal)
+            ]
+            if candidates:
+                relation["unreserved_amount_candidates"] = candidates
+                relation["rationale"] += "\n" + "\n".join(
+                    "Candidato non riservato: "
+                    + ", ".join(labels[i] for i in c["journal_ids"])
+                    + "; scarto esatto "
+                    + c["difference"]
+                    + ". Occorre corroborazione oltre alla tolleranza."
+                    for c in candidates
+                )
     for index, group in enumerate(relations, 1):
         group["id"] = f"R{index:03d}"
     totals = _summary(relations, bank, journal)
@@ -813,6 +868,13 @@ def complete_grouped_review(
     }
     workbook = output / "Riconciliazione_banca_partitario.xlsx"
     status_path = output / "grouped_review_status.json"
+    if balances is not None and (
+        not workbook.exists()
+        or "balance_bridge" in _read(output / "grouped_reconciliation_result.json")
+    ):
+        result["balance_bridge"] = build_balance_bridge(
+            bank, journal, relations, balances, replay["relationship_policy"]
+        )
     if workbook.exists():
         previous = _read(status_path)
         if (

@@ -689,7 +689,7 @@ def _run_review(
         if state_path.is_file() and not state_path.is_symlink()
         else None
     )
-    local_evidence_version = 3
+    local_evidence_version = 4
     if saved_state is not None:
         local_matches = saved_state.get("local_matches")
         local_evidence_version = saved_state.get("local_evidence_version", 1)

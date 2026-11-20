@@ -5783,6 +5783,7 @@ def run_semantic_resolution_pipeline(
     purpose: str = "bank_open_items",
     resume_checkpoint: bool = False,
     review_strategy: str = "staged",
+    balance_evidence: Path | None = None,
 ) -> dict[str, Any]:
     """Complete the same grouped review and final workbook on every normal run.
 
@@ -5803,6 +5804,11 @@ def run_semantic_resolution_pipeline(
         purpose=purpose,
         resume_checkpoint=resume_checkpoint,
         review_strategy=review_strategy,
+        **(
+            {"balance_evidence": balance_evidence}
+            if balance_evidence is not None
+            else {}
+        ),
     )
     result["required_resolution_level"] = required_resolution_level
     return result
@@ -5870,6 +5876,11 @@ def _parser() -> argparse.ArgumentParser:
         choices=("staged", "orchestrator"),
         default="staged",
         help="Use the bounded model-directed reconciliation pilot or the existing staged review.",
+    )
+    run_all.add_argument(
+        "--balance-evidence",
+        type=Path,
+        help="Reviewed source-bound closing balance/date mappings for the cutoff bridge.",
     )
     run_all.add_argument("--codex-bin", type=Path)
     run_all.add_argument(
@@ -6017,6 +6028,11 @@ def main() -> int:
                 purpose=args.purpose,
                 resume_checkpoint=args.resume_checkpoint,
                 review_strategy=args.review_strategy,
+                **(
+                    {"balance_evidence": args.balance_evidence}
+                    if args.balance_evidence is not None
+                    else {}
+                ),
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
                 worker_selection=_load_cli_worker_selection(args),

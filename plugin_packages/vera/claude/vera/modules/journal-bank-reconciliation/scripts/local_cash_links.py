@@ -18,12 +18,12 @@ def admit_local_matches(
     matches: Sequence[Mapping[str, str]],
     purpose: str,
     *,
-    evidence_version: int = 2,
+    evidence_version: int = 3,
 ) -> list[dict[str, Any]]:
     """Restore connected match groups from the source-replayed local pass."""
     import bank_first as bf
 
-    if evidence_version not in {1, 2}:
+    if evidence_version not in {1, 2, 3}:
         raise ValueError("Unsupported local evidence version")
     if relationship.get("open_item_allocation_authorized"):
         raise ValueError("Journal matcher results cannot authorize invoice allocation")
@@ -56,8 +56,7 @@ def admit_local_matches(
             "journal": [i for i in records["journal"] if i in j_ids],
         }
         rows = [records[s][i] for s in ids for i in ids[s]]
-        # The producer has already replayed the matcher and its reviewed scope,
-        # direction and tolerance policy. Do not impose a second admission gate.
+        # Tolerance discovers candidates; it does not establish their identity.
         sums = {
             s: sum(bf.cents(records[s][i]["amount_signed"]) for i in ids[s])
             for s in ids
@@ -80,20 +79,51 @@ def admit_local_matches(
             for field in fields
             if records[s][i].get(field)
         ]
+        corroborated = True
+        if evidence_version >= 3 and purpose == "bank_open_items" and difference:
+            # A unique near amount alone caused a false cash link in the PDF
+            # benchmark. Only an unambiguous shared source reference can close
+            # it locally; fee explanations and other context remain semantic.
+            references = {
+                side: {bf._text(records[side][i].get("reference")) for i in ids[side]}
+                for side in ids
+            }
+            corroborated = (
+                len(ids["bank"]) == len(ids["journal"]) == 1
+                and len(references["bank"]) == 1
+                and references["bank"] == references["journal"]
+                and "" not in references["bank"]
+                and all(
+                    sum(
+                        bf._text(r.get("reference")) in references[side]
+                        for r in records[side].values()
+                    )
+                    == 1
+                    for side in ids
+                )
+                and not (
+                    records["bank"][ids["bank"][0]].get("party_ref")
+                    and records["journal"][ids["journal"][0]].get("party_ref")
+                    and bf._text(records["bank"][ids["bank"][0]]["party_ref"])
+                    != bf._text(records["journal"][ids["journal"][0]]["party_ref"])
+                )
+            )
         content = {
             "bank_ids": ids["bank"],
             "journal_ids": ids["journal"],
             "rule_id": "receipt_replayed_local_match.v1",
             "scope": list(bf._scope(rows[0], relationship)),
-            "evidence_class": "sure",
-            "reasons": [],
+            "evidence_class": "sure" if corroborated else "probable",
+            "reasons": (
+                [] if corroborated else ["nonzero_cash_difference_needs_corroboration"]
+            ),
             "evidence": evidence,
             "local_cash_match": True,
             "cash_only": purpose == "bank_open_items",
             "bank_sum": bf._money(sums["bank"]),
             "journal_sum": bf._money(sums["journal"]),
             "difference": bf._money(difference),
-            "confirmed_discrepancy": difference != 0,
+            "confirmed_discrepancy": difference != 0 and corroborated,
         }
         accepted.append({**content, "evidence_sha256": bf.digest(content)})
     return accepted
