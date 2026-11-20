@@ -838,3 +838,62 @@ For Windows reconciliation requiring the native semantic worker, run
 before expensive preparation. It runs the same capability probes on a synthetic
 schema. If it fails, retain local diagnostics, continue independent accounting
 steps and deliver saved results. Recheck the actual capsule before submission.
+
+### Near amounts and the statement-cutoff balance bridge
+
+For `bank_open_items`, tolerance discovers candidates; it is not evidence that
+unequal signed cash amounts belong together. Before local rows are reserved or
+removed from semantic context, a nonzero difference needs corroboration. A unique
+shared source reference can support a local cash link; conflicting or duplicate
+references cannot. Otherwise keep both rows available for semantic investigation,
+including documented fee/group evidence. Preserve the exact difference even for
+a supported link. Exact local matches and unique allocation rules are unchanged.
+Historical saved reviews retain their admission version; opening them is not a
+fresh assessment under this rule.
+
+The final `Sintesi` includes a statement-cutoff balance bridge. Before `run-all`,
+review the closing bank balance and the ledger balance at that same date. Do not
+assume that the final movement date is the statement cutoff, or that the last
+ledger balance belongs to the statement period. For PDF sources, record the
+mapping in a run-local JSON and pass `--balance-evidence <path>`. This is routine
+agent source review, not an additional user approval. Use this schema, replacing
+all illustrative values with exact source evidence:
+
+```json
+{
+  "schema_version": "journal_bank.balance_evidence.v1",
+  "bank": {
+    "role": "closing_balance", "reviewed_by": "agent",
+    "source_file": "bank.pdf", "source_sha256": "<actual SHA-256>",
+    "page": 1, "quote": "31/03/2027 Closing balance 500.00",
+    "amount_text": "500.00", "cash_sign": 1,
+    "date_text": "31/03/2027", "date_format": "%d/%m/%Y",
+    "currency": "EUR", "entity_ref": "<same reviewed entity>"
+  },
+  "journal": {
+    "role": "closing_balance", "reviewed_by": "agent",
+    "source_file": "ledger.pdf", "source_sha256": "<actual SHA-256>",
+    "page": 2, "quote": "31/03/2027 Closing balance 530.00",
+    "amount_text": "530.00", "cash_sign": 1,
+    "date_text": "31/03/2027", "date_format": "%d/%m/%Y",
+    "currency": "EUR", "entity_ref": "<same reviewed entity>"
+  }
+}
+```
+
+For a running ledger balance, select the balance after the last posting at the
+cutoff, checking the source order and any continuations. `cash_sign` maps the
+printed balance to the same signed cash convention as the transactions; it must
+not be chosen to force the bridge to zero. The producer checks original-file
+membership, file hashes, page quotes, exact amounts/dates and comparable scope.
+It retains this mapping for reopening; its full evidence is in the result.
+Balance quotes are local reporting inputs, not extra semantic-worker context.
+
+The bridge computes bank minus ledger closing balances, open bank minus open
+ledger amounts at cutoff, and separately preserved supported-link differences.
+The remainder is the unexplained difference. A zero remainder does not close
+any open transaction. Cross-cutoff links remain timing items at cutoff; later
+ledger rows are listed separately as subsequent-period evidence. Missing,
+unverifiable, differently dated or non-comparable balances produce an explicit
+missing-evidence message, never an inferred zero. The current balance mapper
+supports text PDFs; other source formats retain the missing-evidence explanation.

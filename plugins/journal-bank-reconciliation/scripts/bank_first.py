@@ -150,7 +150,7 @@ def admission(
     *,
     local_matches: list[dict[str, Any]] | None = None,
     purpose: str = "bank_open_items",
-    local_evidence_version: int = 3,
+    local_evidence_version: int = 4,
 ) -> dict[str, Any]:
     """Admit explicit complete identities before any candidate is consumed.
 
@@ -170,8 +170,12 @@ def admission(
             relationship,
             local_matches,
             purpose,
-            evidence_version=min(local_evidence_version, 2),
+            evidence_version=(
+                3 if local_evidence_version >= 4 else min(local_evidence_version, 2)
+            ),
         )
+    probable = [g for g in local if g["evidence_class"] != "sure"]
+    local = [g for g in local if g["evidence_class"] == "sure"]
     locally_used = {
         side: {i for g in local for i in g[side + "_ids"]}
         for side in ("bank", "journal")
@@ -193,7 +197,6 @@ def admission(
             )
             groups.setdefault(key, {"bank": [], "journal": []})[side].append(row)
     accepted: list[dict[str, Any]] = list(local)
-    probable: list[dict[str, Any]] = []
     shape = relationship.get(
         "admission_relationship_shape",
         relationship.get("relationship_shape", "one_to_one"),

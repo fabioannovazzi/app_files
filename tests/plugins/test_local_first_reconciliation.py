@@ -308,8 +308,10 @@ def test_opposite_sign_cash_link_keeps_signed_sources_without_false_discrepancy(
     assert bf.replay_retained(result, bank, journal, relationship) == result["groups"]
 
 
-def test_local_match_retains_reviewed_tolerance_difference(tmp_path):
-    bank, journal = [row("b1", amount="-80")], [row("j1", amount="-79.99")]
+def test_local_match_retains_corroborated_tolerance_difference(tmp_path):
+    bank, journal = [row("b1", amount="-80", reference="transfer-ABC")], [
+        row("j1", amount="-79.99", reference="transfer-ABC")
+    ]
     result = execute(tmp_path, NativeFixture({}), bank, journal, local_matches=[pair()])
     assert result["groups"][0]["difference"] == "-0.01"
     assert result["groups"][0]["confirmed_discrepancy"]
