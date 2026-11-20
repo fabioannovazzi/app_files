@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "7244f5dee1987233bee0c473d4dd73d4d8c73a9aded9adb1c6dff1086e3a95df",
+  "catalogue_fingerprint": "3eb6a8b79e1d5fc3fdc1267e6de54bacc8ce84ef9fadceb7f7cf3644089511fb",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2860,5 +2860,11 @@
     "scope": "Journal-bank explicit cash reconciliation pilot; general source evidence, arithmetic and semantic matching; no jurisdiction-specific legal or tax treatment added. Existing Geneva classifications remain unchanged.",
     "source": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
     "deployment": "held"
+  },
+  "review_completion_binding_20261120": {
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "scope": "Source-bound search history, explicit open dispositions and separate document questions. No changes to currency, jurisdiction or account-policy semantics."
   }
 }
