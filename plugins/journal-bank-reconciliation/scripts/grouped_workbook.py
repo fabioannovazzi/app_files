@@ -360,6 +360,7 @@ def export_final_workbook(
         for index, line in enumerate(notes, 22):
             sheet.merge_range(index, 0, index, 5, line, note)
             sheet.set_row(index, 34)
+        row = 27
         if result.get("bank_first"):
             canonical = result["bank_first"]
             sheet.write_row(
@@ -470,4 +471,98 @@ def export_final_workbook(
             sheet.print_area(0, 0, max(row, 41), 5)
         else:
             sheet.print_area("A1:F26")
+        bridge = result.get("balance_bridge")
+        if bridge is not None:
+            bridge_money = book.add_format(
+                {**base, "num_format": "#,##0.00;[Red](#,##0.00);0.00"}
+            )
+            row += 2
+            sheet.merge_range(
+                row, 0, row, 5, "Ponte saldi alla chiusura dell'estratto conto", header
+            )
+            row += 1
+            sheet.write(row, 0, "Data di chiusura", text)
+            sheet.write(row, 1, bridge.get("cutoff") or "Non accertata", text)
+            row += 1
+            sheet.merge_range(
+                row,
+                0,
+                row,
+                5,
+                "Il ponte spiega il divario dei saldi; anche con residuo zero i movimenti aperti restano aperti. Le scritture successive non sono saldi alla chiusura.",
+                note,
+            )
+            sheet.set_row(row, 34)
+            row += 1
+            for message in bridge["missing"]:
+                sheet.merge_range(row, 0, row, 5, message, note)
+                sheet.set_row(row, 34)
+                row += 1
+            for label, key in (
+                ("Saldo banca alla chiusura", "bank_closing"),
+                ("Saldo partitario alla stessa data", "journal_closing"),
+                ("Divario saldi: banca meno partitario", "balance_gap"),
+                ("Aperti banca alla chiusura (netto)", "bank_open_net"),
+                ("Aperti partitario alla chiusura (netto)", "journal_open_net"),
+                (
+                    "Scarti conservati nei collegamenti supportati",
+                    "supported_difference",
+                ),
+                (
+                    "Divario spiegato dagli aperti e dagli scarti",
+                    "explained_difference",
+                ),
+                ("Differenza non spiegata", "unexplained_difference"),
+            ):
+                sheet.write(row, 0, label, text)
+                if key in bridge:
+                    sheet.write_number(
+                        row, 1, float(Decimal(bridge[key])), bridge_money
+                    )
+                else:
+                    sheet.write(row, 1, "Non accertata", note)
+                sheet.set_row(row, 30)
+                row += 1
+            for side, label, key in (
+                ("bank", "Aperti banca alla chiusura", "bank_open_ids"),
+                ("journal", "Aperti partitario alla chiusura", "journal_open_ids"),
+                (
+                    "journal",
+                    "Scritture successive: evidenza del periodo seguente",
+                    "subsequent_journal_ids",
+                ),
+            ):
+                ids = bridge.get(key, [])
+                sheet.write_row(row, 0, [label, "Numero", len(ids)], header)
+                sheet.set_row(row, 30)
+                row += 1
+                rows_by_id = bank_by_id if side == "bank" else journal_by_id
+                labels = bank_labels if side == "bank" else journal_labels
+                for identifier in ids:
+                    source = rows_by_id[identifier]
+                    sheet.write_string(row, 0, labels[identifier], text)
+                    sheet.write(row, 1, source["transaction_date"], text)
+                    sheet.write_number(
+                        row, 2, float(Decimal(source["amount_signed"])), money
+                    )
+                    sheet.merge_range(
+                        row, 3, row, 5, str(source.get("description", "")), text
+                    )
+                    sheet.set_row(row, 30)
+                    row += 1
+            for side, snapshot in bridge["balance_evidence"].items():
+                if side not in ("bank", "journal"):
+                    continue
+                source = snapshot["evidence"]
+                sheet.merge_range(
+                    row,
+                    0,
+                    row,
+                    5,
+                    f"Saldo {side}: {source['source_file']}, p. {source['page']} — {source['quote']}",
+                    note,
+                )
+                sheet.set_row(row, 44)
+                row += 1
+            sheet.print_area(0, 0, row, 5)
         sheet.set_portrait()

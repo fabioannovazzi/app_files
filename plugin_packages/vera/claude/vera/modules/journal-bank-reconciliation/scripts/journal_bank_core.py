@@ -328,6 +328,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/grouped_workbook.py",
     ),
     (
+        "implementation.plugin.scripts.balance_bridge_py",
+        "implementation",
+        "scripts/balance_bridge.py",
+    ),
+    (
         "implementation.plugin.scripts.bank_working_copy_py",
         "implementation",
         "scripts/bank_working_copy.py",

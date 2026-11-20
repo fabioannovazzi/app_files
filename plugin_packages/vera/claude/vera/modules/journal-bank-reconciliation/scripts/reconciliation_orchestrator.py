@@ -506,7 +506,7 @@ def replay_result(result, bank, journal, relationship, **_):
         relationship,
         local_matches=result["local_matches"],
         purpose=result["purpose"],
-        local_evidence_version=3,
+        local_evidence_version=state.get("local_evidence_version", 3),
     )
     groups, _, _ = _replay(
         state,
@@ -590,19 +590,25 @@ def run_orchestrator(
         binding = _binding(
             bank, journal, relationship, source_binding, purpose, local_matches
         )
+        path = output / "orchestrator_state.json"
+        state = (
+            bf._read(path)
+            if path.exists()
+            else {
+                "binding": binding,
+                "events": [],
+                "elapsed_seconds": 0,
+                "revision": 0,
+                "local_evidence_version": 4,
+            }
+        )
         admitted = bf.admission(
             bank,
             journal,
             relationship,
             local_matches=local_matches,
             purpose=purpose,
-            local_evidence_version=3,
-        )
-        path = output / "orchestrator_state.json"
-        state = (
-            bf._read(path)
-            if path.exists()
-            else {"binding": binding, "events": [], "elapsed_seconds": 0, "revision": 0}
+            local_evidence_version=state.get("local_evidence_version", 3),
         )
         if path.exists() and state.get("content_sha256") != bf.digest(
             {k: v for k, v in state.items() if k != "content_sha256"}
