@@ -1,0 +1,2588 @@
+{
+  "date": "2026-11-20",
+  "case_count": 55,
+  "required_content_points": 491,
+  "scores_unchanged": true,
+  "method": "Sum saved numerators and denominators; no averaging of percentages, regrading, or case-win scoring. Whole percentages rounded half-up.",
+  "totals": {
+    "vera": {
+      "content": {
+        "n": 391,
+        "d": 491,
+        "percent": 80,
+        "minimum_confirmed": false
+      },
+      "coverage": {
+        "n": 389,
+        "d": 391,
+        "percent": 99,
+        "minimum_confirmed": false
+      },
+      "citations": {
+        "n": 2015,
+        "d": 2057,
+        "percent": 98,
+        "minimum_confirmed": false
+      }
+    },
+    "codex": {
+      "content": {
+        "n": 393,
+        "d": 491,
+        "percent": 80,
+        "minimum_confirmed": false
+      },
+      "coverage": {
+        "n": 388,
+        "d": 393,
+        "percent": 99,
+        "minimum_confirmed": true
+      },
+      "citations": {
+        "n": 2390,
+        "d": 2479,
+        "percent": 96,
+        "minimum_confirmed": true
+      }
+    }
+  },
+  "cases": [
+    {
+      "case": "E26-01",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 10,
+            "percent": 60,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 19,
+            "d": 19,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 10,
+            "percent": 50,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-02",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 12,
+            "d": 13,
+            "percent": 92,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 34,
+            "d": 34,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 11,
+            "d": 13,
+            "percent": 85,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-03",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 43,
+            "d": 43,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 6,
+            "percent": 67,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-04",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 9,
+            "d": 12,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 53,
+            "d": 53,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 10,
+            "d": 12,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 10,
+            "percent": 90,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 16,
+            "d": 17,
+            "percent": 94,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-05",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 41,
+            "d": 41,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-06",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 29,
+            "d": 29,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 13,
+            "d": 13,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-07",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 9,
+            "percent": 44,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 15,
+            "d": 15,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 9,
+            "percent": 44,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-08",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 10,
+            "percent": 90,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 37,
+            "d": 37,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 10,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 8,
+            "percent": 88,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-09",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 14,
+            "d": 15,
+            "percent": 93,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 14,
+            "d": 14,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 50,
+            "d": 52,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 12,
+            "d": 15,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 16,
+            "d": 17,
+            "percent": 94,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-10",
+      "test": "I",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 10,
+            "d": 12,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 70,
+            "d": 70,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 11,
+            "d": 12,
+            "percent": 92,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 21,
+            "d": 21,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-01",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 9,
+            "d": 10,
+            "percent": 90,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 39,
+            "d": 41,
+            "percent": 95,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 9,
+            "d": 10,
+            "percent": 90,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 23,
+            "d": 26,
+            "percent": 88,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-02",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 8,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 23,
+            "d": 24,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 8,
+            "percent": 88,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 24,
+            "d": 27,
+            "percent": 89,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-03",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 35,
+            "d": 36,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 22,
+            "d": 29,
+            "percent": 76,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-04",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 17,
+            "d": 17,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 19,
+            "d": 23,
+            "percent": 83,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-05",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 5,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 14,
+            "d": 18,
+            "percent": 78,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 5,
+            "percent": 80,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 19,
+            "d": 25,
+            "percent": 76,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-06",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 7,
+            "percent": 57,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 20,
+            "d": 20,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 7,
+            "percent": 57,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 18,
+            "d": 19,
+            "percent": 95,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-07",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 23,
+            "d": 24,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 9,
+            "d": 10,
+            "percent": 90,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-08",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 17,
+            "d": 18,
+            "percent": 94,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 6,
+            "percent": 83,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 13,
+            "d": 17,
+            "percent": 76,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-09",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 5,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 18,
+            "d": 19,
+            "percent": 95,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 5,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 14,
+            "d": 17,
+            "percent": 82,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-10",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 6,
+            "percent": 83,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 14,
+            "d": 14,
+            "percent": 100,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-11",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 13,
+            "d": 13,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 13,
+            "d": 13,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 37,
+            "d": 37,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 13,
+            "d": 13,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 13,
+            "d": 13,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 21,
+            "d": 28,
+            "percent": 75,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-12",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 35,
+            "d": 35,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 18,
+            "d": 21,
+            "percent": 86,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-13",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 24,
+            "d": 25,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 15,
+            "d": 16,
+            "percent": 94,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-14",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B02-15",
+      "test": "II",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 12,
+            "d": 13,
+            "percent": 92,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": true
+          },
+          "citations": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": true
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-01",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 8,
+            "percent": 50,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 74,
+            "d": 75,
+            "percent": 99,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 8,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 103,
+            "d": 104,
+            "percent": 99,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-02",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 10,
+            "d": 14,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 106,
+            "d": 107,
+            "percent": 99,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 10,
+            "d": 14,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 111,
+            "d": 111,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-03",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 11,
+            "d": 17,
+            "percent": 65,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 73,
+            "d": 73,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 12,
+            "d": 17,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 63,
+            "d": 63,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-04",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 9,
+            "percent": 44,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 60,
+            "d": 60,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 9,
+            "percent": 44,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 61,
+            "d": 61,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-05",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 8,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 44,
+            "d": 44,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 8,
+            "percent": 88,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 46,
+            "d": 49,
+            "percent": 94,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-06",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 9,
+            "percent": 56,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 41,
+            "d": 42,
+            "percent": 98,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 9,
+            "percent": 67,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 51,
+            "d": 53,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-07",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 8,
+            "d": 10,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 61,
+            "d": 63,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 10,
+            "percent": 80,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 78,
+            "d": 81,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-08",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 8,
+            "d": 9,
+            "percent": 89,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 47,
+            "d": 47,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 9,
+            "percent": 89,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 86,
+            "d": 89,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-09",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 9,
+            "d": 12,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 50,
+            "d": 52,
+            "percent": 96,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 9,
+            "d": 12,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 94,
+            "d": 101,
+            "percent": 93,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-10",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 8,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 32,
+            "d": 32,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 4,
+            "d": 8,
+            "percent": 50,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 43,
+            "d": 43,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-11",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 20,
+            "d": 21,
+            "percent": 95,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 57,
+            "d": 57,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-12",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 10,
+            "d": 12,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 34,
+            "d": 42,
+            "percent": 81,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 10,
+            "d": 12,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 69,
+            "d": 81,
+            "percent": 85,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-13",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 44,
+            "d": 44,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 12,
+            "d": 12,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 68,
+            "d": 70,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-14",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 35,
+            "d": 36,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 6,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 62,
+            "d": 62,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-15",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 32,
+            "d": 32,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 9,
+            "percent": 89,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 63,
+            "d": 64,
+            "percent": 98,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-16",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 8,
+            "percent": 88,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 29,
+            "d": 29,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 51,
+            "d": 55,
+            "percent": 93,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-17",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 6,
+            "percent": 67,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 26,
+            "d": 26,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 6,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 51,
+            "d": 52,
+            "percent": 98,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-18",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 12,
+            "percent": 58,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 54,
+            "d": 57,
+            "percent": 95,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 12,
+            "percent": 58,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 88,
+            "d": 88,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-19",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 8,
+            "percent": 63,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 38,
+            "d": 39,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 8,
+            "percent": 75,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 75,
+            "d": 77,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-20",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 9,
+            "percent": 78,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 25,
+            "d": 25,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 9,
+            "percent": 78,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 63,
+            "d": 63,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-21",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 8,
+            "d": 9,
+            "percent": 89,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 28,
+            "d": 28,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 9,
+            "percent": 89,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 68,
+            "d": 68,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-22",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 17,
+            "d": 17,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 6,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 35,
+            "d": 35,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-23",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 31,
+            "d": 35,
+            "percent": 89,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 7,
+            "percent": 86,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 77,
+            "d": 79,
+            "percent": 97,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-24",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 30,
+            "d": 32,
+            "percent": 94,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 7,
+            "d": 7,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 51,
+            "d": 51,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-25",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 9,
+            "d": 15,
+            "percent": 60,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 9,
+            "d": 9,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 49,
+            "d": 49,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 8,
+            "d": 15,
+            "percent": 53,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 77,
+            "d": 78,
+            "percent": 99,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-26",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 25,
+            "d": 25,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 7,
+            "percent": 71,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 58,
+            "d": 58,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-27",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 4,
+            "d": 8,
+            "percent": 50,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 4,
+            "d": 4,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 32,
+            "d": 32,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 5,
+            "d": 8,
+            "percent": 63,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 5,
+            "d": 5,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 41,
+            "d": 41,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-28",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 8,
+            "d": 11,
+            "percent": 73,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 8,
+            "d": 8,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 61,
+            "d": 61,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 10,
+            "d": 11,
+            "percent": 91,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 90,
+            "d": 90,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-29",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 6,
+            "d": 9,
+            "percent": 67,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 39,
+            "d": 39,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 6,
+            "d": 9,
+            "percent": 67,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 6,
+            "d": 6,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 65,
+            "d": 65,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    },
+    {
+      "case": "E26-B03-30",
+      "test": "III",
+      "metrics": {
+        "vera": {
+          "content": {
+            "n": 10,
+            "d": 12,
+            "percent": 83,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 10,
+            "d": 10,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 52,
+            "d": 52,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        },
+        "codex": {
+          "content": {
+            "n": 11,
+            "d": 12,
+            "percent": 92,
+            "minimum_confirmed": false
+          },
+          "coverage": {
+            "n": 11,
+            "d": 11,
+            "percent": 100,
+            "minimum_confirmed": false
+          },
+          "citations": {
+            "n": 78,
+            "d": 78,
+            "percent": 100,
+            "minimum_confirmed": false
+          }
+        }
+      }
+    }
+  ],
+  "qualifications": [
+    "Codex coverage and citation figures retain historical minimum-confirmed qualifications;41 earlier citation uses were not verifiable and2 lacked sufficient specific support.",
+    "Historical question sets, model versions and grading sessions differ. This is a pooled description, not a calibrated model-ranking experiment.",
+    "Test III contributes284 of491 content points. Each required point has equal weight; tests do not have equal weight."
+  ],
+  "title": "Test con paywall Astra - 55 quesiti, Test I, II e III",
+  "source_note": "Conteggi delle valutazioni originali; testi dei quesiti, risposte riservate e percorsi privati esclusi."
+}
