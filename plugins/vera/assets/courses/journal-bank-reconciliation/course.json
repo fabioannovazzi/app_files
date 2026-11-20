@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/grouped_workbook.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_workbook.py",
-      "sha256": "06050bc011080826b03028681e0c1e548ae97e8f8439cffe32268eba2d57ce9d"
+      "sha256": "dcddc1f4dd42e2d93b7671ed94211cb95ca0dc80de4eee46e695c0176f5f9047"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
@@ -149,7 +149,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/reconciliation_orchestrator.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/reconciliation_orchestrator.py",
-      "sha256": "18eff06e4bdb9dcd14b708bf72fb0bb26ffe35aff95cc972662aa3041227b5c7"
+      "sha256": "9b5d301e0f7e499cee9cb7d2dfb8e17c81eadd6766ac7771b7005b06ece96152"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/retrieval_review.py",
