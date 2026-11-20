@@ -278,7 +278,7 @@ matches. Detailed `decide` responses are capped at four groups per call; larger
 visible candidate sets can use the compact route. Generated routines still only
 discover candidates, and semantic approval remains an explicit model action.
 
-The default run allows six calls and 120 seconds, with at most 45 seconds per
+The default run allows eight calls and 360 seconds, with at most 90 seconds per
 call. A packet contains at most 25 focus bank rows and 64 selected ledger rows
 within a 96 KiB prompt/schema cap. Searches and local expressions operate on
 unreserved source rows and disclose truncation. Expressions cannot import,
@@ -450,3 +450,9 @@ For Windows reconciliation requiring the native semantic worker, run
 before expensive preparation. It runs the same capability probes on a synthetic
 schema. If it fails, retain local diagnostics, continue independent accounting
 steps and deliver saved results. Recheck the actual capsule before submission.
+
+## Completing cash review and document questions
+
+The added document-question phase shares this bounded budget; cash-review completion and document-note completion are reported separately if it is exhausted. Fresh orchestrator runs execute standard date, reference and exact-sum candidate searches locally before the worker. Search results retain their source scope and completeness across retries; a cached search is not rerun. Empty discovery moves to a native final review, with an explicit open disposition, source evidence and requested document for every remaining movement. Truncated searches do not establish absence. Technical interruption remains partial, never a synthetic professional conclusion.
+
+After cash decisions, a separate bounded native review adds source-supported merchant, invoice-reference or classification questions to established links without changing their membership or allocation. Deliver these questions and cited source fields beside the linked movements. An empty issue list is not approval of expense treatment. Record full PDF-opening-to-workbook time separately from active controller and worker time.
