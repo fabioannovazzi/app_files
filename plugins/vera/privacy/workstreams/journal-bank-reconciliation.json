@@ -140,6 +140,14 @@
           "anthropic-cowork",
           "google-antigravity"
         ]
+      },
+      {
+        "id": "native-schema-canary-diagnostics",
+        "purpose": "Diagnose a failed native worker readiness check without exposing private reporter state or rerunning reconciliation",
+        "content": "A failed host-status schema probe returns its own exit code, stdout/schema equality and bounded decoded stdout/stderr with common credential, email, URL and path forms redacted. An explicitly selected older schema-canary record can be read through the same native helper; filename, record shape, file bounds and stable ordinary-file checks restrict this route. Raw hex streams and exact bytes are not returned. Redaction is not universal anonymization: technical messages are untrusted model context and must be reviewed before any incident supplement. Exact process bytes remain local. Reading an old record does not rerun the worker, inspect current credentials or certify readiness. Native job logs retain the helper response under the existing retention policy. No new hosted recipient or provider call is introduced.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -251,7 +259,7 @@
     "reviewed_at": "2026-11-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "db19db81be3a6261a0b447e5f3cb8f66c610fa2f70591cec8dddfff447d64366"
+    "source_fingerprint": "7b57f4a4108050b2eaa979ee0e2ede998aba4d3eb13b240562b8bd3c98e0f499"
   },
   "role": "workflow",
   "runtime_profiles": [

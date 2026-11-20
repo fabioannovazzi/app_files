@@ -245,7 +245,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "0eac2aa718060f95eda7afa0197fb8abd2181cb246b2882107e359f3df208277"
+      "sha256": "9ccde4be5a5e9087a235ed7a9c270c829541e0aa63246098e810598671290153"
     },
     {
       "path": "scripts/prepare_voice_deck_revision.py",

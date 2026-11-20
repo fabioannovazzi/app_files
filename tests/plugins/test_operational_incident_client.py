@@ -1890,3 +1890,40 @@ def test_legacy_archive_report_requires_its_retained_exact_invocation(
             "studio-archive", retry_arguments, failure["report"]["report_id"]
         )
         assert retry["operation_id"] == execution["operation_id"]
+
+
+def test_state_diagnosis_access_denial_returns_no_private_path(tmp_path, monkeypatch):
+    module, _, _ = client(tmp_path, monkeypatch)
+
+    def denied(*args, **kwargs):
+        raise PermissionError(13, "PRIVATE_PATH")
+
+    monkeypatch.setattr(module, "_state_path", denied)
+
+    result = module.diagnose_state()
+
+    assert result["status"] == "unavailable"
+    assert result["errno"] == 13
+    assert "PRIVATE_PATH" not in json.dumps(result)
+
+
+def test_incident_json_failure_declares_only_numeric_parser_facts(
+    tmp_path, monkeypatch
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    existing = module.local_context()
+    path = Path(existing["outbox_path"])
+    malformed = '{"installation_key":"PRIVATE_KEY",'
+    path.write_text(malformed)
+
+    with pytest.raises(json.JSONDecodeError) as captured:
+        module.local_context()
+
+    assert captured.value.incident_technical_facts == {
+        "json_line": 1,
+        "json_column": len(malformed) + 1,
+        "json_position": len(malformed),
+        "json_characters": len(malformed),
+        "utf8_bom": False,
+    }
+    assert path.read_text() == malformed

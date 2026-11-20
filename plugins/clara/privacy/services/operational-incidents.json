@@ -139,13 +139,22 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
+    },
+    {
+      "id": "read-only-state-diagnosis",
+      "control": "The explicit native incident_diagnose_state operation returns only own reporter state access status, size, BOM flags, UTF-8 validity and JSON parser coordinates or syntax-only object status. No credential values, raw state, parser messages/snippets or paths are returned. It creates no state, lock or identity and performs no migration, reset, write or network request. Normal JSON read exceptions also expose numeric coordinates, character count and BOM flag through existing technical_facts. A readable JSON object does not verify identity or outbox validity.",
+      "implemented_by": [
+        "scripts/operational_incidents.py",
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Return unavailable metadata without exposing contents or changing state."
     }
   ],
   "review": {
-    "reviewed_at": "2026-11-12",
+    "reviewed_at": "2026-11-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "6e965c30f184faba5d2572782c6a91b2ddc9bde146cb400d1de462a711a0b563"
+    "source_fingerprint": "2072ee07bece63081b0d1e9fce40269034d0ceebb44820a9053abb81265fd1d1"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

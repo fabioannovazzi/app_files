@@ -43,6 +43,7 @@ __all__ = [
     "reporting_credentials",
     "workflow_transport",
     "native_request",
+    "diagnose_state",
     "authorize_report_delivery",
     "diagnostic_directory",
     "retain_diagnostic",
@@ -539,13 +540,88 @@ def _serialized(function):
     return wrapper
 
 
+def diagnose_state() -> dict[str, Any]:
+    """Inspect parsing without creating, migrating or disclosing private state.
+
+    Fixed metadata is sufficient to distinguish access, encoding and syntax
+    failures; parser text and document snippets may contain credentials.
+    """
+    result: dict[str, Any] = {"state_modified": False}
+    try:
+        path = _state_path(create=False)
+        metadata = path.lstat()
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+            return {**result, "status": "unsupported_file"}
+        result["size_bytes"] = metadata.st_size
+        with path.open("rb") as handle:
+            raw = handle.read(_LIMIT + 1)
+        if len(raw) > _LIMIT:
+            return {**result, "status": "diagnostic_size_limit", "limit_bytes": _LIMIT}
+    except FileNotFoundError:
+        return {**result, "status": "missing"}
+    except (OSError, ValueError) as error:
+        return {
+            **result,
+            "status": "unavailable",
+            "error_type": type(error).__name__,
+            "errno": getattr(error, "errno", None),
+            "winerror": getattr(error, "winerror", None),
+        }
+    result.update(
+        {
+            "empty": not raw,
+            "utf8_bom": raw.startswith(b"\xef\xbb\xbf"),
+            "utf16_bom": raw.startswith((b"\xff\xfe", b"\xfe\xff")),
+        }
+    )
+    try:
+        text = raw.decode("utf-8")
+    except UnicodeDecodeError as error:
+        return {
+            **result,
+            "status": "invalid_utf8",
+            "byte_start": error.start,
+            "byte_end": error.end,
+            "error_type": "UnicodeDecodeError",
+        }
+    try:
+        state = json.loads(text)
+    except json.JSONDecodeError as error:
+        return {
+            **result,
+            "status": "invalid_json",
+            "error_type": "JSONDecodeError",
+            "line": error.lineno,
+            "column": error.colno,
+            "position": error.pos,
+        }
+    return {
+        **result,
+        "status": "json_object" if isinstance(state, dict) else "not_json_object",
+        "scope": "JSON syntax only; identity and queue validity not verified",
+    }
+
+
 def _read(*, create: bool = True) -> dict[str, Any]:
     path = _state_path(create=create)
     if path.exists():
         metadata = path.lstat()
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
             raise ValueError("Incident state must be an ordinary private file")
-        state = json.loads(path.read_text(encoding="utf-8"))
+        text = path.read_text(encoding="utf-8")
+        try:
+            state = json.loads(text)
+        except json.JSONDecodeError as error:
+            # Numeric parser coordinates explain failures without leaking the
+            # document or its credential-bearing parser snippets to the bridge.
+            error.incident_technical_facts = {
+                "json_line": error.lineno,
+                "json_column": error.colno,
+                "json_position": error.pos,
+                "json_characters": len(text),
+                "utf8_bom": text.startswith("\ufeff"),
+            }
+            raise
         if not isinstance(state, dict):
             raise ValueError("Incident state must be a JSON object")
         return _migrate_delivery_permissions(state)

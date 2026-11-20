@@ -341,3 +341,57 @@ def test_three_products_reuse_the_same_physical_computer_proof(tmp_path):
         == second["structuredContent"]["device_id"]
         == third["structuredContent"]["device_id"]
     )
+
+
+@pytest.mark.parametrize(
+    "payload,status",
+    [
+        (b'{"installation_key":"PRIVATE_KEY",', "invalid_json"),
+        (b"\xef\xbb\xbf{}", "invalid_json"),
+        (b"\xff\xfe{}", "invalid_utf8"),
+        (b"", "invalid_json"),
+        (b'{"installation_key":"PRIVATE_KEY","outbox":[]}', "json_object"),
+    ],
+)
+def test_native_state_diagnosis_preserves_bytes_and_never_exposes_values(
+    tmp_path, payload, status
+):
+    root = installed(tmp_path)
+    device = tmp_path / "native-host"
+    state = tmp_path / "unused-task-state/state.json"
+    state.parent.mkdir()
+    state.write_bytes(payload)
+
+    result = call(root, device, "vera_incident_diagnose_state", {})
+
+    facts = result["structuredContent"]
+    assert facts["status"] == status
+    assert facts["state_modified"] is False
+    assert "PRIVATE_KEY" not in json.dumps(result)
+    assert "installation_key" not in json.dumps(result)
+    assert state.read_bytes() == payload
+    assert not (device / "identity.json").exists()
+
+
+def test_native_state_diagnosis_missing_does_not_create_identity_or_state(tmp_path):
+    root = installed(tmp_path)
+    device = tmp_path / "native-host"
+
+    result = call(root, device, "vera_incident_diagnose_state", {})
+
+    assert result["structuredContent"]["status"] == "missing"
+    assert not (tmp_path / "unused-task-state").exists()
+    assert not device.exists()
+
+
+def test_native_state_diagnosis_rejects_arbitrary_path_argument(tmp_path):
+    root = installed(tmp_path)
+
+    result = call(
+        root,
+        tmp_path / "native-host",
+        "vera_incident_diagnose_state",
+        {"path": "state.json"},
+    )
+
+    assert result["isError"] is True

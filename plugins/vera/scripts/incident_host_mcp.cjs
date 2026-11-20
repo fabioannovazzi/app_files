@@ -57,6 +57,10 @@ const REPORTING_TOOLS = require("./incident_tool_schemas.json").map(tool => {
   return { ...tool, name: tool.name.replace(/^vera_/, `${PRODUCT}_`),
     description: tool.description.replaceAll("Vera", PRODUCT) };
 });
+TOOLS.push({ name: `${PRODUCT}_incident_diagnose_state`,
+  description: "Read-only diagnosis of this native reporter's own state: file access, encoding and JSON parser position. Never returns credentials, raw state, parser snippets or paths. Does not create, repair, reset, migrate or upload state. JSON syntax success does not verify identity or queue validity.",
+  inputSchema: { type: "object", properties: {}, additionalProperties: false },
+  annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false } });
 TOOLS.push(...REPORTING_TOOLS);
 function checked(relative, index) {
   const file = path.join(ROOT, relative), info = fs.lstatSync(file);
@@ -115,6 +119,8 @@ try:
     if sys.argv[1] == "workflow-usage":
         from workflow_usage import native_operation
         sys.stdout.write(json.dumps(native_operation(json.load(sys.stdin))))
+    elif sys.argv[1] == "diagnose-state":
+        sys.stdout.write(json.dumps(incidents.diagnose_state()))
     elif sys.argv[1] == "reporting-request":
         from operational_incidents import native_request
         sys.stdout.write(json.dumps(native_request(json.load(sys.stdin))))
@@ -163,6 +169,7 @@ function handle(message) {
         throw new HostFailure("Invalid local incident capability. credentials must contain only installation_id (UUID) and installation_key (32-128 allowed characters), copied unchanged from the original guest incident context. Do not generate replacement credentials. No host linkage has occurred.");
       command = "host-link";
     } else if (name === TOOLS[2].name) command = "workflow-usage";
+    else if (name === `${PRODUCT}_incident_diagnose_state` && Object.keys(args).length === 0) command = "diagnose-state";
     else if (REPORTING_TOOLS.some(tool => tool.name === name)) {
       const operation = name === `${PRODUCT}_workflow_stamp` ? "workflow-stamp" : name.slice(`${PRODUCT}_incident_`.length);
       if (Object.hasOwn(args, "credentials") || Object.hasOwn(args, "operation"))
