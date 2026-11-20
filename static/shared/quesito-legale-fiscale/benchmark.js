@@ -11,7 +11,7 @@
   };
   for (const [language, linkLabel] of Object.entries(linkLabels)) {
     Object.assign(page.copy[language], {
-      publicExampleTitle: "Benchmark Vera",
+      publicExampleTitle: "Benchmark fiscale Vera",
       publicExampleLinkLabel: linkLabel
     });
   }
