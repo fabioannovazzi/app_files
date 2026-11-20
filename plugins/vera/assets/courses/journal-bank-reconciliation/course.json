@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/grouped_workbook.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_workbook.py",
-      "sha256": "dcddc1f4dd42e2d93b7671ed94211cb95ca0dc80de4eee46e695c0176f5f9047"
+      "sha256": "1c382c202eb110b7573f8440e00dd0d0b0e186f7bd5955b7c9f70bd47cddfe1f"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",

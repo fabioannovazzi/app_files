@@ -484,8 +484,10 @@ def export_final_workbook(
                 ("bank", "Dubbi bancari residui"),
                 ("accounting", "Questioni contabili residue"),
             ):
-                sheet.write_row(
-                    row, 0, [label, "Movimenti", "Motivo", "Domande"], header
+                sheet.write_row(row, 0, [label, "Movimenti"], header)
+                sheet.merge_range(row, 2, row, 3, "Motivo", header)
+                sheet.merge_range(
+                    row, 4, row, 5, "Documenti e chiarimenti richiesti", header
                 )
                 row += 1
                 for question in canonical["questions"][scope]:
@@ -496,9 +498,17 @@ def export_final_workbook(
                         ", ".join(bank_labels[i] for i in question["bank_ids"]),
                         text,
                     )
-                    sheet.write_string(row, 2, question["reason"], text)
-                    sheet.write_string(row, 3, "\n".join(question["questions"]), text)
-                    sheet.set_row(row, 72)
+                    requested = "\n".join(question["questions"])
+                    sheet.merge_range(row, 2, row, 3, question["reason"], text)
+                    sheet.merge_range(row, 4, row, 5, requested, text)
+                    lines = max(
+                        sum(
+                            max(1, (len(line) + 41) // 42)
+                            for line in value.splitlines()
+                        )
+                        for value in (question["reason"], requested)
+                    )
+                    sheet.set_row(row, min(409, max(72, lines * 16)))
                     row += 1
                 row += 1
             sheet.print_area(0, 0, max(row, 41), 5)
