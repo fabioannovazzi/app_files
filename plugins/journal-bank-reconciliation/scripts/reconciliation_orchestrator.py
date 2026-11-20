@@ -22,8 +22,8 @@ __all__ = ["run_orchestrator", "replay_result"]
 PROTOCOL = "vera.reconciliation_orchestrator.v2"
 DEFAULT_LIMITS = {
     "calls": 8,
-    "seconds": 240,
-    "call_seconds": 45,
+    "seconds": 360,
+    "call_seconds": 90,
     "context_bytes": 98304,
 }
 
@@ -291,10 +291,16 @@ def _prompt(packet):
             "the unsupported link or missing booking, and request the particular invoice, merchant receipt, "
             "settlement detail or ledger evidence that would resolve it. Do not mark it matched. "
             "In accounting_notes, review each linked_groups entry using review_notes. Acknowledge ALL visible "
+            "groups: they are ALL still unreviewed. last_action describes a PREVIOUS batch, never the "
+            "current one. The controller selects the next batch automatically; escalation is only for "
+            "evidence requiring stronger interpretation, not for advancing to the next batch. Use the "
             "group first-bank IDs in reviewed_group_ids; include accounting_notes ONLY for specific issues, "
             "not one repetitive note per clean group. Cash links remain fixed. "
-            "Compare merchant identity, references and accounting descriptions on both sides. Flag supported "
-            "discrepancies (including fees versus stamp duty) as specific questions naming the document to request. "
+            "Compare merchant identity, references and accounting descriptions on both sides. Flag "
+            "material differences between merchant and legal names when no supplied document establishes "
+            "their relationship, even if a brand/operator relationship seems plausible. Do not flag mere "
+            "case, punctuation or equivalent abbreviations. "
+            "Express supported discrepancies (including fees versus stamp duty) as specific questions naming the document to request. "
             "Cite literal supplied source fields. Do not invent an invoice error or assert an expense classification "
             "is verified from a bank match. If no specific issue is supported, acknowledge the group without "
             "an exception note. Do not request every invoice generically. Keep notes concise and actionable. "
