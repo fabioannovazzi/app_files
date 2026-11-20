@@ -44,9 +44,21 @@ JOURNAL = [
 @pytest.fixture(autouse=True)
 def imports(monkeypatch):
     monkeypatch.syspath_prepend(str(SCRIPTS))
+    from functools import partial
+
+    monkeypatch.setattr(
+        orch, "run_orchestrator", partial(orch.run_orchestrator, controller_version=1)
+    )
 
 
 def action(packet, kind, **extra):
+    if packet.get("controller_version") == 2:
+        extra = {
+            "open_reviews": [],
+            "accounting_notes": [],
+            "reviewed_group_ids": [],
+            **extra,
+        }
     return dict(
         packet_sha256=packet["packet_sha256"],
         action=kind,
@@ -178,6 +190,8 @@ def search(packet):
 def decide(packet):
     a = action(packet, "decide")
     a["groups"] = [decision(packet)]
+    if packet.get("controller_version") == 2:
+        a["groups"][0].pop("accounting_resolution")
     return a
 
 

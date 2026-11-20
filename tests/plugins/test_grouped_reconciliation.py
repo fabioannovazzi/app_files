@@ -990,13 +990,14 @@ def test_orchestrator_partial_workbook_is_delivered_and_resume_uses_new_revision
     tmp_path, monkeypatch
 ):
     from test_reconciliation_orchestrator import Worker, decide, search
+    from test_reconciliation_review_completion import notes
 
     bank = [row("b", "-34.12", "Card ACME shop", day="2026-07-01")]
     journal = [row("j", "-34.12", "Purchase ACME", day="2026-07-02")]
     reconciliation, output, _ = _environment(
         tmp_path, monkeypatch, bank=bank, journal=journal
     )
-    worker = Worker([search, decide])
+    worker = Worker([search, decide, notes])
     monkeypatch.setattr(
         sys.modules["semantic_review"], "run_isolated_native_worker", worker.invoke
     )
@@ -1025,7 +1026,7 @@ def test_orchestrator_partial_workbook_is_delivered_and_resume_uses_new_revision
     assert second["exhaustive"] is True
     assert second["workbook"] != first["workbook"]
     assert first["workbook"].read_bytes() == previous_bytes
-    assert len(worker.calls) == 2
+    assert len(worker.calls) == 3
 
 
 def test_pilot_cutoff_preserves_reviewed_doubt_and_unreviewed_movement(
@@ -1049,6 +1050,8 @@ def test_pilot_cutoff_preserves_reviewed_doubt_and_unreviewed_movement(
             r for r in packet["bank_records"] if r["transaction_id"] == "b"
         ]
         response["groups"] = [decision(focused, status="doubtful")]
+        if packet.get("controller_version") == 2:
+            response["groups"][0].pop("accounting_resolution")
         return response
 
     worker = Worker([search, tentative])

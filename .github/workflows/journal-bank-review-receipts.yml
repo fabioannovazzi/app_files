@@ -144,7 +144,7 @@ jobs:
       - name: Verify complete grouped review, replay and final workbook
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_grouped_reconciliation.py tests/plugins/test_vera_bank_first.py tests/plugins/test_evidence_retrieval.py tests/plugins/test_local_first_reconciliation.py tests/plugins/test_reconciliation_response_recovery.py tests/plugins/test_vera_residual_cash_passes.py tests/plugins/test_reconciliation_orchestrator.py tests/plugins/test_reconciliation_actions.py tests/plugins/test_reconciliation_expression.py
+          tests/plugins/test_grouped_reconciliation.py tests/plugins/test_vera_bank_first.py tests/plugins/test_evidence_retrieval.py tests/plugins/test_local_first_reconciliation.py tests/plugins/test_reconciliation_response_recovery.py tests/plugins/test_vera_residual_cash_passes.py tests/plugins/test_reconciliation_orchestrator.py tests/plugins/test_reconciliation_review_completion.py tests/plugins/test_reconciliation_cutoff_bridge.py tests/plugins/test_reconciliation_actions.py tests/plugins/test_reconciliation_expression.py
           --cov --cov-config=tests/plugins/grouped_reconciliation.coverage.ini
           --cov-report=term-missing --cov-fail-under=80
       - name: Verify rejected worker cost and diagnostic evidence retention
@@ -185,7 +185,7 @@ jobs:
           python -m bandit -q plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py
       - name: Check model-directed reconciliation pilot quality
         run: |
-          python -m black --check plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py tests/plugins/test_reconciliation_{orchestrator,actions,expression}.py
-          python -m isort --check-only plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py tests/plugins/test_reconciliation_{orchestrator,actions,expression}.py
+          python -m black --check plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py tests/plugins/test_reconciliation_{orchestrator,review_completion,actions,expression}.py
+          python -m isort --check-only plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py tests/plugins/test_reconciliation_{orchestrator,review_completion,actions,expression}.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py
           python -m bandit -q -ll plugins/journal-bank-reconciliation/scripts/reconciliation_{orchestrator,actions,expression}.py
