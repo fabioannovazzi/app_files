@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.259",
+  "version": "0.1.260",
   "services": [
     {
       "name": "luciaArchivePanel",
@@ -1104,6 +1104,20 @@
             "readOnlyHint": false,
             "destructiveHint": false,
             "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_diagnose_state",
+          "description": "Read-only diagnosis of this native reporter's own state: file access, encoding and JSON parser position. Never returns credentials, raw state, parser snippets or paths. Does not create, repair, reset, migrate or upload state. JSON syntax success does not verify identity or queue validity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": false
           }
         },
         {

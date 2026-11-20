@@ -94,3 +94,20 @@ performed from this development Mac.
 - Privacy register validation and generated-contract drift checks passed for
   all three products. Fresh-session privacy-report delivery and receipt stamping
   were not exercised; no professional pipeline ran in this diagnostics task.
+
+## Deployment preparation corrections
+
+CI subsequently found two release blockers not covered by the initial local
+checks: required tracked release artifacts were not in the source-only commit,
+and the CI mypy configuration rejects assigning a custom attribute directly to
+JSONDecodeError. The existing dynamic technical-facts field now uses setattr;
+the strict CI type check and parser regressions pass without changing behavior.
+Tracked release distributions are rebuilt and included in the git deployment.
+
+Main independently released Vera 0.1.660 in PR #1054. This diagnostic release is
+therefore Vera 0.1.661, with reconciliation 0.1.89; Clara and Lucia remain the
+planned 0.1.430 and 0.1.260. Main's changed privacy source records were verified
+to differ only in review metadata. Conflicting contracts/catalogues were
+regenerated from the merged source, preserving the current release content.
+Automatic review rejected wholesale selection of conflicting branch files;
+regeneration resolved those conflicts without discarding substantive main data.

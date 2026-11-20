@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.429",
+  "version": "0.1.430",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -166,6 +166,20 @@
             "readOnlyHint": false,
             "destructiveHint": false,
             "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_diagnose_state",
+          "description": "Read-only diagnosis of this native reporter's own state: file access, encoding and JSON parser position. Never returns credentials, raw state, parser snippets or paths. Does not create, repair, reset, migrate or upload state. JSON syntax success does not verify identity or queue validity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": false
           }
         },
         {

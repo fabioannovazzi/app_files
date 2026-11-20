@@ -614,13 +614,17 @@ def _read(*, create: bool = True) -> dict[str, Any]:
         except json.JSONDecodeError as error:
             # Numeric parser coordinates explain failures without leaking the
             # document or its credential-bearing parser snippets to the bridge.
-            error.incident_technical_facts = {
-                "json_line": error.lineno,
-                "json_column": error.colno,
-                "json_position": error.pos,
-                "json_characters": len(text),
-                "utf8_bom": text.startswith("\ufeff"),
-            }
+            setattr(
+                error,
+                "incident_technical_facts",
+                {
+                    "json_line": error.lineno,
+                    "json_column": error.colno,
+                    "json_position": error.pos,
+                    "json_characters": len(text),
+                    "utf8_bom": text.startswith("\ufeff"),
+                },
+            )
             raise
         if not isinstance(state, dict):
             raise ValueError("Incident state must be a JSON object")
