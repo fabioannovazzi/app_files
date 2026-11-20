@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-windows-nov19/plugins/vera",
   "version": "0.1.659",
-  "captured_at": "2026-11-20T13:07:49.078684+00:00",
-  "catalogue_fingerprint": "486b631531ea1c8c204248fbc8e0420d70d7eba5ff41da96d12e715e2b15e7c0",
+  "captured_at": "2026-11-20T13:54:52.661424+00:00",
+  "catalogue_fingerprint": "0cfca8165418288fb7ac3e8035c00fd5cc2d614e8320fc9c27c0f6ffb722e870",
   "manifest_sha256": "0aef02164b61826e970126703f944b5364bbec65579eb1698de182ff2c2fd1d1",
   "entries": [
     {
@@ -144,7 +144,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "a5cd739f85efac278a70540e2adea2f1f54643fcd4c9861670aecaa774c6b7ec"
+      "sha256": "a9d458e497101130ab0957e3090aec69008a856fc1291d9c7c8603d762cb46e6"
     },
     {
       "function_id": "journal-sampling",

@@ -91,7 +91,7 @@ matches. Detailed `decide` responses are capped at four groups per call; larger
 visible candidate sets can use the compact route. Generated routines still only
 discover candidates, and semantic approval remains an explicit model action.
 
-The default run allows eight calls and 240 seconds, with at most 45 seconds per
+The default run allows eight calls and 360 seconds, with at most 90 seconds per
 call. A packet contains at most 25 focus bank rows and 64 selected ledger rows
 within a 96 KiB prompt/schema cap. Searches and local expressions operate on
 unreserved source rows and disclose truncation. Expressions cannot import,
