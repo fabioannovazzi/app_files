@@ -19,7 +19,11 @@ def _call(tmp_path, worker, *, arguments):
     shim = tmp_path / "worker.cjs"
     shim.write_text(
         "const cp = require('node:child_process');\n"
-        "cp.spawnSync = (executable, args, options) => {\n" + worker + "\n};\n"
+        "const worker = (executable, args, options) => {\n" + worker + "\n};\n"
+        "cp.execFile = (executable, args, options, callback) => {\n"
+        "const result = args.includes('-c') ? {status:0, stdout:'python'} : worker(executable,args,options);\n"
+        "setImmediate(() => callback(result.error || (result.status ? Object.assign(new Error('Worker failed'),{code:result.status}):null),result.stdout || '',result.stderr || ''));\n"
+        "return {stdin:{on(){},end(){}}};\n};\n"
     )
     request = {
         "jsonrpc": "2.0",
@@ -47,6 +51,57 @@ def _identifiers():
         "engagement_id": "eng_" + "2" * 24,
         "run_id": "run_" + "3" * 24,
     }
+
+
+def test_slow_archive_worker_keeps_ping_and_progress_responsive(tmp_path):
+    shim = tmp_path / "slow-worker.cjs"
+    shim.write_text(
+        """
+const cp = require('node:child_process');
+const original = cp.execFile;
+const interval = global.setInterval;
+global.setInterval = (fn, milliseconds) => interval(fn, 10);
+cp.execFile = (exe, args, options, callback) => original(process.execPath,
+  ['-e', args.includes('-c') ? "process.stdout.write('python')" :
+    "setTimeout(()=>process.stdout.write(JSON.stringify({status:'ready'})),200)"],
+  options, callback);
+"""
+    )
+    messages = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {
+                "name": "studio_archive_status",
+                "arguments": {},
+                "_meta": {"progressToken": "retained-request"},
+            },
+        },
+        {"jsonrpc": "2.0", "id": 2, "method": "ping"},
+    ]
+
+    response = subprocess.run(
+        ["node", "--require", str(shim), str(SERVER)],
+        input="".join(json.dumps(item) + "\n" for item in messages),
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=10,
+    )
+
+    replies = [json.loads(line) for line in response.stdout.splitlines()]
+    results = [item for item in replies if "id" in item]
+    progress = [
+        item["params"]
+        for item in replies
+        if item.get("method") == "notifications/progress"
+    ]
+    assert [item["id"] for item in results] == [2, 1]
+    assert results[1]["result"]["structuredContent"]["status"] == "ready"
+    assert len(progress) > 1
+    assert progress[-1]["progress"] > progress[0]["progress"]
+    assert progress[-1]["progressToken"] == "retained-request"
 
 
 def test_archive_adapter_delivers_work_that_exceeds_former_deadline(tmp_path):

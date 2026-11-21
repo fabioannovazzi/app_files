@@ -77,6 +77,21 @@ Desktop route.
 
 ## Output Location Rule
 
+For an explicit project rename, resolve its registered client ID and use
+`rename_studio_archive_project` with `client_id` and `name`. The maintained CLI
+equivalent is `scripts/studio_archive.py rename-project --client-id <id> --name
+<name>` through the managed launcher. Names use at most 32 portable characters;
+internal spaces are allowed. Preserve the same client and engagement IDs and
+use the returned current folder binding for later work. Never create a new
+project or copy its contents to simulate renaming. An existing destination is
+not overwritten. Repeat the same client ID and name after a lost response.
+
+Archive progress notifications mean the original operation is still running,
+not that it succeeded. Wait for its result; do not issue duplicate writes while
+it runs. After a host-level timeout, retain the original operation identity and
+check the saved result or reuse the original creation idempotency key. An
+unrelated successful read does not prove the timed-out write completed.
+
 Never write run outputs inside this Git workspace, `static/shared`,
 `protected_downloads`, or any GitHub Pages/static-site folder unless the task is
 explicitly plugin packaging/release. Every local Vera run writes only inside

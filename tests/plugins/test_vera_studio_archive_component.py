@@ -906,6 +906,39 @@ def _mcp_tool(
     return response["result"]
 
 
+def test_mcp_renames_selected_project_and_preserves_private_aliases(tmp_path):
+    root = tmp_path / "Studio"
+    (root / "Rossi").mkdir(parents=True)
+    state = tmp_path / "state"
+    configured = _mcp_tool(
+        "configure_studio_archive", {"archive_root": str(root)}, state_dir=state
+    )
+    scope = configured["structuredContent"]["scopes"][0]["scope_id"]
+    registered = _mcp_tool(
+        "configure_studio_archive_client",
+        {"scope_id": scope, "legal_names": ["Rossi SRL"]},
+        state_dir=state,
+    )["structuredContent"]["client"]
+
+    result = _mcp_tool(
+        "rename_studio_archive_project",
+        {"client_id": registered["client_id"], "name": "Rossi nuovo"},
+        state_dir=state,
+    )
+
+    assert result["isError"] is False, result
+    assert result["structuredContent"]["status"] == "renamed"
+    assert result["structuredContent"]["client_id"] == registered["client_id"]
+    recovered = _mcp_tool(
+        "resolve_studio_archive_client",
+        {"identity_kind": "legal_name", "identity_value": "Rossi SRL"},
+        state_dir=state,
+    )
+    assert recovered["isError"] is False
+    assert registered["client_id"] in json.dumps(recovered["structuredContent"])
+    assert (root / "Rossi nuovo").is_dir()
+
+
 def test_status_without_configuration_does_not_create_state(
     tmp_path: Path,
     archive_core: ModuleType,
@@ -2730,6 +2763,7 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         "get_studio_client_folder",
         "create_studio_archive_client",
         "create_studio_client_engagement",
+        "rename_studio_archive_project",
         "import_studio_client_document",
         "check_studio_import_sources",
         "copy_studio_client_source_folder",

@@ -1600,6 +1600,39 @@ def test_standalone_launcher_creates_reviewable_task_with_or_without_module(
     assert failures == []
 
 
+@pytest.mark.parametrize("component_namesake", [False, True])
+def test_opinion_launcher_with_research_module_runs_product_owned_helper(
+    tmp_path, monkeypatch, capfd, component_namesake
+):
+    manager = standalone_launcher(tmp_path, monkeypatch)
+    root = Path(manager.__file__).parents[1]
+    component = root / "modules/deep-research-validator"
+    (root / "modules/prompt-optimizer").rename(component)
+    (root / "components.json").write_text(json.dumps({"plugins": [component.name]}))
+    (root / "scripts/opinion_validation.py").write_text(
+        "import sys\nassert sys.argv[1:] == ['verify', 'selected-review']\n"
+        "sys.stdout.write('product opinion verified')\n"
+    )
+    if component_namesake:
+        (component / "scripts/opinion_validation.py").write_text(
+            "raise AssertionError('Wrong helper owner')\n"
+        )
+
+    code = manager.main(
+        [
+            "--module",
+            component.name,
+            "run",
+            "scripts/opinion_validation.py",
+            "verify",
+            "selected-review",
+        ]
+    )
+
+    assert code == 0
+    assert capfd.readouterr().out == "product opinion verified"
+
+
 def test_standalone_launcher_rejects_root_helper_symlink_escape_before_execution(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

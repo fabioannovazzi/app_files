@@ -92,6 +92,7 @@ __all__ = [
     "configure_archive",
     "create_studio_client_engagement",
     "create_studio_client",
+    "rename_studio_archive_project",
     "diagnose_archive_access",
     "fail_studio_client_workflow",
     "finalize_studio_client_workflow",
@@ -2448,6 +2449,57 @@ def set_studio_client_identity(
         "client": _client_directory_record(replacement, scope=scope),
         "gmail_connector_called": False,
         "gmail_credentials_stored": False,
+    }
+
+
+@_identity_transaction
+def rename_studio_archive_project(
+    client_id: str, name: str, *, state_dir: Path | None = None
+) -> dict[str, Any]:
+    """Rename the selected folder, preserving portable IDs, aliases and bytes."""
+    from project_rename import rename_without_replacement
+
+    # Portable names prevent path traversal and Windows device/path ambiguity.
+    if (
+        not isinstance(name, str)
+        or not 1 <= len(name) <= 32
+        or name != name.strip(" .")
+        or re.search(r'[<>:"/\\|?*\x00-\x1f\x7f]', name)
+        or name.startswith(".")
+        or name in IGNORED_NAMES
+        or re.fullmatch(r"(?i)(CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\..*)?", name)
+    ):
+        raise ArchiveError("Use a portable project name of 1 to 32 characters.")
+    state = _state_dir(state_dir)
+    binding = get_studio_client_folder(client_id, state_dir=state)["client_folder"]
+    source = Path(binding["client_root"])
+    if source.name == name:
+        return {"status": "unchanged", "client_id": client_id, "client_folder": binding}
+    if any(
+        item.name != source.name and item.name.casefold() == name.casefold()
+        for item in source.parent.iterdir()
+    ):
+        raise ArchiveError(
+            "A project with that name already exists; nothing was renamed."
+        )
+    destination = source.with_name(name)
+    rename_without_replacement(source, destination)
+    # The portable manifest is the authority after the atomic rename. If registry
+    # persistence fails, discovery can still recover this same client by its ID.
+    config, _ = _current_scope_view(_load_config(state, validate_scope_roots=False))
+    registry = {"status": "updated"}
+    try:
+        _synchronize_client_identities(state, config)
+    except (ArchiveError, OSError, ValueError) as exc:
+        registry = {"status": "unavailable", "error": str(exc)}
+    return {
+        "status": "renamed",
+        "client_id": client_id,
+        "client_folder": get_studio_client_folder(client_id, state_dir=state)[
+            "client_folder"
+        ],
+        "identity_registry": registry,
+        "index_requires_refresh": True,
     }
 
 

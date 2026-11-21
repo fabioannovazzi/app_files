@@ -126,7 +126,8 @@
     "scripts/archive_panel.py"
   ],
   "governed_repository_paths": [
-    "plugins/studio-archive/scripts/build_model_data_report.py"
+    "plugins/studio-archive/scripts/build_model_data_report.py",
+    "plugins/studio-archive/scripts/project_rename.py"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -295,6 +296,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "project-rename-status",
+        "purpose": "Rename the explicitly selected project and continue using its stable identity",
+        "content": "The selected client ID and requested project name; completion or unchanged status; the current folder binding including absolute paths; index refresh status and any identity-registry persistence error. Private identity aliases and document bytes remain local. Progress notifications carry only the caller-provided correlation token, an increasing counter and a generic running message.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -302,7 +312,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "c9eea90dfe6ccedff98932a8a1b443ff65ce608f04151dc2e855318d4f8916cf"
+    "source_fingerprint": "c06144070e2621646f9a50da837610de27c31f6a203449b9dd9a5ca24458840a"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -442,6 +452,10 @@
     {
       "id": "shared-product-archive-ui",
       "control": "Vera, Clara and Lucia load the same Archive template, styles and document/search/chat controls. The local adapter returns only product-owned projects and engagements in app metadata. Search filters product areas and eligible project scopes before ranking, refreshes stale indexes locally, and verifies the selected source within the same query scope. Document reads preserve exact client, engagement, revision and format references. Linked chats use their stored URL; the Archive does not create new chats. Paths, search passages and document previews remain in app metadata rather than the model-visible status response."
+    },
+    {
+      "id": "project-rename-no-replacement",
+      "control": "Portable names prevent traversal. Rename uses the operating system no-replace primitive so a destination created after preflight is not overwritten. The portable client manifest and retained engagements and sources preserve identity across renaming and a lost response. Registry synchronization failure is reported separately."
     }
   ],
   "workstream": "studio-archive",

@@ -17,7 +17,7 @@ const serverPath = path.join(componentRoot, "mcp", "server.cjs");
 
 const workflows = JSON.parse(fs.readFileSync(path.join(pluginRoot, "components.json"), "utf8"))
   .workflow_roles["studio-archive"].supports;
-const allowed = new Set(["studio_archive_status", "list_studio_archive_clients", "resolve_studio_archive_client", "get_studio_client_folder", "create_studio_archive_client", "create_studio_client_engagement", "list_studio_client_engagements", "setup_studio_archive", "configure_studio_archive", "diagnose_studio_archive_access", "configure_studio_archive_client", "refresh_studio_archive", "search_studio_archive", "open_studio_archive_source", "check_studio_import_sources", "import_studio_client_document", "verify_studio_client_inputs"]);
+const allowed = new Set(["studio_archive_status", "list_studio_archive_clients", "resolve_studio_archive_client", "get_studio_client_folder", "create_studio_archive_client", "rename_studio_archive_project", "create_studio_client_engagement", "list_studio_client_engagements", "setup_studio_archive", "configure_studio_archive", "diagnose_studio_archive_access", "configure_studio_archive_client", "refresh_studio_archive", "search_studio_archive", "open_studio_archive_source", "check_studio_import_sources", "import_studio_client_document", "verify_studio_client_inputs"]);
 const excluded = { has: (name) => !allowed.has(name) };
 const caseTool = {
   name: "clara_archive_case", title: "Create or resume the engagement's Clara case",

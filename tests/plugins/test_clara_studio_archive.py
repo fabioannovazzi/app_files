@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import importlib
+import io
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -15,6 +17,7 @@ def setup_case(tmp_path, monkeypatch):
     monkeypatch.setenv("CLARA_ARCHIVE_HOST", "1")
     monkeypatch.delenv("LUCIA_ASSURANCE_HOST", raising=False)
     monkeypatch.syspath_prepend(str(ROOT / "plugins/clara/scripts"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     module = importlib.import_module("clara_studio_archive")
     state = tmp_path / "state"
     root = tmp_path / "archive"
@@ -42,6 +45,29 @@ def test_create_and_resume_preserves_case_bytes(setup_case):
     assert result["case_dir"] == created["case_dir"]
     assert (path / "case_manifest.json").read_bytes() == before
     assert result["data_handling"]["network_requests"] == 0
+
+
+def test_renamed_project_resumes_same_case_through_json_bridge(
+    setup_case, monkeypatch, capsys
+):
+    module, state, cid, eid = setup_case
+    created = module.open_case(cid, eid, objective="Retained case", state_dir=state)
+    before = (Path(created["case_dir"]) / "case_manifest.json").read_bytes()
+    module.archive.rename_studio_archive_project(
+        cid, "Renamed project", state_dir=state
+    )
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(state))
+    monkeypatch.setattr(
+        sys, "stdin", io.StringIO(json.dumps({"client_id": cid, "engagement_id": eid}))
+    )
+
+    code = module.main()
+
+    result = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert result["status"] == "resumed"
+    assert "Renamed project" in Path(result["case_dir"]).parts
+    assert (Path(result["case_dir"]) / "case_manifest.json").read_bytes() == before
 
 
 def test_existing_case_is_bound_without_moving_or_rewriting(setup_case, tmp_path):

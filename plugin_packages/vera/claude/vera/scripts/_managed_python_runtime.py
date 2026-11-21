@@ -167,12 +167,16 @@ def select_runtime(
 
 def resolve_helper_root(plugin_root: Path, component_root: Path, script: Path) -> Path:
     """Resolve exact shipped ownership, independently of dependency selection."""
-    # Vera's standalone preparer is product-owned, including with --module.
-    # Other scripts retain their component boundary; no missing-file fallback.
+    # These exact Vera helpers are product-owned even when a component selects
+    # dependencies. Match the native opinion route; never search other roots
+    # merely because a requested component file is missing.
     if (
         script == Path("scripts/standalone_work.py")
-        and _plugin_name(plugin_root) == "vera"
-    ):
+        or (
+            script == Path("scripts/opinion_validation.py")
+            and component_root.name == "deep-research-validator"
+        )
+    ) and _plugin_name(plugin_root) == "vera":
         return plugin_root.resolve()
     return component_root
 

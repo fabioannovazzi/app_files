@@ -164,7 +164,11 @@ def _validate_record(
             for ref in evidence
         ):
             raise ValueError(
-                f"Treatment requires its declared evidence kind: {identifier}"
+                f"Treatment requires its declared evidence kind: {identifier}; "
+                f"treatment_type={treatment_type}; expected one of "
+                f"{', '.join(sorted(TREATMENT_REFERENCES[treatment_type]))}. "
+                "Review the selected evidence and treatment together; do not "
+                "relabel evidence merely to pass validation."
             )
         effects = issue.get("effects")
         if (

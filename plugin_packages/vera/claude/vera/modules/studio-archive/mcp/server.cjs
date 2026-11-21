@@ -7,7 +7,7 @@ const archiveSessionId = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.e
 const path = require("node:path");
 const os = require("node:os");
 const readline = require("node:readline");
-const { spawnSync } = require("node:child_process");
+const { execFile } = require("node:child_process");
 
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
 const MANIFEST = JSON.parse(
@@ -40,6 +40,7 @@ const TOOL_NAMES = {
   resolveClient: "resolve_studio_archive_client",
   clientFolder: "get_studio_client_folder",
   createClient: "create_studio_archive_client",
+  renameProject: "rename_studio_archive_project",
   createEngagement: "create_studio_client_engagement",
   checkImportSources: "check_studio_import_sources",
   importDocument: "import_studio_client_document",
@@ -158,6 +159,13 @@ function annotations(readOnly, idempotent = true, openWorld = false) {
 
 function toolDefinitions() {
   return [
+    {
+      name: TOOL_NAMES.renameProject,
+      title: "Rename a Studio Archive project",
+      description: "Rename the selected project folder, preserving its client ID, engagements, sources, results and private identity aliases. Supply a portable name of at most 32 characters. Existing destinations are never replaced. Reuse the same client ID and name after a lost response.",
+      inputSchema: objectSchema({client_id: {type:"string",pattern:"^client_[0-9a-f]{24}$"}, name: {type:"string",minLength:1,maxLength:32}}, ["client_id", "name"]),
+      annotations: annotations(false),
+    },
     ...incaricoApi.definitions(),
     {
       name: TOOL_NAMES.checkpointWorkflow,
@@ -950,7 +958,18 @@ function toolDefinitions() {
   }));
 }
 
-function pythonExecutable() {
+function runProcess(executable, args, options) {
+  return new Promise((resolve) => {
+    const child = execFile(executable, args, options, (error, stdout, stderr) => {
+      resolve({status: error ? (typeof error.code === "number" ? error.code : null) : 0,
+        error: error && typeof error.code !== "number" ? error : null, stdout, stderr});
+    });
+    child.stdin.on("error", () => {}); // Early worker exit is reported by execFile.
+    child.stdin.end(options.input);
+  });
+}
+
+async function pythonExecutable() {
   const interpreter = process.platform === "win32" ? "Scripts/python.exe" : "bin/python";
   const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
     ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
@@ -969,7 +988,7 @@ function pythonExecutable() {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
     // Probe the actual interpreter, not the presence of a PATH alias. This
     // avoids ENOENT/Store aliases hiding an already working managed Python.
-    const probe = spawnSync(candidate, ["-X", "utf8", "-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+    const probe = await runProcess(candidate, ["-X", "utf8", "-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
       encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
     });
     if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
@@ -1102,6 +1121,12 @@ function runIdentityCommand(args, commandName, extraKeys = []) {
 
 function commandForTool(name, rawArgs) {
   const args = requirePlainObject(rawArgs);
+  if (name === TOOL_NAMES.renameProject) {
+    assertOnlyKeys(args, new Set(["client_id", "name"]));
+    const client = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(client)) throw new Error("Select an exact registered client ID.");
+    return ["rename-project", "--client-id", client, "--name", requireString(args.name, "name")];
+  }
   if (CONTEXT_TOOLS.has(name) && args.context_path !== undefined) {
     const {context_path, ...remaining} = args;
     if (typeof context_path !== "string" || !path.isAbsolute(context_path)) throw new Error("context_path must be an absolute saved context path");
@@ -1866,7 +1891,7 @@ function commandForTool(name, rawArgs) {
   throw new Error("Unknown Studio Archive tool.");
 }
 
-function callTool(name, args) {
+async function callTool(name, args) {
   const {incident_report_id: reportId, ...operationArgs} = args;
   if (reportId !== undefined && (typeof reportId !== "string" ||
       !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reportId))) {
@@ -1886,8 +1911,9 @@ function callTool(name, args) {
   if (name === TOOL_NAMES.finalizeWorkflow && args.artifacts !== undefined) {
     spawnOptions.input = JSON.stringify(args.artifacts);
   }
-  const completed = spawnSync(
-    pythonExecutable(), ["-X", "utf8", ...workerArguments(commandForTool(name, args), reportId)],
+  const command = commandForTool(name, args);
+  const completed = await runProcess(
+    await pythonExecutable(), ["-X", "utf8", ...workerArguments(command, reportId)],
     spawnOptions,
   );
   if (completed.error) throw completed.error;
@@ -1970,12 +1996,12 @@ function toolError(error) {
   };
 }
 
-function recordToolError(args, payload) {
+async function recordToolError(args, payload) {
   if (!["client_id", "engagement_id", "run_id"].every((key) => typeof args[key] === "string")) {
     return payload;
   }
   // Save the exact MCP envelope, including errors raised before the worker runs.
-  const recorded = spawnSync(pythonExecutable(), ["-X", "utf8", ...workerArguments(["record-error"])], {
+  const recorded = await runProcess(await pythonExecutable(), ["-X", "utf8", ...workerArguments(["record-error"])], {
     cwd: PLUGIN_ROOT,
     env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId, VERA_STUDIO_ARCHIVE_MCP: "1" },
     input: JSON.stringify({ arguments: args, payload }),
@@ -2010,7 +2036,7 @@ function rpcError(id, code, message) {
   return { jsonrpc: "2.0", id, error: { code, message } };
 }
 
-function handleRpc(message) {
+async function handleRpc(message) {
   const id = message.id ?? null;
   const params =
     message.params && typeof message.params === "object" ? message.params : {};
@@ -2024,6 +2050,7 @@ function handleRpc(message) {
     });
   }
   if (message.method === "notifications/initialized") return null;
+  if (message.method === "ping") return rpcResult(id, {});
   if (message.method === "tools/list") {
     return rpcResult(id, { tools: toolDefinitions() });
   }
@@ -2038,8 +2065,15 @@ function handleRpc(message) {
     ) {
       return rpcError(id, -32602, "tools/call arguments must be an object");
     }
+    const token = params._meta?.progressToken;
+    let progress = 0;
+    const notifyProgress = () => send({jsonrpc:"2.0",method:"notifications/progress",
+      params:{progressToken:token,progress:progress++,message:"Archive operation is still running; its result is not yet available."}});
+    const timer = (typeof token === "string" || typeof token === "number")
+      ? setInterval(notifyProgress, 10000) : null;
+    if (timer) notifyProgress();
     try {
-      const result = toolResult(callTool(params.name, params.arguments));
+      const result = toolResult(await callTool(params.name, params.arguments));
       if (!result.isError && params.arguments.incident_report_id) {
         result._meta = {...result._meta, incident_recovery: {
           report_id: params.arguments.incident_report_id,
@@ -2049,7 +2083,9 @@ function handleRpc(message) {
       }
       return rpcResult(id, result);
     } catch (error) {
-      return rpcResult(id, recordToolError(params.arguments, toolError(error)));
+      return rpcResult(id, await recordToolError(params.arguments, toolError(error)));
+    } finally {
+      if (timer) clearInterval(timer);
     }
   }
   if (message.method === "resources/list") {
@@ -2073,7 +2109,7 @@ function main() {
     input: process.stdin,
     crlfDelay: Infinity,
   });
-  lines.on("line", (line) => {
+  lines.on("line", async (line) => {
     if (!line.trim()) return;
     let message;
     try {
@@ -2090,7 +2126,7 @@ function main() {
       send(rpcError(null, -32600, "invalid request"));
       return;
     }
-    const response = handleRpc(message);
+    const response = await handleRpc(message);
     if (response !== null && message.id != null) send(response);
   });
 }

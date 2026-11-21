@@ -120,11 +120,24 @@ def test_packaged_integrity_rejects_changed_helper(candidate, tmp_path) -> None:
     original_hash = hashlib.sha256(target.read_bytes()).hexdigest()
     target.write_bytes(target.read_bytes() + b"\n# altered\n")
     assert hashlib.sha256(target.read_bytes()).hexdigest() != original_hash
+    state_dir = (tmp_path / "state").resolve()
+    bootstrap = (
+        "import json, runpy, sys; from pathlib import Path; "
+        "helper, state = sys.argv[1:]; "
+        "sys.path.insert(0, str(Path(helper).parent)); "
+        "import operational_incidents as incidents; "
+        "incidents.configure_settings({'delivery': 'local-only', "
+        "'state_dir': state, 'device_dir': str(Path(state) / 'device')}); "
+        "sys.argv = [helper, '--managed-verify']; "
+        "runpy.run_path(helper, run_name='__main__')"
+    )
     result = subprocess.run(
         [
             sys.executable,
+            "-c",
+            bootstrap,
             str(installed / "scripts/check_dependencies.py"),
-            "--managed-verify",
+            str(state_dir),
         ],
         cwd=installed,
         env=dict(
@@ -138,6 +151,14 @@ def test_packaged_integrity_rejects_changed_helper(candidate, tmp_path) -> None:
         timeout=30,
     )
     assert result.returncode != 0
+    state = json.loads((state_dir / "state.json").read_text())
+    assert state["registered"] is False
+    assert len(state["outbox"]) == 1
+    assert state["outbox"][0]["delivery_mode"] == "local-only"
+    assert (
+        state["outbox"][0]["payload"]["report"]["diagnostics"][0]["error_code"]
+        == "installation.content-mismatch"
+    )
 
 
 def test_all_packaged_local_imports_resolve_without_full_clara(candidate) -> None:

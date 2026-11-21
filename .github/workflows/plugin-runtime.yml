@@ -976,6 +976,11 @@ jobs:
           tests/plugins/test_vera_verified_execution.py
           tests/plugins/test_python_bootstrap.py
           tests/plugins/test_cowork_archive_session.py
+      - name: Verify product-owned research helper routing
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_managed_plugin_python_runtime.py
+          -k opinion_launcher_with_research_module
 
   managed-runtime-quality:
     needs: product-archives
@@ -1363,6 +1368,7 @@ jobs:
           tests/plugins/test_lucia_archive_panel.py
           tests/plugins/test_studio_archive_creation_recovery.py
           tests/plugins/test_studio_archive_mcp_continuity.py
+          tests/plugins/test_studio_archive_project_rename.py
           tests/plugins/test_vera_studio_archive_gmail_routing.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py

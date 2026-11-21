@@ -463,6 +463,24 @@ def test_closure_rejects_missing_traceability_before_writing(
     assert path.read_bytes() == before
 
 
+def test_mismatched_treatment_reports_required_evidence_without_rewriting_record(
+    tmp_path, research_module
+):
+    root = _run(tmp_path)
+    path = root / "research_review.json"
+    record = json.loads(path.read_text())
+    record["issues"][0]["treatment_type"] = "calculation"
+    path.write_text(json.dumps(record))
+    before = path.read_bytes()
+
+    with pytest.raises(
+        ValueError, match="treatment_type=calculation; expected one of calculation"
+    ):
+        _bind(research_module, root)
+
+    assert path.read_bytes() == before
+
+
 @pytest.mark.parametrize(
     "change",
     [

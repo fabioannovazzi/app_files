@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "b0eaa7bba6abce5966fe495140cb7d5f5344bb5deeced38ec3fdc061625b022e",
+      "sha256": "36875520fcacef98df38d0f953b0afd1975c216fa0608e7590173abb9ac0f554",
       "languages": [
         "it",
         "en",
@@ -881,7 +881,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "4f4cbc4f6a153c0fadc58627c2337e8c6bc4c0a887e8720d428a9b3e21e30312",
+      "sha256": "b791c36774fa365ba674292dc718f9333350fb470f18c541296d4043abd64841",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "4266a166c47b3659f7f6585ebf674f67002162c5fe6bc5301204e183d1fbcb3c",
+      "sha256": "45953665fe178eaf45abee5b39d5ad833cc825c174304a613eb533119abd661a",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "fcb3d1941b63930544a5f2fdddc6be57101928b26396146059a1775d0d54da12",
+      "sha256": "f4030a35ff396aa3a44e70dcb7e3832687d52c0631a2645bd1261ad0daaa397b",
       "languages": [
         "it",
         "en",
