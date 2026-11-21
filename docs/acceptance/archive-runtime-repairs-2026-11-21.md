@@ -78,6 +78,17 @@ was exercised. Those remain acceptance limits, independently of automated tests.
 - The full-directory secret scan reported 15 existing matches: 12 SHA-256
   manifest entries, two copies of an ECB series identifier and a fictional
   test idempotency key. All 15 exact lines already existed in the base commit.
+- Detailed CI logs exposed 79.80% coverage in the unchanged Clara case wrapper.
+  A regression now resumes the same case through its JSON bridge after project
+  renaming and verifies its manifest bytes; coverage is 86.87%. Its fixture
+  explicitly restores the component import path for each test because pytest
+  restores `sys.path` while Python retains the imported module.
+- A pre-deployment queue refresh found synthetic Clara report
+  `99810eeb-08db-4c99-98c1-5e14a18de15e`, matching the deliberate tampered-package
+  fixture. The test used obsolete environment-only reporting settings. It now
+  binds explicit local-only settings before the verifier runs and asserts a
+  locally queued, unregistered incident. No production integrity/reporting
+  policy was weakened and no incident was deleted or marked recovered.
 
 ## Local validation
 
@@ -86,6 +97,8 @@ was exercised. Those remain acceptance limits, independently of automated tests.
 - Archive recovery: 588 passed, 1 skipped; required module coverage 89.20%.
 - Shared runtime: 364 passed, 8 skipped; coverage 83.29% (minimum 80%).
 - Product Archive wrappers and research record/package tests: 85 passed.
+- Clara case bridge, including renamed-project resumption: 13 passed with
+  86.87% coverage.
 - Strict runtime type checks: 30 files passed; the rename helper also passed
   independently. Changed Python formatting/import checks, Node syntax and
   medium/high security checks passed. Icon generation changed no assets;
