@@ -42,8 +42,8 @@ for path in (ROOT / ".github/workflows").glob("*.yml"):
     [
         "static/index.html",
         "static/shared/vera/index.html",
-        "static/shared/vera/benchmark/legal-22-dati.json",
-        "static/shared/vera/benchmark/legal-22.js",
+        "static/shared/vera/benchmark/con-paywall-55-dati.json",
+        "static/shared/vera/benchmark/metodologia.html",
         "static/shared/style.css",
         "AGENTS.md",
     ],
@@ -108,7 +108,9 @@ def test_duplicate_anchor_is_rejected(tmp_path):
 
 
 def test_published_benchmark_is_recomputable():
-    CHECKS.validate_benchmark(ROOT / "static/shared/vera/benchmark/legal-22-dati.json")
+    CHECKS.validate_benchmark(
+        ROOT / "static/shared/vera/benchmark/con-paywall-55-dati.json"
+    )
 
 
 @pytest.mark.parametrize("workflow,event,patterns", WORKFLOWS)
