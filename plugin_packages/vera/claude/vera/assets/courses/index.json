@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "f59656d3db158c290cbefe4cdd02e6c8f6429118c3bfb532fd37787823224761",
+      "sha256": "1e3ed3ca102dd604017f560c1bf3d08c2b21b81611df4f39b4d452bd64164b46",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "b0eaa7bba6abce5966fe495140cb7d5f5344bb5deeced38ec3fdc061625b022e"
+      "source_sha256": "36875520fcacef98df38d0f953b0afd1975c216fa0608e7590173abb9ac0f554"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
@@ -915,7 +915,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "a929823e9b057e0f4382e5f0ec9f4b5e24a75c819755d625b47fc121ee577c3d",
+      "sha256": "153e4476f10b6c13475aec516dfef488c7e1386d685a5f95b9843323121e7a45",
       "languages": [
         "it",
         "en",
@@ -940,7 +940,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "4f4cbc4f6a153c0fadc58627c2337e8c6bc4c0a887e8720d428a9b3e21e30312"
+      "source_sha256": "b791c36774fa365ba674292dc718f9333350fb470f18c541296d4043abd64841"
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "20b75267fc1f156210a0ba9fde4395805ffd78ccaa7245cb3a692e2ce7c3fe0d",
+      "sha256": "308678ea35a0a0d1108dd5c2f7c687200b6fecaae763365665c09dbbaa317112",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "4266a166c47b3659f7f6585ebf674f67002162c5fe6bc5301204e183d1fbcb3c"
+      "source_sha256": "45953665fe178eaf45abee5b39d5ad833cc825c174304a613eb533119abd661a"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "c4a00e71d2d00ca9bc611a413abff2f127c045d4aeb7f08064ee6f51ae2b6dfe",
+      "sha256": "9ccd45afd2d456d26593941255596eb3d4d03580de4e0306ec0ba00be13f430f",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "fcb3d1941b63930544a5f2fdddc6be57101928b26396146059a1775d0d54da12"
+      "source_sha256": "f4030a35ff396aa3a44e70dcb7e3832687d52c0631a2645bd1261ad0daaa397b"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",

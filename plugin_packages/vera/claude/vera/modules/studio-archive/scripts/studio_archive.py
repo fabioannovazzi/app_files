@@ -73,6 +73,7 @@ from archive_core import (
     read_studio_run_artifact,
     recover_studio_client_ledger,
     refresh_archive,
+    rename_studio_archive_project,
     report_studio_client_retention,
     resolve_studio_client_identity,
     restore_studio_client_workflow,
@@ -135,6 +136,10 @@ def _parser() -> argparse.ArgumentParser:
     subparsers.add_parser("status")
     subparsers.add_parser("clients")
     subparsers.add_parser("normalize-project-layout")
+
+    rename = subparsers.add_parser("rename-project")
+    rename.add_argument("--client-id", required=True)
+    rename.add_argument("--name", required=True)
 
     resolve_client = subparsers.add_parser("resolve-client")
     resolve_client.add_argument(
@@ -438,6 +443,8 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
             result = studio_archive_status()
         elif args.command == "normalize-project-layout":
             result = normalize_studio_archive_layout()
+        elif args.command == "rename-project":
+            result = rename_studio_archive_project(args.client_id, args.name)
         elif args.command == "clients":
             result = list_studio_clients()
         elif args.command == "resolve-client":

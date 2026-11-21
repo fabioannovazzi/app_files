@@ -217,6 +217,7 @@ def test_packaged_matter_opening_starts_in_real_archive_run(archive_runtime) -> 
             "--matter-reference",
             engagement_id,
         ],
+        env={**os.environ, "LUCIA_ASSURANCE_HOST": "1"},
         capture_output=True,
         text=True,
         check=False,

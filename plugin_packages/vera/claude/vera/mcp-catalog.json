@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.661",
+  "version": "0.1.662",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -9065,7 +9065,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.661",
+          "version": "0.1.662",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -36890,7 +36890,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "vera-studio-archive",
-          "version": "0.1.81"
+          "version": "0.1.82"
         },
         "capabilities": {
           "tools": {}
@@ -36898,6 +36898,41 @@
         "instructions": "Deliver this Vera workflow in chat and its documents."
       },
       "tools": [
+        {
+          "name": "rename_studio_archive_project",
+          "title": "Rename a Studio Archive project",
+          "description": "Rename the selected project folder, preserving its client ID, engagements, sources, results and private identity aliases. Supply a portable name of at most 32 characters. Existing destinations are never replaced. Reuse the same client ID and name after a lost response.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
+            "required": [
+              "client_id",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
         {
           "name": "map_studio_legacy_incarichi",
           "title": "Map historical work to its incarichi",

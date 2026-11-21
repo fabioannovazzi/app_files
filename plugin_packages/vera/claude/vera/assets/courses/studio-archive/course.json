@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "427dcf368c49bc275a3929e8a77069ecc442064305263bb0dd9c46cf59b675b0"
+      "sha256": "1b4c53a187e3393e95cdcf51d5fad1e2917ca7ea90f332324f7bff63015758c2"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -108,6 +108,10 @@
       "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
     },
     {
+      "path": "modules/studio-archive/scripts/project_rename.py",
+      "sha256": "fbcbb67b9fe520a1c99b4a7d22b7d5f1561ada2a74a2d7622af12e0b205d7abd"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "sha256": "ffcfcaf6aafbf6dd568759c39da5551e496cf54caf279c3f3c2c93ae85180529"
     },
@@ -121,7 +125,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "f2a416c1426d34b9dc47740d006e86186fb94eee1da045aff8a7dbfaca87c63a"
+      "sha256": "d54cc47f4fc0047b913d44346f3857ce9a8e2b30f3dc735e5519169a99f92190"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
@@ -750,5 +754,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d9fc6d39f4cfa03738fabbf15a07f91755fffd04330b62aa1dea8bcd43c4a48b"
+  "canonical_course_sha256": "782df4eebee55be4c812dcd980b58763a4b3abc95d74c285ca4f64717ca3294c"
 }
