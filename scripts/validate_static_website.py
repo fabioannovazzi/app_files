@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import functools
-import hashlib
 import http.server
 import json
 import logging
@@ -54,38 +53,32 @@ def validate_page(page: Path, root: Path) -> None:
 
 
 def validate_benchmark(path: Path) -> None:
-    """Recompute the published indicators from criteria and citation judgments."""
+    """Recompute the published paywall benchmark from its saved case scores."""
     data = json.loads(path.read_text(encoding="utf-8"))
     cases = data["cases"]
-    assert [case["number"] for case in cases] == list(range(1, 23))
-    for case in cases:
-        for system in ("vera", "codex"):
-            points = case["points"]
-            citations = [c for c in case["citations"] if c["system"].lower() == system]
-            expected = {
-                "content": {"n": sum(p[system] for p in points), "d": len(points)},
-                "coverage": {
-                    "n": sum(p["fonti_" + system] for p in points),
-                    "d": sum(p[system] for p in points),
-                },
-                "citations": {
-                    "n": sum(c["supported"] for c in citations),
-                    "d": len(citations),
-                },
-            }
-            assert (
-                case["metrics"][system] == expected
-            ), f"Metric mismatch: {case['number']} {system}"
-            answer = case["answers"][system]
-            assert (
-                hashlib.sha256(answer["text"].encode()).hexdigest() == answer["sha256"]
-            )
+    assert len(cases) == data["case_count"] == 55
+    assert len({case["case"] for case in cases}) == len(cases)
+
     for system in ("vera", "codex"):
+        totals = data["totals"][system]
         for metric in ("content", "coverage", "citations"):
+            rows = [case["metrics"][system][metric] for case in cases]
+            result = totals[metric]
             for part in ("n", "d"):
-                assert data["totals"][system][metric][part] == sum(
-                    c["metrics"][system][metric][part] for c in cases
+                assert result[part] == sum(row[part] for row in rows), (
+                    system,
+                    metric,
+                    part,
                 )
+            assert result["minimum_confirmed"] == any(
+                row["minimum_confirmed"] for row in rows
+            ), (system, metric)
+            assert result["percent"] == (200 * result["n"] + result["d"]) // (
+                2 * result["d"]
+            ), (system, metric)
+
+        assert totals["content"]["d"] == data["required_content_points"] == 491
+        assert totals["coverage"]["d"] == totals["content"]["n"]
 
 
 def browser_check(pages: list[Path], root: Path) -> None:
@@ -160,9 +153,8 @@ def main() -> None:
             subprocess.run(["node", "--check", str(path)], check=True)
     for page in sorted(pages):
         validate_page(page, root)
-    benchmark = root / "static/shared/vera/benchmark/legal-22-dati.json"
-    if benchmark.exists():
-        validate_benchmark(benchmark)
+    benchmark = root / "static/shared/vera/benchmark/con-paywall-55-dati.json"
+    validate_benchmark(benchmark)
     if args.browser and pages:
         browser_check(sorted(pages), root)
     logging.basicConfig(level=logging.INFO)

@@ -1,1 +1,0 @@
-function reveal(){const id=decodeURIComponent(location.hash.slice(1));if(!id)return;const el=document.getElementById(id);if(!el)return;let p=el.parentElement;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement;}requestAnimationFrame(()=>el.scrollIntoView({block:'start'}));}addEventListener('hashchange',reveal);addEventListener('DOMContentLoaded',reveal);
