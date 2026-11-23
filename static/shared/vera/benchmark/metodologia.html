@@ -24,10 +24,9 @@
     .benchmark-totals th, .benchmark-totals td { padding: 8px; border-bottom: 1px solid #d7e1e7; text-align: left; }
     .benchmark-totals thead th { background: #e5eef3; }
     .benchmark-totals td { font-variant-numeric: tabular-nums; }
-    .results { margin: 0; padding: 0; list-style: none; border-top: 1px solid #d7e1e7; }
-    .results li { padding: 14px 0; border-bottom: 1px solid #d7e1e7; }
-    .results a { font-weight: 700; }
-    .results p { margin: 3px 0 0; }
+    ol { padding-left: 1.4em; }
+    ol li { margin-bottom: 10px; }
+    .benchmark-totals th { overflow-wrap: anywhere; }
     @media (max-width: 600px) { body { margin: 24px auto 48px; padding: 0 18px; } }
   </style>
 </head>
@@ -37,34 +36,79 @@
 </nav>
 <main>
 <h1>Benchmark fiscale Vera</h1>
-<table class="benchmark-totals">
-<caption>Risultati complessivi · Astra 6, 55 quesiti con paywall</caption>
-<thead>
-<tr><th scope="col">Indicatore</th><th scope="col">Vera</th><th scope="col">Codex</th></tr>
-</thead>
-<tbody><tr><th scope="row">Punti soddisfatti</th><td>391/491 (80%)</td><td>393/491 (80%)</td></tr><tr><th scope="row">Supporto documentale</th><td>389/391 (99%)</td><td>≥ 388/393 (99%)</td></tr><tr><th scope="row">Citazioni pertinenti</th><td>2.015/2.057 (98%)</td><td>≥ 2.390/2.479 (96%)</td></tr></tbody>
-</table>
-<p>Il confronto riunisce 55 quesiti dei Test I, II e III, per un totale di 491 punti richiesti. Le risposte provengono da sessioni Astra distinte. Il simbolo ≥ indica un minimo confermato per le verifiche di Codex.</p>
-<p class="intro">Confrontiamo le risposte a quesiti fiscali con soluzioni canoniche. I risultati aiutano a individuare i punti coperti, le omissioni e le affermazioni da verificare prima di usare un parere.</p>
+<h2>Come si valuta una risposta dell’AI a un quesito fiscale?</h2>
+<p class="intro">In materia fiscale, lo stesso quesito può ammettere più interpretazioni difendibili. Anche due risposte che arrivano alla stessa conclusione possono differire su un punto decisivo. Una può cogliere un’eccezione che l’altra trascura. Come si confrontano, allora, le risposte di sistemi diversi con lo stesso criterio?</p>
+<p>Abbiamo sottoposto a tutti i sistemi gli stessi 55 quesiti, le cui soluzioni erano pubblicate dietro paywall. Ai fini del benchmark, abbiamo assunto come corretta ciascuna soluzione pubblicata e ne abbiamo ricavato i punti da verificare. In tutto, 491 punti.</p>
+<p>Il punteggio misura quanti di quei punti ciascun sistema riesce a ricostruire. Se una risposta segue un’altra interpretazione, anche difendibile, il voto resta ancorato alla soluzione pubblicata.</p>
+
 <h2>Come valutiamo le risposte</h2>
-<p>Dal quesito e dalla soluzione pubblicata ricaviamo una griglia di punti da verificare. Ai fini del confronto assumiamo corretta la soluzione di riferimento. Fissiamo la griglia prima di attribuire i punteggi e usiamo gli stessi punti, pesi e criteri per tutte le risposte allo stesso quesito. Se la griglia cambia, ricalcoliamo tutti i risultati del confronto.</p>
-<h3>1. Punti soddisfatti</h3>
-<p>Dividiamo i punti soddisfatti per tutti i punti richiesti. Ogni punto ha lo stesso peso. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</p>
-<h3>2. Supporto documentale</h3>
-<p>Tra i soli punti soddisfatti, contiamo quelli sostenuti da almeno una fonte adeguata già citata nella risposta. Per esempio, se la risposta soddisfa 8 punti su 10 e 7 degli 8 hanno una fonte adeguata, i primi due risultati sono 8/10 e 7/8.</p>
-<h3>3. Citazioni pertinenti</h3>
-<p>Dividiamo i collegamenti che sostengono l’affermazione per tutti i collegamenti distinti tra affermazioni e fonti citate. Verifichiamo il passaggio pertinente, la sua applicabilità ai fatti e la versione della fonte alla data del caso. Una fonte usata per due affermazioni conta due volte. Le ripetizioni della stessa relazione nello stesso caso contano una volta.</p>
-<p>Per ogni indicatore sommiamo i numeratori e i denominatori dei casi e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile». I tre risultati si leggono insieme e restano distinti.</p>
-<h2>Che cosa si può concludere</h2>
-<p>I conteggi permettono di confrontare le risposte agli stessi quesiti e di risalire ai giudizi sui singoli punti e sulle citazioni, quando i riscontri sono pubblicati. Un punteggio alto sulle citazioni può convivere con omissioni importanti. I risultati dipendono dai casi scelti, dalle soluzioni di riferimento e dai giudizi usati per costruire e applicare la griglia.</p>
-<p>Il controllo usa il testo della fonte, una riproduzione, un estratto o un riassunto disponibile. Quando il controllo si basa su un riassunto, ne assume la fedeltà. I riscontri permettono di ripercorrere i giudizi. Una validazione indipendente richiede di rivedere i punti, le risposte e le evidenze. Per stabilire che cosa il modello abbia visto servono evidenze sull’esecuzione. Le pagine dei risultati descrivono le condizioni note di ciascuna prova, compresa l’eventuale esposizione alle soluzioni durante la ricerca.</p>
-<p>Queste prove misurano le risposte raccolte sui casi esaminati. La correttezza su nuovi quesiti, i tempi, i costi e il lavoro di revisione richiedono misure dedicate. L’uso professionale di un parere richiede una verifica riferita al caso concreto.</p>
-<h2>Risultati per quesito</h2>
-<p>Le risposte di riferimento erano dietro paywall e i modelli non potevano consultarle durante la prova.</p>
-<p>Per ciascun quesito, tutte le risposte a confronto sono valutate rispetto alla stessa soluzione canonica.</p>
-<ul class="results">
-<li><a href="confronto-con-paywall-astra.html">Test con paywall Astra · 55 quesiti</a><p>55 quesiti: Vera 391/491 (80%), Codex 393/491 (80%). Tutti i conteggi e il riepilogo PDF.</p></li>
-</ul>
+<p>Usiamo modelli di AI in tutte le fasi, dalla costruzione della griglia al controllo delle fonti.</p>
+<ol>
+<li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
+<li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
+<li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
+<li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
+</ol>
+<p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
+
+<h2>Tre casi per capire come funziona il punteggio</h2>
+<h3>1. L’albergo viene venduto più avanti. Aspettare cambia qualcosa?</h3>
+<p>Una società vuole smettere di gestire il proprio albergo. Affitta l’attività e dà in locazione l’immobile allo stesso operatore, con due contratti. Vuole poi trasformarsi da S.a.s. in società semplice per far uscire l’immobile dal regime fiscale d’impresa con un’agevolazione. Più avanti potrebbe vendere sia l’attività sia l’immobile all’operatore. Il quesito chiede se l’agevolazione sia accessibile e se il fisco possa contestare la vendita come abuso del diritto.</p>
+<p>Immaginiamo due sviluppi. Nel primo, la società decide di vendere soltanto quando riceve un’offerta, dopo aver affittato l’albergo. Nel secondo, le parti hanno già concordato il trasferimento e prevedono di arrivarci per tappe, passando per la trasformazione agevolata. In entrambi la vendita avviene più tardi. Cambia il legame con le decisioni prese all’inizio.</p>
+<p>Vera individua il rischio che affitto, locazione, trasformazione e vendita siano tappe di un piano già concordato. <strong>Questo vale un punto.</strong> La soluzione pubblicata spiega anche che il tempo trascorso, da solo, non basta a escludere che la vendita faccia parte del piano iniziale. Vera lascia aperta quella domanda. <strong>Quel secondo punto vale zero</strong>, anche se tutte le citazioni del parere risultano pertinenti.</p>
+
+<h3>2. Un ricambio parte per l’estero. Un ragionamento diverso può ottenere il punto?</h3>
+<p>Una società italiana spedisce in un altro Paese UE un ricambio per riparare un divano nell’ambito di un piano di assistenza già pagato. Può mandarlo al cliente o all’artigiano che farà la riparazione. Il dubbio è se la spedizione faccia scattare obblighi IVA per la società nel Paese di destinazione.</p>
+<p>La soluzione pubblicata considera il caso in cui il cliente riceve il pezzo e lo monta da sé. Vera parte dal contratto e distingue due situazioni: la consegna può eseguire un obbligo di sostituzione già pagato, oppure il pezzo può restare a disposizione della società per un intervento all’estero. <strong>Il punto è stato assegnato</strong> perché il ragionamento coglieva la stessa distinzione sostanziale.</p>
+<p>Vera ha ottenuto anche il punto per avere spiegato come collegare il ricambio alla singola riparazione tramite il documento di trasporto, l’ordine e il rapporto d’intervento. Per quel passaggio specifico, la valutazione non ha trovato una fonte citata sufficiente. Da qui i <strong>10/10 sui contenuti e 9/10 sul supporto documentale</strong>.</p>
+
+<h3>3. Un padre dona uno dei due appartamenti. Chi può usare la detrazione residua?</h3>
+<p>Un padre ricava due abitazioni da un immobile e ne dona una al figlio. Prima della donazione ha pagato una fattura per lavori elettrici. Il dubbio è se il figlio possa usare le rate residue della detrazione riferibili all’abitazione ricevuta.</p>
+<p>Vera conclude che, se la detrazione spettava al padre e questi non se l’è riservata, le rate attribuibili all’abitazione donata passano al figlio. La soluzione pubblicata esprime invece un dubbio per le spese riferite all’immobile originario e distingue il caso dei lavori fatti dopo il frazionamento sulla sola unità donata. <strong>Il punto vale zero</strong> perché la risposta non riprende quella distinzione.</p>
+<p>I passaggi citati sostengono la regola generale sul trasferimento della detrazione e lasciano aperta la sua applicazione alle spese per l’immobile poi diviso. La valutazione registra sia lo scostamento dalla soluzione sia il supporto parziale delle fonti. Per stabilire se l’interpretazione di Vera sia sostenibile occorre esaminarla nel merito.</p>
+
+<table class="benchmark-totals">
+<caption>I tre indicatori nei pareri di Vera</caption>
+<thead><tr><th scope="col">Caso</th><th scope="col">Punti soddisfatti</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
+<tbody>
+<tr><th scope="row">Albergo · E26-01</th><td>6/10</td><td>6/6</td><td>19/19</td></tr>
+<tr><th scope="row">Ricambio · E26-08</th><td>10/10</td><td>9/10</td><td>37/37</td></tr>
+<tr><th scope="row">Donazione · E26-09</th><td>14/15</td><td>14/14</td><td>50/52</td></tr>
+</tbody>
+</table>
+<p><a href="confronto-con-paywall-astra.html">Vedi i risultati per quesito e le condizioni delle sessioni Astra 6</a>.</p>
+
+<h2>Risultati sui 55 quesiti</h2>
+<table class="benchmark-totals">
+<caption>Copertura dei 491 punti della griglia</caption>
+<thead><tr><th scope="col">Configurazione</th><th scope="col">Punti soddisfatti</th><th scope="col">Contenuti</th></tr></thead>
+<tbody>
+<tr><th scope="row">Sol 6.2 — Codex</th><td>433/491</td><td>88%</td></tr>
+<tr><th scope="row">Astra 6.2 — Codex</th><td>425/491</td><td>87%</td></tr>
+<tr><th scope="row">Vertical A</th><td>419/491</td><td>85%</td></tr>
+<tr><th scope="row">Astra 6.2 — Vera</th><td>412/491</td><td>84%</td></tr>
+<tr><th scope="row">Opus 5.5 — Vera</th><td>411/491</td><td>84%</td></tr>
+<tr><th scope="row">Sol 6.2 — Vera</th><td>409/491</td><td>83%</td></tr>
+<tr><th scope="row">Astra 6 — Codex</th><td>393/491</td><td>80%</td></tr>
+<tr><th scope="row">Astra 6 — Vera</th><td>391/491</td><td>80%</td></tr>
+<tr><th scope="row">Sonnet 5.5 — Vera</th><td>367/491</td><td>75%</td></tr>
+<tr><th scope="row">Vertical B</th><td>351/491</td><td>71%</td></tr>
+<tr><th scope="row">Vertical C</th><td>249/491</td><td>51%</td></tr>
+<tr><th scope="row">Vertical D</th><td>160/491</td><td>33%</td></tr>
+<tr><th scope="row">Vertical E</th><td>131/491</td><td>27%</td></tr>
+</tbody>
+</table>
+<p>La tabella riporta i punteggi sui contenuti delle valutazioni disponibili, compresi punteggi da revisioni ancora da consolidare.</p>
+
+<h2>Che cosa ci dicono i risultati sui generalisti e sui verticali</h2>
+<p><strong>Su questi quesiti, le due configurazioni con il punteggio più alto sono generaliste.</strong> Sol 6.2 in Codex arriva a 433/491 (88%) e Astra 6.2 in Codex a 425/491 (87%). Il migliore dei verticali in tabella, Vertical A, è vicino a 419/491 (85%). Gli altri verticali vanno dal 71% al 27%. La specializzazione, da sola, dice poco su quanti punti del quesito verranno coperti.</p>
+<p><strong>Il confronto cambia quando cambiano i modelli.</strong> Tra le sessioni con Astra 6 e quelle con Astra 6.2, Codex passa da 393 a 425 punti e Vera da 391 a 412. Sono 32 e 21 punti in più. Con Sol 6.2, Codex arriva a 433 punti e Vera a 409. Questi risultati descrivono le configurazioni e le sessioni provate. Per isolare il contributo di Vera servirebbe una prova a parità di versione del modello, fonti disponibili e condizioni di esecuzione.</p>
+<p><strong>Quando il modello generalista migliora, si alza il livello a cui confrontare un verticale.</strong> Con lo stesso modello di base, il verticale aiuta il professionista a individuare più punti decisivi? Offre fonti più solide? Riduce il tempo necessario per rivedere il parere? La tabella misura la prima dimensione, rispetto alla soluzione pubblicata. Per le altre servono misure dedicate.</p>
+<p>Il punteggio più alto, 433/491, lascia 58 punti della griglia insoddisfatti. Il confronto sui singoli quesiti aiuta a distinguere un’eccezione saltata, un requisito affrontato solo in parte e un’interpretazione diversa. Per sapere quanto il miglioramento si estenda a quesiti nuovi occorre una prova separata su casi nuovi.</p>
+
+<h2>Condizioni e limiti della prova</h2>
+<p>Le soluzioni di riferimento erano dietro paywall. Le condizioni delle sessioni variavano e, in una sessione Codex del confronto Astra, il contesto includeva riepiloghi automatici. L’isolamento cieco di quella sessione resta da dimostrare.</p>
+<p>Il controllo delle fonti può basarsi sul testo, su una riproduzione, su un estratto o su un riassunto disponibile. Quando usa un riassunto, il controllo ne assume la fedeltà. Nei risultati per quesito, il simbolo ≥ indica un minimo confermato. L’uso professionale di un parere richiede una verifica riferita al caso concreto.</p>
 </main>
 </body>
 </html>
