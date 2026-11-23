@@ -44,10 +44,10 @@
 <p class="intro">L’AI migliora di continuo. Quello che era vero ieri («l’AI si inventa le citazioni») potrebbe essere molto meno vero oggi.</p>
 <p>In Italia ci sono diversi servizi AI «verticali» che rispondono a quesiti legali e fiscali. Un professionista può anche usare direttamente ChatGPT o Claude, con o senza plugin. Per un commercialista, testare tutte le alternative è impossibile.</p>
 <p>Il commercialista deve sempre verificare un parere generato da AI. Ma se nella risposta manca un’eccezione che cambia il trattamento fiscale, deve prima accorgersi che manca. Se l’omissione gli sfugge, il cliente può prendere una decisione sulla base di un parere incompleto.</p>
-<p>Per chi sviluppa una soluzione AI tax per commercialisti il problema è analogo. Come migliori le prestazioni del tuo strumento se il modello cambia ogni mese? Noi abbiamo costruito il motore legale e fiscale di Vera su due premesse, deep research e validazione della risposta. Adesso che i modelli fanno più ricerca da soli e sbagliano meno, quei due passaggi aggiungono meno di prima, e forse addirittura confondono il modello. Come modificare Vera per fare in modo che torni a battere Codex?</p>
+<p>Per chi sviluppa una soluzione AI tax per commercialisti il problema è analogo. Come migliorare le prestazioni dello strumento se il modello cambia ogni mese? Noi abbiamo costruito il motore legale e fiscale di Vera su due premesse, deep research e validazione della risposta. Adesso che i modelli fanno più ricerca da soli e sbagliano meno, quei due passaggi aggiungono meno di prima, e forse addirittura confondono il modello. Come modificare Vera per fare in modo che torni a battere Codex?</p>
 <p>Ci vuole un benchmark.</p>
 <p>Ci sono già benchmark legali ben strutturati come <a href="https://aptus.ai/it/legalita-benchmark-whitepaper/">LegalITA</a>. Usarli per seguire nel tempo le prestazioni del proprio strumento è però poco pratico.</p>
-<p>Abbiamo deciso di proporre uno strumento aperto, verificabile e semplice.</p>
+<p>Abbiamo deciso di proporre un benchmark aperto, verificabile e semplice.</p>
 <p>Il punteggio sui contenuti misura una cosa sola: quanto la risposta dello strumento corrisponde alla soluzione canonica di un quesito fiscale, redatta da esperti e assunta come corretta ai fini del benchmark.</p>
 <p>I servizi di AI legale fanno anche altro. Rivedono contratti, analizzano documenti e preparano bozze. Queste attività restano fuori dall’ambito del benchmark.</p>
 
@@ -72,17 +72,17 @@
 <h2>Come il modello valuta le risposte</h2>
 <p>Il benchmark usa modelli AI in tutte le fasi, dalla costruzione della griglia all’assegnazione dei punti e al controllo delle fonti.</p>
 <ol>
-<li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
+<li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia dei requisiti prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
 <li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
 <li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
 <li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
 </ol>
 <p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
 
-<h2 id="risultati">Risultati sui 55 quesiti</h2>
+<h2 id="risultati">Risultati del benchmark</h2>
 <div class="benchmark-scroll" role="region" aria-labelledby="risultati" tabindex="0">
 <table class="benchmark-totals benchmark-results">
-<caption>14 configurazioni · 491 punti · 23 novembre 2026</caption>
+<caption>14 configurazioni · 55 quesiti · 491 punti · 23 novembre 2026</caption>
 <thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
 <tbody>
 <tr><th scope="row">Sol 6.2 — Codex</th><td>433/491 (88%)</td><td>428/433 (99%)</td><td>258 con sostegno verificato<br><small>Totale aperto</small></td></tr>
