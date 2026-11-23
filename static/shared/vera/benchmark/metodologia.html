@@ -27,10 +27,6 @@
     ol { padding-left: 1.4em; }
     ol li { margin-bottom: 10px; }
     .benchmark-totals th { overflow-wrap: anywhere; }
-    .benchmark-scroll { overflow-x: auto; margin-bottom: 24px; }
-    .benchmark-results { min-width: 600px; margin-bottom: 0; }
-    .benchmark-results td { white-space: nowrap; }
-    .benchmark-results small { color: #526b7b; }
     @media (max-width: 600px) { body { margin: 24px auto 48px; padding: 0 18px; } }
   </style>
 </head>
@@ -82,35 +78,32 @@
 </table>
 <p><a href="confronto-con-paywall-astra.html">Vedi i risultati per quesito e le condizioni delle sessioni Astra 6</a>.</p>
 
-<h2 id="risultati">Risultati sui 55 quesiti</h2>
-<div class="benchmark-scroll" role="region" aria-labelledby="risultati" tabindex="0">
-<table class="benchmark-totals benchmark-results">
-<caption>13 configurazioni · 491 punti · 23 novembre 2026</caption>
-<thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
+<h2>Risultati sui 55 quesiti</h2>
+<table class="benchmark-totals">
+<caption>Copertura dei 491 punti della griglia</caption>
+<thead><tr><th scope="col">Configurazione</th><th scope="col">Punti soddisfatti</th><th scope="col">Contenuti</th></tr></thead>
 <tbody>
-<tr><th scope="row">Sol 6.2 — Codex</th><td>433/491 (88%)</td><td>≥ 47/433 (11%)</td><td>225 verificate<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Astra 6.2 — Codex</th><td>425/491 (87%)</td><td>≥ 385/425 (91%)</td><td>1.135/1.152 (99%)</td></tr>
-<tr><th scope="row">Rigo AI</th><td>419/491 (85%)</td><td>≥ 309/419 (74%)</td><td>≥ 1.643/1.787 (92%)</td></tr>
-<tr><th scope="row">Astra 6.2 — Vera</th><td>412/491 (84%)</td><td>≥ 394/412 (96%)</td><td>884/889 (99%)</td></tr>
-<tr><th scope="row">Opus 5.5 — Vera</th><td>411/491 (84%)</td><td>≥ 391/411 (95%)</td><td>1.907 verificate<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Sol 6.2 — Vera</th><td>409/491 (83%)</td><td>≥ 50/409 (12%)</td><td>215 verificate<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Astra 6 — Codex</th><td>393/491 (80%)</td><td>≥ 388/393 (99%)</td><td>≥ 2.390/2.479 (96%)</td></tr>
-<tr><th scope="row">Astra 6 — Vera</th><td>391/491 (80%)</td><td>389/391 (99%)</td><td>2.015/2.057 (98%)</td></tr>
-<tr><th scope="row">Sonnet 5.5 — Vera</th><td>363/491 (74%)</td><td>≥ 345/363 (95%)</td><td>≥ 1.255/1.407 (89%)</td></tr>
-<tr><th scope="row">Normo</th><td>351/491 (71%)</td><td>≥ 295/351 (84%)</td><td>≥ 1.068/1.411 (76%)</td></tr>
-<tr><th scope="row">SapientIA</th><td>245/491 (50%)</td><td>≥ 50/245 (20%)</td><td>154 verificate<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Lextel</th><td>160/491 (33%)</td><td>≥ 57/160 (36%)</td><td>≥ 507/1.552 (33%)</td></tr>
-<tr><th scope="row">LegalAI</th><td>131/491 (27%)</td><td>≥ 71/131 (54%)</td><td>≥ 209/393 (53%)</td></tr>
+<tr><th scope="row">Sol 6.2 — Codex</th><td>433/491</td><td>88%</td></tr>
+<tr><th scope="row">Astra 6.2 — Codex</th><td>425/491</td><td>87%</td></tr>
+<tr><th scope="row">Vertical A</th><td>419/491</td><td>85%</td></tr>
+<tr><th scope="row">Astra 6.2 — Vera</th><td>412/491</td><td>84%</td></tr>
+<tr><th scope="row">Opus 5.5 — Vera</th><td>411/491</td><td>84%</td></tr>
+<tr><th scope="row">Sol 6.2 — Vera</th><td>409/491</td><td>83%</td></tr>
+<tr><th scope="row">Astra 6 — Codex</th><td>393/491</td><td>80%</td></tr>
+<tr><th scope="row">Astra 6 — Vera</th><td>391/491</td><td>80%</td></tr>
+<tr><th scope="row">Sonnet 5.5 — Vera</th><td>367/491</td><td>75%</td></tr>
+<tr><th scope="row">Vertical B</th><td>351/491</td><td>71%</td></tr>
+<tr><th scope="row">Vertical C</th><td>249/491</td><td>51%</td></tr>
+<tr><th scope="row">Vertical D</th><td>160/491</td><td>33%</td></tr>
+<tr><th scope="row">Vertical E</th><td>131/491</td><td>27%</td></tr>
 </tbody>
 </table>
-</div>
-<p><strong>≥ indica un minimo verificato.</strong> Dove il totale delle citazioni è ancora aperto, la tabella mostra il numero di relazioni fonte–affermazione già verificate come pertinenti. Le verifiche ancora aperte limitano il confronto tra sistemi sui due indicatori delle fonti.</p>
-<p>I punteggi di contenuto recepiscono i riesami sulla rubrica master, revisione 1. Per i cinque punteggi rivisti nel riesame di copertura materiale, il supporto documentale include i punti tuttora soddisfatti che avevano già un riscontro verificato. I punti appena riconosciuti richiedono una verifica delle fonti per entrare in quel conteggio.</p>
+<p>La tabella riporta i punteggi sui contenuti delle valutazioni disponibili, compresi punteggi da revisioni ancora da consolidare.</p>
 
 <h2>Che cosa ci dicono i risultati sui generalisti e sui verticali</h2>
-<p><strong>Su questi quesiti, le due configurazioni con il punteggio più alto sono generaliste.</strong> Sol 6.2 in Codex arriva a 433/491 (88%) e Astra 6.2 in Codex a 425/491 (87%). Il migliore dei verticali in tabella, Rigo AI, è vicino a 419/491 (85%). Gli altri verticali vanno dal 71% al 27%. La specializzazione, da sola, dice poco su quanti punti del quesito verranno coperti.</p>
+<p><strong>Su questi quesiti, le due configurazioni con il punteggio più alto sono generaliste.</strong> Sol 6.2 in Codex arriva a 433/491 (88%) e Astra 6.2 in Codex a 425/491 (87%). Il migliore dei verticali in tabella, Vertical A, è vicino a 419/491 (85%). Gli altri verticali vanno dal 71% al 27%. La specializzazione, da sola, dice poco su quanti punti del quesito verranno coperti.</p>
 <p><strong>Il confronto cambia quando cambiano i modelli.</strong> Tra le sessioni con Astra 6 e quelle con Astra 6.2, Codex passa da 393 a 425 punti e Vera da 391 a 412. Sono 32 e 21 punti in più. Con Sol 6.2, Codex arriva a 433 punti e Vera a 409. Questi risultati descrivono le configurazioni e le sessioni provate. Per isolare il contributo di Vera servirebbe una prova a parità di versione del modello, fonti disponibili e condizioni di esecuzione.</p>
-<p><strong>Quando il modello generalista migliora, si alza il livello a cui confrontare un verticale.</strong> Con lo stesso modello di base, il verticale aiuta il professionista a individuare più punti decisivi? Offre fonti più solide? Riduce il tempo necessario per rivedere il parere? La tabella misura la copertura dei contenuti rispetto alla soluzione pubblicata e riporta le verifiche documentali disponibili. Il tempo di revisione richiede una misura dedicata.</p>
+<p><strong>Quando il modello generalista migliora, si alza il livello a cui confrontare un verticale.</strong> Con lo stesso modello di base, il verticale aiuta il professionista a individuare più punti decisivi? Offre fonti più solide? Riduce il tempo necessario per rivedere il parere? La tabella misura la prima dimensione, rispetto alla soluzione pubblicata. Per le altre servono misure dedicate.</p>
 <p>Il punteggio più alto, 433/491, lascia 58 punti della griglia insoddisfatti. Il confronto sui singoli quesiti aiuta a distinguere un’eccezione saltata, un requisito affrontato solo in parte e un’interpretazione diversa. Per sapere quanto il miglioramento si estenda a quesiti nuovi occorre una prova separata su casi nuovi.</p>
 
 <h2>Condizioni e limiti della prova</h2>
