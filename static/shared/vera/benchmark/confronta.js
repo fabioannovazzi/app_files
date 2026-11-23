@@ -55,6 +55,15 @@
   let scrollBeforeDetail = 0;
 
   function updateUrl(push) {
+    const url = comparisonUrl();
+    try {
+      history[push ? "pushState" : "replaceState"](null, "", url);
+    } catch {
+      // Some local HTML previews restrict history changes.
+    }
+  }
+
+  function comparisonUrl() {
     const url = new URL(location.href);
     url.search = "";
     url.searchParams.set("a", state.left);
@@ -63,11 +72,7 @@
     if (state.sort === "code") url.searchParams.set("ordine", "codice");
     if (state.filter !== "all") url.searchParams.set("esito", state.filter);
     if (state.selected) url.searchParams.set("caso", state.selected);
-    try {
-      history[push ? "pushState" : "replaceState"](null, "", url);
-    } catch {
-      // Some local HTML previews restrict history changes.
-    }
+    return url;
   }
 
   function formatScore(score, withPercent = false) {
@@ -244,6 +249,33 @@
     return section;
   }
 
+  function shareCase() {
+    const section = node("div", undefined, "link-share");
+    const status = node("span");
+    status.setAttribute("role", "status");
+    const field = node("input");
+    field.type = "url";
+    field.readOnly = true;
+    field.hidden = true;
+    field.setAttribute("aria-label", "Link al quesito");
+    const copy = button("Copia il link al quesito", async () => {
+      const url = comparisonUrl().href;
+      try {
+        await navigator.clipboard.writeText(url);
+        field.hidden = true;
+        status.textContent = "Link copiato.";
+      } catch {
+        field.value = url;
+        field.hidden = false;
+        field.focus();
+        field.select();
+        status.textContent = "Copia il link selezionato.";
+      }
+    });
+    section.append(copy, status, field);
+    return section;
+  }
+
   function renderDetail() {
     const item = dataCases.get(state.selected);
     controls.workspace.classList.toggle("has-case", Boolean(item));
@@ -261,14 +293,12 @@
     controls.detail.replaceChildren(button("← Torna ai quesiti", closeCase, "detail-back"),
       node("p", item.id, "muted"), title);
     if (example) controls.detail.append(node("p", example.summary));
+    if (example?.scoreNote) controls.detail.append(node("p", example.scoreNote));
     controls.detail.append(metricsTable(item));
     if (isAstra62Pair(state)) controls.detail.append(pointsBreakdown(item));
     if (example) controls.detail.append(renderExample(example));
-    else controls.detail.append(node("p", "Per questo confronto sono disponibili i conteggi del caso.", "muted"));
-
-    const share = node("a", "Link a questo confronto e quesito", "link-share");
-    share.href = location.href;
-    controls.detail.append(share);
+    else controls.detail.append(node("p", "Per questo quesito pubblichiamo i punteggi. La motivazione dei singoli punti non è disponibile qui.", "muted"));
+    controls.detail.append(shareCase());
   }
 
   function openCase(id) {

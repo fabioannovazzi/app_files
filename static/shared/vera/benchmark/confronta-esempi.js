@@ -17,6 +17,21 @@ window.fiscalBenchmarkExamples = {
       note: "Vera distingue il credito speciale dal credito originario. Sul requisito del cumulo, la valutazione ha dato il punto a Codex perché esplicita come cambia il calcolo per le risorse del PNRR. Questo spiega uno dei due punti di scarto."
     }]
   },
+  "E26-B02-06": {
+    summary: "Un socio vuole uscire da una Srl nata dalla trasformazione di una Snc e incassare a rate 500.000 euro, pari a metà della riserva di utili della vecchia Snc. Può farsi liquidare dalla società oppure vendere la quota agli altri soci?",
+    scoreNote: "Uno dei due punti di vantaggio di Codex è da verificare. La tabella riporta il punteggio pubblicato.",
+    points: [{
+      title: "Vera 0 · Codex 1 — Come può essere la società a pagare?",
+      vera: "Un accordo specifico e opponibile può definire il credito disponibile e programmare le rate con il consenso di A.",
+      codex: "Il Consiglio notarile di Firenze ammette l’uscita consensuale deliberata all’unanimità, anche in assenza di causa di recesso, con rimborso liberamente negoziato e utilizzo di riserve disponibili.",
+      note: "Vera parte dal recesso previsto dallo statuto e propone un accordo per definire il rimborso e le rate. Codex descrive anche una seconda strada: se tutti i soci sono d’accordo, possono concordare l’uscita, i 500.000 euro e le scadenze fin dall’inizio. La valutazione ha dato il punto per aver spiegato questa seconda strada."
+    }, {
+      title: "Secondo punto da rivedere — Vendere la quota sotto il suo valore",
+      vera: "Sono gli acquirenti a dovere il prezzo. La riserva resta nel patrimonio sociale.",
+      codex: "I debitori sono gli acquirenti. La riserva resta nel patrimonio della Srl.",
+      note: "Entrambi spiegano chi paga nella vendita. La griglia chiedeva anche di esaminare se uno sconto sul valore della quota, dato con l’intento di fare un regalo agli altri soci, potesse avere effetti come donazione indiretta. Il punteggio pubblicato assegna questo punto a Codex, ma i passaggi indicati nel registro parlano della vendita e della plusvalenza. La risposta di Codex tratta la donazione esplicita di una parte della quota in un’altra ipotesi. Il secondo punto resta da verificare."
+    }]
+  },
   "E26-B02-09": {
     summary: "Un’impresa ha prenotato nel 2024 un investimento in beni strumentali 4.0, completato nel 2026. Chiede quale plafond e quale codice tributo utilizzare.",
     points: [{

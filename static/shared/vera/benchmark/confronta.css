@@ -73,7 +73,9 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .excerpt strong { font-weight: 500; }
 .excerpt blockquote { margin: 5px 0 0; color: #172e40; font-size: .87rem; overflow-wrap: anywhere; }
 .footnote { margin: 15px 0 0; }
-.link-share { display: inline-block; margin: 11px 0 0; font-size: .88rem; }
+.link-share { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 11px; font-size: .88rem; }
+.link-share button, .link-share input { padding: 6px 10px; }
+.link-share input { width: 100%; min-width: 0; }
 @media (max-width: 760px) {
   main { margin: 24px auto 48px; padding: 0 18px; }
   .workspace { grid-template-columns: minmax(0,1fr); }
