@@ -27,7 +27,7 @@ button, select { cursor: pointer; }
 button, select, input { border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
 select, input { width: 100%; padding: 8px 10px; }
 :focus-visible { outline: 2px solid var(--right); outline-offset: 3px; }
-label { display: block; font-size: .85rem; font-weight: 680; }
+label { display: block; font-size: .85rem; font-weight: 500; }
 .setup { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 10px; align-items: end; }
 .setup select { display: block; margin-top: 4px; }
 .swap { min-width: 42px; min-height: 42px; }
@@ -49,11 +49,11 @@ label { display: block; font-size: .85rem; font-weight: 680; }
 .case-row { width: 100%; text-align: left; padding: 9px 10px; display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 2px 8px; margin-bottom: 5px; }
 .case-row:hover { background: var(--right-tint); }
 .case-row[aria-pressed="true"] { border-color: var(--right); background: var(--right-tint); }
-.case-title { font-weight: 665; line-height: 1.25; overflow-wrap: anywhere; }
+.case-title { line-height: 1.25; overflow-wrap: anywhere; }
 .case-meta, .delta { font-size: .78rem; color: var(--muted); }
 .case-meta { grid-column: 1; }
 .case-scores { grid-column: 2; grid-row: 1; display: flex; gap: 4px; }
-.score { font-size: .8rem; font-weight: 750; padding: 2px 5px; border-radius: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.score { font-size: .8rem; font-weight: 500; padding: 2px 5px; border-radius: 4px; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .delta { grid-column: 2; text-align: right; }
 .case-detail p { margin-top: 10px; }
 .case-heading { margin: 7px 0 8px; font-size: clamp(1.4rem, 3vw, 1.85rem); }
@@ -61,13 +61,16 @@ label { display: block; font-size: .85rem; font-weight: 680; }
 .suggestion { margin-top: 12px; }
 .metrics { width: 100%; margin: 14px 0; border-collapse: collapse; font-size: .87rem; text-align: left; font-variant-numeric: tabular-nums; }
 .metrics th, .metrics td { padding: 5px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.metrics tbody th { font-weight: 400; }
 .breakdown { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; margin: 9px 0 14px; }
 .breakdown div { padding: 5px 7px; border: 1px solid var(--line); border-radius: 6px; font-size: .84rem; }
 .breakdown strong { margin-right: 4px; }
 .detail-notes { margin-top: 15px; }
 .detail-notes article { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 9px; }
+.detail-notes article h3 { font-weight: 500; }
 .excerpts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin-top: 7px; }
 .excerpt { padding: 7px 8px; border-radius: 6px; }
+.excerpt strong { font-weight: 500; }
 .excerpt blockquote { margin: 5px 0 0; color: #172e40; font-size: .87rem; overflow-wrap: anywhere; }
 .footnote { margin: 15px 0 0; }
 .link-share { display: inline-block; margin: 11px 0 0; font-size: .88rem; }
