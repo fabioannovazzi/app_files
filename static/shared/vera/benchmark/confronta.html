@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Confronta due configurazioni del benchmark fiscale e consulta il risultato di ciascuno dei 55 quesiti.">
+<title>Confronta due strumenti · Benchmark fiscale</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="confronta.css">
+<script defer src="confronta-dati.js"></script>
+<script defer src="confronta-esempi.js"></script>
+<script defer src="confronta.js"></script>
+</head>
+<body>
+<main>
+<a class="page-back" href="metodologia.html#risultati">← Risultati del benchmark</a>
+<header>
+<h1>Confronta due strumenti</h1>
+<p>Scegli due configurazioni, confronta i 55 quesiti e apri i casi che ti interessano.</p>
+</header>
+<div id="comparison">
+<section class="setup" aria-label="Configurazioni a confronto">
+<label for="left">Primo strumento
+<select id="left"><option value="vera-astra-62">Vera · Astra 6.2</option></select>
+</label>
+<button id="swap" type="button" class="swap" aria-label="Inverti gli strumenti" title="Inverti gli strumenti">⇄</button>
+<label for="right">Secondo strumento
+<select id="right"><option value="codex-astra-62">Codex · Astra 6.2</option></select>
+</label>
+</section>
+<div id="totals" class="totals" aria-live="polite"></div>
+<nav id="filters" class="filters" aria-label="Filtra i quesiti per risultato"></nav>
+<div class="workspace" id="workspace">
+<section class="case-list" aria-labelledby="cases-heading">
+<h2 id="cases-heading">Quesiti</h2>
+<div class="tools">
+<div><label for="query">Cerca per titolo o codice</label><input id="query" type="search" placeholder="Es. albergo, E26-01"></div>
+<div><label for="sort">Ordina per</label><select id="sort"><option value="gap">Scarto maggiore</option><option value="code">Codice del quesito</option></select></div>
+</div>
+<p id="visible-count" class="muted" aria-live="polite"></p>
+<div id="cases" class="cases"></div>
+</section>
+<section class="case-detail" id="detail" aria-labelledby="detail-title" tabindex="-1"></section>
+</div>
+<p class="footnote">I risultati descrivono le configurazioni e le sessioni provate. Il simbolo ≥ indica un minimo verificato. <a href="metodologia.html">Leggi come funziona il benchmark</a>.</p>
+</div>
+<noscript><p>Per usare il confronto interattivo serve JavaScript. <a href="metodologia.html#risultati">Vedi la tabella dei risultati</a>.</p></noscript>
+</main>
+</body>
+</html>
