@@ -53,8 +53,80 @@
 
 <h2>Come funziona il benchmark</h2>
 <p>Il benchmark deve essere il più semplice possibile, valutabile in automatico da AI, con un’assegnazione dei punteggi il più oggettiva possibile, e difficile da aggirare.</p>
-<p>Abbiamo scelto 55 quesiti fiscali con soluzioni redatte da esperti e pubblicate dietro paywall. Il paywall rende più difficile per il modello trovare la soluzione già pronta durante la prova. Per semplicità, abbiamo preso ciascuna soluzione pubblicata come canonica e l’abbiamo assunta come corretta ai fini del benchmark. Uno dei vantaggi del benchmark è che è facilmente replicabile con un set diverso di domande e risposte.</p>
+<p>Abbiamo preso 55 quesiti fiscali con soluzioni redatte da esperti e pubblicate dietro paywall. Il paywall rende più difficile per il modello trovare la soluzione già pronta durante la prova. Per semplicità, abbiamo preso ciascuna soluzione pubblicata come canonica e l’abbiamo assunta come corretta ai fini del benchmark. Uno dei vantaggi del benchmark è che è facilmente replicabile con un set diverso di domande e risposte.</p>
 <p>Per poter assegnare i punteggi in automatico, abbiamo fatto scomporre all’AI ciascuna soluzione in singoli punti da verificare. In tutto sono 491. Questi punti formano la griglia, che fissiamo prima di assegnare i punteggi. L’AI usa la stessa griglia per tutte le risposte a uno stesso quesito e assegna un punto per ogni requisito soddisfatto.</p>
+
+<section id="prova-tu-il-benchmark" aria-labelledby="un-benchmark-aperto">
+<h2 id="un-benchmark-aperto">Un benchmark aperto</h2>
+<p>Ti incuriosisce un servizio che non abbiamo testato? I risultati non ti convincono e vuoi rifare la prova?</p>
+<p>Le istruzioni che usiamo per eseguire il benchmark e assegnare i punteggi sono liberamente disponibili, così come l’elenco dei titoli dei 55 quesiti.</p>
+<ul>
+<li><a href="https://github.com/fabioannovazzi/app_files/blob/main/docs/vera/benchmark/metodologia-benchmark-vera-v1.md">Metodo di valutazione</a></li>
+<li><a href="https://github.com/fabioannovazzi/app_files/blob/main/docs/vera/benchmark/prompt-riutilizzabile.txt">Prompt per assegnare i punteggi</a></li>
+</ul>
+<p>Per leggere i quesiti completi e le relative soluzioni serve un abbonamento o un accordo con Eutekne che dia accesso a quei contenuti. Sottoponi al servizio solo i quesiti e usa le soluzioni nella fase di valutazione.</p>
+<p>Una volta ottenuto l’accesso, puoi <a href="mailto:fabio@mparanza.com?subject=Benchmark%20fiscale%20-%20griglia%20di%20valutazione">contattarci</a> per la griglia di valutazione. L’abbiamo ricavata dalle soluzioni pubblicate da Eutekne e preferiamo condividerla solo con il suo consenso scritto.</p>
+<details id="titoli-quesiti">
+<summary>Titoli dei 55 quesiti</summary>
+<ul>
+<li>E26-01 · Trasformazione agevolata in società semplice e vendita all’affittuario</li>
+<li>E26-02 · Cumulo Transizione 5.0 e contributo ISMEA</li>
+<li>E26-03 · Variazioni del reddito concordato</li>
+<li>E26-04 · Utilizzo di immobile in comodato</li>
+<li>E26-05 · IVA sulle prestazioni didattiche di soggetti non residenti</li>
+<li>E26-06 · Correzione del codice Natura nelle fatture per servizi intra-UE</li>
+<li>E26-07 · Cessione del leasing per un magazzino automatizzato</li>
+<li>E26-08 · IVA sui piani di assistenza e ricambi in altri Stati UE</li>
+<li>E26-09 · Bonus casa, ecobonus e donazione durante i lavori</li>
+<li>E26-10 · Consorzio turistico e carte ospiti in Alto Adige</li>
+<li>E26-B02-01 · Rinuncia da parte del socio amministratore al TFM e distribuzione della riserva di rivalutazione</li>
+<li>E26-B02-02 · Trattamento contabile e fiscale applicabile in caso di incendio di un fabbricato strumentale</li>
+<li>E26-B02-03 · Trattamento fiscale del corrispettivo percepito da un’associazione per la redazione di un elaborato scientifico</li>
+<li>E26-B02-04 · Regime IVA di gruppo – calcolo dell’acconto IVA – obblighi di garanzia e compilazione della dichiarazione annuale</li>
+<li>E26-B02-05 · Trattamento IVA delle operazioni finanziarie effettuate da una holding</li>
+<li>E26-B02-06 · Recesso del socio di SRL – utilizzo della riserva di utili ex SNC – profili civilistici e fiscali</li>
+<li>E26-B02-07 · Applicazione del nuovo patent box alle spese di sviluppo software</li>
+<li>E26-B02-08 · Possibilità di utilizzo del credito d’imposta “formazione 4.0” con dichiarazioni integrative</li>
+<li>E26-B02-09 · Credito d’imposta beni strumentali 4.0 per investimenti prenotati nel 2024 ed effettuati nel 2026</li>
+<li>E26-B02-10 · Profili abusivi di una riorganizzazione societaria in ambito familiare</li>
+<li>E26-B02-11 · Ristrutturazione e ampliamento – lavori in economia – detrazioni “edilizie” – profili IVA</li>
+<li>E26-B02-12 · Mandato su locazioni turistiche brevi – trattamento IVA</li>
+<li>E26-B02-13 · Conferimento di partecipazioni in regime di realizzo controllato</li>
+<li>E26-B02-14 · Nuovi iper-ammortamenti in caso di beni agevolabili concessi in comodato d’uso a terzi</li>
+<li>E26-B02-15 · Trattamento contabile e fiscale delle detrazioni edilizie in capo al fornitore che applica lo sconto sul corrispettivo</li>
+<li>E26-B03-01 · Applicazione della direttiva DAC 7 alle vendite giudiziarie telematiche</li>
+<li>E26-B03-02 · Trattamento fiscale della cessione/conferimento separata della nuda proprietà e dell’usufrutto su terreno destinato a uso cava</li>
+<li>E26-B03-03 · Prestazioni di servizi rese da un’associazione di infermieri</li>
+<li>E26-B03-04 · Crediti d’imposta derivanti da interventi “edilizi” rata del credito non utilizzata entro il termine trattamento contabile e fiscale</li>
+<li>E26-B03-05 · Plusvalenza in caso di cessione di immobile trasferito al figlio in esecuzione degli accordi di separazione</li>
+<li>E26-B03-06 · Revisore legale unico di SRL scadenza dell’incarico regime di prorogatio</li>
+<li>E26-B03-07 · Incentivi per docenti e ricercatori – mancata indicazione in dichiarazione dei redditi – possibili rimedi</li>
+<li>E26-B03-08 · Conferimento a realizzo controllato: determinazione della neutralità indotta e applicabilità alle società di persone</li>
+<li>E26-B03-09 · Costituzione di una fondazione di partecipazione</li>
+<li>E26-B03-10 · Limite di applicazione del CPB e rilevanza delle rimanenze</li>
+<li>E26-B03-11 · Regime speciale IVA per L’editoria – cessione di libri con gadget – criterio di determinazione dell’imposta</li>
+<li>E26-B03-12 · Nuovi iper-ammortamenti in caso di locazione operativa</li>
+<li>E26-B03-13 · Decadenza dal concordato preventivo biennale per effetto di errori nel modello CPB</li>
+<li>E26-B03-14 · Servizi di assistenza a persone disabili – trattamento IVA</li>
+<li>E26-B03-15 · Obbligo di tenuta della contabilità di magazzino in presenza di attività di vendita all’ingrosso e al minuto</li>
+<li>E26-B03-16 · Attribuzione del TFM all’amministratore in carica</li>
+<li>E26-B03-17 · Individuazione del titolare effettivo con il metodo residuale nelle catene di controllo</li>
+<li>E26-B03-18 · Fuoriuscita dal regime forfetario e redditi di lavoro dipendente</li>
+<li>E26-B03-19 · Scissione di una società semplice agricola e successiva cessione di terreni</li>
+<li>E26-B03-20 · Riqualificazione intervento edilizio da parte dell’agenzia delle entrate</li>
+<li>E26-B03-21 · Cessazione del CPB per eventi eccezionali</li>
+<li>E26-B03-22 · Verifica dell’incremento occupazionale ai fini dell’IRES premiale</li>
+<li>E26-B03-23 · Imposte di bollo e di registro sulla locazione di alloggi in immobili destinati a housing universitario</li>
+<li>E26-B03-24 · Applicazione del termine di prescrizione al credito d’imposta per investimenti ex art. 18 del dl 91/2014</li>
+<li>E26-B03-25 · Superbonus 110 % termini dell’asseverazione ENEA</li>
+<li>E26-B03-26 · Aliquota IVA delle operazioni effettuate da una gelateria</li>
+<li>E26-B03-27 · Fattura incassata con pagamento anticipato della banca</li>
+<li>E26-B03-28 · Applicabilità del CPB in caso di variazione di accordi commerciali</li>
+<li>E26-B03-29 · Pareti prefabbricate complete – aliquota IVA</li>
+<li>E26-B03-30 · Credito d’imposta investimenti 4.0 ex L. 160/2019 – compilazione corretta del modello redditi e codice tributo per L’utilizzo</li>
+</ul>
+</details>
+</section>
 
 <h2>Come valutiamo le risposte</h2>
 <p>Usiamo modelli di AI in tutte le fasi, dalla costruzione della griglia al controllo delle fonti.</p>
@@ -130,82 +202,7 @@
 <p>Le soluzioni di riferimento erano dietro paywall. Le condizioni delle sessioni variavano e, in una sessione Codex del confronto Astra, il contesto includeva riepiloghi automatici. L’isolamento cieco di quella sessione resta da dimostrare.</p>
 <p>Il controllo delle fonti può basarsi sul testo, su una riproduzione, su un estratto o su un riassunto disponibile. Quando usa un riassunto, il controllo ne assume la fedeltà. Nei risultati per quesito, il simbolo ≥ indica un minimo confermato. L’uso professionale di un parere richiede una verifica riferita al caso concreto.</p>
 
-<h2 id="prova-tu-il-benchmark">Prova tu il benchmark</h2>
-<p>Ti incuriosisce un servizio che non abbiamo testato? I risultati non ti convincono e vuoi rifare la prova?</p>
-<p>Le istruzioni che usiamo per eseguire il benchmark e assegnare i punteggi sono liberamente disponibili, così come l’elenco dei titoli dei 55 quesiti.</p>
-<ul>
-<li><a href="https://github.com/fabioannovazzi/app_files/blob/main/docs/vera/benchmark/metodologia-benchmark-vera-v1.md">Metodo di valutazione</a></li>
-<li><a href="https://github.com/fabioannovazzi/app_files/blob/main/docs/vera/benchmark/prompt-riutilizzabile.txt">Prompt per assegnare i punteggi</a></li>
-</ul>
-<p>Per leggere i quesiti completi e le relative soluzioni serve un abbonamento o un accordo con Eutekne che dia accesso a quei contenuti. Sottoponi al servizio solo i quesiti e usa le soluzioni nella fase di valutazione.</p>
-<p>Una volta ottenuto l’accesso, puoi contattarci per la griglia di valutazione. L’abbiamo ricavata dalle soluzioni pubblicate da Eutekne e preferiamo condividerla solo con il suo consenso scritto. <a href="mailto:fabio@mparanza.com?subject=Benchmark%20fiscale%20-%20griglia%20di%20valutazione">Chiedi la griglia</a>.</p>
-<details id="titoli-quesiti">
-<summary>Titoli dei 55 quesiti</summary>
-<h3>Test I</h3>
-<ul>
-<li>E26-01 · Trasformazione agevolata in società semplice e vendita all’affittuario</li>
-<li>E26-02 · Cumulo Transizione 5.0 e contributo ISMEA</li>
-<li>E26-03 · Variazioni del reddito concordato</li>
-<li>E26-04 · Utilizzo di immobile in comodato</li>
-<li>E26-05 · IVA sulle prestazioni didattiche di soggetti non residenti</li>
-<li>E26-06 · Correzione del codice Natura nelle fatture per servizi intra-UE</li>
-<li>E26-07 · Cessione del leasing per un magazzino automatizzato</li>
-<li>E26-08 · IVA sui piani di assistenza e ricambi in altri Stati UE</li>
-<li>E26-09 · Bonus casa, ecobonus e donazione durante i lavori</li>
-<li>E26-10 · Consorzio turistico e carte ospiti in Alto Adige</li>
-</ul>
-<h3>Test II</h3>
-<ul>
-<li>E26-B02-01 · Rinuncia da parte del socio amministratore al TFM e distribuzione della riserva di rivalutazione</li>
-<li>E26-B02-02 · Trattamento contabile e fiscale applicabile in caso di incendio di un fabbricato strumentale</li>
-<li>E26-B02-03 · Trattamento fiscale del corrispettivo percepito da un’associazione per la redazione di un elaborato scientifico</li>
-<li>E26-B02-04 · Regime IVA di gruppo – calcolo dell’acconto IVA – obblighi di garanzia e compilazione della dichiarazione annuale</li>
-<li>E26-B02-05 · Trattamento IVA delle operazioni finanziarie effettuate da una holding</li>
-<li>E26-B02-06 · Recesso del socio di SRL – utilizzo della riserva di utili ex SNC – profili civilistici e fiscali</li>
-<li>E26-B02-07 · Applicazione del nuovo patent box alle spese di sviluppo software</li>
-<li>E26-B02-08 · Possibilità di utilizzo del credito d’imposta “formazione 4.0” con dichiarazioni integrative</li>
-<li>E26-B02-09 · Credito d’imposta beni strumentali 4.0 per investimenti prenotati nel 2024 ed effettuati nel 2026</li>
-<li>E26-B02-10 · Profili abusivi di una riorganizzazione societaria in ambito familiare</li>
-<li>E26-B02-11 · Ristrutturazione e ampliamento – lavori in economia – detrazioni “edilizie” – profili IVA</li>
-<li>E26-B02-12 · Mandato su locazioni turistiche brevi – trattamento IVA</li>
-<li>E26-B02-13 · Conferimento di partecipazioni in regime di realizzo controllato</li>
-<li>E26-B02-14 · Nuovi iper-ammortamenti in caso di beni agevolabili concessi in comodato d’uso a terzi</li>
-<li>E26-B02-15 · Trattamento contabile e fiscale delle detrazioni edilizie in capo al fornitore che applica lo sconto sul corrispettivo</li>
-</ul>
-<h3>Test III</h3>
-<ul>
-<li>E26-B03-01 · Applicazione della direttiva DAC 7 alle vendite giudiziarie telematiche</li>
-<li>E26-B03-02 · Trattamento fiscale della cessione/conferimento separata della nuda proprietà e dell’usufrutto su terreno destinato a uso cava</li>
-<li>E26-B03-03 · Prestazioni di servizi rese da un’associazione di infermieri</li>
-<li>E26-B03-04 · Crediti d’imposta derivanti da interventi “edilizi” rata del credito non utilizzata entro il termine trattamento contabile e fiscale</li>
-<li>E26-B03-05 · Plusvalenza in caso di cessione di immobile trasferito al figlio in esecuzione degli accordi di separazione</li>
-<li>E26-B03-06 · Revisore legale unico di SRL scadenza dell’incarico regime di prorogatio</li>
-<li>E26-B03-07 · Incentivi per docenti e ricercatori – mancata indicazione in dichiarazione dei redditi – possibili rimedi</li>
-<li>E26-B03-08 · Conferimento a realizzo controllato: determinazione della neutralità indotta e applicabilità alle società di persone</li>
-<li>E26-B03-09 · Costituzione di una fondazione di partecipazione</li>
-<li>E26-B03-10 · Limite di applicazione del CPB e rilevanza delle rimanenze</li>
-<li>E26-B03-11 · Regime speciale IVA per L’editoria – cessione di libri con gadget – criterio di determinazione dell’imposta</li>
-<li>E26-B03-12 · Nuovi iper-ammortamenti in caso di locazione operativa</li>
-<li>E26-B03-13 · Decadenza dal concordato preventivo biennale per effetto di errori nel modello CPB</li>
-<li>E26-B03-14 · Servizi di assistenza a persone disabili – trattamento IVA</li>
-<li>E26-B03-15 · Obbligo di tenuta della contabilità di magazzino in presenza di attività di vendita all’ingrosso e al minuto</li>
-<li>E26-B03-16 · Attribuzione del TFM all’amministratore in carica</li>
-<li>E26-B03-17 · Individuazione del titolare effettivo con il metodo residuale nelle catene di controllo</li>
-<li>E26-B03-18 · Fuoriuscita dal regime forfetario e redditi di lavoro dipendente</li>
-<li>E26-B03-19 · Scissione di una società semplice agricola e successiva cessione di terreni</li>
-<li>E26-B03-20 · Riqualificazione intervento edilizio da parte dell’agenzia delle entrate</li>
-<li>E26-B03-21 · Cessazione del CPB per eventi eccezionali</li>
-<li>E26-B03-22 · Verifica dell’incremento occupazionale ai fini dell’IRES premiale</li>
-<li>E26-B03-23 · Imposte di bollo e di registro sulla locazione di alloggi in immobili destinati a housing universitario</li>
-<li>E26-B03-24 · Applicazione del termine di prescrizione al credito d’imposta per investimenti ex art. 18 del dl 91/2014</li>
-<li>E26-B03-25 · Superbonus 110 % termini dell’asseverazione ENEA</li>
-<li>E26-B03-26 · Aliquota IVA delle operazioni effettuate da una gelateria</li>
-<li>E26-B03-27 · Fattura incassata con pagamento anticipato della banca</li>
-<li>E26-B03-28 · Applicabilità del CPB in caso di variazione di accordi commerciali</li>
-<li>E26-B03-29 · Pareti prefabbricate complete – aliquota IVA</li>
-<li>E26-B03-30 · Credito d’imposta investimenti 4.0 ex L. 160/2019 – compilazione corretta del modello redditi e codice tributo per L’utilizzo</li>
-</ul>
-</details>
+
 </main>
 </body>
 </html>
