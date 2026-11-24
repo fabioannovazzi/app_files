@@ -386,10 +386,10 @@ def test_write_denial_leaves_installation_unchanged(tmp_path, monkeypatch):
     alias.hardlink_to(source)
     original = source.read_bytes()
 
-    def denied(**kwargs):
+    def denied(_parent, _prefix):
         raise PermissionError("host denied private storage")
 
-    monkeypatch.setattr(recovery.tempfile, "mkdtemp", denied)
+    monkeypatch.setattr(recovery, "_execution_stage", denied)
 
     with pytest.raises(PermissionError, match="host denied"):
         recovery.prepare_execution_root(root, "journal-bank-reconciliation")
