@@ -36,7 +36,7 @@
     },
     {
       "id": "connection-lifetime",
-      "control": "Concurrent first requests share a worker. Used services retain their review state until the host connection closes; unused services never start during runtime discovery. Closing the connection ends worker input. Separately accepted native jobs retain their existing ownership policy.",
+      "control": "Concurrent first requests share a worker. Used services retain their review state until the host connection closes; unused services never start during runtime discovery. Closing the connection ends worker input. Separately accepted native jobs retain their existing ownership policy. After the native execution service closes, a later explicit status query can open a fresh service to inspect the retained job. No earlier request is replayed.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs"
       ],
@@ -79,6 +79,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "dbd996817f34a87eac82f755dc552f43ee6d61da2a27ffb01afd33fd06dd05c6"
+    "source_fingerprint": "fa602fe6c55c592d1e04f9e48a855055dc0cb776542dfe64678ff4c8a6720d29"
   }
 }

@@ -61,8 +61,11 @@ function main(root = path.resolve(__dirname, "..")) {
     resources.set(resource.uri, service.name);
   }
 
-  async function service(name) {
+  async function service(name, reconnectForStatus) {
     if (closing) throw new Error(`${product} connection is closing`);
+    // Native job state belongs to disk. A new status request can inspect it
+    // through a fresh service, while the failed operation stays unreplayed.
+    if (reconnectForStatus && services.get(name)?.client.closed) services.delete(name);
     if (!services.has(name)) {
       const original = configurations[name];
       const config = original?.args?.some(value => ["incident_host_mcp.cjs", "native_execution_mcp.cjs"].some(script => value.endsWith(script)))
@@ -138,7 +141,12 @@ function main(root = path.resolve(__dirname, "..")) {
     const pending = {};
     active.set(id, pending);
     try {
-      const client = await service(name);
+      const reconnectForStatus = product === "vera"
+        && name === "veraExecution"
+        && message.method === "tools/call"
+        && message.params?.name === "vera_execute"
+        && message.params?.arguments?.operation === "status";
+      const client = await service(name, reconnectForStatus);
       if (pending.cancelled) { failure(id, -32800, "Request cancelled before tool execution"); return; }
       const reply = await client.call(message.method, message.params, { started(workerId) {
         pending.client = client;
