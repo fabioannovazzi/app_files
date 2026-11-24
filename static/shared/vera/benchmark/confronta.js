@@ -1,10 +1,11 @@
 (() => {
   const data = window.fiscalBenchmarkComparison;
   const examples = window.fiscalBenchmarkExamples;
+  const outcomes = window.fiscalBenchmarkOutcomes;
   const byId = (id) => document.getElementById(id);
   const controls = {
     left: byId("left"), right: byId("right"), query: byId("query"), sort: byId("sort"),
-    totals: byId("totals"), filters: byId("filters"), cases: byId("cases"),
+    totals: byId("totals"), measure: byId("measure"), filters: byId("filters"), cases: byId("cases"),
     count: byId("visible-count"), detail: byId("detail"), workspace: byId("workspace")
   };
   const defaultLeft = "vera-astra-62";
@@ -44,6 +45,7 @@
     const selected = params.get("caso");
     return {
       left, right,
+      measure: params.get("indicatore") === "concordanza" ? "outcome" : "content",
       query: params.get("cerca") || "",
       sort: params.get("ordine") === "codice" ? "code" : "gap",
       filter: validFilters.includes(filter) ? filter : "all",
@@ -68,6 +70,7 @@
     url.search = "";
     url.searchParams.set("a", state.left);
     url.searchParams.set("b", state.right);
+    if (state.measure === "outcome") url.searchParams.set("indicatore", "concordanza");
     if (state.query) url.searchParams.set("cerca", state.query);
     if (state.sort === "code") url.searchParams.set("ordine", "codice");
     if (state.filter !== "all") url.searchParams.set("esito", state.filter);
@@ -93,10 +96,22 @@
     return "tie";
   }
 
+  const outcomeLabels = ["Non concorda", "Esito variabile", "Concorda"];
+
+  function outcomePasses(caseId, configId) {
+    return outcomes[caseId].results[configId].filter(({result}) => result === "pass").length;
+  }
+
+  function showsDifferentPoints() {
+    return state.measure === "content" && isAstra62Pair(state);
+  }
+
   function scoredCases() {
     return data.cases.map((item) => {
-      const gap = item.scores[state.left].content[0] - item.scores[state.right].content[0];
-      const different = gap === 0 && isAstra62Pair(state) && item.astra62.veraOnly > 0;
+      const gap = state.measure === "outcome"
+        ? outcomePasses(item.id, state.left) - outcomePasses(item.id, state.right)
+        : item.scores[state.left].content[0] - item.scores[state.right].content[0];
+      const different = gap === 0 && showsDifferentPoints() && item.astra62.veraOnly > 0;
       return { item, gap, different };
     });
   }
@@ -118,12 +133,20 @@
   function renderTotals() {
     const cards = ["left", "right"].map((side) => {
       const id = state[side];
-      const totals = data.cases.reduce(([n, d], item) => {
-        const [caseNumerator, caseDenominator] = item.scores[id].content;
-        return [n + caseNumerator, d + caseDenominator];
-      }, [0,0]);
+      let score;
+      if (state.measure === "outcome") {
+        const passes = data.cases.reduce((n, item) => n + outcomePasses(item.id, id), 0);
+        const judgments = data.cases.reduce((n, item) => n + outcomes[item.id].results[id].length, 0);
+        score = `${Math.round(passes * 100 / judgments)}%`;
+      } else {
+        const totals = data.cases.reduce(([n, d], item) => {
+          const [caseNumerator, caseDenominator] = item.scores[id].content;
+          return [n + caseNumerator, d + caseDenominator];
+        }, [0, 0]);
+        score = formatScore(totals, true);
+      }
       const card = node("div", undefined, `total ${side}-card`);
-      card.append(node("span", configNames.get(id)), node("strong", formatScore(totals, true)));
+      card.append(node("span", configNames.get(id)), node("strong", score));
       return card;
     });
     controls.totals.replaceChildren(...cards);
@@ -139,7 +162,7 @@
       all: "Tutti", left: `${configNames.get(state.left)} avanti`, tie: "Pari",
       right: `${configNames.get(state.right)} avanti`, different: "Pari, punti diversi"
     };
-    const filters = validFilters.filter((filter) => filter !== "different" || isAstra62Pair(state));
+    const filters = validFilters.filter((filter) => filter !== "different" || showsDifferentPoints());
     controls.filters.replaceChildren(...filters.map((filter) => {
       const element = button(`${labels[filter]} · ${counts[filter]}`, () => {
         state.filter = filter;
@@ -164,7 +187,7 @@
     const visible = scoredCases().filter(({item, gap, different}) => {
       const match = state.filter === "all" ||
         (state.filter === "different" ? different : resultType(gap) === state.filter);
-      const searchable = `${item.id} ${item.title} ${examples[item.id]?.summary || ""}`;
+      const searchable = `${item.id} ${item.title} ${examples[item.id]?.summary || ""} ${outcomes[item.id].question}`;
       return match && normalized(searchable).includes(query);
     });
     if (state.sort === "gap") visible.sort((a,b) =>
@@ -178,14 +201,20 @@
       const badges = node("span", undefined, "case-scores");
       for (const side of ["left", "right"]) {
         const id = state[side];
-        const score = formatScore(item.scores[id].content);
-        const badge = node("span", score, `score ${side}`);
-        badge.setAttribute("aria-label", `${configNames.get(id)} ${score}`);
+        const agreement = state.measure === "outcome";
+        const passes = agreement ? outcomePasses(item.id, id) : null;
+        const score = agreement ? ["No", "Varia", "Sì"][passes] : formatScore(item.scores[id].content);
+        const badge = node("span", score, `score ${side}${agreement ? " outcome-score" : ""}`);
+        const label = agreement ? outcomeLabels[passes] : score;
+        badge.setAttribute("aria-label", `${configNames.get(id)} · ${label}`);
+        if (agreement) badge.title = label;
         badges.append(badge);
       }
       const details = different ? `${item.id} · punti diversi` : item.id;
-      row.append(node("span", item.title, "case-title"), node("span", details, "case-meta"), badges,
-        node("span", gap === 0 ? "Pari" : `Δ ${gap > 0 ? "+" : "−"}${Math.abs(gap)}`, "delta"));
+      row.append(node("span", item.title, "case-title"), node("span", details, "case-meta"), badges);
+      if (state.measure === "content") {
+        row.append(node("span", gap === 0 ? "Pari" : `Δ ${gap > 0 ? "+" : "−"}${Math.abs(gap)}`, "delta"));
+      }
       return row;
     }));
     if (!visible.length) controls.cases.append(node("p", "Nessun quesito corrisponde ai filtri.", "muted"));
@@ -358,14 +387,63 @@
     return section;
   }
 
+  const judgmentLabels = {
+    pass: "Concorda",
+    different: "Conclusione diversa",
+    not_established: "Concordanza non accertata"
+  };
+
+  function renderOutcome(item) {
+    const outcome = outcomes[item.id];
+    const section = node("section", undefined, "outcome-detail");
+    const context = node("div", undefined, "outcome-reference");
+    const question = node("p", outcome.question);
+    const reference = node("p", outcome.reference);
+    question.lang = reference.lang = "en";
+    context.append(node("h3", "Domanda centrale"), question,
+      node("h3", "Conclusione canonica"), reference);
+    section.append(context);
+
+    const columns = node("div", undefined, "excerpts");
+    for (const id of [state.left, state.right]) {
+      const records = outcome.results[id];
+      const result = outcomeLabels[outcomePasses(item.id, id)];
+      const column = node("div", undefined, "excerpt");
+      column.append(node("h3", configNames.get(id)), node("p", result, "outcome-result"));
+      for (const [index, record] of records.entries()) {
+        if (index > 0 && record.result === records[0].result &&
+            record.evidence === records[0].evidence && record.reason === records[0].reason) continue;
+        const check = node("details", undefined, "outcome-check");
+        check.open = index === 0 || result === "Esito variabile";
+        check.append(node("summary", judgmentLabels[record.result]));
+        if (record.evidence) {
+          check.append(node("p", "Passaggio della risposta", "muted"),
+            node("blockquote", record.evidence));
+        }
+        if (record.reason) {
+          const reason = node("p", record.reason);
+          reason.lang = "en";
+          check.append(node("p", "Perché questo esito", "muted"), reason);
+        }
+        column.append(check);
+      }
+      columns.append(column);
+    }
+    section.append(columns);
+    return section;
+  }
+
   function renderDetail() {
     const item = dataCases.get(state.selected);
     controls.workspace.classList.toggle("has-case", Boolean(item));
     if (!item) {
       const title = node("h2", "Apri un quesito");
       title.id = "detail-title";
-      controls.detail.replaceChildren(title, node("p", "Scegli un caso dalla lista per vedere i tre indicatori."));
-      if (isAstra62Pair(state)) controls.detail.append(button("Vedi un pareggio con punti diversi",
+      const description = state.measure === "outcome"
+        ? "Scegli un quesito per confrontare la conclusione dei due strumenti con quella canonica."
+        : "Scegli un quesito dalla lista per vedere i risultati.";
+      controls.detail.replaceChildren(title, node("p", description));
+      if (showsDifferentPoints()) controls.detail.append(button("Vedi un pareggio con punti diversi",
         () => openCase("E26-B02-09"), "suggestion"));
       return;
     }
@@ -374,6 +452,10 @@
     title.id = "detail-title";
     controls.detail.replaceChildren(button("← Torna ai quesiti", closeCase, "detail-back"),
       node("p", item.id, "muted"), title);
+    if (state.measure === "outcome") {
+      controls.detail.append(renderOutcome(item), shareCase());
+      return;
+    }
     if (example) controls.detail.append(node("p", example.summary));
     if (example?.scoreNote) controls.detail.append(node("p", example.scoreNote));
     controls.detail.append(metricsTable(item));
@@ -411,7 +493,11 @@
   }
 
   function renderAll() {
-    if (state.filter === "different" && !isAstra62Pair(state)) state.filter = "all";
+    if (state.filter === "different" && !showsDifferentPoints()) state.filter = "all";
+    for (const control of controls.measure.children) {
+      control.setAttribute("aria-pressed", String(control.dataset.measure === state.measure));
+    }
+    byId("outcome-note").hidden = state.measure !== "outcome";
     updateSelectors();
     renderTotals();
     renderFilters(scoredCases());
@@ -419,6 +505,14 @@
     renderDetail();
   }
 
+  for (const control of controls.measure.children) {
+    control.addEventListener("click", () => {
+      if (control.dataset.measure === state.measure) return;
+      state.measure = control.dataset.measure;
+      renderAll();
+      updateUrl(true);
+    });
+  }
   for (const side of ["left", "right"]) {
     controls[side].addEventListener("change", () => {
       state[side] = controls[side].value;

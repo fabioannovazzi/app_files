@@ -8,10 +8,11 @@
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="confronta.css?v=3">
+<link rel="stylesheet" href="confronta.css?v=4">
 <script defer src="confronta-dati.js?v=3"></script>
+<script defer src="confronta-concordanza.js?v=1"></script>
 <script defer src="confronta-esempi.js"></script>
-<script defer src="confronta.js?v=3"></script>
+<script defer src="confronta.js?v=4"></script>
 </head>
 <body>
 <main>
@@ -30,7 +31,12 @@
 <select id="right"><option value="codex-astra-62">Codex · Astra 6.2</option></select>
 </label>
 </section>
+<div id="measure" class="measure" role="group" aria-label="Indicatore da confrontare">
+<button type="button" data-measure="content" aria-pressed="true">Contenuti</button>
+<button type="button" data-measure="outcome" aria-pressed="false">Concordanza</button>
+</div>
 <div id="totals" class="totals" aria-live="polite"></div>
+<p id="outcome-note" class="muted" hidden>«Varia» indica che le due valutazioni del quesito hanno dato esiti diversi sulla concordanza.</p>
 <nav id="filters" class="filters" aria-label="Filtra i quesiti per risultato"></nav>
 <div class="workspace" id="workspace">
 <section class="case-list" aria-labelledby="cases-heading">
