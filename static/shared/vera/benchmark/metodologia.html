@@ -49,6 +49,7 @@
 <p>Ci sono già benchmark legali ben strutturati come <a href="https://aptus.ai/it/legalita-benchmark-whitepaper/">LegalITA</a>. Usarli per seguire nel tempo le prestazioni del proprio strumento è però poco pratico.</p>
 <p>Abbiamo deciso di proporre un benchmark aperto, verificabile e semplice.</p>
 <p>Il punteggio sui contenuti misura una cosa sola: quanto la risposta dello strumento corrisponde alla soluzione canonica di un quesito fiscale, redatta da esperti e assunta come corretta ai fini del benchmark.</p>
+<p>Per ciascuno dei 55 quesiti abbiamo fissato una domanda centrale, uguale per tutti gli strumenti. L’indice di concordanza con la soluzione canonica misura quante volte lo strumento arriva alla stessa conclusione su quella domanda. Ogni quesito conta una volta.</p>
 <p>I servizi di AI legale fanno anche altro. Rivedono contratti, analizzano documenti e preparano bozze. Queste attività restano fuori dall’ambito del benchmark.</p>
 
 <h2>Come funziona il benchmark</h2>
@@ -59,6 +60,16 @@
 <h2>I 55 quesiti sono rappresentativi?</h2>
 <p>I quesiti vengono da una fonte professionale autorevole, le tendenze che emergono sembrano ragionevoli e le conclusioni sono coerenti tra loro.</p>
 <p>Ciò detto, non abbiamo modo di essere certi che i 55 quesiti rappresentino un campione sufficiente per trarre conclusioni generali. Token permettendo, ci ripromettiamo di estendere l’esercizio.</p>
+
+<h2>Come il modello valuta le risposte</h2>
+<p>Il benchmark usa modelli AI in tutte le fasi, dalla costruzione della griglia all’assegnazione dei punti e al controllo delle fonti.</p>
+<ol>
+<li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia dei requisiti prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
+<li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
+<li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
+<li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
+</ol>
+<p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
 
 <section id="prova-tu-il-benchmark" aria-labelledby="un-benchmark-aperto">
 <h2 id="un-benchmark-aperto">Un benchmark open</h2>
@@ -72,16 +83,6 @@
 <p>Per leggere i quesiti completi e le relative soluzioni serve un abbonamento o un accordo con Eutekne che dia accesso a quei contenuti. Sottoponi al servizio solo i quesiti e usa le soluzioni nella fase di valutazione.</p>
 <p>Una volta ottenuto l’accesso, puoi <a href="mailto:fabio@mparanza.com?subject=Benchmark%20fiscale%20-%20griglia%20di%20valutazione">contattarci</a> per la griglia di valutazione. L’abbiamo ricavata dalle soluzioni pubblicate da Eutekne e preferiamo condividerla solo con il suo consenso scritto.</p>
 </section>
-
-<h2>Come il modello valuta le risposte</h2>
-<p>Il benchmark usa modelli AI in tutte le fasi, dalla costruzione della griglia all’assegnazione dei punti e al controllo delle fonti.</p>
-<ol>
-<li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia dei requisiti prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
-<li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
-<li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
-<li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
-</ol>
-<p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
 
 <h2 id="risultati">Risultati del benchmark</h2>
 <p><a href="confronta.html">Confronta due strumenti sui 55 quesiti</a>.</p>
