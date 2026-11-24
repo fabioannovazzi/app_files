@@ -42,6 +42,10 @@ def test_mcp_selects_product_runtime_unless_interpreter_explicitly_supplied(
     )
     environment = {
         **os.environ,
+        "VERA_XBRL_STORAGE_ROOT": str(tmp_path / "store"),
+        "VERA_XBRL_TENANT_ID": "authenticated_tenant",
+        "VERA_XBRL_ACTOR_ID": "authenticated_actor",
+        "VERA_XBRL_ROLES": "PREPARER",
         "PATH": str(Path(sys.executable).parent)
         + os.pathsep
         + os.environ.get("PATH", ""),
@@ -274,7 +278,9 @@ def test_mcp_create_selects_historical_statutory_pack_by_period(
     assert structured["rule_pack_versions"]["statutory_rule_pack"] == ("IT_CC_2016.1")
 
 
-def test_mcp_mutation_fails_closed_without_authenticated_environment() -> None:
+def test_mcp_mutation_does_not_start_worker_without_authenticated_environment(
+    tmp_path: Path,
+) -> None:
     responses = _run_server(
         [
             {
@@ -296,12 +302,55 @@ def test_mcp_mutation_fails_closed_without_authenticated_environment() -> None:
             "VERA_XBRL_TENANT_ID": "",
             "VERA_XBRL_ACTOR_ID": "",
             "VERA_XBRL_ROLES": "",
-            "VERA_XBRL_PYTHON": sys.executable,
+            "VERA_XBRL_PYTHON": str(tmp_path / "unused-python"),
         },
     )
 
     assert responses[0]["error"]["code"] == -32000
     assert "environment is incomplete" in responses[0]["error"]["message"]
+    assert "use the installed Bilancio OIC commands" in responses[0]["error"]["message"]
+
+
+def test_managed_bridge_captures_the_exception_behind_exit_two(
+    tmp_path: Path,
+) -> None:
+    event_file = tmp_path / "technical.json"
+    environment = {
+        **os.environ,
+        "VERA_XBRL_STORAGE_ROOT": "",
+        "VERA_XBRL_TENANT_ID": "",
+        "VERA_XBRL_ACTOR_ID": "",
+        "VERA_XBRL_ROLES": "",
+    }
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/vera/scripts/technical_runner.py"),
+            str(PLUGIN_ROOT),
+            str(event_file),
+            str(PLUGIN_ROOT / "scripts/service_bridge.py"),
+        ],
+        input=json.dumps({"tool": "xbrl_case_validate", "arguments": {}}),
+        text=True,
+        capture_output=True,
+        env=environment,
+        check=False,
+    )
+
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == (
+        "Authenticated XBRL service environment is incomplete: storage, tenant, actor, roles\n"
+    )
+    events = json.loads(event_file.read_text(encoding="utf-8"))["events"]
+    configuration_error = next(
+        event for event in events if event["error_type"] == "ServiceConfigurationError"
+    )
+    assert configuration_error["message"].endswith("incomplete: {value}")
+    assert any(
+        frame["function"] == "_context"
+        for frame in configuration_error["technical_frames"]
+    )
 
 
 def test_mcp_queues_revision_bound_job_and_returns_compact_status(

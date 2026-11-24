@@ -206,7 +206,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "c878830359c99b5539b0840c7fa09f466d163f8cb8938ead3b55e2f0d2fdabf7"
+      "sha256": "4c197b3e72d9f18e5eea9e8e37b83e2c918f81c0c7159ad6eab72437ff153a4f"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -230,7 +230,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "abe2b4e048fe8b3c7aaa57653875ecc2eff23125e6581756bba6b25ad82444ef"
+      "sha256": "15e089a980724e0cd3badd0a87f67232ba4496e318229dcb2974431e74faccbc"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -704,5 +704,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e34959a36e8ed9003af5909283dd6ac4a9d1428a109c8abe013f4cf6b8244a73"
+  "canonical_course_sha256": "d948fb3b6c84830f04bc55bcac545530e68e87d94c9f31aaaf69e768665c8413"
 }
