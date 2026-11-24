@@ -27,12 +27,17 @@ function checked(relative) {
   return bytes;
 }
 checked("scripts/native_execution_mcp.cjs");
+let python = "python3";
+let prefix = [];
+if (process.platform === "win32") {
+  checked("scripts/windows_python.cjs");
+  ({ executable: python, prefix } = require("./windows_python.cjs").windowsPython());
+} else {
+  const runtime = process.env.MPARANZA_RUNTIME_ROOT || path.join(os.homedir(), ".local/share/mparanza/runtime");
+  const managed = path.join(runtime, "venv", "bin", "python");
+  if (fs.existsSync(managed)) python = managed;
+}
 const bootstrap = fs.mkdtempSync(path.join(os.tmpdir(), "vera-execution-bootstrap-"));
-const runtime = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
-  ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
-  : path.join(os.homedir(), ".local/share/mparanza/runtime"));
-const managed = path.join(runtime, "venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
-const python = fs.existsSync(managed) ? managed : (process.platform === "win32" ? "python" : "python3");
 // One Python process owns verification, the service and its live workers.
 // A short-lived preparer must not delete code before the service can use it.
 const program = [
@@ -68,7 +73,7 @@ try {
   // The transport parent must release the replaceable installation directory
   // too: Windows prevents its removal while any process keeps it as cwd.
   process.chdir(os.tmpdir());
-  const child = spawn(python, ["-X", "utf8", "-I", "-B", "-c", program, bootstrap, root, JSON.stringify(settings)],
+  const child = spawn(python, [...prefix, "-X", "utf8", "-I", "-B", "-c", program, bootstrap, root, JSON.stringify(settings)],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
   // A host stop closes this transport, not the detached professional jobs.
   // Keep the owner alive until its workers release the leased code.

@@ -23,6 +23,51 @@ __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_windows_bootstrap_probes_real_python_and_ignores_store_alias(tmp_path):
+    alias = tmp_path / "WindowsApps"
+    fallback = tmp_path / "fallback"
+    managed = tmp_path / "runtime" / "venv" / "Scripts"
+    for directory in (alias, fallback, managed):
+        directory.mkdir(parents=True)
+        (directory / "python.exe").touch()
+    resolver = ROOT / "plugins/vera/scripts/windows_python.cjs"
+    result = subprocess.run(
+        [
+            "node",
+            "-e",
+            """
+const { windowsPython } = require(process.argv[1]);
+const probes = [];
+const chosen = windowsPython(process.env, executable => {
+  probes.push(executable);
+  return { status: 0, stdout: executable === process.env.EXPECTED ? "3.12" : "3.14" };
+});
+console.log(JSON.stringify({ chosen, probes }));
+""",
+            str(resolver),
+        ],
+        env={
+            **os.environ,
+            "MPARANZA_RUNTIME_ROOT": str(tmp_path / "absent-runtime"),
+            "VIRTUAL_ENV": str(tmp_path / "absent-venv"),
+            "PATH": os.pathsep.join(
+                (str(alias), str(fallback), str(managed), os.environ["PATH"])
+            ),
+            "EXPECTED": str(managed / "python.exe"),
+        },
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    selected = json.loads(result.stdout)
+
+    assert selected["chosen"]["executable"] == str(managed / "python.exe")
+    assert selected["probes"] == [
+        str(fallback / "python.exe"),
+        str(managed / "python.exe"),
+    ]
+
+
 @pytest.fixture
 def installed(tmp_path):
     """Isolate dependency provisioning; keep the real managed incident wrapper."""
@@ -31,7 +76,11 @@ def installed(tmp_path):
     scripts.mkdir(parents=True)
     for source in (ROOT / "plugins/_shared/reporting-runtime").glob("*.py"):
         shutil.copyfile(source, scripts / source.name)
-    for name in ("native_execution.py", "native_execution_mcp.cjs"):
+    for name in (
+        "native_execution.py",
+        "native_execution_mcp.cjs",
+        "windows_python.cjs",
+    ):
         source = (
             Path(os.environ["NATIVE_EXECUTION_TEST_SOURCE"])
             if name == "native_execution.py"

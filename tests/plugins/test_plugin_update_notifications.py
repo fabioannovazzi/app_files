@@ -219,7 +219,11 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
     assert session_hook["matcher"] == "startup|resume"
     assert session_hook["hooks"][0] == {
         "type": "command",
-        "command": 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"',
+        "command": (
+            'node "$PLUGIN_ROOT/scripts/onboarding_session_start.cjs"'
+            if plugin_root == VERA_ROOT
+            else 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"'
+        ),
         "timeout": 8,
     }
     if plugin_root == VERA_ROOT:

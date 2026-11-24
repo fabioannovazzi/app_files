@@ -17,7 +17,20 @@ function Quote-Argument([string]$Value) {
     return '"' + ([regex]::Replace(([regex]::Replace($Value, '(\\*)"', '$1$1\"')), '(\\+)$', '$1$1')) + '"'
 }
 function Probe-Python([string]$Executable, [string[]]$Prefix) {
-    $probe = 'import sys,pathlib,json; assert sys.implementation.name == "cpython" and sys.version_info >= (3,10); p=pathlib.Path(sys.argv[1]); p.open("rb").close(); print(json.dumps({"vera_bootstrap":True,"executable":sys.executable}))'
+    $probe = 'import sys,pathlib,json; assert sys.implementation.name == ''cpython'' and sys.version_info >= (3,10); p=pathlib.Path(sys.argv[1]); p.open(''rb'').close(); print(json.dumps({''vera_bootstrap'':True,''executable'':sys.executable}))'
+    if ($ExecutionContext.SessionState.LanguageMode -ne 'FullLanguage') {
+        try {
+            $result = & $Executable @Prefix '-I' '-c' $probe $entry 2>$null |
+                ConvertFrom-Json -ErrorAction SilentlyContinue
+            if ($LASTEXITCODE -eq 0 -and $result.vera_bootstrap -eq $true -and
+                (Test-Path -LiteralPath $result.executable -PathType Leaf)) {
+                return [string]$result.executable
+            }
+        } catch {
+            return $null
+        }
+        return $null
+    }
     $info = New-Object System.Diagnostics.ProcessStartInfo
     $info.FileName = $Executable
     $info.Arguments = ((@($Prefix) + @('-I','-c',$probe,$entry)) | ForEach-Object { Quote-Argument $_ }) -join ' '
@@ -54,14 +67,22 @@ $candidates = @()
 if ($PythonExecutable) {
     $candidates += @{ Name=$PythonExecutable; Prefix=@() }
 } else {
-    $candidates += @{ Name='py'; Prefix=@('-3') }
+    if ($env:MPARANZA_RUNTIME_ROOT) {
+        $candidates += @{ Name=(Join-Path $env:MPARANZA_RUNTIME_ROOT 'venv\Scripts\python.exe'); Prefix=@() }
+    }
+    if ($env:VIRTUAL_ENV) {
+        $candidates += @{ Name=(Join-Path $env:VIRTUAL_ENV 'Scripts\python.exe'); Prefix=@() }
+    }
+    $candidates += @{ Name='py'; Prefix=@('-3.12') }
     $candidates += @{ Name='python'; Prefix=@() }
+    $candidates += @{ Name='py'; Prefix=@('-3') }
     $candidates += @{ Name='python3'; Prefix=@() }
 }
 $selected = $null
 foreach ($candidate in $candidates) {
     $resolved = Get-Command $candidate.Name -CommandType Application -ErrorAction SilentlyContinue | Select-Object -First 1
     if (-not $resolved) { continue }
+    if ($resolved.Source -match '[\\/]WindowsApps[\\/]') { continue }
     $selected = Probe-Python $resolved.Source $candidate.Prefix
     if ($selected) { break }
 }

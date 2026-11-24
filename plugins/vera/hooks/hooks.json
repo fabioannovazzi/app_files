@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"$PLUGIN_ROOT/scripts/onboarding_session_start.py\"",
+            "command": "node \"$PLUGIN_ROOT/scripts/onboarding_session_start.cjs\"",
             "timeout": 8
           }
         ]

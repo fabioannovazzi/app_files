@@ -1288,6 +1288,8 @@ def _native_folder_picker_command() -> tuple[str, ...]:
         if executable is None:
             raise ArchiveFolderPickerUnavailableError()
         script = (
+            "$ErrorActionPreference = 'Stop'; "
+            "if ($ExecutionContext.SessionState.LanguageMode -ne 'FullLanguage') { exit 2 }; "
             "[Console]::OutputEncoding = [System.Text.UTF8Encoding]::new($false); "
             "Add-Type -AssemblyName System.Windows.Forms; "
             "$dialog = New-Object System.Windows.Forms.FolderBrowserDialog; "

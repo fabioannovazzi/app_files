@@ -76,6 +76,25 @@ def test_clean_installation_keeps_original_root(tmp_path):
     assert prepared == root
 
 
+def test_windows_execution_staging_inherits_parent_permissions(tmp_path, monkeypatch):
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery, "os", SimpleNamespace(name="nt"))
+    mkdir = Path.mkdir
+    modes = []
+
+    def observe_mode(path, mode=0o777, *args, **kwargs):
+        modes.append(mode)
+        return mkdir(path, mode, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", observe_mode)
+    stage = recovery._execution_stage(tmp_path, ".staging-")
+    other = recovery._execution_stage(tmp_path, ".staging-")
+
+    assert stage != other
+    assert stage.is_dir() and other.is_dir()
+    assert modes == [0o777, 0o777]
+
+
 @pytest.mark.parametrize("reporter_succeeds", [True, False])
 def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_delivery(
     tmp_path, monkeypatch, caplog, reporter_succeeds
@@ -367,10 +386,10 @@ def test_write_denial_leaves_installation_unchanged(tmp_path, monkeypatch):
     alias.hardlink_to(source)
     original = source.read_bytes()
 
-    def denied(**kwargs):
+    def denied(_parent, _prefix):
         raise PermissionError("host denied private storage")
 
-    monkeypatch.setattr(recovery.tempfile, "mkdtemp", denied)
+    monkeypatch.setattr(recovery, "_execution_stage", denied)
 
     with pytest.raises(PermissionError, match="host denied"):
         recovery.prepare_execution_root(root, "journal-bank-reconciliation")

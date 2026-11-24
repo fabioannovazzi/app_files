@@ -24,6 +24,7 @@ import tempfile
 from contextlib import contextmanager
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Iterator
+from uuid import uuid4
 
 product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
     "product_name"
@@ -497,6 +498,23 @@ def _execution_path(path: Path) -> Path:
     )
 
 
+def _execution_stage(parent: Path, prefix: str) -> Path:
+    """Allocate fresh code staging under an existing runtime or temp root."""
+    if os.name != "nt":
+        return Path(tempfile.mkdtemp(prefix=prefix, dir=parent))
+    _real_ancestors(parent)
+    for _ in range(16):
+        stage = _execution_path(parent / f"{prefix}{uuid4().hex}")
+        try:
+            # CPython's Windows 0o700 ACL can exclude the host's sandbox token.
+            # Inherit the selected parent's ACL and keep creation exclusive.
+            stage.mkdir()
+            return stage
+        except FileExistsError:
+            continue
+    raise FileExistsError("Could not allocate a new execution staging directory")
+
+
 def prepare_execution_root(
     root: Path, module: str | None, *, snapshot: bool = False, shared: bool = False
 ) -> Path:
@@ -561,14 +579,10 @@ def prepare_execution_root(
 
     recover_abandoned_execution_roots()
 
-    # mkdtemp creates a fresh private directory. Never mutate the installed tree
+    # Allocate a fresh directory. Never mutate the installed tree
     # or an alias, never reuse an unverified cache, never copy client material.
     private = _execution_path(
-        Path(
-            tempfile.mkdtemp(
-                prefix="vera-verified-", dir=Path(tempfile.gettempdir()).resolve()
-            )
-        )
+        _execution_stage(Path(tempfile.gettempdir()).resolve(), "vera-verified-")
     )
     try:
         own_execution_root(private)
@@ -604,7 +618,9 @@ def _code_store() -> Path:
     else:
         base = Path.home() / ".local/share/mparanza/runtime"
     directory = _execution_path(base / "code")
-    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    directory.mkdir(
+        mode=0o777 if os.name == "nt" else 0o700, parents=True, exist_ok=True
+    )
     _real_ancestors(directory)
     info = directory.stat()
     if os.name == "posix" and (
@@ -729,7 +745,7 @@ def _preserve_component_replay(root: Path, component: str) -> None:
             raise ValueError("Historical component bytes changed before preservation")
         contents[name] = data
     archive = root.parent.parent / f"{component}-replay"
-    archive.mkdir(mode=0o700, exist_ok=True)
+    archive.mkdir(mode=0o777 if os.name == "nt" else 0o700, exist_ok=True)
     _real_ancestors(archive)
     destination = archive / root.name
     if destination.exists():
@@ -739,7 +755,7 @@ def _preserve_component_replay(root: Path, component: str) -> None:
         ):
             raise ValueError("Preserved component implementation changed")
         return
-    stage = Path(tempfile.mkdtemp(prefix=".staging-", dir=archive))
+    stage = _execution_stage(archive, ".staging-")
     try:
         for name, data in contents.items():
             path = stage / name
@@ -875,7 +891,7 @@ def _shared_execution_root(
     with execution_store_lock():
         _collect_execution_store(directory, 2)
         if not root.exists():
-            stage = Path(tempfile.mkdtemp(prefix=".staging-", dir=directory))
+            stage = _execution_stage(directory, ".staging-")
             try:
                 for name, data in expected.items():
                     path = stage / name
