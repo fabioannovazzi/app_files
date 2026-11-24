@@ -399,7 +399,6 @@
     const context = node("div", undefined, "outcome-reference");
     const question = node("p", outcome.question);
     const reference = node("p", outcome.reference);
-    question.lang = reference.lang = "en";
     context.append(node("h3", "Domanda centrale"), question,
       node("h3", "Conclusione canonica"), reference);
     section.append(context);
@@ -417,12 +416,12 @@
         check.open = index === 0 || result === "Esito variabile";
         check.append(node("summary", judgmentLabels[record.result]));
         if (record.evidence) {
-          check.append(node("p", "Passaggio della risposta", "muted"),
-            node("blockquote", record.evidence));
+          const passage = node("blockquote", record.evidence);
+          passage.translate = false;
+          check.append(node("p", "Passaggio della risposta", "muted"), passage);
         }
         if (record.reason) {
           const reason = node("p", record.reason);
-          reason.lang = "en";
           check.append(node("p", "Perché questo esito", "muted"), reason);
         }
         column.append(check);
