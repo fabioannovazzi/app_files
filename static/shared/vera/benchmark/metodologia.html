@@ -49,7 +49,7 @@
 <p>Ci sono già benchmark legali ben strutturati come <a href="https://aptus.ai/it/legalita-benchmark-whitepaper/">LegalITA</a>. Usarli per seguire nel tempo le prestazioni del proprio strumento è però poco pratico.</p>
 <p>Abbiamo deciso di proporre un benchmark aperto, verificabile e semplice.</p>
 <p>Il punteggio sui contenuti misura una cosa sola: quanto la risposta dello strumento corrisponde alla soluzione canonica di un quesito fiscale, redatta da esperti e assunta come corretta ai fini del benchmark.</p>
-<p>Misuriamo anche se la risposta arriva alla stessa conclusione della soluzione canonica. <a href="#indice-di-concordanza">Come si calcola l’indice di concordanza</a>.</p>
+<p>L’indice di concordanza, invece, misura se la risposta arriva alla stessa conclusione della soluzione canonica.</p>
 <p>I servizi di AI legale fanno anche altro. Rivedono contratti, analizzano documenti e preparano bozze. Queste attività restano fuori dall’ambito del benchmark.</p>
 
 <h2>Come funziona il benchmark</h2>
@@ -93,31 +93,31 @@
 <div class="benchmark-scroll" role="region" aria-labelledby="risultati" tabindex="0">
 <table class="benchmark-totals benchmark-results">
 <caption>15 configurazioni · 55 quesiti · 491 punti · 24 novembre 2026</caption>
-<thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
+<thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Indice di concordanza</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
 <tbody>
-<tr><th scope="row">Sol 6.2 — Codex</th><td>433/491 (88%)</td><td>428/433 (99%)</td><td>258 con sostegno verificato<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Astra 6.2 — Codex</th><td>425/491 (87%)</td><td>≥ 385/425 (91%)</td><td>1.135/1.152 (99%)</td></tr>
-<tr><th scope="row">Rigo AI</th><td>419/491 (85%)</td><td>≥ 309/419 (74%)</td><td>≥ 1.643/1.787 (92%)</td></tr>
-<tr><th scope="row">Astra 6.2 — Vera</th><td>412/491 (84%)</td><td>≥ 394/412 (96%)</td><td>884/889 (99%)</td></tr>
-<tr><th scope="row">Opus 5.5 — Vera</th><td>411/491 (84%)</td><td>≥ 391/411 (95%)</td><td>2.084 con sostegno verificato<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Sol 6.2 — Vera</th><td>409/491 (83%)</td><td>404/409 (99%)</td><td>1.829/1.857 (98%)</td></tr>
-<tr><th scope="row">Astra 6 — Codex</th><td>393/491 (80%)</td><td>≥ 388/393 (99%)</td><td>≥ 2.390/2.479 (96%)</td></tr>
-<tr><th scope="row">Astra 6 — Vera</th><td>391/491 (80%)</td><td>389/391 (99%)</td><td>2.015/2.057 (98%)</td></tr>
-<tr><th scope="row">Sonnet 5.5 — Vera</th><td>363/491 (74%)</td><td>≥ 345/363 (95%)</td><td>≥ 1.255/1.407 (89%)</td></tr>
-<tr><th scope="row">Vertical B</th><td>351/491 (71%)</td><td>≥ 295/351 (84%)</td><td>≥ 1.068/1.411 (76%)</td></tr>
-<tr><th scope="row">Sonnet 5.5 — Cowork</th><td>297/491 (60%)</td><td>≥ 238/297 (80%)<br><small>1 punto da verificare</small></td><td>≥ 3.456/4.301 (80%)<br><small>31 relazioni da verificare</small></td></tr>
-<tr><th scope="row">Vertical F</th><td>272/491 (55%)</td><td>≥ 219/272 (81%)</td><td>1.878/2.250 (83%)</td></tr>
-<tr><th scope="row">Vertical C</th><td>245/491 (50%)</td><td>≥ 106/245 (43%)</td><td>154 con sostegno verificato<br><small>Totale aperto</small></td></tr>
-<tr><th scope="row">Vertical D</th><td>160/491 (33%)</td><td>≥ 57/160 (36%)</td><td>≥ 507/1.552 (33%)</td></tr>
-<tr><th scope="row">Vertical E</th><td>131/491 (27%)</td><td>≥ 71/131 (54%)</td><td>≥ 209/393 (53%)</td></tr>
+<tr><th scope="row">Sol 6.2 — Codex</th><td>433/491 (88%)</td><td>83%</td><td>428/433 (99%)</td><td>258 con sostegno verificato<br><small>Totale aperto</small></td></tr>
+<tr><th scope="row">Astra 6.2 — Codex</th><td>425/491 (87%)</td><td>85%</td><td>≥ 385/425 (91%)</td><td>1.135/1.152 (99%)</td></tr>
+<tr><th scope="row">Rigo AI</th><td>419/491 (85%)</td><td>80%</td><td>≥ 309/419 (74%)</td><td>≥ 1.643/1.787 (92%)</td></tr>
+<tr><th scope="row">Astra 6.2 — Vera</th><td>412/491 (84%)</td><td>87%</td><td>≥ 394/412 (96%)</td><td>884/889 (99%)</td></tr>
+<tr><th scope="row">Opus 5.5 — Vera</th><td>411/491 (84%)</td><td>77%</td><td>≥ 391/411 (95%)</td><td>2.084 con sostegno verificato<br><small>Totale aperto</small></td></tr>
+<tr><th scope="row">Sol 6.2 — Vera</th><td>409/491 (83%)</td><td>80%</td><td>404/409 (99%)</td><td>1.829/1.857 (98%)</td></tr>
+<tr><th scope="row">Astra 6 — Codex</th><td>393/491 (80%)</td><td>75%</td><td>≥ 388/393 (99%)</td><td>≥ 2.390/2.479 (96%)</td></tr>
+<tr><th scope="row">Astra 6 — Vera</th><td>391/491 (80%)</td><td>79%</td><td>389/391 (99%)</td><td>2.015/2.057 (98%)</td></tr>
+<tr><th scope="row">Sonnet 5.5 — Vera</th><td>363/491 (74%)</td><td>71%</td><td>≥ 345/363 (95%)</td><td>≥ 1.255/1.407 (89%)</td></tr>
+<tr><th scope="row">Vertical B</th><td>351/491 (71%)</td><td>65%</td><td>≥ 295/351 (84%)</td><td>≥ 1.068/1.411 (76%)</td></tr>
+<tr><th scope="row">Sonnet 5.5 — Cowork</th><td>297/491 (60%)</td><td>69%</td><td>≥ 238/297 (80%)<br><small>1 punto da verificare</small></td><td>≥ 3.456/4.301 (80%)<br><small>31 relazioni da verificare</small></td></tr>
+<tr><th scope="row">Vertical F</th><td>272/491 (55%)</td><td>61%</td><td>≥ 219/272 (81%)</td><td>1.878/2.250 (83%)</td></tr>
+<tr><th scope="row">Vertical C</th><td>245/491 (50%)</td><td>47%</td><td>≥ 106/245 (43%)</td><td>154 con sostegno verificato<br><small>Totale aperto</small></td></tr>
+<tr><th scope="row">Vertical D</th><td>160/491 (33%)</td><td>45%</td><td>≥ 57/160 (36%)</td><td>≥ 507/1.552 (33%)</td></tr>
+<tr><th scope="row">Vertical E</th><td>131/491 (27%)</td><td>41%</td><td>≥ 71/131 (54%)</td><td>≥ 209/393 (53%)</td></tr>
 </tbody>
 </table>
 </div>
-<p>Il riesame di Vertical F ha riconosciuto 13 ulteriori punti di contenuto. La copertura delle fonti riporta i 219 punti già verificati. Il sostegno documentale dei 13 punti aggiunti resta da verificare.</p>
 <p><strong>≥ indica un minimo verificato.</strong> Dove il totale delle citazioni è ancora aperto, la tabella mostra il numero di relazioni fonte–affermazione già verificate come pertinenti. Le verifiche ancora aperte limitano il confronto tra sistemi sui due indicatori delle fonti.</p>
 
-<h2>Che cosa ci dicono i risultati sui generalisti e sui verticali</h2>
+<h2>Che cosa ci dicono i risultati</h2>
 <p><strong>Su questi quesiti, le due configurazioni con il punteggio più alto sono generaliste.</strong> Sol 6.2 in Codex arriva a 433/491 (88%) e Astra 6.2 in Codex a 425/491 (87%). Il migliore dei verticali in tabella, Rigo AI, è vicino a 419/491 (85%). Gli altri verticali vanno dal 71% al 27%. La specializzazione, da sola, dice poco su quanti punti del quesito verranno coperti.</p>
+<p>L’indice di concordanza cambia l’ordine ai primi posti. Sol 6.2 in Codex è primo per contenuti (88%), mentre Astra 6.2 in Vera è primo per concordanza (87%). Con Astra 6.2, Codex copre più punti della griglia (87% contro 84%) e Vera arriva più spesso alla conclusione canonica (87% contro 85%).</p>
 <p><strong>Il confronto cambia quando cambiano i modelli.</strong> Tra le sessioni con Astra 6 e quelle con Astra 6.2, Codex passa da 393 a 425 punti e Vera da 391 a 412. Sono 32 e 21 punti in più. Con Sol 6.2, Codex arriva a 433 punti e Vera a 409. Questi risultati descrivono le configurazioni e le sessioni provate. Per isolare il contributo di Vera servirebbe una prova a parità di versione del modello, fonti disponibili e condizioni di esecuzione.</p>
 <p><strong>Quando il modello generalista migliora, si alza il livello a cui confrontare un verticale.</strong> Con lo stesso modello di base, il verticale aiuta il professionista a individuare più punti decisivi? Offre fonti più solide? Riduce il tempo necessario per rivedere il parere? La tabella misura la copertura dei contenuti rispetto alla soluzione pubblicata e riporta le verifiche documentali disponibili. Il tempo di revisione richiede una misura dedicata.</p>
 <p>Il punteggio più alto, 433/491, lascia 58 punti della griglia insoddisfatti. Il confronto sui singoli quesiti aiuta a distinguere un’eccezione saltata, un requisito affrontato solo in parte e un’interpretazione diversa. Per sapere quanto il miglioramento si estenda a quesiti nuovi occorre una prova separata su casi nuovi.</p>
