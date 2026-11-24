@@ -252,7 +252,7 @@
     {
       "path": "modules/bilancio-xbrl-it/scripts/service_bridge.py",
       "repository_path": "plugins/bilancio-xbrl-it/scripts/service_bridge.py",
-      "sha256": "c878830359c99b5539b0840c7fa09f466d163f8cb8938ead3b55e2f0d2fdabf7"
+      "sha256": "4c197b3e72d9f18e5eea9e8e37b83e2c918f81c0c7159ad6eab72437ff153a4f"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/statutory_presentation.py",
@@ -282,7 +282,7 @@
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/bilancio-xbrl-it/skills/bilancio-oic/SKILL.md",
-      "sha256": "f1919a253b9c55bde1e4eef843dac7eaeca8d9d5abbe7f28815f24932238a93e"
+      "sha256": "c790a7f0666d6f3c55ee81adfe46ea10b686e267ada89a2ae2c95b163780db4d"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/bilancio-oic/agents/openai.yaml",
