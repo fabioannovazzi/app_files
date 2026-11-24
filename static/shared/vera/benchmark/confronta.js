@@ -252,6 +252,23 @@
   }
 
   const reviewsByCase = new Map();
+  const fullOpinionRequests = new Map();
+
+  function getPointReview(caseId) {
+    if (!reviewsByCase.has(caseId)) {
+      const request = fetch(`dettagli-estesi/${encodeURIComponent(caseId)}.json`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Dettaglio non disponibile");
+          return response.json();
+        })
+        .catch((error) => {
+          reviewsByCase.delete(caseId);
+          throw error;
+        });
+      reviewsByCase.set(caseId, request);
+    }
+    return reviewsByCase.get(caseId);
+  }
 
   function loadPointReview(item, container, tools, afterRender) {
     const render = (review) => {
@@ -259,23 +276,11 @@
       container.replaceChildren(pointsBreakdown(review, tools));
       if (afterRender) afterRender();
     };
-    const cached = reviewsByCase.get(item.id);
-    if (cached) {
-      render(cached);
-      return;
-    }
     const status = node("p", "Caricamento dei singoli punti…", "muted");
     status.setAttribute("role", "status");
     container.replaceChildren(status);
-    fetch(`dettagli-estesi/${encodeURIComponent(item.id)}.json`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Dettaglio non disponibile");
-        return response.json();
-      })
-      .then((review) => {
-        reviewsByCase.set(item.id, review);
-        render(review);
-      })
+    getPointReview(item.id)
+      .then(render)
       .catch(() => {
         if (!container.isConnected) return;
         status.textContent = "Il dettaglio dei punti non è disponibile al momento.";
@@ -361,12 +366,7 @@
       if (!result.context && !result.summary && !result.evidence.length) {
         card.append(node("p", "Il registro non indica un brano della risposta per questo punto.", "muted"));
       }
-      if (review.opinions[id] || id === "vertical-f") {
-        const open = button("Apri il parere completo",
-          () => openOpinion(id, review.opinions[id], review.id), "detail-back");
-        open.setAttribute("aria-label", `Apri il parere completo di ${product}`);
-        card.append(open);
-      }
+      card.append(opinionButton(id, review.id, review.opinions[id]));
       const verdict = result.score ? "Perché il valutatore ha dato un punto" : "Perché il valutatore ha dato zero";
       card.append(node("h4", verdict, "review-verdict"), node("p", result.reason));
       if (result.unresolved) card.append(node("p", "Punto da riesaminare.", "muted"));
@@ -376,7 +376,14 @@
     return article;
   }
 
-  function openOpinion(id, opinion, caseId) {
+  function opinionButton(id, caseId, opinion) {
+    const name = id === defaultLeft ? "Vera" : id === defaultRight ? "Codex" : configNames.get(id);
+    const control = button("Apri il parere completo", () => openOpinion(id, caseId, opinion), "detail-back");
+    control.setAttribute("aria-label", `Apri il parere completo di ${name}`);
+    return control;
+  }
+
+  function openOpinion(id, caseId, opinion) {
     const dialog = node("dialog", undefined, "full-opinion");
     dialog.setAttribute("aria-labelledby", "opinion-title");
     const heading = node("h2", `Parere completo · ${configNames.get(id)}`);
@@ -384,36 +391,65 @@
     const toolbar = node("div", undefined, "opinion-toolbar");
     toolbar.append(heading, button("Chiudi", () => dialog.close(), "detail-back"));
     const body = node("div", undefined, "opinion-body");
+    body.translate = false;
     if (opinion) body.innerHTML = opinion;
     dialog.append(toolbar, body);
     dialog.addEventListener("close", () => dialog.remove(), {once: true});
     document.body.append(dialog);
     dialog.showModal();
-    if (!opinion) loadVerticalFOpinion(caseId, body);
+    if (!opinion) loadOpinion(id, caseId, body);
   }
 
-  async function loadVerticalFOpinion(caseId, body) {
+  async function fetchOpinion(id, caseId) {
+    if (id === defaultLeft || id === defaultRight) {
+      const review = await getPointReview(caseId);
+      if (!review.opinions[id]) throw new Error("Parere non disponibile");
+      return {html: review.opinions[id]};
+    }
+    const file = `${encodeURIComponent(caseId)}.json`;
+    const path = id === "vertical-f" ? `pareri-vertical-f/${file}` :
+      `pareri-integrali/${encodeURIComponent(id)}/${file}`;
+    const response = await fetch(path);
+    if (!response.ok) throw new Error("Parere non disponibile");
+    const answer = await response.json();
+    if (answer.case !== caseId || (id !== "vertical-f" && answer.tool !== id)) {
+      throw new Error("Parere non valido");
+    }
+    const content = id === "vertical-f" ? answer.text : answer.html;
+    if (typeof content !== "string" || !content.trim()) throw new Error("Parere non valido");
+    return answer;
+  }
+
+  async function loadOpinion(id, caseId, body) {
     const status = node("p", "Caricamento del parere…", "muted");
     status.setAttribute("role", "status");
     body.replaceChildren(status);
     try {
-      const response = await fetch(`pareri-vertical-f/${encodeURIComponent(caseId)}.json`);
-      if (!response.ok) throw new Error("Parere non disponibile");
-      const answer = await response.json();
-      if (answer.case !== caseId || typeof answer.text !== "string" || !answer.text.trim()) {
-        throw new Error("Parere non valido");
+      const key = `${id}/${caseId}`;
+      if (!fullOpinionRequests.has(key)) {
+        const request = fetchOpinion(id, caseId).catch((error) => {
+          fullOpinionRequests.delete(key);
+          throw error;
+        });
+        fullOpinionRequests.set(key, request);
       }
+      const answer = await fullOpinionRequests.get(key);
       if (!body.isConnected) return;
-      const transcript = node("div", answer.text, "opinion-transcript");
-      transcript.translate = false;
-      body.replaceChildren(
-        node("p", "Intestazione e link del fornitore omessi per mantenere l’anonimato.", "muted"),
-        transcript
-      );
+      if (answer.html) {
+        body.innerHTML = answer.html;
+        if (answer.redacted) {
+          body.prepend(node("p", "Riferimenti interni o identificativi omessi nella versione pubblica.", "muted"));
+        }
+      } else {
+        body.replaceChildren(
+          node("p", "Intestazione e link del fornitore omessi per mantenere l’anonimato.", "muted"),
+          node("div", answer.text, "opinion-transcript")
+        );
+      }
     } catch {
       if (!body.isConnected) return;
       status.textContent = "Il parere non è disponibile al momento.";
-      body.append(button("Riprova", () => loadVerticalFOpinion(caseId, body), "detail-back"));
+      body.append(button("Riprova", () => loadOpinion(id, caseId, body), "detail-back"));
     }
   }
 
@@ -466,6 +502,7 @@
       const result = outcomeLabels[outcomePasses(item.id, id)];
       const column = node("div", undefined, "excerpt");
       column.append(node("h3", configNames.get(id)), node("p", result, "outcome-result"));
+      column.append(opinionButton(id, item.id));
       for (const [index, record] of records.entries()) {
         if (index > 0 && record.result === records[0].result &&
             record.evidence === records[0].evidence && record.reason === records[0].reason) continue;
