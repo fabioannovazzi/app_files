@@ -32,10 +32,10 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .setup select { display: block; margin-top: 4px; }
 .swap { min-width: 42px; min-height: 42px; }
 .totals { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin: 12px 0 16px; }
-.total { border-radius: 8px; padding: 8px 12px; }
+.total { border-radius: 8px; padding: 8px 12px; background: #eff3f5; }
 .total span { display: block; font-size: .85rem; }
-.left, .left-card { color: var(--left); background: var(--left-tint); }
-.right, .right-card { color: var(--right); background: var(--right-tint); }
+.left, .left-card { color: var(--left); }
+.right, .right-card { color: var(--right); }
 .total strong { display: block; font-size: clamp(1rem, 2vw, 1.28rem); font-weight: 500; font-variant-numeric: tabular-nums; }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
 .measure { display: inline-flex; gap: 4px; margin-top: 14px; }
