@@ -94,6 +94,7 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .opinion-body h1 { font-size: 1.55rem; }
 .opinion-body :is(p, ul, ol, table, h2, h3) { margin: .75em 0; }
 .opinion-body pre { white-space: pre-wrap; }
+.opinion-transcript { white-space: pre-wrap; }
 .review-passage { margin-top: 9px; }
 .review-passage summary { cursor: pointer; }
 .detail-notes { margin-top: 15px; }
