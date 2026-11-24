@@ -86,8 +86,10 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .detail-notes { margin-top: 15px; }
 .detail-notes article { margin-top: 13px; border-top: 1px solid var(--line); padding-top: 9px; }
 .detail-notes article h3 { font-weight: 500; }
-.excerpts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; margin-top: 7px; }
-.excerpt { padding: 7px 8px; border-radius: 6px; }
+.excerpts { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: 10px; }
+.excerpt { padding: 4px 12px; color: inherit; background: transparent; }
+.excerpt:first-child { padding-inline-start: 0; }
+.excerpt + .excerpt { border-inline-start: 1px solid var(--line); padding-inline-end: 0; }
 .excerpt strong { font-weight: 500; }
 .excerpt blockquote { margin: 5px 0 0; color: #172e40; font-size: .87rem; overflow-wrap: anywhere; }
 .footnote { margin: 15px 0 0; }
@@ -102,6 +104,8 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 }
 @media (max-width: 390px) {
   .tools, .excerpts { grid-template-columns: minmax(0,1fr); }
+  .excerpt { padding-inline: 0; }
+  .excerpt + .excerpt { margin-top: 10px; padding-top: 12px; border-inline-start: 0; border-top: 1px solid var(--line); }
   .setup { gap: 5px; }
   .setup select { padding-inline: 3px; font-size: .86rem; }
   .swap { min-width: 31px; }
