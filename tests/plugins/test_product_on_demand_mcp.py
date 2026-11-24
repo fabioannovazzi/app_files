@@ -244,6 +244,57 @@ def test_original_worker_errors_are_forwarded(session):
     assert response["error"] == {"code": -32602, "message": "original worker error"}
 
 
+def test_native_status_reconnects_without_replaying_failed_execution(installation):
+    configs_path = installation / "mcp-services.json"
+    configs = json.loads(configs_path.read_text())
+    configs["mcpServers"]["veraExecution"] = configs["mcpServers"].pop("alpha")
+    configs_path.write_text(json.dumps(configs))
+    catalog_path = installation / "mcp-catalog.json"
+    catalog = json.loads(catalog_path.read_text())
+    service = next(item for item in catalog["services"] if item["name"] == "alpha")
+    service["name"] = "veraExecution"
+    service["tools"][0]["name"] = "vera_execute"
+    catalog_path.write_text(json.dumps(catalog))
+    _seal(installation)
+
+    client = Session(installation)
+    try:
+        failed = client.call(
+            "tools/call",
+            {"name": "vera_execute", "arguments": {"action": "crash"}},
+        )
+        rejected = client.call(
+            "tools/call",
+            {"name": "vera_execute", "arguments": {"action": "crash"}},
+        )
+        status = client.call(
+            "tools/call",
+            {
+                "name": "vera_execute",
+                "arguments": {
+                    "operation": "status",
+                    "job_id": "02809e9f-117e-4220-9509-a59da14c35ff",
+                },
+            },
+        )
+    finally:
+        client.close()
+
+    assert "inspect any existing result" in failed["error"]["message"]
+    assert rejected["error"] == failed["error"]
+    product = json.loads((installation / ".codex-plugin/plugin.json").read_text())[
+        "name"
+    ]
+    if product == "vera":
+        assert status["result"]["structuredContent"]["name"] == "alpha"
+    else:
+        assert status["error"] == failed["error"]
+    assert (installation.parent / "writes").read_text() == "saved\n"
+    assert (installation.parent / "starts").read_text().count("alpha:") == (
+        2 if product == "vera" else 1
+    )
+
+
 @pytest.mark.parametrize("payload", ["null", "not-json"])
 def test_malformed_worker_reply_does_not_crash_other_services(session, payload):
     failed = session.call(
