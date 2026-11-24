@@ -2,6 +2,7 @@
   const data = window.fiscalBenchmarkComparison;
   const examples = window.fiscalBenchmarkExamples;
   const outcomes = window.fiscalBenchmarkOutcomes;
+  const pointRegisters = window.fiscalBenchmarkPointRegisters;
   const byId = (id) => document.getElementById(id);
   const controls = {
     left: byId("left"), right: byId("right"), query: byId("query"), sort: byId("sort"),
@@ -220,7 +221,7 @@
     if (!visible.length) controls.cases.append(node("p", "Nessun quesito corrisponde ai filtri.", "muted"));
   }
 
-  function metricsTable(item) {
+  function metricsTable(item, available, showReview) {
     const table = node("table", undefined, "metrics");
     const head = table.createTHead().insertRow();
     for (const title of ["Indicatore", configNames.get(state.left), configNames.get(state.right)]) {
@@ -233,49 +234,71 @@
       const row = body.insertRow();
       const label = node("th", title);
       label.scope = "row";
-      row.append(label, ...[state.left,state.right].map((id) =>
-        node("td", formatScore(item.scores[id][key], true))));
+      row.append(label, ...[state.left,state.right].map((id) => {
+        const score = formatScore(item.scores[id][key], true);
+        const cell = node("td");
+        if (key === "content" && available.includes(id)) {
+          const control = button(score, () => showReview(id), "point-score");
+          control.setAttribute("aria-label", `${score} · Vedi i singoli punti di ${configNames.get(id)}`);
+          control.setAttribute("aria-controls", "point-review");
+          cell.append(control);
+        } else {
+          cell.textContent = score;
+        }
+        return cell;
+      }));
     }
     return table;
   }
 
   const reviewsByCase = new Map();
 
-  function loadPointReview(item, container) {
+  function loadPointReview(item, container, tools, afterRender) {
+    const render = (review) => {
+      if (!container.isConnected) return;
+      container.replaceChildren(pointsBreakdown(review, tools));
+      if (afterRender) afterRender();
+    };
     const cached = reviewsByCase.get(item.id);
     if (cached) {
-      container.replaceChildren(pointsBreakdown(item, cached));
+      render(cached);
       return;
     }
     const status = node("p", "Caricamento dei singoli punti…", "muted");
     status.setAttribute("role", "status");
     container.replaceChildren(status);
-    fetch(`dettagli/${encodeURIComponent(item.id)}.json`)
+    fetch(`dettagli-estesi/${encodeURIComponent(item.id)}.json`)
       .then((response) => {
         if (!response.ok) throw new Error("Dettaglio non disponibile");
         return response.json();
       })
       .then((review) => {
         reviewsByCase.set(item.id, review);
-        if (container.isConnected) container.replaceChildren(pointsBreakdown(item, review));
+        render(review);
       })
       .catch(() => {
         if (!container.isConnected) return;
         status.textContent = "Il dettaglio dei punti non è disponibile al momento.";
-        container.append(button("Riprova", () => loadPointReview(item, container), "detail-back"));
+        container.append(button("Riprova", () => loadPointReview(item, container, tools, afterRender), "detail-back"));
       });
   }
 
-  function pointsBreakdown(item, review) {
-    const counts = item.astra62;
-    const ideas = [
-      ["both", "Entrambi"],
-      ["veraOnly", "Solo Vera"],
-      ["codexOnly", "Solo Codex"],
-      ["neither", "Nessuno dei due"]
+  function pointsBreakdown(review, tools) {
+    const name = (id) => id === defaultLeft ? "Vera" : id === defaultRight ? "Codex" : configNames.get(id);
+    const [left, right] = tools;
+    const ideas = right ? [
+      ["both", "Entrambi", (p) => p.results[left].score && p.results[right].score],
+      ["left", `Solo ${name(left)}`, (p) => p.results[left].score && !p.results[right].score],
+      ["right", `Solo ${name(right)}`, (p) => !p.results[left].score && p.results[right].score],
+      ["neither", "Nessuno dei due", (p) => !p.results[left].score && !p.results[right].score]
+    ] : [
+      ["zero", "Punti non assegnati", (p) => !p.results[left].score],
+      ["one", "Punti assegnati", (p) => p.results[left].score],
+      ["all", "Tutti i punti", () => true]
     ];
+    const groups = ideas.map(([group, label, test]) => [group, label, review.points.filter(test)]);
     const section = node("div", undefined, "detail-notes");
-    section.append(node("h3", "Chi ha soddisfatto i punti"));
+    section.append(node("h3", right ? "Chi ha soddisfatto i punti" : `Dettaglio · ${configNames.get(left)}`));
     const grid = node("div", undefined, "breakdown");
     const status = node("span");
     status.setAttribute("role", "status");
@@ -283,61 +306,68 @@
     const list = node("div", undefined, "point-list");
     list.id = "point-list";
 
-    function show(group, label) {
-      const points = review.points.filter((point) => pointGroup(point) === group);
+    function show(group, label, points) {
       status.textContent = `${label} · ${points.length} ${points.length === 1 ? "punto" : "punti"}`;
-      list.replaceChildren(...points.map((point) => renderPoint(point, review.opinions)));
+      list.replaceChildren(...points.map((point) => renderPoint(point, review.opinions, tools)));
       for (const control of grid.children) {
         control.setAttribute("aria-pressed", String(control.dataset.group === group));
       }
     }
 
-    for (const [group, label] of ideas) {
-      const control = button(`${label} · ${counts[group]}`, () => show(group, label));
+    for (const [group, label, points] of groups) {
+      const control = button(`${label} · ${points.length}`, () => show(group, label, points));
       control.dataset.group = group;
       control.setAttribute("aria-controls", list.id);
-      control.disabled = counts[group] === 0;
+      control.disabled = points.length === 0;
       grid.append(control);
     }
     section.append(grid, status, list);
-    const first = ["codexOnly", "veraOnly", "neither", "both"].find((group) => counts[group]);
-    show(first, ideas.find(([group]) => group === first)[1]);
+    const order = right
+      ? (right === defaultLeft ? ["left", "right", "neither", "both"] : ["right", "left", "neither", "both"])
+      : ["zero", "one", "all"];
+    const first = order.map((key) => groups.find(([group]) => group === key)).find((group) => group[2].length);
+    show(...first);
     return section;
   }
 
-  function pointGroup(point) {
-    const vera = point.results[defaultLeft].score;
-    const codex = point.results[defaultRight].score;
-    if (vera === codex) return vera ? "both" : "neither";
-    return vera ? "veraOnly" : "codexOnly";
-  }
-
-  function renderPoint(point, opinions) {
+  function renderPoint(point, opinions, tools) {
     const article = node("article", undefined, "review-point");
+    const requirement = tools.length === 1 ? point.results[tools[0]].requirement || point.requirement : point.requirement;
     article.append(node("p", point.id, "muted"),
-      node("h3", "Cosa doveva spiegare la risposta"), node("p", point.requirement));
-    const cards = node("div", undefined, "excerpts");
-    for (const side of ["left", "right"]) {
-      const id = state[side];
+      node("h3", "Cosa doveva spiegare la risposta"), node("p", requirement));
+    const cards = node("div", undefined, tools.length === 2 ? "excerpts" : "point-excerpt");
+    for (const id of tools) {
+      const side = id === state.left ? "left" : "right";
       const result = point.results[id];
       const card = node("div", undefined, `excerpt ${side}-card`);
-      const product = id === defaultLeft ? "Vera" : "Codex";
+      const product = id === defaultLeft ? "Vera" : id === defaultRight ? "Codex" : configNames.get(id);
+      if (result.requirement && tools.length === 2) {
+        card.append(node("h4", "Requisito usato per questo strumento"), node("p", result.requirement));
+      }
       card.append(node("h4", `Cosa ha scritto ${product}`));
       if (result.context) {
         card.append(node("blockquote", result.context));
       }
-      result.evidence.forEach(({line, text}, i) => {
+      result.evidence.forEach(({line, paragraph, text}, i) => {
         const disclosure = node("details", undefined, "review-passage");
         const label = i === 0 && !result.context ? "Brano della risposta" : "Altro brano della risposta";
         disclosure.open = i === 0 && !result.context;
-        disclosure.append(node("summary", `${label} · riga ${line}`),
+        const locator = line ? ` · riga ${line}` : paragraph ? ` · paragrafo ${paragraph}` : "";
+        disclosure.append(node("summary", label + locator),
           node("blockquote", text.replace(/\*\*/g, "").replace(/\[([^\[\]\n]+)\]\(https?:\/\/[^\s)]+\)/g, "$1")));
         card.append(disclosure);
       });
-      const open = button("Apri il parere completo", () => openOpinion(id, opinions[id]), "detail-back");
-      open.setAttribute("aria-label", `Apri il parere completo di ${product}`);
+      if (result.summary) card.append(node("p", "Sintesi nel registro", "muted"), node("p", result.summary));
+      if (!result.context && !result.summary && !result.evidence.length) {
+        card.append(node("p", "Il registro non indica un brano della risposta per questo punto.", "muted"));
+      }
+      if (opinions[id]) {
+        const open = button("Apri il parere completo", () => openOpinion(id, opinions[id]), "detail-back");
+        open.setAttribute("aria-label", `Apri il parere completo di ${product}`);
+        card.append(open);
+      }
       const verdict = result.score ? "Perché il valutatore ha dato un punto" : "Perché il valutatore ha dato zero";
-      card.append(open, node("h4", verdict, "review-verdict"), node("p", result.reason));
+      card.append(node("h4", verdict, "review-verdict"), node("p", result.reason));
       if (result.unresolved) card.append(node("p", "Punto da riesaminare.", "muted"));
       cards.append(card);
     }
@@ -457,14 +487,31 @@
     }
     if (example) controls.detail.append(node("p", example.summary));
     if (example?.scoreNote) controls.detail.append(node("p", example.scoreNote));
-    controls.detail.append(metricsTable(item));
-    if (isAstra62Pair(state)) {
-      const review = node("div");
-      controls.detail.append(review);
-      loadPointReview(item, review);
-    } else {
-      controls.detail.append(node("p", "Il dettaglio dei singoli punti è disponibile per il confronto tra Vera e Codex con Astra 6.2.", "muted"));
+    const available = [state.left, state.right].filter((id) => pointRegisters[item.id]?.includes(id));
+    const review = node("div");
+    review.id = "point-review";
+    review.tabIndex = -1;
+    let panel = node("div");
+    review.append(panel);
+    const show = (tools, focus = false) => {
+      const nextPanel = node("div");
+      panel.replaceWith(nextPanel);
+      panel = nextPanel;
+      loadPointReview(item, panel, tools, focus ? () => {
+        review.scrollIntoView({block: "nearest"});
+        review.focus({preventScroll: true});
+      } : undefined);
+    };
+    const table = metricsTable(item, available, (id) => show([id], true));
+    controls.detail.append(table);
+    if (available.length === 2) {
+      controls.detail.append(button("Confronta punto per punto", () => show(available, true), "detail-back"));
+    } else if (available.length < 2) {
+      const missing = [state.left, state.right].filter((id) => !available.includes(id)).map((id) => configNames.get(id));
+      controls.detail.append(node("p", `Dettaglio dei singoli punti non disponibile per ${missing.join(" e ")} su questo quesito.`, "muted"));
     }
+    controls.detail.append(review);
+    if (isAstra62Pair(state)) show(available);
     controls.detail.append(shareCase());
   }
 
