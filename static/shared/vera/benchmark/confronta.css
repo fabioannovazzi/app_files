@@ -38,6 +38,17 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .right, .right-card { color: var(--right); background: var(--right-tint); }
 .total strong { display: block; font-size: clamp(1rem, 2vw, 1.28rem); font-weight: 500; font-variant-numeric: tabular-nums; }
 .filters { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+.measure { display: inline-flex; gap: 4px; margin-top: 14px; }
+.measure button { padding: 6px 12px; font-size: .9rem; }
+.measure button[aria-pressed="true"] { background: var(--left-tint); border-color: #819bab; font-weight: 600; }
+.outcome-score { text-align: right; }
+.outcome-reference { margin-top: 16px; }
+.outcome-reference h3 + p { margin-top: 4px; }
+.outcome-reference p + h3 { margin-top: 12px; }
+.outcome-result { font-size: .9rem; font-weight: 600; }
+.outcome-check { margin-top: 10px; font-size: .85rem; }
+.outcome-check summary { cursor: pointer; }
+.outcome-check p { color: var(--muted); }
 .filters button { padding: 5px 10px; font-size: .86rem; }
 .filters button[aria-pressed="true"] { background: var(--left-tint); color: var(--left); border-color: #819bab; font-weight: 600; }
 .workspace { display: grid; grid-template-columns: minmax(300px, .9fr) minmax(0, 1.1fr); gap: 14px; align-items: start; }
