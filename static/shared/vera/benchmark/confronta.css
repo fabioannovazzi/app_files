@@ -75,6 +75,8 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 .metrics th, .metrics td { padding: 5px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
 .metrics thead th { font-weight: 500; }
 .metrics tbody th { font-weight: 400; }
+.point-score { border: 0; background: transparent; padding: 4px 0; color: var(--right); text-align: left; text-decoration: underline; text-underline-offset: .2em; }
+.point-excerpt { margin-top: 10px; }
 .breakdown { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 5px; margin: 9px 0 14px; }
 .breakdown button { padding: 5px 8px; text-align: left; font-size: .84rem; }
 .breakdown button[aria-pressed="true"] { background: var(--left-tint); border-color: #819bab; }
