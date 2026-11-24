@@ -95,6 +95,7 @@
     "scripts/technical_runner.py",
     "scripts/native_execution.py",
     "scripts/native_execution_mcp.cjs",
+    "scripts/windows_python.cjs",
     "scripts/run_component_mcp.cjs",
     "scripts/component_service.cjs",
     "scripts/verify_mcp_package.cjs",
@@ -107,7 +108,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-06",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a31d42c04a8f4a5e5ff1130807b563601b69f077308835c4af36aad12c105dc6"
+    "source_fingerprint": "3a6e74ef3931567ff3456fa9ea9011a14d3b70cf0a06e32e72896fcf65919cac"
   },
   "runtime_profiles": [
     "openai-codex",

@@ -331,10 +331,15 @@ def _relative_path(value: object, *, label: str) -> str:
     return value
 
 
+def _archive_child_mode() -> int:
+    """Inherit Windows permissions from the selected Archive directory."""
+    return 0o777 if os.name == "nt" else 0o700
+
+
 def _ordinary_directory(path: Path, *, label: str, create: bool = False) -> Path:
     io_path = _io_path(path)
     if create and not io_path.exists() and not io_path.is_symlink():
-        io_path.mkdir(mode=0o700, parents=True)
+        io_path.mkdir(mode=_archive_child_mode(), parents=True)
     try:
         observed = io_path.lstat()
     except OSError as exc:
@@ -849,7 +854,7 @@ def create_engagement(
         engagement_id = _new_id("eng")
         target = engagements_root / engagement_id
         try:
-            target.mkdir(mode=0o700)
+            target.mkdir(mode=_archive_child_mode())
             break
         except FileExistsError:
             continue
@@ -857,7 +862,7 @@ def create_engagement(
         raise LedgerError("Could not allocate a unique engagement ID.")
     try:
         for child in ("inputs", "runs"):
-            (target / child).mkdir(mode=0o700)
+            (target / child).mkdir(mode=_archive_child_mode())
         content = {
             "schema_version": ENGAGEMENT_MANIFEST_SCHEMA,
             "client_id": client_id,
@@ -898,7 +903,7 @@ def ensure_engagement(
     key = _text(idempotency_key, label="idempotency_key", maximum=200)
     _prepare_engagements_root(root)
     requests = _product_root(root, LEDGER_DIRECTORY) / ".engagement-requests"
-    requests.mkdir(mode=0o700, exist_ok=True)
+    requests.mkdir(mode=_archive_child_mode(), exist_ok=True)
     _ordinary_directory(requests, label="engagement creation requests")
     identity = _canonical_json_sha256({"client_id": client_id, "key": key})
     legacy_intent = (
@@ -1494,7 +1499,7 @@ def import_document(
                 }
         input_id = _new_id("input")
         target = inputs_root / input_id
-        target.mkdir(mode=0o700)
+        target.mkdir(mode=_archive_child_mode())
         safe_name = source.name
         if Path(safe_name).name != safe_name or safe_name in {
             "",
@@ -2725,15 +2730,15 @@ def prepare_run(
             # Retain interrupted staging separately from published run records.
             run_root = preparation_root / run_id
             try:
-                _io_path(run_root).mkdir(mode=0o700)
+                _io_path(run_root).mkdir(mode=_archive_child_mode())
                 break
             except FileExistsError:
                 continue
         else:
             raise LedgerError("Could not allocate a unique run ID.")
         try:
-            _io_path(run_root / "inputs").mkdir(mode=0o700)
-            _io_path(run_root / "outputs").mkdir(mode=0o700)
+            _io_path(run_root / "inputs").mkdir(mode=_archive_child_mode())
+            _io_path(run_root / "outputs").mkdir(mode=_archive_child_mode())
             for binding in bindings:
                 source = _archive_path(root, binding["source_relative_path"])
                 destination = run_root / binding["execution_relative_path"]
@@ -2744,7 +2749,7 @@ def prepare_run(
                         not _io_path(destination_parent).exists()
                         and not _io_path(destination_parent).is_symlink()
                     ):
-                        _io_path(destination_parent).mkdir(mode=0o700)
+                        _io_path(destination_parent).mkdir(mode=_archive_child_mode())
                     _ordinary_directory(
                         destination_parent,
                         label="run execution input directory",
@@ -2759,7 +2764,7 @@ def prepare_run(
                 ):
                     raise LedgerError("Run execution input copy is not exact.")
             provenance = run_root / "source-receipts"
-            _io_path(provenance).mkdir(mode=0o700)
+            _io_path(provenance).mkdir(mode=_archive_child_mode())
             for binding in bindings:
                 receipt_path = _archive_path(root, binding["receipt_relative_path"])
                 receipt = _validate_seal(
@@ -3204,7 +3209,7 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                     / "reporting-history"
                     / secrets.token_hex(12)
                 )
-                history.mkdir(parents=True, mode=0o700)
+                history.mkdir(parents=True, mode=_archive_child_mode())
                 manifest.rename(history / manifest.name)
         loaded = _write_run_status_locked(root, engagement_id, run_id, "running")
         try:

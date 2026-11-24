@@ -58,6 +58,8 @@
     "scripts/local_onboarding.py",
     "scripts/local_onboarding_case.py",
     "scripts/onboarding_session_start.py",
+    "scripts/onboarding_session_start.cjs",
+    "scripts/windows_python.cjs",
     "hooks/hooks.json",
     "skills/vera/references/local-onboarding.md",
     "skills/vera/references/tutorial-cases.md",
@@ -93,7 +95,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4b7c177cfa61b7cd8b089f68cecf27db2a45348ed737c6e623e1247954e57373"
+    "source_fingerprint": "4b6994437b5d6bcfa1d3127f861f30ea7885c47d5d528a4f8bd39730582939ee"
   },
   "runtime_profiles": [
     "openai-codex"

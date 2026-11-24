@@ -26,6 +26,8 @@
     "hooks/hooks.json",
     "scripts/check_for_update.py",
     "scripts/onboarding_session_start.py",
+    "scripts/onboarding_session_start.cjs",
+    "scripts/windows_python.cjs",
     "scripts/local_onboarding.py",
     "scripts/local_teaching.py",
     "skills/vera/SKILL.md"
@@ -34,7 +36,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6b87b00d6e13c15228381ad41580f453716900ac3c39c5594e215ee2114a01f6"
+    "source_fingerprint": "f1144a1b208a4fdae8f545fbfbf32b0ac36a7c31ef3f848c22bae214a46bc4a0"
   },
   "runtime_profiles": [
     "openai-codex"

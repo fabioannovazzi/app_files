@@ -254,7 +254,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "0e536e6a13bd5d9b1ba56d6334e65f171829c790457c23d791556ef6e9d3caf5"
+      "sha256": "2812510a577923d0c8ca7e82ac14730c3b7a80c2a7cadb1e8c18dc054eba3eb9"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -289,7 +289,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "fa799d8d89227e91c915b2b7bfca7ed2d40c0381d231a6fb4748f890cdcfe6be"
+      "sha256": "1447b22c8b0b7fd0fd1530b943712b02e4c9bb4d49927a22ac84b58178e97bef"
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
