@@ -67,13 +67,12 @@
 <p>Il benchmark usa modelli AI in tutte le fasi, dalla costruzione della griglia all’assegnazione dei punti e al controllo delle fonti.</p>
 <ol>
 <li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia dei requisiti prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
-<li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
-<li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
-<li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
+<li><strong>Contenuti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
+<li><strong>Concordanza.</strong> Il modello confronta la conclusione della risposta con quella della soluzione canonica sulla questione centrale.</li>
+<li><strong>Copertura.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
+<li><strong>Citazioni.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
 </ol>
-<p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
-
-<p>Per l’indice di concordanza, il modello confronta la conclusione della risposta con quella della soluzione canonica sulla questione centrale.</p>
+<p>Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i risultati sono <strong>8/10 per i Contenuti</strong> e <strong>7/8 per la Copertura</strong>. Per le Citazioni, il denominatore è il totale degli usi distinti delle fonti citate. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
 
 <section id="prova-tu-il-benchmark" aria-labelledby="un-benchmark-aperto">
 <h2 id="un-benchmark-aperto">Un benchmark open</h2>
