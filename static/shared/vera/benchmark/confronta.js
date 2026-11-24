@@ -39,7 +39,7 @@
     const left = configNames.has(candidate) ? candidate : defaultLeft;
     const requested = params.get("b");
     const right = configNames.has(requested) && requested !== left
-      ? requested : data.configs.find(({ id }) => id !== left).id;
+      ? requested : left === defaultRight ? defaultLeft : defaultRight;
     const filter = params.get("esito");
     const selected = params.get("caso");
     return {
@@ -78,6 +78,7 @@
   function formatScore(score, withPercent = false) {
     if (!score || score[1] === 0) return "—";
     const [n, d, minimum] = score;
+    if (d === null) return n ? `${n.toLocaleString("it-IT")} pertinenti · totale aperto` : "Totale aperto";
     const percentage = withPercent ? ` (${Math.round(n * 100 / d)}%)` : "";
     return `${minimum ? "≥ " : ""}${n.toLocaleString("it-IT")}/${d.toLocaleString("it-IT")}${percentage}`;
   }
