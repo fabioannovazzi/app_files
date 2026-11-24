@@ -12,6 +12,12 @@ const MANIFEST = JSON.parse(
   fs.readFileSync(path.join(PLUGIN_ROOT, ".codex-plugin", "plugin.json"), "utf8"),
 );
 const BRIDGE = path.join(PLUGIN_ROOT, "scripts", "service_bridge.py");
+const REQUIRED_SERVICE_ENV = [
+  "VERA_XBRL_STORAGE_ROOT",
+  "VERA_XBRL_TENANT_ID",
+  "VERA_XBRL_ACTOR_ID",
+  "VERA_XBRL_ROLES",
+];
 
 const COMMON_MUTATION = {
   case_id: { type: "string", minLength: 1 },
@@ -360,6 +366,13 @@ function errorResponse(id, code, message) {
 }
 
 function callBridge(tool, args) {
+  if (REQUIRED_SERVICE_ENV.some((name) => !process.env[name])) {
+    throw new Error(
+      "Authenticated XBRL service environment is incomplete. " +
+      "For a local Studio Archive case, use the installed Bilancio OIC commands. " +
+      "For a hosted case, have the host configure the authenticated XBRL service.",
+    );
+  }
   const python = process.env.VERA_XBRL_PYTHON || "python3";
   // The host's bootstrap Python need not have the component dependencies.
   // Let the owning product select its managed worker, as its CLI does.

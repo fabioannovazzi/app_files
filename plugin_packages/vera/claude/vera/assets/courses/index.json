@@ -166,7 +166,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "e14c9e64b686d0e404417937f17f389eb1d04a58dcde6e2780e6723fca79af96",
+      "sha256": "b3438b44e5ba7c970219e88c9d7f222968da308fd6c6183d2814d4ef1354f043",
       "languages": [
         "it",
         "en"
@@ -182,7 +182,7 @@
         "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
         "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
       },
-      "source_sha256": "4bbb6f7f003c20b34c1ecf743a9037db5b57ec1573573e54f5832c216efb5f17"
+      "source_sha256": "5e62fe89aebf2824a222a1985c31eaf4b9eefb590feb7f11e4aac200dfcbf070"
     },
     "browser-automation": {
       "path": "browser-automation/course.json",

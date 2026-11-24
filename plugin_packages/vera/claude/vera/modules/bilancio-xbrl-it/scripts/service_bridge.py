@@ -26,6 +26,10 @@ DEFAULT_DISCLOSURE_RULE_PACK = (
 )
 
 
+class ServiceConfigurationError(PermissionError):
+    """The host has not supplied the authenticated XBRL service context."""
+
+
 def _trusted_rule_pack(environment_key: str, default_path: Path) -> dict[str, Any]:
     """Load one deployment-selected rule pack from a regular local file."""
 
@@ -93,7 +97,7 @@ def _context() -> RequestContext:
     }
     missing = [key for key, value in required.items() if not value]
     if missing:
-        raise PermissionError(
+        raise ServiceConfigurationError(
             f"Authenticated XBRL service environment is incomplete: {', '.join(missing)}"
         )
     return RequestContext(
@@ -384,7 +388,8 @@ def main() -> int:
         return 0
     except (KeyError, OSError, PermissionError, TypeError, ValueError) as exc:
         sys.stderr.write(f"{exc}\n")
-        return 2
+        # The managed runner follows the exception chain without uploading stderr.
+        raise SystemExit(2) from exc
 
 
 if __name__ == "__main__":

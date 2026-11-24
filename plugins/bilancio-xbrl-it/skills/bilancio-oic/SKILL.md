@@ -99,6 +99,13 @@ reviews remain blocking.
 
 ## Run workflow
 
+Use the installed local commands for a local Studio Archive run. The
+`xbrl_case_*` MCP tools require an authenticated, host-configured XBRL service.
+Call them only when the host exposes that service for the same case. The
+`scripts/service_bridge.py` entry point belongs to that service and is not a
+local case command. If a step requires the service and it is unavailable,
+report which step is blocked and keep the existing case and revision.
+
 For preparation of the closing accounts, read `references/closing-workflow.md`
 completely and follow its reviewed path before form selection and mapping.
 Use the same canonical case and authenticated service. Retain proposals,
