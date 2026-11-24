@@ -67,13 +67,12 @@
 <p>Il benchmark usa modelli AI in tutte le fasi, dalla costruzione della griglia all’assegnazione dei punti e al controllo delle fonti.</p>
 <ol>
 <li><strong>Costruiamo la griglia.</strong> Il modello legge ogni quesito e la soluzione pubblicata ed estrae i singoli requisiti. Fissiamo la griglia dei requisiti prima di assegnare i punteggi e la applichiamo a tutte le risposte allo stesso quesito. Se la griglia cambia, il metodo prevede di ricalcolare tutte le risposte interessate.</li>
-<li><strong>Contiamo i punti soddisfatti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
-<li><strong>Controlliamo il supporto documentale.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
-<li><strong>Verifichiamo come viene usata ogni citazione.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
+<li><strong>Contenuti.</strong> Il modello confronta ogni risposta con la griglia. Ogni requisito soddisfatto vale un punto. Un requisito omesso, trattato solo in parte o contraddetto altrove nella risposta vale zero.</li>
+<li><strong>Concordanza.</strong> Il modello confronta la conclusione della risposta con quella della soluzione canonica sulla questione centrale.</li>
+<li><strong>Copertura.</strong> Per ciascun punto soddisfatto, il modello verifica se almeno una delle fonti già citate nella risposta lo sostiene.</li>
+<li><strong>Citazioni.</strong> Il modello controlla se il passaggio citato sostiene l’affermazione, se si applica ai fatti e se la versione della fonte è pertinente alla data del caso. Una fonte usata per due affermazioni conta due volte. Lo stesso abbinamento tra fonte e affermazione, ripetuto nel medesimo caso, conta una volta.</li>
 </ol>
-<p>I tre indicatori hanno denominatori diversi. Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i primi due risultati sono <strong>8/10</strong> e <strong>7/8</strong>. Il terzo riguarda tutti gli usi distinti delle citazioni. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
-
-<p>Per l’indice di concordanza, il modello confronta la conclusione della risposta con quella della soluzione canonica sulla questione centrale.</p>
+<p>Se una risposta soddisfa 8 punti su 10 e 7 di quegli 8 hanno una fonte adeguata, i risultati sono <strong>8/10 per i Contenuti</strong> e <strong>7/8 per la Copertura</strong>. Per le Citazioni, il denominatore è il totale degli usi distinti delle fonti citate. Nei totali sommiamo numeratori e denominatori e arrotondiamo la percentuale all’intero più vicino. Con denominatore zero l’indicatore è «non applicabile».</p>
 
 <section id="prova-tu-il-benchmark" aria-labelledby="un-benchmark-aperto">
 <h2 id="un-benchmark-aperto">Un benchmark open</h2>
@@ -93,7 +92,7 @@
 <div class="benchmark-scroll" role="region" aria-labelledby="risultati" tabindex="0">
 <table class="benchmark-totals benchmark-results">
 <caption>15 configurazioni · 55 quesiti · 491 punti · 24 novembre 2026</caption>
-<thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Indice di concordanza</th><th scope="col">Supporto documentale</th><th scope="col">Citazioni pertinenti</th></tr></thead>
+<thead><tr><th scope="col">Configurazione</th><th scope="col">Contenuti</th><th scope="col">Concordanza</th><th scope="col">Copertura</th><th scope="col">Citazioni</th></tr></thead>
 <tbody>
 <tr><th scope="row">Sol 6.2 — Codex</th><td>433/491 (88%)</td><td>83%</td><td>428/433 (99%)</td><td>258 con sostegno verificato<br><small>Totale aperto</small></td></tr>
 <tr><th scope="row">Astra 6.2 — Codex</th><td>425/491 (87%)</td><td>85%</td><td>≥ 385/425 (91%)</td><td>1.135/1.152 (99%)</td></tr>
@@ -116,8 +115,8 @@
 <p><strong>≥ indica un minimo verificato.</strong> Dove il totale delle citazioni è ancora aperto, la tabella mostra il numero di relazioni fonte–affermazione già verificate come pertinenti. Le verifiche ancora aperte limitano il confronto tra sistemi sui due indicatori delle fonti.</p>
 
 <h2>Che cosa ci dicono i risultati</h2>
-<p><strong>Rigo AI molto competitivo.</strong> Ottiene l’85% sui contenuti e l’80% di concordanza. Gli altri verticali si fermano al 65% di concordanza o meno. Anche Sonnet 5.5 in Cowork, ultimo tra i generalisti, li supera tutti con il 69%. Sui contenuti ne supera quattro su cinque.</p>
 <p><strong>Generalisti vincono sui contenuti.</strong> Sol 6.2 in Codex è primo con l’88%, seguito da Astra 6.2 in Codex con l’87%. Sulla concordanza è prima Vera con Astra 6.2, all’87%.</p>
+<p><strong>Rigo AI molto competitivo.</strong> Ottiene l’85% sui contenuti e l’80% di concordanza. Gli altri verticali si fermano al 65% di concordanza o meno. Anche Sonnet 5.5 in Cowork, ultimo tra i generalisti, li supera tutti con il 69%. Sui contenuti ne supera quattro su cinque.</p>
 <p><strong>Nuovi modelli (Sol e Astra 6.2) molto migliorati.</strong> Sui contenuti Codex sale dall’80% all’87% e Vera dall’80% all’84%. Sulla concordanza Codex passa dal 75% all’85% e Vera dal 79% all’87%.</p>
 <p><strong>Vera non mostra vantaggio su Codex.</strong> Con Astra 6.2, Vera arriva più spesso alla conclusione canonica (87% contro 85%), mentre Codex copre più punti della griglia (87% contro 84%). Con Sol 6.2, Codex è avanti su entrambi gli indicatori.</p>
 
