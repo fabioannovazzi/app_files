@@ -209,44 +209,125 @@
     return table;
   }
 
-  function pointsBreakdown(item) {
+  const reviewsByCase = new Map();
+
+  function loadPointReview(item, container) {
+    const cached = reviewsByCase.get(item.id);
+    if (cached) {
+      container.replaceChildren(pointsBreakdown(item, cached));
+      return;
+    }
+    const status = node("p", "Caricamento dei singoli punti…", "muted");
+    status.setAttribute("role", "status");
+    container.replaceChildren(status);
+    fetch(`dettagli/${encodeURIComponent(item.id)}.json`)
+      .then((response) => {
+        if (!response.ok) throw new Error("Dettaglio non disponibile");
+        return response.json();
+      })
+      .then((review) => {
+        reviewsByCase.set(item.id, review);
+        if (container.isConnected) container.replaceChildren(pointsBreakdown(item, review));
+      })
+      .catch(() => {
+        if (!container.isConnected) return;
+        status.textContent = "Il dettaglio dei punti non è disponibile al momento.";
+        container.append(button("Riprova", () => loadPointReview(item, container), "detail-back"));
+      });
+  }
+
+  function pointsBreakdown(item, review) {
     const counts = item.astra62;
     const ideas = [
-      [counts.both, "Entrambi"],
-      [counts.veraOnly, "Solo Vera"],
-      [counts.codexOnly, "Solo Codex"],
-      [counts.neither, "Nessuno dei due"]
+      ["both", "Entrambi"],
+      ["veraOnly", "Solo Vera"],
+      ["codexOnly", "Solo Codex"],
+      ["neither", "Nessuno dei due"]
     ];
     const section = node("div", undefined, "detail-notes");
     section.append(node("h3", "Chi ha soddisfatto i punti"));
     const grid = node("div", undefined, "breakdown");
-    for (const [value, label] of ideas) {
-      const cell = node("div");
-      cell.append(node("strong", String(value)), document.createTextNode(label));
-      grid.append(cell);
+    const status = node("span");
+    status.setAttribute("role", "status");
+    status.className = "muted";
+    const list = node("div", undefined, "point-list");
+    list.id = "point-list";
+
+    function show(group, label) {
+      const points = review.points.filter((point) => pointGroup(point) === group);
+      status.textContent = `${label} · ${points.length} ${points.length === 1 ? "punto" : "punti"}`;
+      list.replaceChildren(...points.map((point) => renderPoint(point, review.opinions)));
+      for (const control of grid.children) {
+        control.setAttribute("aria-pressed", String(control.dataset.group === group));
+      }
     }
-    section.append(grid);
+
+    for (const [group, label] of ideas) {
+      const control = button(`${label} · ${counts[group]}`, () => show(group, label));
+      control.dataset.group = group;
+      control.setAttribute("aria-controls", list.id);
+      control.disabled = counts[group] === 0;
+      grid.append(control);
+    }
+    section.append(grid, status, list);
+    const first = ["codexOnly", "veraOnly", "neither", "both"].find((group) => counts[group]);
+    show(first, ideas.find(([group]) => group === first)[1]);
     return section;
   }
 
-  function renderExample(example) {
-    const section = node("div", undefined, "detail-notes");
-    section.append(node("h3", "Perché questi punteggi"));
-    for (const point of example.points) {
-      const article = node("article");
-      article.append(node("h3",point.title));
-      const excerptPair = node("div", undefined, "excerpts");
-      for (const side of ["left", "right"]) {
-        const selected = state[side];
-        const excerpt = node("div", undefined, `excerpt ${side}-card`);
-        excerpt.append(node("strong", configNames.get(selected)), node("blockquote",
-          selected === defaultLeft ? point.vera : point.codex));
-        excerptPair.append(excerpt);
+  function pointGroup(point) {
+    const vera = point.results[defaultLeft].score;
+    const codex = point.results[defaultRight].score;
+    if (vera === codex) return vera ? "both" : "neither";
+    return vera ? "veraOnly" : "codexOnly";
+  }
+
+  function renderPoint(point, opinions) {
+    const article = node("article", undefined, "review-point");
+    article.append(node("p", point.id, "muted"),
+      node("h3", "Cosa doveva spiegare la risposta"), node("p", point.requirement));
+    const cards = node("div", undefined, "excerpts");
+    for (const side of ["left", "right"]) {
+      const id = state[side];
+      const result = point.results[id];
+      const card = node("div", undefined, `excerpt ${side}-card`);
+      const product = id === defaultLeft ? "Vera" : "Codex";
+      card.append(node("h4", `Cosa ha scritto ${product}`));
+      if (result.context) {
+        card.append(node("blockquote", result.context));
       }
-      article.append(excerptPair, node("p", point.note));
-      section.append(article);
+      result.evidence.forEach(({line, text}, i) => {
+        const disclosure = node("details", undefined, "review-passage");
+        const label = i === 0 && !result.context ? "Brano della risposta" : "Altro brano della risposta";
+        disclosure.open = i === 0 && !result.context;
+        disclosure.append(node("summary", `${label} · riga ${line}`),
+          node("blockquote", text.replace(/\*\*/g, "").replace(/\[([^\[\]\n]+)\]\(https?:\/\/[^\s)]+\)/g, "$1")));
+        card.append(disclosure);
+      });
+      const open = button("Apri il parere completo", () => openOpinion(id, opinions[id]), "detail-back");
+      open.setAttribute("aria-label", `Apri il parere completo di ${product}`);
+      const verdict = result.score ? "Perché il valutatore ha dato un punto" : "Perché il valutatore ha dato zero";
+      card.append(open, node("h4", verdict, "review-verdict"), node("p", result.reason));
+      if (result.unresolved) card.append(node("p", "Punto da riesaminare.", "muted"));
+      cards.append(card);
     }
-    return section;
+    article.append(cards);
+    return article;
+  }
+
+  function openOpinion(id, opinion) {
+    const dialog = node("dialog", undefined, "full-opinion");
+    dialog.setAttribute("aria-labelledby", "opinion-title");
+    const heading = node("h2", `Parere completo · ${configNames.get(id)}`);
+    heading.id = "opinion-title";
+    const toolbar = node("div", undefined, "opinion-toolbar");
+    toolbar.append(heading, button("Chiudi", () => dialog.close(), "detail-back"));
+    const body = node("div", undefined, "opinion-body");
+    body.innerHTML = opinion;
+    dialog.append(toolbar, body);
+    dialog.addEventListener("close", () => dialog.remove(), {once: true});
+    document.body.append(dialog);
+    dialog.showModal();
   }
 
   function shareCase() {
@@ -295,9 +376,13 @@
     if (example) controls.detail.append(node("p", example.summary));
     if (example?.scoreNote) controls.detail.append(node("p", example.scoreNote));
     controls.detail.append(metricsTable(item));
-    if (isAstra62Pair(state)) controls.detail.append(pointsBreakdown(item));
-    if (example) controls.detail.append(renderExample(example));
-    else controls.detail.append(node("p", "Per questo quesito pubblichiamo i punteggi. La motivazione dei singoli punti non è disponibile qui.", "muted"));
+    if (isAstra62Pair(state)) {
+      const review = node("div");
+      controls.detail.append(review);
+      loadPointReview(item, review);
+    } else {
+      controls.detail.append(node("p", "Il dettaglio dei singoli punti è disponibile per il confronto tra Vera e Codex con Astra 6.2.", "muted"));
+    }
     controls.detail.append(shareCase());
   }
 
