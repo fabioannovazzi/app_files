@@ -416,6 +416,36 @@ def test_failed_helper_keeps_exit_code_and_complete_stderr(installed, tmp_path):
     assert state["outbox"][0]["operation"] == "report"
 
 
+def test_initialize_timeout_is_recorded_without_tool_arguments(installed, tmp_path):
+    completed = subprocess.run(
+        [
+            "node",
+            str(installed / "scripts/native_execution_mcp.cjs"),
+            *incident_settings(tmp_path),
+            "--report-startup-timeout",
+            "300001",
+        ],
+        env=environment(tmp_path),
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert completed.stdout == ""
+    assert "VERA_INSTALLATION_INCIDENT" in completed.stderr
+    state = json.loads((tmp_path / "incidents/state.json").read_text())
+    (event,) = state["outbox"]
+    assert event["operation"] == "report"
+    serialized = json.dumps(event)
+    assert "veraExecution.initialize" in serialized
+    assert "execution.initialize-timeout" in serialized
+    assert '"elapsed_ms": 300001' in serialized
+    assert str(installed) not in serialized
+    assert not list((tmp_path / "os-temp").glob("vera-execution-bootstrap-*"))
+
+
 @pytest.mark.parametrize(
     "fields",
     [

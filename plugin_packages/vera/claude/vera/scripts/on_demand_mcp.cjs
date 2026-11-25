@@ -5,7 +5,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
 const { randomUUID } = require("node:crypto");
+const { spawn } = require("node:child_process");
 const { ServiceClient } = require("./mcp_service_client.cjs");
+
+const NATIVE_STARTUP_TIMEOUT_MS = 300000;
 
 function main(root = path.resolve(__dirname, "..")) {
   require("./verify_mcp_package.cjs").verify(root);
@@ -36,6 +39,7 @@ function main(root = path.resolve(__dirname, "..")) {
     return settingsPath;
   }
   const services = new Map();
+  const startupReporters = new Set();
   const active = new Map();
   const serverRequests = new Map();
   let serverSequence = 0;
@@ -43,6 +47,26 @@ function main(root = path.resolve(__dirname, "..")) {
   let initialization;
   const output = message => { if (!closing) process.stdout.write(JSON.stringify(message) + "\n"); };
   const failure = (id, code, message) => output({ jsonrpc: "2.0", id, error: { code, message } });
+  const isNativeExecution = name => product === "vera" && name === "veraExecution";
+  function removeReportingSettings() {
+    if (closing && !startupReporters.size && settingsPath)
+      fs.rmSync(settingsPath, { force: true });
+  }
+  function reportStartupTimeout(elapsedMs) {
+    try {
+      const reporter = spawn(process.execPath, [path.join(root, "scripts/native_execution_mcp.cjs"),
+        "--settings", reportingSettingsPath(), "--report-startup-timeout", String(elapsedMs)],
+      { cwd: root, env: serviceEnvironment, stdio: ["ignore", "ignore", "inherit"] });
+      startupReporters.add(reporter);
+      reporter.on("error", () => process.stderr.write("Vera startup timeout reporter could not start.\n"));
+      reporter.once("close", () => {
+        startupReporters.delete(reporter);
+        removeReportingSettings();
+      });
+    } catch {
+      process.stderr.write("Vera startup timeout reporter could not start.\n");
+    }
+  }
   const items = field => catalog.services.flatMap(service => service[field] || []);
   const owners = field => {
     const map = new Map();
@@ -61,7 +85,7 @@ function main(root = path.resolve(__dirname, "..")) {
     resources.set(resource.uri, service.name);
   }
 
-  async function service(name, reconnectForStatus) {
+  function service(name, reconnectForStatus) {
     if (closing) throw new Error(`${product} connection is closing`);
     // Native job state belongs to disk. A new status request can inspect it
     // through a fresh service, while the failed operation stays unreplayed.
@@ -80,14 +104,26 @@ function main(root = path.resolve(__dirname, "..")) {
           output({ ...message, id });
         },
       });
-      const ready = client.initialize(initialization).then(() => client).catch(error => {
+      const native = isNativeExecution(name);
+      const started = performance.now();
+      const entry = { client, initializing: true };
+      entry.ready = client.initialize(initialization, native ? NATIVE_STARTUP_TIMEOUT_MS : undefined).then(() => {
+        entry.initializing = false;
+        return client;
+      }).catch(error => {
+        entry.initializing = false;
+        // Initialization failed before any tool request reached this worker.
+        // Preserve the existing status-only handling for a dispatched job.
+        if (native && services.get(name) === entry) services.delete(name);
         client.close("SIGTERM");
+        if (native && !closing && error.code === "MCP_REQUEST_TIMEOUT")
+          reportStartupTimeout(Math.round(performance.now() - started));
         throw error;
       });
       // Store before waiting so simultaneous first calls share one worker.
-      services.set(name, { client, ready });
+      services.set(name, entry);
     }
-    return services.get(name).ready;
+    return services.get(name);
   }
 
   async function handle(message) {
@@ -139,6 +175,7 @@ function main(root = path.resolve(__dirname, "..")) {
     if (!name) { failure(id, -32602, `Unknown ${product} method or target: ${message.method}`); return; }
     if (active.has(id)) { failure(id, -32600, "Duplicate active request ID"); return; }
     const pending = {};
+    let startupProgress;
     active.set(id, pending);
     try {
       const reconnectForStatus = product === "vera"
@@ -146,7 +183,18 @@ function main(root = path.resolve(__dirname, "..")) {
         && message.method === "tools/call"
         && message.params?.name === "vera_execute"
         && message.params?.arguments?.operation === "status";
-      const client = await service(name, reconnectForStatus);
+      const entry = service(name, reconnectForStatus);
+      const progressToken = message.params?._meta?.progressToken;
+      if (isNativeExecution(name) && entry.initializing && progressToken !== undefined) {
+        let progress = 0;
+        startupProgress = setInterval(() => {
+          if (!pending.cancelled) output({ jsonrpc: "2.0", method: "notifications/progress", params: {
+            progressToken, progress: ++progress, message: "Vera is preparing its native execution service.",
+          } });
+        }, 10000);
+      }
+      const client = await entry.ready;
+      clearInterval(startupProgress);
       if (pending.cancelled) { failure(id, -32800, "Request cancelled before tool execution"); return; }
       const reply = await client.call(message.method, message.params, { started(workerId) {
         pending.client = client;
@@ -165,7 +213,7 @@ function main(root = path.resolve(__dirname, "..")) {
       }
       output({ ...reply, id });
     } catch (error) { failure(id, -32000, error.message); }
-    finally { active.delete(id); }
+    finally { clearInterval(startupProgress); active.delete(id); }
   }
 
   const input = readline.createInterface({ input: process.stdin, crlfDelay: Infinity });
@@ -179,7 +227,7 @@ function main(root = path.resolve(__dirname, "..")) {
   });
   const close = signal => {
     closing = true;
-    if (settingsPath) fs.rmSync(settingsPath, { force: true });
+    removeReportingSettings();
     for (const { client } of services.values()) client.close(signal);
     input.close();
   };

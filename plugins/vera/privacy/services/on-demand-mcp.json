@@ -6,7 +6,8 @@
     ".mcp.json",
     "mcp-services.json",
     "scripts/on_demand_mcp.cjs",
-    "scripts/incident_host_mcp.cjs"
+    "scripts/incident_host_mcp.cjs",
+    "scripts/native_execution_mcp.cjs"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -36,7 +37,7 @@
     },
     {
       "id": "connection-lifetime",
-      "control": "Concurrent first requests share a worker. Used services retain their review state until the host connection closes; unused services never start during runtime discovery. Closing the connection ends worker input. Separately accepted native jobs retain their existing ownership policy. After the native execution service closes, a later explicit status query can open a fresh service to inspect the retained job. No earlier request is replayed.",
+      "control": "Concurrent first requests share a worker. Used services retain their review state until the host connection closes; unused services never start during runtime discovery. Closing the connection ends worker input. A failed native execution initialization clears the unused service so a later explicit request can start a fresh worker. Separately accepted native jobs retain their existing ownership policy. After the native execution service closes, a later explicit status query can open a fresh service to inspect the retained job. No earlier request is replayed.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs"
       ],
@@ -52,9 +53,11 @@
     },
     {
       "id": "server-owned-explicit-reporting-settings",
-      "control": "The native server passes internal settings explicitly to the Python reporter. The on-demand server retains one private session settings file and passes its path to the incident host; workflow task UUIDs are bound per request. No user credential or custom production endpoint is requested. Production reporting uses the existing fixed Mparanza endpoints. Host permissions remain authoritative.",
+      "control": "The native server passes internal settings explicitly to the Python reporter. The on-demand server retains one private session settings file and passes its path to the incident host; workflow task UUIDs are bound per request. A native execution initialization timeout uses the same incident reporting session. Its diagnostic adds only a fixed event code, service and phase, and elapsed milliseconds. Tool arguments and professional inputs are not read for this event. No user credential or custom production endpoint is requested. Production reporting uses the existing fixed Mparanza endpoints. Host permissions remain authoritative.",
       "implemented_by": [
-        "scripts/incident_host_mcp.cjs"
+        "scripts/incident_host_mcp.cjs",
+        "scripts/on_demand_mcp.cjs",
+        "scripts/native_execution_mcp.cjs"
       ],
       "on_violation": "Invalid settings are rejected before reporting; reporting failure remains separate from professional task completion."
     }
@@ -79,6 +82,6 @@
     "reviewed_at": "2026-11-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "fa602fe6c55c592d1e04f9e48a855055dc0cb776542dfe64678ff4c8a6720d29"
+    "source_fingerprint": "79b6042e0e926cb9fbc43b2f2bb8d57b1944de81894a2b01de64dc763f69ac3b"
   }
 }
