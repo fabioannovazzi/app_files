@@ -15,6 +15,10 @@ from lipe_core import ROOT, ContractError, calculate, digest, money, read_json
 __all__ = ["extract", "save_result", "main"]
 
 
+class ArchiveContextError(ContractError):
+    """Studio Archive rejected the execution context or its bound inputs."""
+
+
 def _write_json(path: Path, value: dict) -> None:
     with path.open("x", encoding="utf-8") as handle:
         path.chmod(0o600)
@@ -254,11 +258,20 @@ def _archive(
         if (vendor / "vera_assurance").is_dir():
             sys.path.insert(0, str(vendor))
             break
-    from vera_assurance import load_client_engagement_context_file
-
-    context = load_client_engagement_context_file(
-        context_path, expected_workflow_id="lipe", input_paths=[case_path]
+    from vera_assurance import (
+        AssuranceContractError,
+        load_client_engagement_context_file,
     )
+
+    def load_context(inputs: list[Path]) -> dict:
+        try:
+            return load_client_engagement_context_file(
+                context_path, expected_workflow_id="lipe", input_paths=inputs
+            )
+        except AssuranceContractError as error:
+            raise ArchiveContextError(str(error)) from error
+
+    context = load_context([case_path])
     if context["schema_version"] != "vera.client_workflow_context.v2" or (
         case["client_id"],
         case["engagement_id"],
@@ -269,9 +282,7 @@ def _archive(
     paths.extend(path.resolve() for path in (extra_inputs or []))
     if any(not path.is_relative_to(root.resolve()) for path in paths):
         raise ContractError("Source escapes archive inputs")
-    load_client_engagement_context_file(
-        context_path, expected_workflow_id="lipe", input_paths=paths
-    )
+    load_context(paths)
     return root, Path(context["output_dir"])
 
 
@@ -326,9 +337,26 @@ def main(argv: list[str] | None = None) -> int:
         result["result_hash"] = digest(result)
     folder = save_result(case, result, output)
     logging.info("LIPE %s: %s", result["status"], folder)
-    return 2 if result["status"].startswith("BLOCKED") else 0
+    if result["status"].startswith("BLOCKED"):
+        logging.error(
+            "LIPE calculation blocked. Read the blockers in the saved result.json."
+        )
+        return 2
+    return 0
+
+
+def _cli() -> int:
+    try:
+        return main()
+    except ArchiveContextError as error:
+        logging.info("LIPE Archive validation detail: %s", error)
+    logging.error(
+        "LIPE Archive context rejected. Check the run context and the exact paths "
+        "registered for the case JSON and its evidence."
+    )
+    return 1
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    raise SystemExit(main())
+    raise SystemExit(_cli())

@@ -155,7 +155,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "f28e065dbaf3576523fc06482035472f5b41432341f6932ef53636c9b1436df6",
+  "course_sha256": "dfe19c44c634fb44cdabcd861af5c66da5817677d05626e481b84864f20cc4b5",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",

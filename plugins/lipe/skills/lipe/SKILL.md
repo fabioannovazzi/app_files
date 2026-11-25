@@ -104,11 +104,18 @@ carry a small debit into a forbidden next-period VP7.
 
 ## Calculate and review
 
-Import the completed case JSON into the archive input inventory, then run:
+Import the completed case JSON into the engagement and include its input ID,
+along with the evidence input IDs, when preparing the LIPE run. Start the run
+and find the case JSON entry in `context.input_bindings` by matching its
+`binding_id` to the imported case input ID. Pass that entry's exact `path` as
+`--case` and the started run's `context_path` as `--client-engagement`:
 
 ```bash
-python scripts/lipe.py calculate --case /absolute/run/inputs/case.json --client-engagement /absolute/client_engagement.json
+python scripts/lipe.py calculate --case "$case_binding_path" --client-engagement "$run_context_path"
 ```
+
+If calculation exits with code `2`, check the run's output for a saved
+`result.json` and report its `status` and `blockers` when present.
 
 For the bundled synthetic example only:
 
