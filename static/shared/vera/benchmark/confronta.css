@@ -130,3 +130,4 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 
 .verification-passages blockquote { white-space: pre-line; }
 .verification-passages .muted { font-size: .78rem; margin: 3px 0 9px; }
+.verification-passages blockquote + .muted { margin-top: 12px; }

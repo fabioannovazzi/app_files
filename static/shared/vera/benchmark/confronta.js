@@ -257,10 +257,18 @@
 
   function getPointReview(caseId) {
     if (!reviewsByCase.has(caseId)) {
-      const request = fetch(`dettagli-estesi/${encodeURIComponent(caseId)}.json`)
+      const detail = fetch(`dettagli-estesi/${encodeURIComponent(caseId)}.json`)
         .then((response) => {
           if (!response.ok) throw new Error("Dettaglio non disponibile");
           return response.json();
+        });
+      const evidence = fetch(`verifica-punti/${encodeURIComponent(caseId)}.json?v=1`)
+        .then((response) => response.ok ? response.json() : null)
+        .catch(() => null);
+      const request = Promise.all([detail, evidence])
+        .then(([review, verification]) => {
+          if (verification?.id === caseId) review.verification = verification;
+          return review;
         })
         .catch((error) => {
           reviewsByCase.delete(caseId);
@@ -293,8 +301,8 @@
     const name = (id) => id === defaultLeft ? "Vera" : id === defaultRight ? "Codex" : configNames.get(id);
     const [left, right] = tools;
     const verification = verificationByCase[review.id];
-    const showAll = right && verification && review.points.every((point) =>
-      verification[point.id]?.passages[left] && verification[point.id].passages[right]);
+    const showAll = right && (review.verification || (verification && review.points.every((point) =>
+      verification[point.id]?.passages[left] && verification[point.id].passages[right])));
     const ideas = right ? [
       ...(showAll ? [["all", "Tutti i punti", () => true]] : []),
       ["both", "Entrambi", (p) => p.results[left].score && p.results[right].score],
@@ -343,6 +351,7 @@
   function renderPoint(point, review, tools) {
     const article = node("article", undefined, "review-point");
     const requirement = tools.length === 1 ? point.results[tools[0]].requirement || point.requirement : point.requirement;
+    const caseReference = review.verification?.points[point.id];
     article.append(node("p", point.id, "muted"),
       node("h3", "Cosa doveva spiegare la risposta"), node("p", requirement));
     const savedVerification = verificationByCase[review.id]?.[point.id];
@@ -350,6 +359,9 @@
     if (verification) {
       article.append(node("h4", "Riferimento Eutekne"), node("p", verification.reference),
         node("p", verification.locator, "muted"));
+    } else if (caseReference) {
+      article.append(node("h4", "Riferimento Eutekne"),
+        node("p", `${review.verification.date}. Il criterio sopra riassume il riferimento. ${caseReference.locator}`, "muted"));
     }
     const cards = node("div", undefined, tools.length === 2 ? "excerpts" : "point-excerpt");
     for (const id of tools) {
@@ -367,6 +379,8 @@
           passages.append(node("blockquote", text), node("p", locator, "muted"));
         }
         card.append(passages);
+      } else if (caseReference) {
+        appendVerifiedPassages(card, caseReference.passages[id] || []);
       } else {
         appendRegisteredPassages(card, result);
       }
@@ -381,6 +395,20 @@
       article.append(node("h4", "Cosa verificare"), node("p", verification.check));
     }
     return article;
+  }
+
+  function appendVerifiedPassages(card, passages) {
+    if (!passages.length) {
+      card.append(node("p", "Non è stato individuato un brano mirato. La motivazione qui sotto riporta ciò che ha rilevato il valutatore.", "muted"));
+      return;
+    }
+    const section = node("div", undefined, "verification-passages");
+    for (const {text, kind} of passages) {
+      const label = kind === "register" ? "Brano del registro verificato nel parere"
+        : "Passaggio da confrontare · selezione automatica";
+      section.append(node("p", label, "muted"), node("blockquote", text));
+    }
+    card.append(section);
   }
 
   function appendRegisteredPassages(card, result) {
