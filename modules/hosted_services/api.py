@@ -444,6 +444,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "transparency": {
+            "id": "transparency",
+            "title": "Transparent by design.",
+            "description": (
+                "To use AI in professional work, we believe it’s important to see where it works and where it gets things wrong. "
+                "In our tax benchmark, we compare Vera with other tools on the same questions. "
+                "You can read the full answers and see how we awarded points for each case."
+            ),
+            "links_label": "Tax benchmark",
+            "methodology_label": "Explore the tax benchmark",
+            "compare_label": "Compare the answers",
+        },
         "free": {
             "id": "free",
             "title": "Free by design.",
@@ -679,6 +691,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "transparency": {
+            "id": "transparency",
+            "title": "Trasparenti per scelta.",
+            "description": (
+                "Per usare l’AI nel lavoro professionale, crediamo sia importante poter vedere dove funziona e dove sbaglia. "
+                "Nel nostro benchmark fiscale confrontiamo Vera con altri strumenti sugli stessi quesiti. "
+                "Puoi leggere le risposte complete e vedere, caso per caso, come abbiamo assegnato i punti."
+            ),
+            "links_label": "Benchmark fiscale",
+            "methodology_label": "Esplora il benchmark fiscale",
+            "compare_label": "Confronta le risposte",
+        },
         "free": {
             "id": "free",
             "title": "Gratuiti per scelta.",
@@ -906,6 +930,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "href": "https://github.com/fabioannovazzi/app_files/blob/main/LICENSE",
                 },
             ],
+        },
+        "transparency": {
+            "id": "transparency",
+            "title": "Transparents par conception.",
+            "description": (
+                "Pour utiliser l’IA dans le travail professionnel, nous pensons qu’il est important de voir où elle fonctionne et où elle se trompe. "
+                "Dans notre benchmark fiscal, nous comparons Vera à d’autres outils sur les mêmes questions. "
+                "Vous pouvez lire les réponses intégrales et voir, au cas par cas, comment nous avons attribué les points."
+            ),
+            "links_label": "Benchmark fiscal",
+            "methodology_label": "Explorer le benchmark fiscal",
+            "compare_label": "Comparer les réponses",
         },
         "free": {
             "id": "free",
@@ -1140,6 +1176,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "transparency": {
+            "id": "transparency",
+            "title": "Transparent konzipiert.",
+            "description": (
+                "Beim Einsatz von KI im Berufsalltag ist es uns wichtig, dass Sie sehen können, wo sie gute Ergebnisse liefert und wo sie Fehler macht. "
+                "In unserem Steuerbenchmark vergleichen wir Vera anhand derselben Fragen mit anderen Tools. "
+                "Sie können die vollständigen Antworten lesen und für jeden Fall nachvollziehen, wie wir die Punkte vergeben haben."
+            ),
+            "links_label": "Steuerbenchmark",
+            "methodology_label": "Steuerbenchmark ansehen",
+            "compare_label": "Antworten vergleichen",
+        },
         "free": {
             "id": "free",
             "title": "Kostenlos konzipiert.",
@@ -1371,6 +1419,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
         },
+        "transparency": {
+            "id": "transparency",
+            "title": "Transparentes por diseño.",
+            "description": (
+                "Para usar la IA en el trabajo profesional, creemos que es importante poder ver dónde funciona y dónde se equivoca. "
+                "En nuestro benchmark fiscal comparamos a Vera con otras herramientas a partir de las mismas preguntas. "
+                "Puedes leer las respuestas completas y ver, caso por caso, cómo asignamos los puntos."
+            ),
+            "links_label": "Benchmark fiscal",
+            "methodology_label": "Explora el benchmark fiscal",
+            "compare_label": "Compara las respuestas",
+        },
         "free": {
             "id": "free",
             "title": "Gratuitos por diseño.",
@@ -1561,6 +1621,7 @@ def landing_page(request: Request) -> Any:
             hero=landing_page_content["hero"],
             harness=landing_page_content["harness"],
             open_source=landing_page_content["open_source"],
+            transparency=landing_page_content["transparency"],
             free=landing_page_content["free"],
             security=landing_page_content["security"],
             compliance=landing_page_content["compliance"],
@@ -1778,6 +1839,8 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
                 section.get("links", []),
                 reference.get("links", []) if isinstance(reference, dict) else [],
             )
+    transparency = content["transparency"]
+    benchmark_path = "/static/shared/vera/benchmark"
     return {
         "primary": content.get("primary"),
         "sections": sections,
@@ -1785,6 +1848,22 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
         "hero": content.get("hero"),
         "harness": content.get("harness", {}),
         "open_source": content.get("open_source", {}),
+        "transparency": {
+            "id": transparency["id"],
+            "title": transparency["title"],
+            "description": transparency["description"],
+            "links_label": transparency["links_label"],
+            "links": [
+                {
+                    "label": transparency["methodology_label"],
+                    "href": f"{benchmark_path}/metodologia.html",
+                },
+                {
+                    "label": transparency["compare_label"],
+                    "href": f"{benchmark_path}/confronta.html",
+                },
+            ],
+        },
         "free": content.get("free", {}),
         "security": content.get("security", {}),
         "compliance": content.get("compliance", {}),

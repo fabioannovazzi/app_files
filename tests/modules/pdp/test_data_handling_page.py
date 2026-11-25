@@ -292,6 +292,68 @@ def test_homepage_collaborative_section_uses_approved_copy() -> None:
     }
 
 
+@pytest.mark.parametrize(
+    ("lang", "title", "methodology_label", "compare_label"),
+    (
+        (
+            "en",
+            "Transparent by design.",
+            "Explore the tax benchmark",
+            "Compare the answers",
+        ),
+        (
+            "it",
+            "Trasparenti per scelta.",
+            "Esplora il benchmark fiscale",
+            "Confronta le risposte",
+        ),
+        (
+            "fr",
+            "Transparents par conception.",
+            "Explorer le benchmark fiscal",
+            "Comparer les réponses",
+        ),
+        (
+            "de",
+            "Transparent konzipiert.",
+            "Steuerbenchmark ansehen",
+            "Antworten vergleichen",
+        ),
+        (
+            "es",
+            "Transparentes por diseño.",
+            "Explora el benchmark fiscal",
+            "Compara las respuestas",
+        ),
+    ),
+)
+def test_homepage_passes_localized_transparency_with_direct_benchmark_links(
+    monkeypatch: pytest.MonkeyPatch,
+    lang: str,
+    title: str,
+    methodology_label: str,
+    compare_label: str,
+) -> None:
+    captured = _capture_template_response(monkeypatch)
+    response = TestClient(app).get(f"/?lang={lang}")
+
+    assert response.status_code == 200
+    context = captured["context"]
+    assert isinstance(context, dict)
+    section = context["transparency"]
+    assert section["title"] == title
+    assert section["links"] == [
+        {
+            "label": methodology_label,
+            "href": "/static/shared/vera/benchmark/metodologia.html",
+        },
+        {
+            "label": compare_label,
+            "href": "/static/shared/vera/benchmark/confronta.html",
+        },
+    ]
+
+
 def test_homepage_passes_collaborative_section_to_template(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -425,7 +487,7 @@ def test_homepage_places_free_and_security_after_open_by_design() -> None:
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
 
     narrative_markers = (
-        'class="landing-open-source"',
+        "[open_source, transparency]",
         'class="landing-free"',
         'class="landing-security"',
         'class="landing-bridge"',
