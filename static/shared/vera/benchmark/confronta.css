@@ -127,3 +127,6 @@ label { display: block; font-size: .85rem; font-weight: 500; }
 }
 
 .full-opinion table { display: block; max-width: 100%; overflow-x: auto; }
+
+.verification-passages blockquote { white-space: pre-line; }
+.verification-passages .muted { font-size: .78rem; margin: 3px 0 9px; }
