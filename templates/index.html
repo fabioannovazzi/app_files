@@ -102,26 +102,26 @@
     </section>
   {% endif %}
 
-  {% if open_source %}
-    <section id="{{ open_source.id }}"
+  {% for principle in [open_source, transparency] if principle %}
+    <section id="{{ principle.id }}"
              class="landing-open-source"
-             aria-labelledby="landing-open-source-title">
-      <h2 id="landing-open-source-title">{{ open_source.title }}</h2>
+             aria-labelledby="landing-{{ principle.id }}-title">
+      <h2 id="landing-{{ principle.id }}-title">{{ principle.title }}</h2>
       <div class="landing-open-source__body">
-        <p>{{ open_source.description }}</p>
-        {% if open_source.links %}
+        <p>{{ principle.description }}</p>
+        {% if principle.links %}
           <nav class="landing-open-source__links"
-               aria-label="{{ open_source.links_label }}">
-            {% for item in open_source.links %}
-              <a href="{{ item.href }}" target="_blank" rel="noopener noreferrer">
-                {{ item.label }}
+               aria-label="{{ principle.links_label }}">
+            {% for item in principle.links %}
+              <a href="{{ item.href }}"{% if principle.id == open_source.id %} target="_blank" rel="noopener noreferrer"{% else %} hreflang="it"{% endif %}>
+                <span>{{ item.label }}{% if principle.id == transparency.id %} <span aria-hidden="true">→</span>{% endif %}</span>
               </a>
             {% endfor %}
           </nav>
         {% endif %}
       </div>
     </section>
-  {% endif %}
+  {% endfor %}
 
   {% if free %}
     <section id="{{ free.id }}"
