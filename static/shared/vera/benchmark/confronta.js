@@ -3,6 +3,7 @@
   const examples = window.fiscalBenchmarkExamples;
   const outcomes = window.fiscalBenchmarkOutcomes;
   const pointRegisters = window.fiscalBenchmarkPointRegisters;
+  const verificationByCase = window.fiscalBenchmarkPointVerification || {};
   const byId = (id) => document.getElementById(id);
   const controls = {
     left: byId("left"), right: byId("right"), query: byId("query"), sort: byId("sort"),
@@ -291,7 +292,11 @@
   function pointsBreakdown(review, tools) {
     const name = (id) => id === defaultLeft ? "Vera" : id === defaultRight ? "Codex" : configNames.get(id);
     const [left, right] = tools;
+    const verification = verificationByCase[review.id];
+    const showAll = right && verification && review.points.every((point) =>
+      verification[point.id]?.passages[left] && verification[point.id].passages[right]);
     const ideas = right ? [
+      ...(showAll ? [["all", "Tutti i punti", () => true]] : []),
       ["both", "Entrambi", (p) => p.results[left].score && p.results[right].score],
       ["left", `Solo ${name(left)}`, (p) => p.results[left].score && !p.results[right].score],
       ["right", `Solo ${name(right)}`, (p) => !p.results[left].score && p.results[right].score],
@@ -327,7 +332,7 @@
       grid.append(control);
     }
     section.append(grid, status, list);
-    const order = right
+    const order = showAll ? ["all"] : right
       ? (right === defaultLeft ? ["left", "right", "neither", "both"] : ["right", "left", "neither", "both"])
       : ["zero", "one", "all"];
     const first = order.map((key) => groups.find(([group]) => group === key)).find((group) => group[2].length);
@@ -340,6 +345,12 @@
     const requirement = tools.length === 1 ? point.results[tools[0]].requirement || point.requirement : point.requirement;
     article.append(node("p", point.id, "muted"),
       node("h3", "Cosa doveva spiegare la risposta"), node("p", requirement));
+    const savedVerification = verificationByCase[review.id]?.[point.id];
+    const verification = tools.every((id) => savedVerification?.passages[id]) ? savedVerification : null;
+    if (verification) {
+      article.append(node("h4", "Riferimento Eutekne"), node("p", verification.reference),
+        node("p", verification.locator, "muted"));
+    }
     const cards = node("div", undefined, tools.length === 2 ? "excerpts" : "point-excerpt");
     for (const id of tools) {
       const side = id === state.left ? "left" : "right";
@@ -350,21 +361,14 @@
         card.append(node("h4", "Requisito usato per questo strumento"), node("p", result.requirement));
       }
       card.append(node("h4", `Cosa ha scritto ${product}`));
-      if (result.context) {
-        card.append(node("blockquote", result.context));
-      }
-      result.evidence.forEach(({line, paragraph, text}, i) => {
-        const disclosure = node("details", undefined, "review-passage");
-        const label = i === 0 && !result.context ? "Brano della risposta" : "Altro brano della risposta";
-        disclosure.open = i === 0 && !result.context;
-        const locator = line ? ` · riga ${line}` : paragraph ? ` · paragrafo ${paragraph}` : "";
-        disclosure.append(node("summary", label + locator),
-          node("blockquote", text.replace(/\*\*/g, "").replace(/\[([^\[\]\n]+)\]\(https?:\/\/[^\s)]+\)/g, "$1")));
-        card.append(disclosure);
-      });
-      if (result.summary) card.append(node("p", "Sintesi nel registro", "muted"), node("p", result.summary));
-      if (!result.context && !result.summary && !result.evidence.length) {
-        card.append(node("p", "Il registro non indica un brano della risposta per questo punto.", "muted"));
+      if (verification) {
+        const passages = node("div", undefined, "verification-passages");
+        for (const {text, locator} of verification.passages[id]) {
+          passages.append(node("blockquote", text), node("p", locator, "muted"));
+        }
+        card.append(passages);
+      } else {
+        appendRegisteredPassages(card, result);
       }
       card.append(opinionButton(id, review.id, review.opinions[id]));
       const verdict = result.score ? "Perché il valutatore ha dato un punto" : "Perché il valutatore ha dato zero";
@@ -373,7 +377,29 @@
       cards.append(card);
     }
     article.append(cards);
+    if (verification) {
+      article.append(node("h4", "Cosa verificare"), node("p", verification.check));
+    }
     return article;
+  }
+
+  function appendRegisteredPassages(card, result) {
+    if (result.context) {
+      card.append(node("blockquote", result.context));
+    }
+    result.evidence.forEach(({line, paragraph, text}, i) => {
+      const disclosure = node("details", undefined, "review-passage");
+      const label = i === 0 && !result.context ? "Brano della risposta" : "Altro brano della risposta";
+      disclosure.open = i === 0 && !result.context;
+      const locator = line ? ` · riga ${line}` : paragraph ? ` · paragrafo ${paragraph}` : "";
+      disclosure.append(node("summary", label + locator),
+        node("blockquote", text.replace(/\*\*/g, "").replace(/\[([^\[\]\n]+)\]\(https?:\/\/[^\s)]+\)/g, "$1")));
+      card.append(disclosure);
+    });
+    if (result.summary) card.append(node("p", "Sintesi nel registro", "muted"), node("p", result.summary));
+    if (!result.context && !result.summary && !result.evidence.length) {
+      card.append(node("p", "Il registro non indica un brano della risposta per questo punto.", "muted"));
+    }
   }
 
   function opinionButton(id, caseId, opinion) {
