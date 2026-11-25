@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "37a5711fd532f5db51c1f38f292d741cecf8906346a4d3b0f14adcbec7caa178",
+  "catalogue_fingerprint": "240c44bd58057623cc42858e3fd8080b63ae83547ecd25efc43ea2684e2c6c3a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -741,6 +741,11 @@
     "previous_catalogue_fingerprint": "c92a4175a52c31e930a52d064c39e76131731a89159d8bec4f42204fd5c029b8",
     "review": "Merged the existing LIPE and costing assessment rows without changing their territorial judgments. Canonical version advanced; LIPE remains an Italian VAT workflow. The new Italian course adds no Swiss qualification.",
     "version": "0.1.338"
+  },
+  "native_execution_startup_release_binding": {
+    "previous_catalogue_fingerprint": "37a5711fd532f5db51c1f38f292d741cecf8906346a4d3b0f14adcbec7caa178",
+    "scope": "Version and native execution startup maintenance. All skill entrypoints and Geneva assessments are unchanged.",
+    "version": "0.1.667"
   },
   "lipe_diagnostics_release_binding": {
     "previous_catalogue_fingerprint": "9226d57371fc260aef77f29929303d579802dc3617c479c2fe4805f0fb77cff3",

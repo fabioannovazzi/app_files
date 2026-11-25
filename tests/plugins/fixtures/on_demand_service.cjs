@@ -6,6 +6,7 @@ const { createHash, randomUUID } = require("node:crypto");
 const name = process.argv[2];
 const archiveSession = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
 const archiveState = path.join(path.dirname(process.env.START_LOG), `archive-${createHash("sha256").update(archiveSession).digest("hex")}.json`);
+const firstStart = !fs.existsSync(process.env.START_LOG);
 fs.appendFileSync(process.env.START_LOG, `${name}:${process.pid}\n`);
 let value;
 const waiting = new Map();
@@ -21,7 +22,7 @@ input.on("line", line => {
     serverRequests.delete(m.id);
     return;
   }
-  if (m.method === "initialize") { setTimeout(() => reply(m.id, { protocolVersion: m.params.protocolVersion, serverInfo: { name, version: "1" }, capabilities: { tools: {}, resources: {}, prompts: {} }, instructions: `Use ${name} for reconciliation` }), Number(process.env.INITIALIZE_DELAY_MS || 30)); return; }
+  if (m.method === "initialize") { setTimeout(() => reply(m.id, { protocolVersion: m.params.protocolVersion, serverInfo: { name, version: "1" }, capabilities: { tools: {}, resources: {}, prompts: {} }, instructions: `Use ${name} for reconciliation` }), Number((firstStart && process.env.FIRST_INITIALIZE_DELAY_MS) || process.env.INITIALIZE_DELAY_MS || 30)); return; }
   if (m.method === "tools/list") { reply(m.id, { tools: [tool] }); return; }
   if (m.method === "resources/list") { reply(m.id, { resources: [{ uri: `ui://${name}`, name, mimeType: "text/html;profile=mcp-app" }] }); return; }
   if (m.method === "resources/templates/list") { reply(m.id, { resourceTemplates: [] }); return; }

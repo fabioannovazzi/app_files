@@ -244,10 +244,13 @@ def test_original_worker_errors_are_forwarded(session):
     assert response["error"] == {"code": -32602, "message": "original worker error"}
 
 
-def test_native_status_reconnects_without_replaying_failed_execution(installation):
+def _as_native_execution(installation: Path, first_delay: int | None = None) -> None:
     configs_path = installation / "mcp-services.json"
     configs = json.loads(configs_path.read_text())
-    configs["mcpServers"]["veraExecution"] = configs["mcpServers"].pop("alpha")
+    config = configs["mcpServers"].pop("alpha")
+    configs["mcpServers"]["veraExecution"] = config
+    if first_delay is not None:
+        config["env"]["FIRST_INITIALIZE_DELAY_MS"] = str(first_delay)
     configs_path.write_text(json.dumps(configs))
     catalog_path = installation / "mcp-catalog.json"
     catalog = json.loads(catalog_path.read_text())
@@ -257,6 +260,9 @@ def test_native_status_reconnects_without_replaying_failed_execution(installatio
     catalog_path.write_text(json.dumps(catalog))
     _seal(installation)
 
+
+def test_native_status_reconnects_without_replaying_failed_execution(installation):
+    _as_native_execution(installation)
     client = Session(installation)
     try:
         failed = client.call(
@@ -293,6 +299,56 @@ def test_native_status_reconnects_without_replaying_failed_execution(installatio
     assert (installation.parent / "starts").read_text().count("alpha:") == (
         2 if product == "vera" else 1
     )
+
+
+@pytest.mark.parametrize("installation", ["vera"], indirect=True)
+@pytest.mark.parametrize("slow_ms, expired", [(300, False), (2400, True)])
+def test_native_startup_waits_with_progress_and_retries_timed_out_initialization(
+    installation, slow_ms, expired
+):
+    # Scale the router's timers without changing the real worker's delay.
+    preload = installation.parent / "scale-startup-timers.cjs"
+    preload.write_text(
+        "const timeout = global.setTimeout; const interval = global.setInterval;\n"
+        "global.setTimeout = (fn, ms) => timeout(fn, ms === 300000 ? 1500 : ms === 60000 ? 100 : ms);\n"
+        "global.setInterval = (fn, ms) => interval(fn, ms === 10000 ? 50 : ms);\n"
+    )
+    report = installation.parent / "startup-report.json"
+    settings = installation.parent / "reporting-settings.json"
+    settings.write_text(json.dumps({"state_dir": str(installation.parent / "state")}))
+    reporter = installation / "scripts/native_execution_mcp.cjs"
+    reporter.write_text(
+        "require('node:fs').writeFileSync("
+        f"{json.dumps(str(report))}, JSON.stringify(process.argv.slice(2)));"
+    )
+    _as_native_execution(installation, first_delay=slow_ms)
+
+    active = Session(installation, preload=preload, settings=settings)
+    try:
+        progress = active.call(
+            "tools/call",
+            {"name": "vera_execute", "_meta": {"progressToken": "start"}},
+        )
+        assert progress["method"] == "notifications/progress"
+        assert progress["params"]["progressToken"] == "start"
+        reply = active.receive()
+        while reply.get("method") == "notifications/progress":
+            reply = active.receive()
+        if expired:
+            assert reply["error"]["message"] == "veraExecution: initialize timed out"
+            reply = active.call("tools/call", {"name": "vera_execute"})
+        assert reply["result"]["structuredContent"]["name"] == "alpha"
+    finally:
+        active.close()
+
+    starts = (installation.parent / "starts").read_text()
+    assert starts.count("alpha:") == (2 if expired else 1)
+    assert report.exists() is expired
+    if expired:
+        arguments = json.loads(report.read_text())
+        assert arguments[2] == "--report-startup-timeout"
+        assert int(arguments[3]) >= 1500
+        assert len(arguments) == 4
 
 
 @pytest.mark.parametrize("payload", ["null", "not-json"])

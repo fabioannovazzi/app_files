@@ -166,7 +166,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "1a172ab8a3d0985269814f4e07e1a8d7a156c108824562a2f17984d72c15a875",
+      "sha256": "9d402b901e4b98752d1bbf234711cdffd7b905cb23bb59232119d4db881c2721",
       "languages": [
         "it",
         "en"
@@ -182,7 +182,7 @@
         "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
         "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
       },
-      "source_sha256": "a79b3074d6ab6ca498af828744bdde9f59964c8942a27582ce7d990053ef9199"
+      "source_sha256": "9a0f341ce5f8b698930992bba5ddb8ae4977d5e7df9b24f4c9437f9559f0b280"
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
@@ -269,7 +269,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "b99fdaabfa919e1dc148dc13d02c5abbb89dcdc21e44f7aa82b1014a642671bb",
+      "sha256": "f1478970b1a30fc18db7f4452da20846e6c6935af5fb7003bb7935044df84202",
       "languages": [
         "it",
         "en",
@@ -294,7 +294,7 @@
         "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
         "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
       },
-      "source_sha256": "f27b73686b79258b37dd4288660261bc93d62649dcba266908ca04cb41c733bc"
+      "source_sha256": "970942ea1ea78dd1e1ad19082aaefa43ada8b6a1977a3bcf6df1782ab72ce0a2"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
@@ -356,7 +356,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "724971ee3b831fbf8d3165b47708429feb31107d94350b9a8f4855af98e49f29",
+      "sha256": "0998fa1e729aeca6023ce1bab5818642987aa56c4b818b8e67260c17868e8655",
       "languages": [
         "it",
         "en",
@@ -381,7 +381,7 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "eced36b9e205928ca796f79deccd352917cca22d9a1ae565f31bdec2205e7b3c"
+      "source_sha256": "a72f357a71c8df42690ba21dfb20e3ec5669e96bb5855598ab1b3906d91f61c1"
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
@@ -770,7 +770,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "cb09014de9624c18992891e8348f2a9f7d18f8a729572e259120a8ee483dd5d9",
+      "sha256": "ff295d91cc5d9c3772f4c46ddc4233425b87a1e438e8ec2cc47f7002995fb837",
       "languages": [
         "it",
         "en",
@@ -795,7 +795,7 @@
         "de": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
         "es": "Aprender a guardar un compromiso, modificarlo, recuperarlo en otra conversación y convertir notas de reunión en tareas posteriores."
       },
-      "source_sha256": "65dda9aa7a7072a062ccc23549fb19f082c108a285b591170d52fce9b6aa68f4"
+      "source_sha256": "4ba7ff7897d3e30d1eaf56b02ead365af3731e12a7c50da776099696f3f73061"
     },
     "patent-box-review": {
       "path": "patent-box-review/course.json",
@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "24dfddfe0799318e2089d6da3d27922181cee60cfcebd4cb3f443159b79d390c",
+      "sha256": "bcf878db5de82fdd5a1f4e3cec4575395ebb86f383652a1bcc5c47d788739c44",
       "languages": [
         "it",
         "en",
@@ -1085,11 +1085,11 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "5e75a0fd0dfc10cedec10f05638706f055a5b2a4f74fdb8853b447e76d1f08fa"
+      "source_sha256": "eef471d40402544a145a724c1ccc6a19f4cce819f0fe3b2d9153ffe9f101f0d3"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "4e8ea69102a6ece2b851825544ada71b77b58c594a52b20b8c7dd827640ba5b9",
+      "sha256": "85f512881e9fc02c31906c1cc09e418ee3306cd39324647643e1ec441a11d775",
       "languages": [
         "it",
         "en",
@@ -1114,7 +1114,7 @@
         "de": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
         "es": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo."
       },
-      "source_sha256": "8b264f5b3dec96e76da74d2c0f4ac77e70125c85fea94b2a605900e9ed944719"
+      "source_sha256": "0b4639499a21e2425f1a624b8f392ab9a0730cdd2d7f7fdd7597d4d2e4bd2142"
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
@@ -1135,7 +1135,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "e23265e8cab88659c86cb863bd4e040c328a80aa1bfbe34b69b3ca5eb0c31bce",
+      "sha256": "88fe04b0b50e53f13a6940a7b09a9bba2ff661c1010fd70e5bcf0738bab2e5fb",
       "languages": [
         "it",
         "en",
@@ -1160,7 +1160,7 @@
         "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
         "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       },
-      "source_sha256": "c0dee2aa26f467948b7cd84eafd2633d4867b783bb14e4ed7e2a0a5e0b24ebbc"
+      "source_sha256": "fc7a2f1610c664de30b959ba9a9097d31ea85c04c99bef96a29274317f345eea"
     },
     "vouching": {
       "path": "vouching/course.json",

@@ -950,6 +950,37 @@ def test_orphan_recovery_preserves_live_borrowed_replaced_and_symlink_roots(
     recovery.release_execution_root(live)
 
 
+def test_windows_bootstrap_recovery_requires_matching_identity_and_free_lease(
+    tmp_path, monkeypatch
+):
+    import os
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    live = tmp_path / "vera-execution-bootstrap-live"
+    abandoned = tmp_path / "vera-execution-bootstrap-abandoned"
+    replaced = tmp_path / "vera-execution-bootstrap-replaced"
+    historical = tmp_path / "vera-execution-bootstrap-historical"
+    for root in (live, abandoned, replaced, historical):
+        root.mkdir()
+    for root in (live, abandoned, replaced):
+        recovery._mark_windows_bootstrap(root, root.lstat())
+    os.close(recovery._LEASES.pop(abandoned))
+    os.close(recovery._LEASES.pop(replaced))
+    replaced.rename(tmp_path / "original")
+    replaced.mkdir()
+
+    try:
+        recovery.recover_abandoned_windows_bootstraps()
+
+        assert not abandoned.exists()
+        assert live.is_dir()
+        assert historical.is_dir()
+        assert replaced.is_dir()
+    finally:
+        os.close(recovery._LEASES.pop(live))
+
+
 @pytest.mark.skipif(sys.platform == "win32", reason="POSIX inherited kernel lease")
 def test_owner_cleanup_cannot_remove_code_held_by_detached_worker(
     tmp_path, monkeypatch

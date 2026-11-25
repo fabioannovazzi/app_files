@@ -71,7 +71,9 @@ class ServiceClient {
     return new Promise((resolve, reject) => {
       const timer = timeout ? setTimeout(() => {
         this.pending.delete(id);
-        reject(new Error(`${this.name}: ${method} timed out`));
+        const error = new Error(`${this.name}: ${method} timed out`);
+        error.code = "MCP_REQUEST_TIMEOUT";
+        reject(error);
       }, timeout) : null;
       this.pending.set(id, { resolve, reject, timer });
       try {
@@ -85,10 +87,8 @@ class ServiceClient {
     });
   }
 
-  async initialize(params) {
-    // A cold native service verifies and copies its package before answering;
-    // Windows CI has exceeded ten seconds on this legitimate startup path.
-    const reply = await this.call("initialize", params, { timeout: 60000 });
+  async initialize(params, timeout = 60000) {
+    const reply = await this.call("initialize", params, { timeout });
     if (reply.error || !reply.result?.serverInfo || !reply.result?.capabilities)
       throw new Error(`${this.name}: invalid initialize response`);
     this.send({ jsonrpc: "2.0", method: "notifications/initialized" });
