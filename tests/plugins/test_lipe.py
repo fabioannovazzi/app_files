@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+import subprocess
 import sys
 import zipfile
 from pathlib import Path
@@ -1367,3 +1368,75 @@ def test_archive_identity_mismatch_is_rejected_before_calculation(
             ["calculate", "--case", str(case_path), "--client-engagement", str(context)]
         )
     assert list(output.glob("lipe-*")) == []
+
+
+@pytest.mark.parametrize(
+    (
+        "bound_case",
+        "exit_code",
+        "diagnostic_prefix",
+        "result_statuses",
+        "stderr_detail",
+    ),
+    [
+        (
+            False,
+            1,
+            "LIPE Archive context rejected.",
+            [],
+            "workflow input is not one of the run's exact receipts",
+        ),
+        (
+            True,
+            2,
+            "LIPE calculation blocked.",
+            ["BLOCKED_INVALID_INPUT"],
+            "result.json",
+        ),
+    ],
+)
+def test_lipe_runner_reports_archive_rejection_and_saved_blockers(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    bound_case: bool,
+    exit_code: int,
+    diagnostic_prefix: str,
+    result_statuses: list[str],
+    stderr_detail: str,
+) -> None:
+    invalid_case = case_data()
+    invalid_amount = "private-invalid-test-amount"
+    invalid_case["registers"][0]["printed_base"] = invalid_amount
+    monkeypatch.setitem(globals(), "case_data", lambda: invalid_case)
+    context, case_path, output = archive_case(tmp_path)
+    if not bound_case:
+        case_path = Path(shutil.copyfile(case_path, tmp_path / "unbound-case.json"))
+    diagnostic = tmp_path / "diagnostic.json"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/vera/scripts/technical_runner.py"),
+            str(ROOT),
+            str(diagnostic),
+            str(PLUGIN / "scripts/lipe.py"),
+            "calculate",
+            "--case",
+            str(case_path),
+            "--client-engagement",
+            str(context),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert completed.returncode == exit_code, completed.stderr
+    events = read_json(diagnostic)["events"]
+    assert len(events) == 1
+    assert events[0]["message"].startswith(diagnostic_prefix)
+    assert events[0]["detail_available"] is True
+    assert invalid_amount not in diagnostic.read_text(encoding="utf-8")
+    assert stderr_detail in completed.stderr
+    results = [read_json(path) for path in output.glob("lipe-*/result.json")]
+    assert [result["status"] for result in results] == result_statuses

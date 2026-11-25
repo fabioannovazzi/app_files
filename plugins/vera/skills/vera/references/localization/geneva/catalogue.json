@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-11-24/ca/work/vera-windows-startup/plugins/vera",
-  "version": "0.1.665",
-  "captured_at": "2026-11-24T15:29:37.548737+00:00",
-  "catalogue_fingerprint": "9226d57371fc260aef77f29929303d579802dc3617c479c2fe4805f0fb77cff3",
-  "manifest_sha256": "78b298e8cfe3d676fa03b0e9f0836a4067d449693f5da1db1f65977e1b41cad8",
+  "version": "0.1.666",
+  "captured_at": "2026-11-25T10:17:13.187055+00:00",
+  "catalogue_fingerprint": "37a5711fd532f5db51c1f38f292d741cecf8906346a4d3b0f14adcbec7caa178",
+  "manifest_sha256": "89259d9011bbe95b59fbccfca0f2752590927c4f3feee229fef723293d0f892a",
   "entries": [
     {
       "function_id": "adeguati-assetti",

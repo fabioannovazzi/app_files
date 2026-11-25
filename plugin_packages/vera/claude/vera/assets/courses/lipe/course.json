@@ -141,7 +141,7 @@
     },
     {
       "path": "modules/lipe/scripts/lipe.py",
-      "sha256": "8c70ec26806aa9e59559f9416d07d8a80a4b74c0aa0ccd87a05b9f348cb254ad"
+      "sha256": "dbc5cc19868a2a14680fee16fdd7b44b5b4ff066cc9f3969c4a116bd49a4a723"
     },
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
@@ -209,7 +209,7 @@
     },
     {
       "path": "modules/lipe/skills/mparanza-lipe/SKILL.md",
-      "sha256": "08a2bb7b8b48ec1892897edb0f9479d999360957d13af0a2a1042ce081481258"
+      "sha256": "fca02507ec53f1619708b8ec4733b369fb98b7bacb8e57d38461516e6c47f61c"
     },
     {
       "path": "skills/mparanza-lipe/SKILL.md",
@@ -462,5 +462,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "af48a503f120e986da6c9aa21c7b1af39c32161e2e79206e85b309e0ae4ee968"
+  "canonical_course_sha256": "45d62955b97c4df8bfac1e2482290e371f1cecd881c5a5c6260cbe307f432278"
 }

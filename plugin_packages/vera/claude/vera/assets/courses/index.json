@@ -675,7 +675,7 @@
     },
     "lipe": {
       "path": "lipe/course.json",
-      "sha256": "a54c7397c223d19e8f381a1e74c01205c286976e554c56b8cc7110ffee7607d2",
+      "sha256": "250e9bb7677b60fc1b70a4e04c62bd31ed3271880ae31711f7dd5f09a461c233",
       "languages": [
         "it"
       ],
@@ -688,7 +688,7 @@
       "goals": {
         "it": "Controllare le fonti, leggere la carta di lavoro e aggiornare la bozza dopo una correzione, conservando la prima versione."
       },
-      "source_sha256": "657e5955b35b2e7fda768ebf341a889e49856f8ec0aef30ced07b2e400b8faa9"
+      "source_sha256": "245930a81bf1513d447cc1c9bb0a31ef5bea1ba68aa97327ad58065712c5964e"
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",

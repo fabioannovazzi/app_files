@@ -171,7 +171,7 @@
     {
       "path": "modules/lipe/scripts/lipe.py",
       "repository_path": "plugins/lipe/scripts/lipe.py",
-      "sha256": "8c70ec26806aa9e59559f9416d07d8a80a4b74c0aa0ccd87a05b9f348cb254ad"
+      "sha256": "dbc5cc19868a2a14680fee16fdd7b44b5b4ff066cc9f3969c4a116bd49a4a723"
     },
     {
       "path": "modules/lipe/scripts/lipe_approval.py",
@@ -256,7 +256,7 @@
     {
       "path": "modules/lipe/skills/lipe/SKILL.md",
       "repository_path": "plugins/lipe/skills/lipe/SKILL.md",
-      "sha256": "c10744369e998da45bc4da98f296b8115d2a87cb3ff62c966f6724e6004c3dec"
+      "sha256": "e6116f0ba0842f10ed87efddfc7b8ecc5dab2a4147212981614a5ea8d87bdf01"
     },
     {
       "path": "skills/lipe/SKILL.md",
