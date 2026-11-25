@@ -26,7 +26,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C02": {
       "reference": "Il padre può eseguire parte dei lavori in proprio e incaricare direttamente altri artigiani. Per i lavori propri rilevano i materiali acquistati. Le fatture possono essere intestate al padre come persona fisica quando sostiene la spesa, con la documentazione e il bonifico richiesti.",
       "locator": "§ II, pp. 7–8",
-      "check": "Controlla se Aptus dice anche che i materiali dei lavori in proprio sono detraibili se documentati. Il paragrafo sul lavoro personale li discute nel caso in cui la famiglia rinunci alla detrazione.",
+      "check": "Controlla se Vertical F dice anche che i materiali dei lavori in proprio sono detraibili se documentati. Il paragrafo sul lavoro personale li discute nel caso in cui la famiglia rinunci alla detrazione.",
       "passages": {
         "codex-astra-62": [
           {
@@ -76,7 +76,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C04": {
       "reference": "Per il cappotto si separano superfici preesistenti e nuove. Per il tetto serve individuare con il tecnico la spesa della copertura preesistente. Per la linea vita comune, Eutekne propone prudenzialmente la quota di perimetro del tetto preesistente.",
       "locator": "§ III, pp. 10–11",
-      "check": "Aptus propone il computo metrico per il riparto complessivo. Puoi decidere se questo basti o se manchi l’applicazione al tetto. Verifica anche se il criterio pubblicato richiede un metodo specifico come quello esemplificato da Eutekne per la linea vita.",
+      "check": "Vertical F propone il computo metrico per il riparto complessivo. Puoi decidere se questo basti o se manchi l’applicazione al tetto. Verifica anche se il criterio pubblicato richiede un metodo specifico come quello esemplificato da Eutekne per la linea vita.",
       "passages": {
         "codex-astra-62": [
           {
@@ -99,7 +99,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C05": {
       "reference": "I beni finiti acquistati direttamente possono beneficiare del 10% se destinati a restauro, risanamento o ristrutturazione qualificata. Le materie prime e i semilavorati, tra cui mattoni e cemento, sono esclusi da quell’aliquota ridotta.",
       "locator": "§ IV, pp. 12–13",
-      "check": "Controlla se Aptus indica il caso del 10% per beni finiti acquistati direttamente o si limita a rinviare a eccezioni.",
+      "check": "Controlla se Vertical F indica il caso del 10% per beni finiti acquistati direttamente o si limita a rinviare a eccezioni.",
       "passages": {
         "codex-astra-62": [
           {
@@ -184,7 +184,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C08": {
       "reference": "Per le spese pagate nel 2026, il riferimento indica il 50% per il titolare di diritto reale sull’abitazione principale e il 36% negli altri casi. Il 36% e il 30% valgono per il 2027. I limiti si verificano per tipo di intervento.",
       "locator": "§ V, pp. 17–19 e § VI, pp. 24–25",
-      "check": "Confronta le percentuali per lo stesso anno. Il parere di Aptus riporta esplicitamente 36% e 30% per il 2026.",
+      "check": "Confronta le percentuali per lo stesso anno. Il parere di Vertical F riporta esplicitamente 36% e 30% per il 2026.",
       "passages": {
         "codex-astra-62": [
           {
@@ -227,7 +227,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C09": {
       "reference": "Il riferimento tratta separatamente recupero edilizio ed ecobonus, con limiti diversi. Per il cappotto separa l’esistente dall’ampliamento ed esclude la riqualificazione energetica globale dell’edificio ampliato. Nel parere consultato non è stato individuato un passaggio esplicito sul cumulo tra i due bonus per la stessa spesa.",
       "locator": "§ III, p. 10 e § V, pp. 16–20",
-      "check": "Il criterio contiene anche il divieto di cumulo sulla stessa spesa. Verifica separatamente quel requisito e la distinzione sulla riqualificazione globale. Il passaggio Aptus sulla doppia detrazione riguarda il subappalto.",
+      "check": "Il criterio contiene anche il divieto di cumulo sulla stessa spesa. Verifica separatamente quel requisito e la distinzione sulla riqualificazione globale. Il passaggio Vertical F sulla doppia detrazione riguarda il subappalto.",
       "passages": {
         "codex-astra-62": [
           {
@@ -304,7 +304,7 @@ window.fiscalBenchmarkPointVerification = {
     "E26-B02-11-C12": {
       "reference": "Eutekne richiede il bonifico parlante e costi di costruzione del box distintamente documentati. Nella soluzione consultata non ho trovato indicati i due rimedi concreti citati nella motivazione dello zero. Codex li collega nella risposta alla circolare 43/E del 2016.",
       "locator": "§ VI, pp. 23–24",
-      "check": "Qui vanno controllate due cose distinte. La risposta di Aptus tratta il bonifico ordinario. La motivazione pretende inoltre due rimedi specifici che il riferimento Eutekne consultato non esplicita.",
+      "check": "Qui vanno controllate due cose distinte. La risposta di Vertical F tratta il bonifico ordinario. La motivazione pretende inoltre due rimedi specifici che il riferimento Eutekne consultato non esplicita.",
       "passages": {
         "codex-astra-62": [
           {
