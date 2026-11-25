@@ -403,10 +403,13 @@
       return;
     }
     const section = node("div", undefined, "verification-passages");
+    const labels = {
+      register: "Brano del registro verificato nel parere",
+      related: "Passaggio da confrontare · selezione automatica",
+      manual: "Passaggio individuato nel parere"
+    };
     for (const {text, kind} of passages) {
-      const label = kind === "register" ? "Brano del registro verificato nel parere"
-        : "Passaggio da confrontare · selezione automatica";
-      section.append(node("p", label, "muted"), node("blockquote", text));
+      section.append(node("p", labels[kind], "muted"), node("blockquote", text));
     }
     card.append(section);
   }
