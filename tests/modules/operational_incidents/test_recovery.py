@@ -17,6 +17,7 @@ from modules.operational_incidents.contracts import Credentials, Remedy
 from modules.operational_incidents.store import IncidentStore
 from modules.run_receipts.signing import RunReceiptSigner
 from modules.run_receipts.store import RunReceiptStore
+from scripts.summarize_incident_monitor import evidence_hash
 from tests.modules.operational_incidents.support import technical_report
 
 __all__: list[str] = []
@@ -107,6 +108,14 @@ def test_browser_patch_is_bound_to_original_owner_and_keeps_exact_bytes(
         store.export_patch(UUID(patch["report_id"]), patch["sha256"])
         == patch["diff"].encode()
     )
+    store.close_test(
+        receipt["incident_id"],
+        expected_evidence_sha256=evidence_hash(details),
+        note="Synthetic patch submission verified.",
+        evidence_refs=[patch["sha256"]],
+    )
+    assert store.patch_queue() == []
+    assert store.show(receipt["incident_id"])["patches"] == details["patches"]
 
 
 @pytest.mark.parametrize(

@@ -1622,15 +1622,16 @@ class IncidentStore:
         return {**dict(saved), "status": "received"}
 
     def patch_queue(self, limit: int = 100) -> list[dict[str, Any]]:
-        """Operator inbox includes patches sent after a task was recovered."""
+        """Include recovered work while leaving closed test fixtures out of the inbox."""
         with self._connection() as connection:
             self._schema(connection)
             return [
                 dict(row)
                 for row in connection.execute(
                     self._sql(
-                        "SELECT report_id,sha256,incident_id,product,product_version,base_commit,result,size_bytes,submitted_at "
-                        "FROM operational_patches ORDER BY submitted_at DESC,report_id,sha256 LIMIT ?"
+                        "SELECT p.report_id,p.sha256,p.incident_id,p.product,p.product_version,p.base_commit,p.result,p.size_bytes,p.submitted_at "
+                        "FROM operational_patches p JOIN operational_incidents i ON i.incident_id=p.incident_id "
+                        "WHERE i.status!='closed-test' ORDER BY p.submitted_at DESC,p.report_id,p.sha256 LIMIT ?"
                     ),
                     (max(1, min(limit, 1000)),),
                 ).fetchall()
