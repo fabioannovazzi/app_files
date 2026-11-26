@@ -47,6 +47,12 @@ unverified. Old packages that require the remote MCP must be updated.
 
 ## Operator workflow
 
+Operators reviewing a contributor patch for Vera, Clara, or Lucia must use the
+[patch-review skill](../.agents/skills/review-submitted-patch/SKILL.md). Review the
+full diff as text and obtain Fabio's approval of the exact changes before
+applying or executing them. The [Send patch runbook](vera-autonomous-recovery.md)
+describes how to retrieve the original diff by report ID and SHA-256.
+
 The registry exposes `report_records`, `reporting_summary` and `recovery_events`.
 `outcome_records` additionally retains each outcome's actual reporter owner and
 server receipt time, including older payloads missing an original report ID.
