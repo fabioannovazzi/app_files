@@ -16,6 +16,12 @@
   const dataCases = new Map(data.cases.map((item) => [item.id, item]));
   const mobile = matchMedia("(max-width: 760px)");
   const validFilters = ["all", "left", "tie", "right", "different"];
+  const metrics = [
+    ["content", "Contenuti"],
+    ["outcome", "Concordanza"],
+    ["coverage", "Copertura delle fonti"],
+    ["citations", "Citazioni pertinenti"]
+  ];
 
   function node(tag, text, className) {
     const element = document.createElement(tag);
@@ -100,8 +106,20 @@
 
   const outcomeLabels = ["Non concorda", "Esito variabile", "Concorda"];
 
-  function outcomePasses(caseId, configId) {
-    return outcomes[caseId].results[configId].filter(({result}) => result === "pass").length;
+  function caseScore(item, id, metric) {
+    if (metric !== "outcome") return item.scores[id][metric];
+    const records = outcomes[item.id].results[id];
+    return [records.filter(({result}) => result === "pass").length, records.length, false];
+  }
+
+  function outcomeRate(item, id) {
+    const [passes, judgments] = caseScore(item, id, "outcome");
+    return passes / judgments;
+  }
+
+  function outcomeLevel(item, id) {
+    const rate = outcomeRate(item, id);
+    return rate === 0 ? 0 : rate === 1 ? 2 : 1;
   }
 
   function showsDifferentPoints() {
@@ -111,7 +129,7 @@
   function scoredCases() {
     return data.cases.map((item) => {
       const gap = state.measure === "outcome"
-        ? outcomePasses(item.id, state.left) - outcomePasses(item.id, state.right)
+        ? outcomeRate(item, state.left) - outcomeRate(item, state.right)
         : item.scores[state.left].content[0] - item.scores[state.right].content[0];
       const different = gap === 0 && showsDifferentPoints() && item.astra62.veraOnly > 0;
       return { item, gap, different };
@@ -135,20 +153,21 @@
   function renderTotals() {
     const cards = ["left", "right"].map((side) => {
       const id = state[side];
-      let score;
-      if (state.measure === "outcome") {
-        const passes = data.cases.reduce((n, item) => n + outcomePasses(item.id, id), 0);
-        const judgments = data.cases.reduce((n, item) => n + outcomes[item.id].results[id].length, 0);
-        score = `${Math.round(passes * 100 / judgments)}%`;
-      } else {
-        const totals = data.cases.reduce(([n, d], item) => {
-          const [caseNumerator, caseDenominator] = item.scores[id].content;
-          return [n + caseNumerator, d + caseDenominator];
-        }, [0, 0]);
-        score = formatScore(totals, true);
-      }
       const card = node("div", undefined, `total ${side}-card`);
-      card.append(node("span", configNames.get(id)), node("strong", score));
+      card.append(node("strong", configNames.get(id)));
+      for (const [key, title] of metrics) {
+        const total = data.cases.reduce(([n, d, minimum], item) => {
+          const [caseNumerator, caseDenominator, caseMinimum] = caseScore(item, id, key);
+          return [
+            n + caseNumerator,
+            d === null || caseDenominator === null ? null : d + caseDenominator,
+            minimum || caseMinimum
+          ];
+        }, [0, 0, false]);
+        const line = node("span", `${title} · ${formatScore(total, true)}`);
+        if (state.measure === key) line.classList.add("active-total");
+        card.append(line);
+      }
       return card;
     });
     controls.totals.replaceChildren(...cards);
@@ -204,10 +223,10 @@
       for (const side of ["left", "right"]) {
         const id = state[side];
         const agreement = state.measure === "outcome";
-        const passes = agreement ? outcomePasses(item.id, id) : null;
-        const score = agreement ? ["No", "Varia", "Sì"][passes] : formatScore(item.scores[id].content);
+        const outcome = agreement ? outcomeLevel(item, id) : null;
+        const score = agreement ? ["No", "Varia", "Sì"][outcome] : formatScore(item.scores[id].content);
         const badge = node("span", score, `score ${side}${agreement ? " outcome-score" : ""}`);
-        const label = agreement ? outcomeLabels[passes] : score;
+        const label = agreement ? outcomeLabels[outcome] : score;
         badge.setAttribute("aria-label", `${configNames.get(id)} · ${label}`);
         if (agreement) badge.title = label;
         badges.append(badge);
@@ -231,12 +250,12 @@
       head.append(th);
     }
     const body = table.createTBody();
-    for (const [key, title] of [["content","Contenuti"],["coverage","Supporto documentale"],["citations","Citazioni pertinenti"]]) {
+    for (const [key, title] of metrics) {
       const row = body.insertRow();
       const label = node("th", title);
       label.scope = "row";
       row.append(label, ...[state.left,state.right].map((id) => {
-        const score = formatScore(item.scores[id][key], true);
+        const score = formatScore(caseScore(item, id, key), true);
         const cell = node("td");
         if (key === "content" && available.includes(id)) {
           const control = button(score, () => showReview(id), "point-score");
@@ -556,7 +575,7 @@
     const columns = node("div", undefined, "excerpts");
     for (const id of [state.left, state.right]) {
       const records = outcome.results[id];
-      const result = outcomeLabels[outcomePasses(item.id, id)];
+      const result = outcomeLabels[outcomeLevel(item, id)];
       const column = node("div", undefined, "excerpt");
       column.append(node("h3", configNames.get(id)), node("p", result, "outcome-result"));
       column.append(opinionButton(id, item.id));
