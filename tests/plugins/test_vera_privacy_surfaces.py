@@ -240,20 +240,19 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
     assert [boundary["id"] for boundary in update_boundaries] == [
         "automatic-version-check"
     ]
-    assert update_boundaries[0]["activation"] == "automatic_session_start"
+    assert update_boundaries[0]["activation"] == "automatic_on_first_use"
     feedback_boundaries = manifests["plugin-feedback"]["external_boundaries"]
     assert [boundary["id"] for boundary in feedback_boundaries] == [
-        "automatic-feedback-status-poll",
+        "requested-feedback-status-check",
         "approved-text-feedback-submission",
         "approved-follow-up-evidence",
         "approved-improvement-interview",
     ]
-    assert feedback_boundaries[0]["activation"] == ("automatic_after_prior_submission")
     assert all(
         boundary["activation"] == "explicit_user_choice"
         and boundary["optional"] is True
         and boundary["requires_confirmation"] is True
-        for boundary in feedback_boundaries[1:]
+        for boundary in feedback_boundaries
     )
     receipt_boundaries = manifests["run-receipt-stamping"]["external_boundaries"]
     assert [boundary["id"] for boundary in receipt_boundaries] == [
