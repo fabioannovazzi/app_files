@@ -214,9 +214,15 @@ patches` to see recent submissions, including those received after recovery.
 Each entry names the affected product and release. The incident’s `show` also
 lists patch metadata. Retrieve the submitted bytes
 with `python scripts/manage_incidents.py export-patch <report_id> <sha256>
---output <review-file.patch>`. Review the diff and check compatibility against
-the intended product release before integrating it. Uploading a patch records a
-submission. It neither changes the incident outcome nor applies the diff.
+--output <review-file.patch>`. Follow the maintainer
+[patch-review skill](../.agents/skills/review-submitted-patch/SKILL.md) for Vera,
+Clara, and Lucia. Uploading records the submission against the original report.
+Inspect the whole diff as text, check compatibility against the intended
+release, and wait for Fabio to approve the exact reviewed changes before
+applying them or running any changed code. Test approved changes only in a
+disposable sandbox with the isolation specified in the skill. Scheduled recovery
+may surface the patch for review. Its standing authorization for independently
+diagnosed source fixes does not authorize executing or merging a submitted patch.
 
 ## Required actionable alert preparation
 
