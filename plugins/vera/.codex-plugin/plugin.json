@@ -7,7 +7,6 @@
   },
   "description": "Vera affianca commercialisti e studi professionali nei quesiti fiscali e legali, nel contenzioso tributario italiano, nel bilancio OIC/XBRL e nella revisione contabile e riconciliazione: risposte con fonti, analisi, controlli e carte di lavoro da rivedere.",
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
-  "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Vera",
     "shortDescription": "Assistente AI x commercialisti",
@@ -131,5 +130,5 @@
   "name": "vera",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "skills": "./skills/",
-  "version": "0.1.667"
+  "version": "0.1.668"
 }

@@ -966,11 +966,14 @@ def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_source_hooks(
     ]
     assert manifests
     assert all("hooks" not in manifest for manifest in manifests)
-    assert native_entries[prefix + "hooks/hooks.json"] == source_hooks.read_bytes()
-    assert (
-        json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])["hooks"]
-        == "./hooks/hooks.json"
-    )
+    native_manifest = json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])
+    native_hook = prefix + "hooks/hooks.json"
+    if plugin_name == "vera":
+        assert "hooks" not in native_manifest
+        assert native_hook not in native_entries
+    else:
+        assert native_entries[native_hook] == source_hooks.read_bytes()
+        assert native_manifest["hooks"] == "./hooks/hooks.json"
 
 
 @pytest.mark.parametrize(
