@@ -246,7 +246,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "240c44bd58057623cc42858e3fd8080b63ae83547ecd25efc43ea2684e2c6c3a",
+  "catalogue_fingerprint": "c58a18d5bcf71d574add02019104055ab510914da55259e2dac7b35ba694d15a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2876,5 +2876,10 @@
       "journal-bank-reconciliation"
     ],
     "scope": "Source-bound search history, explicit open dispositions and separate document questions. No changes to currency, jurisdiction or account-policy semantics."
+  },
+  "startup_hook_removal_release_binding": {
+    "previous_catalogue_fingerprint": "240c44bd58057623cc42858e3fd8080b63ae83547ecd25efc43ea2684e2c6c3a",
+    "scope": "Vera startup hook removal and version update. Geneva territorial assessments are unchanged.",
+    "version": "0.1.668"
   }
 }

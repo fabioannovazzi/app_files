@@ -3,7 +3,6 @@
   "service_id": "plugin-feedback",
   "display_name": "Plugin improvement feedback",
   "governed_paths": [
-    "hooks/hooks.json",
     "scripts/check_for_update.py",
     "scripts/change_requests.py",
     "skills/vera/SKILL.md"
@@ -21,20 +20,20 @@
   ],
   "external_boundaries": [
     {
-      "id": "automatic-feedback-status-poll",
+      "id": "requested-feedback-status-check",
       "kind": "hosted_service",
       "destination": "Mparanza's fixed HTTPS change-request status endpoint",
       "purpose": "Notify the user when a previously submitted problem or suggestion has been fixed or needs specific additional evidence",
       "content": "Locally stored change-request IDs and their bearer status tokens, in batches of at most 100, plus ordinary connection metadata. The response may return an explicit disposition and bounded needs-information question. The submitted feedback text and client or case material are not resent.",
       "retention": "The IDs and status tokens remain in local plugin state until that state is removed. State files are forced to mode 0600, while only the temporary fallback directories are forced to mode 0700. The corresponding change request remains in Mparanza's service record; the plugin does not enforce its deletion period.",
-      "activation": "automatic_after_prior_submission",
-      "optional": false,
-      "requires_confirmation": false,
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
       "runtime_profiles": [
         "openai-codex"
       ],
       "controls": [
-        "Polling occurs only when local state contains a receipt from an earlier user-approved submission.",
+        "The Vera skill runs this check outside tutorial work when the user asks for updates on previously submitted feedback. The checker polls only when local state contains a receipt from an earlier user-approved submission.",
         "The initial request URL is restricted to Mparanza HTTPS, each batch is capped at 100 receipts, the response size is bounded, and the submitted request text is not included."
       ]
     },
@@ -127,6 +126,6 @@
     "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "ebb532580ce346baf89a1e71f95be3b66df9d12fd6fdee2afc8c495b490d51cd"
+    "source_fingerprint": "35a72a1983b33caa101ea5227cd1db65ea8002015065f4e235efa1d04b873e27"
   }
 }

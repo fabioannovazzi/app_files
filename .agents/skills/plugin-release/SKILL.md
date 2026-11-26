@@ -33,6 +33,8 @@ and Cowork builders use that same version. Claude source manifests are metadata
 templates and must not declare a separate version. Bump the canonical patch
 version for a release on either host, then rebuild every affected host package.
 Do not maintain independent Codex and Cowork version sequences.
+Each public download page offers one official ZIP per host. Verify candidate
+builds privately and publish the verified package through the existing link.
 
 Before reserving a patch version, inspect the current canonical version and the
 product manifest changes in other open release PRs. Choose a version above all
@@ -137,10 +139,9 @@ force the host to update or replace instructions in an existing conversation.
 
 ## Post-publish update notification
 
-Clara and Vera include a `SessionStart` hook that checks the public manifest at
-`static/shared/codex-plugin-versions.json`. Codex asks the user to trust this hook
-before it runs. The manifest must describe what OpenAI has actually released,
-not what is merely built or submitted.
+Clara checks `static/shared/codex-plugin-versions.json` through its trusted
+`SessionStart` hook. Vera checks that same manifest when its main skill is
+first used. The manifest records the versions OpenAI has published.
 
 After OpenAI shows a new Clara or Vera version as **Published**:
 

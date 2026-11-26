@@ -2,40 +2,6 @@
   "display_name": "Local onboarding and repeatable voice-first teaching in native OpenAI desktop sessions",
   "external_boundaries": [
     {
-      "activation": "automatic_session_start",
-      "content": "Fixed public GET with ordinary connection metadata; no tutorial, profile, lesson, case, plugin-version or local-path content. Details are governed by plugin-update-check.",
-      "controls": [
-        "Profile, lesson and feedback fields are never arguments to the version checker. Change-request status polling is suppressed while onboarding is unfinished/recovering or a teaching session is active/inaccessible; tutorial receipt stamping remains suppressed. A completed introduction with no active teaching session permits the ordinary prior-submission status route described separately below."
-      ],
-      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
-      "id": "public-version-check",
-      "kind": "hosted_service",
-      "optional": false,
-      "purpose": "Show published version updates independently of tutorial completion",
-      "requires_confirmation": false,
-      "retention": "Only the downloaded public manifest and check time are cached locally when plugin data storage is available. Hosted access-log retention is outside this helper.",
-      "runtime_profiles": [
-        "openai-codex"
-      ]
-    },
-    {
-      "activation": "automatic_after_prior_submission",
-      "content": "Only previously retained change-request IDs and their bearer status tokens, bounded to 100 per batch, plus ordinary connection metadata. No interview, profile, lesson, personal teaching feedback, tutorial files or submitted feedback text is sent by this status lookup.",
-      "controls": [
-        "No local prior-submission receipts means no request. Unfinished or inaccessible onboarding and active or inaccessible teaching suppress this route. Polling does not create feedback or mark a lesson complete; the plugin-feedback register governs the bounded transport and response."
-      ],
-      "destination": "Mparanza HTTPS /api/change-requests/status through the existing plugin-feedback service",
-      "id": "ordinary-prior-feedback-status-after-tutorial",
-      "kind": "hosted_service",
-      "optional": false,
-      "purpose": "Restore ordinary status notices for previously user-approved feedback when the introduction is complete and no teaching session is active.",
-      "requires_confirmation": false,
-      "retention": "Existing local plugin-feedback receipt state and Mparanza service retention apply. The onboarding helper does not set a new deletion policy.",
-      "runtime_profiles": [
-        "openai-codex"
-      ]
-    },
-    {
       "activation": "automatic_on_first_use",
       "content": "Fixed public GET paths for selected prepared assets, bound locally to exact SHA-256 values, plus ordinary connection metadata. No client files, local paths, teaching profile, answers, progress or feedback are sent.",
       "controls": [
@@ -60,7 +26,6 @@
     "scripts/onboarding_session_start.py",
     "scripts/onboarding_session_start.cjs",
     "scripts/windows_python.cjs",
-    "hooks/hooks.json",
     "skills/vera/references/local-onboarding.md",
     "skills/vera/references/tutorial-cases.md",
     "skills/vera/SKILL.md",
@@ -95,7 +60,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "c5aa3fec6252634fd95b810b1a78d43ee1e1bbf54426ab765168195725892b26"
+    "source_fingerprint": "a894226b459b9e70434485aa5839faa2607b296402ccc28da9ee0e7ce0fcdbe2"
   },
   "runtime_profiles": [
     "openai-codex"
@@ -114,14 +79,11 @@
       "on_violation": "Permission errors, corrupt profiles and missing enrolled records require recovery only to resume the optional tutorial. Ordinary work continues without a profile check, server fallback, automatic reset or manufactured completion."
     },
     {
-      "control": "Tutorial profiles, lesson artifacts and feedback remain local. Incomplete, inaccessible or active tutorials suppress CR polling; their receipts suppress stamping, including direct retries. Independently, startup may GET the fixed public version manifest with ordinary connection metadata and no tutorial content, installed version or local path, as recorded under plugin-update-check. It does not require a completed profile. Pause/rebind/resume revoke worker tokens for future bounded steps without claiming to cancel a running host command. Startup delegates only the fixed public version GET during unfinished/recovering onboarding or active/inaccessible teaching. After introduction completion with no active lesson, the ordinary previously receipted feedback status lookup may resume; no teaching material is submitted.",
       "id": "onboarding-transmission-suppression",
+      "control": "Tutorial profiles, lesson artifacts and feedback remain local. Tutorial receipts suppress stamping, including direct retries. Tutorial work does not poll prior feedback. Pause, rebind and resume revoke worker tokens for future bounded steps without claiming to cancel a running host command.",
       "implemented_by": [
-        "scripts/onboarding_session_start.py",
         "scripts/notarized_run_receipt.py",
-        "skills/vera/references/local-onboarding.md",
-        "scripts/check_for_update.py",
-        "scripts/change_requests.py"
+        "skills/vera/references/local-onboarding.md"
       ],
       "on_violation": "A tutorial receipt returns not_requested/local_onboarding before request construction; missing state leaves onboarding pending."
     },

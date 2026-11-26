@@ -48,7 +48,6 @@
     "scripts/archive_reporting.py",
     "scripts/archive_report_store.py",
     "scripts/archive_report_measurements.py",
-    "hooks/hooks.json",
     "hooks/cowork-hooks.json",
     "skills/vera/references/selective-reporting.md",
     "scripts/operational_incidents.py",
@@ -103,7 +102,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-18",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "774fe6991ef157ebf2f74a7f88fd57275e9db375d94605b1b4042879d9b8c8ca"
+    "source_fingerprint": "951204e64e0a74a60d3d129e6ee6a8e1244c37099c2442f8e60e42cc6fbb36ae"
   },
   "runtime_profiles": [
     "openai-codex",

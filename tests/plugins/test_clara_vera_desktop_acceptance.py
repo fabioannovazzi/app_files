@@ -70,7 +70,6 @@ def test_local_package_exposes_codex_desktop_runtime_contract(
         marketplace_path,
         manifest_path,
         f"{package_root}/skills/{plugin_name}/SKILL.md",
-        f"{package_root}/hooks/hooks.json",
         f"{package_root}/requirements.txt",
         f"{package_root}/scripts/check_dependencies.py",
     }
@@ -90,7 +89,12 @@ def test_local_package_exposes_codex_desktop_runtime_contract(
     assert required_entries <= names
     assert manifest["name"] == plugin_name
     assert manifest["skills"] == "./skills/"
-    assert manifest["hooks"] == "./hooks/hooks.json"
+    if plugin_name == "vera":
+        assert "hooks" not in manifest
+        assert f"{package_root}/hooks/hooks.json" not in names
+    else:
+        assert manifest["hooks"] == "./hooks/hooks.json"
+        assert f"{package_root}/hooks/hooks.json" in names
     assert runtime_configs == expected_runtime_configs
     assert manifest_configs == expected_manifest_configs
     assert len(marketplace["plugins"]) == 1

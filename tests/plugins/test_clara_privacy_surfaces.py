@@ -275,7 +275,7 @@ def test_clara_register_includes_non_case_automatic_network_boundaries() -> None
     )
 
 
-def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
+def test_vera_and_clara_maintenance_boundaries_follow_product_activation() -> None:
     vera_services = {
         manifest["service_id"]: manifest
         for manifest in _load_json_manifests(
@@ -311,8 +311,15 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
         boundary["activation"] == "explicit_user_choice"
         for boundary in vera_feedback_boundaries
     )
-    assert any(
-        boundary["activation"] == "automatic_after_prior_submission"
+    vera_status = next(
+        boundary
+        for boundary in vera_feedback_boundaries
+        if boundary["id"] == "requested-feedback-status-check"
+    )
+    assert vera_status["activation"] == "explicit_user_choice"
+    assert vera_status["requires_confirmation"] is True
+    assert all(
+        boundary["activation"] != "automatic_after_prior_submission"
         for boundary in vera_feedback_boundaries
     )
     assert any(

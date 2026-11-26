@@ -205,13 +205,12 @@ def test_stale_notice_repeats_in_a_new_session_without_another_download(
     assert "installed 1.0.0, published 1.1.0" in result
 
 
-@pytest.mark.parametrize("plugin_root", [CLARA_ROOT, VERA_ROOT])
-def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) -> None:
+def test_clara_declares_trusted_session_start_update_hook() -> None:
     manifest = json.loads(
-        (plugin_root / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+        (CLARA_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
     hooks = json.loads(
-        (plugin_root / "hooks" / "hooks.json").read_text(encoding="utf-8")
+        (CLARA_ROOT / "hooks" / "hooks.json").read_text(encoding="utf-8")
     )
 
     assert manifest["hooks"] == "./hooks/hooks.json"
@@ -219,15 +218,18 @@ def test_plugins_declare_trusted_session_start_update_hook(plugin_root: Path) ->
     assert session_hook["matcher"] == "startup|resume"
     assert session_hook["hooks"][0] == {
         "type": "command",
-        "command": (
-            'node "$PLUGIN_ROOT/scripts/onboarding_session_start.cjs"'
-            if plugin_root == VERA_ROOT
-            else 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"'
-        ),
+        "command": 'python3 "$PLUGIN_ROOT/scripts/onboarding_session_start.py"',
         "timeout": 8,
     }
-    if plugin_root == VERA_ROOT:
-        assert "archive_report_hook.py" not in json.dumps(hooks)
+
+
+def test_vera_does_not_register_a_startup_hook() -> None:
+    manifest = json.loads(
+        (VERA_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+
+    assert "hooks" not in manifest
+    assert not (VERA_ROOT / "hooks" / "hooks.json").exists()
 
 
 def test_session_start_prioritizes_exact_fixed_request_message(

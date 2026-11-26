@@ -1559,21 +1559,13 @@
           "marketplace_skill_instructions.json"
         ],
         "privacy/services/local-onboarding.json": [
-          "hooks/hooks.json",
           "marketplace_skill_instructions.json"
         ],
         "privacy/services/managed-python-runtime.json": [
           "skills/studio-archive/references/cowork-runtime.md"
         ],
-        "privacy/services/plugin-feedback.json": [
-          "hooks/hooks.json"
-        ],
-        "privacy/services/plugin-update-check.json": [
-          "hooks/hooks.json"
-        ],
         "privacy/services/run-receipt-stamping.json": [
-          "hooks/cowork-hooks.json",
-          "hooks/hooks.json"
+          "hooks/cowork-hooks.json"
         ],
         "privacy/workstreams/open-item-reconciliation.json": [
           "assets/open-item-reconciliation-review-widget.html"
@@ -1701,9 +1693,6 @@
       "services": [],
       "workstreams": [],
       "paths": {
-        "privacy/services/local-onboarding.json": [
-          "hooks/hooks.json"
-        ],
         "privacy/services/managed-python-runtime.json": [
           "skills/studio-archive/references/cowork-runtime.md"
         ],
@@ -1713,15 +1702,8 @@
         "privacy/services/operational-incidents.json": [
           ".mcp.json"
         ],
-        "privacy/services/plugin-feedback.json": [
-          "hooks/hooks.json"
-        ],
-        "privacy/services/plugin-update-check.json": [
-          "hooks/hooks.json"
-        ],
         "privacy/services/run-receipt-stamping.json": [
-          "hooks/cowork-hooks.json",
-          "hooks/hooks.json"
+          "hooks/cowork-hooks.json"
         ],
         "privacy/services/on-demand-mcp.json": [
           ".mcp.json"

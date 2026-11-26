@@ -176,13 +176,12 @@ financial-report-builder, vouching and concordato-plan-review, follow
 the preparation internally; do not ask the professional to use Terminal.
 
 <!-- VERA_OPENAI_VERSION_BEGIN -->
-## Installed version check
+## Installed version and feedback checks
 
-For Codex with local tools, once per conversation run the **currently exposed
-installed plugin's** `scripts/check_for_update.py --version-only` before ordinary
-work if startup did not already provide its installed-version context. Resolve
-that script from this skill's own plugin root; never substitute a repository,
-download or another cache. Show any update notice in the user's language.
+When this skill is first used in a Codex conversation with local tools, run the
+**currently exposed installed plugin's** `scripts/check_for_update.py --version-only`.
+Resolve that script from this skill's own plugin root; never substitute a
+repository, download or another cache. Show any update notice in the user's language.
 A local marketplace package does not update merely because a new version was
 published: use the official listing in the notice to update, then verify the
 plugin exposed in a fresh conversation. Do not edit generated cache files.
@@ -190,6 +189,9 @@ If the script is missing or the version cannot be checked, say the active versio
 is unverified when discussing a fix; never infer it from a successful build.
 This check sends no case or tutorial content and does not start CR polling.
 It does not require onboarding and does not block the requested work.
+When the user asks for updates on previously submitted Vera feedback, run the
+same installed script without `--version-only` and show any feedback notice in
+the user's language. Use this feedback check outside tutorial work.
 <!-- VERA_OPENAI_VERSION_END -->
 
 
