@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from typing import Any, Literal
 from uuid import UUID
@@ -26,6 +27,7 @@ __all__ = [
     "ReporterStatus",
     "Outcome",
     "RecoveryEvent",
+    "PatchSubmission",
     "scrub",
 ]
 
@@ -60,6 +62,47 @@ class Credentials(StrictModel):
     installation_key: str = Field(
         min_length=32, max_length=128, pattern=r"^[A-Za-z0-9_-]+$"
     )
+
+
+class PatchSubmission(StrictModel):
+    """A proposed source change tied to a specific original incident report."""
+
+    report_id: UUID
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    diff: str = Field(min_length=1, max_length=256 * 1024)
+    result: str = Field(min_length=1, max_length=2000)
+    base_commit: str | None = Field(default=None, pattern=r"^[a-f0-9]{40}$")
+
+    @field_validator("result")
+    @classmethod
+    def clean_result(cls, value: str) -> str:
+        try:
+            value.encode("utf-8")
+        except UnicodeError as error:
+            raise ValueError("Patch result must be UTF-8 text") from error
+        if not value.strip() or "\0" in value:
+            raise ValueError("Describe what worked after the change")
+        return scrub(value.strip())
+
+    @model_validator(mode="after")
+    def verify_diff(self) -> PatchSubmission:
+        try:
+            payload = self.diff.encode("utf-8")
+        except UnicodeError as error:
+            raise ValueError("Patch must be UTF-8 text") from error
+        if (
+            len(payload) > 256 * 1024
+            or b"\0" in payload
+            or not self.diff.startswith("diff --git ")
+            or not re.search(r"(?m)^@@ -\d+(?:,\d+)? \+\d+(?:,\d+)? @@", self.diff)
+            or re.search(
+                r"(?m)^(?:GIT binary patch|Binary files .* differ)\r?$", self.diff
+            )
+        ):
+            raise ValueError("Submit a text-only Git diff no larger than 256 KiB")
+        if hashlib.sha256(payload).hexdigest() != self.sha256:
+            raise ValueError("Patch checksum does not match its bytes")
+        return self
 
 
 class DeviceCredentials(StrictModel):

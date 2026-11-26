@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 from zipfile import ZipFile
 
 if __package__ in {None, ""}:
@@ -57,6 +59,12 @@ def main() -> None:
     listing.add_argument("--limit", type=int, default=100)
     show = commands.add_parser("show")
     show.add_argument("incident_id")
+    patches = commands.add_parser("patches", help="List submitted source patches")
+    patches.add_argument("--limit", type=int, default=100)
+    export = commands.add_parser("export-patch", help="Save the exact submitted diff")
+    export.add_argument("report_id", type=UUID)
+    export.add_argument("sha256")
+    export.add_argument("--output", type=Path, required=True)
     installation = commands.add_parser("installation")
     installation.add_argument("installation_id")
     app = commands.add_parser("app")
@@ -81,6 +89,18 @@ def main() -> None:
         result = store.queue(args.limit)
     elif args.command == "show":
         result = store.show(args.incident_id)
+    elif args.command == "patches":
+        result = store.patch_queue(args.limit)
+    elif args.command == "export-patch":
+        data = store.export_patch(args.report_id, args.sha256)
+        descriptor = os.open(args.output, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(data)
+        result = {
+            "report_id": str(args.report_id),
+            "sha256": args.sha256,
+            "bytes": len(data),
+        }
     elif args.command == "installation":
         result = store.installation(args.installation_id)
     elif args.command == "app":

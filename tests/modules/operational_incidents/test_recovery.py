@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import sqlite3
 from datetime import datetime, timezone
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
@@ -17,6 +17,7 @@ from modules.operational_incidents.contracts import Credentials, Remedy
 from modules.operational_incidents.store import IncidentStore
 from modules.run_receipts.signing import RunReceiptSigner
 from modules.run_receipts.store import RunReceiptStore
+from scripts.summarize_incident_monitor import evidence_hash
 from tests.modules.operational_incidents.support import technical_report
 
 __all__: list[str] = []
@@ -44,6 +45,117 @@ def request(client, product, operation, arguments=None):
         json=arguments or {},
         headers=HEADERS,
     )
+
+
+def source_patch(report_id):
+    diff = (
+        "diff --git a/worker.py b/worker.py\r\n"
+        "--- a/worker.py\r\n+++ b/worker.py\r\n"
+        "@@ -1 +1 @@\r\n"
+        '-print("fixture")\r\n+print("fix verificato ✓")\r\n'
+    )
+    return {
+        "report_id": report_id,
+        "sha256": hashlib.sha256(diff.encode()).hexdigest(),
+        "diff": diff,
+        "result": "Synthetic retry completed.",
+    }
+
+
+@pytest.mark.parametrize("product", PRODUCTS)
+def test_browser_patch_is_bound_to_original_owner_and_keeps_exact_bytes(
+    service, product
+):
+    client, store, _ = service
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(owner, product=product)
+    report = {**technical_report(), "product": product}
+    receipt = client.post(
+        "/api/operational-incidents/report",
+        json={"credentials": owner.model_dump(mode="json"), "report": report},
+    ).json()
+    patch = source_patch(receipt["report_id"])
+    page = client.get(f"/{product}/incident-recovery")
+    schema = request(client, product, "schema", {"operation": "patch"})
+
+    denied = request(client, product, "patch", {"patch": patch})
+    accepted = request(
+        client,
+        product,
+        "patch",
+        {"credentials": owner.model_dump(mode="json"), "patch": patch},
+    )
+    repeated = request(client, product, "patch", {"patch": patch})
+    changed_note = request(
+        client, product, "patch", {"patch": {**patch, "result": "Different result"}}
+    )
+
+    assert 'id="patch-form"' in page.text
+    assert schema.status_code == 200
+    assert denied.status_code == 404
+    assert accepted.status_code == repeated.status_code == 200
+    assert changed_note.status_code == 409
+    assert accepted.json() == repeated.json()
+    assert accepted.json()["status"] == "received"
+    assert accepted.json()["product"] == product
+    assert accepted.json()["product_version"] == report["product_version"]
+    assert "diff" not in accepted.json()
+    assert len(store.patch_queue()) == 1
+    details = store.show(receipt["incident_id"])
+    assert details["patches"] == store.patch_queue()
+    assert details["outcomes"] == []
+    assert (
+        store.export_patch(UUID(patch["report_id"]), patch["sha256"])
+        == patch["diff"].encode()
+    )
+    store.close_test(
+        receipt["incident_id"],
+        expected_evidence_sha256=evidence_hash(details),
+        note="Synthetic patch submission verified.",
+        evidence_refs=[patch["sha256"]],
+    )
+    assert store.patch_queue() == []
+    assert store.show(receipt["incident_id"])["patches"] == details["patches"]
+
+
+@pytest.mark.parametrize(
+    "product,foreign_product",
+    [("vera", "clara"), ("clara", "lucia"), ("lucia", "vera")],
+)
+def test_native_patch_rejects_bad_checksum_and_cross_product_submission(
+    service, product, foreign_product
+):
+    client, store, _ = service
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(owner, product=product)
+    credential_payload = owner.model_dump(mode="json")
+    report = {**technical_report(), "product": product}
+    client.post(
+        "/api/operational-incidents/report",
+        json={"credentials": credential_payload, "report": report},
+    ).raise_for_status()
+    patch = source_patch(report["report_id"])
+
+    invalid = client.post(
+        "/api/operational-incidents/patch",
+        json={
+            "credentials": credential_payload,
+            "patch": {**patch, "sha256": "0" * 64},
+        },
+    )
+    client.get(f"/{foreign_product}/incident-recovery")
+    foreign = request(client, foreign_product, "patch", {"patch": patch})
+    accepted = client.post(
+        "/api/operational-incidents/patch",
+        json={"credentials": credential_payload, "patch": patch},
+    )
+
+    assert invalid.status_code == 422
+    assert patch["diff"] not in invalid.text
+    assert foreign.status_code == 404
+    assert accepted.status_code == 200
+    assert accepted.json()["product"] == product
+    assert len(store.patch_queue()) == 1
 
 
 @pytest.mark.parametrize("product", PRODUCTS)
@@ -244,6 +356,12 @@ def test_browser_delivers_remedy_progress_and_verified_recovery(service, product
     assert result.status_code == 200
     assert result.json()["status"] == "recovered"
     assert store.queue() == []
+    accepted = request(
+        client, product, "patch", {"patch": source_patch(receipt["report_id"])}
+    )
+    assert accepted.status_code == 200
+    assert store.patch_queue()[0]["incident_id"] == receipt["incident_id"]
+    assert store.show(receipt["incident_id"])["status"] == "recovered"
 
 
 @pytest.mark.parametrize(

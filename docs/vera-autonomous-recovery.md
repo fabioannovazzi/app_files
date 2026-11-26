@@ -194,6 +194,30 @@ contract validation, persistence and operator `show`; check that its decisive
 technical facts survive, client strings do not, and failure behavior is unchanged.
 A synthetic pass does not resolve any existing original user incident.
 
+## Send a source patch after a local fix
+
+After testing a local fix, the user can attach a UTF-8 Git diff and say what
+worked. The **Invia patch** form on the Vera, Clara, or Lucia recovery page
+(`/{product}/incident-recovery`) accepts the original report ID and a `.patch`
+or `.diff` file of up to 256 KiB. Use the existing
+browsing identity or restore the original reporting identity before sending.
+Include source changes only. Keep credentials, customer documents, and case data
+out of the diff. The receipt confirms storage and gives the exact SHA-256.
+
+An agent with the original local reporting credentials may also POST to
+`/api/operational-incidents/patch`. Send `credentials` and `patch`, with
+`report_id`, `sha256`, `diff`, `result`, and optional `base_commit` in `patch`.
+Retry with the same diff and details if the acknowledgement is lost.
+
+During the existing incident review, run `python scripts/manage_incidents.py
+patches` to see recent submissions, including those received after recovery.
+Each entry names the affected product and release. The incident’s `show` also
+lists patch metadata. Retrieve the submitted bytes
+with `python scripts/manage_incidents.py export-patch <report_id> <sha256>
+--output <review-file.patch>`. Review the diff and check compatibility against
+the intended product release before integrating it. Uploading a patch records a
+submission. It neither changes the incident outcome nor applies the diff.
+
 ## Required actionable alert preparation
 
 For every newly warranted incident alert, use the deployed

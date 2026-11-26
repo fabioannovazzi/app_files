@@ -34,6 +34,20 @@
     <p id="status" role="status"></p>
     <p>Per conoscere i campi ammessi, scegliere «Schema della richiesta» e inviare <code>{"operation":"report"}</code>, sostituendo report con l’operazione da consultare. Il ripristino accetta le credenziali originali in credentials.</p>
     <pre id="response" aria-label="Risposta del servizio"></pre>
+    <section aria-labelledby="patch-title">
+      <h2 id="patch-title">Invia una correzione</h2>
+      <p>Allega il diff Git della correzione e indica cosa ha funzionato dopo averla provata. Il file deve contenere solo modifiche al codice, senza dati dei clienti o credenziali.</p>
+      <form id="patch-form">
+        <label for="patch-report-id">ID della segnalazione originale</label>
+        <input id="patch-report-id" type="text" required spellcheck="false" autocomplete="off">
+        <label for="patch-file">File .patch o .diff (fino a 256 KiB)</label>
+        <input id="patch-file" type="file" accept=".patch,.diff" required>
+        <label for="patch-result">Risultato della prova</label>
+        <textarea id="patch-result" rows="3" maxlength="2000" required></textarea>
+        <button type="submit">Invia patch</button>
+      </form>
+      <p id="patch-status" role="status"></p>
+    </section>
     <p>La sessione del browser ha un’identità tecnica propria. L’assenza di uno storico non prova che una precedente segnalazione sia stata risolta.</p>
   </main>
 </body>
