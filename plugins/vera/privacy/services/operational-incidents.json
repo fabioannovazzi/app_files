@@ -80,6 +80,26 @@
       "optional": false,
       "activation": "automatic_session_start",
       "destination": "Mparanza ordinary HTTPS operational-incident API and https://mparanza.com/vera/incident-recovery"
+    },
+    {
+      "id": "user-submitted-incident-patch",
+      "purpose": "Deliver a user-selected Vera source diff and a test result for maintainer review",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "requires_confirmation": true,
+      "kind": "hosted_service",
+      "retention": "Private incident storage retains the exact diff and its receipt without automatic deletion. Operator queue entries include metadata. The exact diff is exposed only through an explicit operator export.",
+      "content": "The selected text Git diff, its SHA-256 and byte size, original report UUID and recorded product version, the supplied test result and optional source commit. Original reporting capabilities authenticate submission. The submitted source is not scrubbed because review requires exact bytes.",
+      "optional": true,
+      "activation": "explicit_user_choice",
+      "destination": "Mparanza private operational incident storage via the same-origin Vera recovery page or authenticated incident HTTPS API",
+      "controls": [
+        "Explicit selection and submission of a source-only diff. The page asks the sender to exclude client data and credentials.",
+        "The exact original Vera report must belong to the authenticated installation or a proven linked browser identity.",
+        "Validate the text-only Git diff, exact checksum and 256 KiB size limit. Store it as data without applying it or changing the task outcome."
+      ]
     }
   ],
   "security_controls": [
@@ -147,12 +167,24 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Return unavailable metadata without exposing contents or changing state."
+    },
+    {
+      "id": "user-owned-source-patch",
+      "control": "Bind the proposed patch to the original owner's Vera report. Persist exact source bytes separately from scrubbed diagnostics and preserve idempotent receipt identity on a byte-identical retry. Export never executes the patch.",
+      "implemented_by": [
+        "repository:modules/operational_incidents/contracts.py",
+        "repository:modules/operational_incidents/store.py",
+        "repository:modules/operational_incidents/api.py",
+        "repository:scripts/manage_incidents.py",
+        "repository:static/shared/incident-recovery.js"
+      ],
+      "on_violation": "Reject invalid or unauthorized submissions without disclosing the diff or replacing an accepted submission."
     }
   ],
   "review": {
     "reviewed_at": "2026-11-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "71ffc4ef6686c437aff2da6a08b1a2613d46a7fbe50c561e314184d06629162f"
+    "source_fingerprint": "515686cdb4e0b40f6c7a32f5bad8447f5b5dadcf84757f63b2e86a9041d95ffc"
   }
 }

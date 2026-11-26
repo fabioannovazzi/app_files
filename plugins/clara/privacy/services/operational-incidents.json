@@ -81,6 +81,26 @@
         "Scoped automatic retries deliver original reports in occurrence order before dependent diagnostics and recovery notices. An unacknowledged item remains private and pending for retry. Each original requires its own server receipt; restrictions on local-only evidence and unrelated task scopes still apply.",
         "Archive retry association compares a keyed local binding of the exact command, client, engagement and run IDs. Older reports require the exact saved invocation. Only the keyed digest enters the existing input_binding field; raw Archive IDs are not added to reporting payloads. A mismatch suppresses incident association without blocking professional execution."
       ]
+    },
+    {
+      "id": "user-submitted-incident-patch",
+      "purpose": "Deliver a user-selected Clara source diff and a test result for maintainer review",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "requires_confirmation": true,
+      "kind": "hosted_service",
+      "retention": "Private incident storage retains the exact diff and its receipt without automatic deletion. Operator queue entries include metadata. The exact diff is exposed only through an explicit operator export.",
+      "content": "The selected text Git diff, its SHA-256 and byte size, original report UUID and recorded product version, the supplied test result and optional source commit. Original reporting capabilities authenticate submission. The submitted source is not scrubbed because review requires exact bytes.",
+      "optional": true,
+      "activation": "explicit_user_choice",
+      "destination": "Mparanza private operational incident storage via the same-origin Clara recovery page or authenticated incident HTTPS API",
+      "controls": [
+        "Explicit selection and submission of a source-only diff. The page asks the sender to exclude client data and credentials.",
+        "The exact original Clara report must belong to the authenticated installation or a proven linked browser identity.",
+        "Validate the text-only Git diff, exact checksum and 256 KiB size limit. Store it as data without applying it or changing the task outcome."
+      ]
     }
   ],
   "security_controls": [
@@ -148,13 +168,25 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Return unavailable metadata without exposing contents or changing state."
+    },
+    {
+      "id": "user-owned-source-patch",
+      "control": "Bind the proposed patch to the original owner's Clara report. Persist exact source bytes separately from scrubbed diagnostics and preserve idempotent receipt identity on a byte-identical retry. Export never executes the patch.",
+      "implemented_by": [
+        "repository:modules/operational_incidents/contracts.py",
+        "repository:modules/operational_incidents/store.py",
+        "repository:modules/operational_incidents/api.py",
+        "repository:scripts/manage_incidents.py",
+        "repository:static/shared/incident-recovery.js"
+      ],
+      "on_violation": "Reject invalid or unauthorized submissions without disclosing the diff or replacing an accepted submission."
     }
   ],
   "review": {
     "reviewed_at": "2026-11-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "b10f45e7e8ff26797cf1cb6d7b1e6afeff14c7fb9995c5c1de73021af5801885"
+    "source_fingerprint": "78ecd85cdedb506be6e2e77a3811ee507b5ef81e739ce29e409feee56ba65e2f"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

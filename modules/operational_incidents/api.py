@@ -20,6 +20,7 @@ from modules.operational_incidents.contracts import (
     Credentials,
     DeviceCredentials,
     Outcome,
+    PatchSubmission,
     RecoveryEvent,
     Report,
     ReporterStatus,
@@ -94,6 +95,16 @@ class Envelope(BaseModel):
     receipt_request: RunReceiptStampRequest | None = None
 
 
+class PatchEnvelope(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    credentials: Credentials | None = None
+    patch: PatchSubmission
+
+
+class AuthenticatedPatchEnvelope(PatchEnvelope):
+    credentials: Credentials
+
+
 _RATE_LOCK = threading.Lock()
 _RATE_EVENTS: OrderedDict[str, deque[float]] = OrderedDict()
 _GLOBAL_EVENTS: deque[float] = deque()
@@ -154,6 +165,9 @@ def _dispatch(
     if operation == "course-completed":
         course = CourseEnvelope.model_validate(arguments)
         return store.record_course(course.credentials, course.completion)
+    if operation == "patch":
+        submission = AuthenticatedPatchEnvelope.model_validate(arguments)
+        return store.submit_patch(submission.credentials, submission.patch)
     envelope = Envelope.model_validate(arguments)
     if operation == "register":
         registered = store.register(
@@ -257,6 +271,7 @@ _NO_CACHE = {
 _RECOVERY_OPERATIONS = {
     "register",
     "report",
+    "patch",
     "status",
     "outcome",
     "progress",
@@ -270,6 +285,11 @@ _RECOVERY_OPERATIONS = {
 
 def _recovery_schema(product: Product, operation: str) -> dict[str, Any]:
     """Expose the existing input contract without requiring MCP discovery."""
+    if operation == "patch":
+        return {
+            "operation": operation,
+            "input_schema": PatchEnvelope.model_json_schema(),
+        }
     name = (
         f"{product}_{operation.replace('-', '_')}"
         if operation.startswith("workflow-")
@@ -476,6 +496,11 @@ def _connection_dispatch(
     operation: str,
     arguments: dict[str, Any],
 ) -> dict[str, Any]:
+    if operation == "patch":
+        submission = PatchEnvelope.model_validate(arguments)
+        if submission.credentials is not None:
+            store.link_connection(actor, submission.credentials)
+        return store.submit_patch(actor, submission.patch)
     envelope = ConnectionEnvelope.model_validate(arguments)
     member = actor
     if envelope.credentials is not None:

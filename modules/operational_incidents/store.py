@@ -22,6 +22,7 @@ from modules.operational_incidents.contracts import (
     Credentials,
     DeviceCredentials,
     Outcome,
+    PatchSubmission,
     RecoveryEvent,
     Remedy,
     Report,
@@ -88,6 +89,9 @@ _SCHEMA = (
     "CREATE TABLE IF NOT EXISTS operational_deliveries (installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, status TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY (installation_id, incident_id))",
     "CREATE TABLE IF NOT EXISTS operational_outcomes (outcome_id TEXT PRIMARY KEY, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_test_closures (incident_id TEXT NOT NULL, evidence_sha256 TEXT NOT NULL, note TEXT NOT NULL, evidence_refs_json TEXT NOT NULL, closed_at TEXT NOT NULL, PRIMARY KEY (incident_id,evidence_sha256))",
+    "CREATE TABLE IF NOT EXISTS operational_patches (report_id TEXT NOT NULL, sha256 TEXT NOT NULL, incident_id TEXT NOT NULL, product TEXT NOT NULL, product_version TEXT NOT NULL, base_commit TEXT, result TEXT NOT NULL, size_bytes INTEGER NOT NULL, diff TEXT NOT NULL, submitted_at TEXT NOT NULL, PRIMARY KEY (report_id,sha256))",
+    "CREATE INDEX IF NOT EXISTS operational_patches_by_incident ON operational_patches (incident_id,submitted_at)",
+    "CREATE INDEX IF NOT EXISTS operational_patches_by_date ON operational_patches (submitted_at)",
 )
 
 
@@ -1560,6 +1564,95 @@ class IncidentStore:
             ).fetchall()
             return [self._details(connection, dict(row)) for row in rows]
 
+    def submit_patch(
+        self, actor: Credentials | ConnectionActor, patch: PatchSubmission
+    ) -> dict[str, Any]:
+        """Accept one source diff as evidence, independently of task outcome."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            identifier = str(patch.report_id)
+            original = connection.execute(
+                self._sql(
+                    "SELECT installation_id,incident_id,payload_json FROM operational_reports WHERE report_id=?"
+                ),
+                (identifier,),
+            ).fetchone()
+            if original is None:
+                raise IncidentNotFound("Original report is unavailable")
+            installation = original["installation_id"]
+            if isinstance(actor, ConnectionActor):
+                self._authorize(
+                    connection, ConnectionActor(UUID(installation), actor.connection_id)
+                )
+            elif str(actor.installation_id) != installation:
+                raise IncidentNotFound("Original report is unavailable")
+            product = self._installation_product(connection, installation)
+            version = json.loads(original["payload_json"])["product_version"]
+            connection.execute(
+                self._sql(
+                    "INSERT INTO operational_patches (report_id,sha256,incident_id,product,product_version,base_commit,result,size_bytes,diff,submitted_at) "
+                    "VALUES (?,?,?,?,?,?,?,?,?,?) ON CONFLICT (report_id,sha256) DO NOTHING"
+                ),
+                (
+                    identifier,
+                    patch.sha256,
+                    original["incident_id"],
+                    product,
+                    version,
+                    patch.base_commit,
+                    patch.result,
+                    len(patch.diff.encode("utf-8")),
+                    patch.diff,
+                    _now(),
+                ),
+            )
+            saved = connection.execute(
+                self._sql(
+                    "SELECT report_id,sha256,incident_id,product,product_version,base_commit,result,size_bytes,submitted_at "
+                    "FROM operational_patches WHERE report_id=? AND sha256=?"
+                ),
+                (identifier, patch.sha256),
+            ).fetchone()
+            if (
+                saved["base_commit"] != patch.base_commit
+                or saved["result"] != patch.result
+            ):
+                raise IncidentConflict("This patch already has a saved submission")
+        return {**dict(saved), "status": "received"}
+
+    def patch_queue(self, limit: int = 100) -> list[dict[str, Any]]:
+        """Operator inbox includes patches sent after a task was recovered."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return [
+                dict(row)
+                for row in connection.execute(
+                    self._sql(
+                        "SELECT report_id,sha256,incident_id,product,product_version,base_commit,result,size_bytes,submitted_at "
+                        "FROM operational_patches ORDER BY submitted_at DESC,report_id,sha256 LIMIT ?"
+                    ),
+                    (max(1, min(limit, 1000)),),
+                ).fetchall()
+            ]
+
+    def export_patch(self, report_id: UUID, sha256: str) -> bytes:
+        """Return the operator-selected diff as inert UTF-8 bytes."""
+        with self._connection() as connection:
+            self._schema(connection)
+            saved = connection.execute(
+                self._sql(
+                    "SELECT diff FROM operational_patches WHERE report_id=? AND sha256=?"
+                ),
+                (str(report_id), sha256),
+            ).fetchone()
+            if saved is None:
+                raise IncidentNotFound("Submitted patch is unavailable")
+        data = saved["diff"].encode("utf-8")
+        if hashlib.sha256(data).hexdigest() != sha256:
+            raise IncidentConflict("Saved patch does not match its checksum")
+        return data
+
     def close_test(
         self,
         incident_id: str,
@@ -1797,6 +1890,15 @@ class IncidentStore:
             return self._details(connection, dict(row))
 
     def _details(self, connection: Any, incident: dict[str, Any]) -> dict[str, Any]:
+        patches = connection.execute(
+            self._sql(
+                "SELECT report_id,sha256,incident_id,product,product_version,base_commit,result,size_bytes,submitted_at "
+                "FROM operational_patches WHERE incident_id=? ORDER BY submitted_at,report_id,sha256"
+            ),
+            (incident["incident_id"],),
+        ).fetchall()
+        if patches:
+            incident["patches"] = [dict(row) for row in patches]
         closures = connection.execute(
             self._sql(
                 "SELECT * FROM operational_test_closures WHERE incident_id=? ORDER BY closed_at"
