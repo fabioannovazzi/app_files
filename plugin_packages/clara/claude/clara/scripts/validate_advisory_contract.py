@@ -41,7 +41,7 @@ import re
 import tempfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 from jsonschema import Draft202012Validator
 
@@ -83,7 +83,29 @@ QUESTION_RE = re.compile(
 
 
 class ContractValidationError(ValueError):
-    """Raised when a contract or literal-source input is not valid JSON/text."""
+    """Raised when a contract or literal-source input cannot be validated."""
+
+    def __init__(self, message: str, *, rule: str | None = None) -> None:
+        super().__init__(message)
+        self.incident_technical_facts = {f"advisory_contract.{rule}": 1} if rule else {}
+
+
+class _Issue(NamedTuple):
+    rule: str
+    message: str
+
+
+class _AdvisoryContractRejected(ValueError):
+    """Expose only code-defined rule identifiers to the incident runner."""
+
+    def __init__(self, message: str, issues: Sequence[_Issue]) -> None:
+        super().__init__(message)
+        self.incident_technical_facts: dict[str, int] = {}
+        for issue in issues:
+            key = f"advisory_contract.{issue.rule}"
+            self.incident_technical_facts[key] = (
+                self.incident_technical_facts.get(key, 0) + 1
+            )
 
 
 def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -92,7 +114,9 @@ def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     payload: dict[str, Any] = {}
     for key, value in pairs:
         if key in payload:
-            raise ContractValidationError(f"duplicate JSON field {key!r}")
+            raise ContractValidationError(
+                f"duplicate JSON field {key!r}", rule="input.duplicate_json_key"
+            )
         payload[key] = value
     return payload
 
@@ -103,15 +127,23 @@ def load_contract(path: Path) -> dict[str, Any]:
     try:
         text = path.read_text(encoding="utf-8")
     except OSError as exc:
-        raise ContractValidationError(f"cannot read {path.name}: {exc}") from exc
+        raise ContractValidationError(
+            f"cannot read {path.name}: {exc}", rule="input.unreadable"
+        ) from exc
     except UnicodeDecodeError as exc:
-        raise ContractValidationError(f"{path.name} is not valid UTF-8") from exc
+        raise ContractValidationError(
+            f"{path.name} is not valid UTF-8", rule="input.invalid_utf8"
+        ) from exc
     try:
         payload = json.loads(text, object_pairs_hook=_unique_object)
     except json.JSONDecodeError as exc:
-        raise ContractValidationError(f"invalid JSON in {path.name}: {exc}") from exc
+        raise ContractValidationError(
+            f"invalid JSON in {path.name}: {exc}", rule="input.invalid_json"
+        ) from exc
     if not isinstance(payload, dict):
-        raise ContractValidationError(f"{path.name} must contain one JSON object")
+        raise ContractValidationError(
+            f"{path.name} must contain one JSON object", rule="input.not_object"
+        )
     return payload
 
 
@@ -161,7 +193,7 @@ def _known_handoff_workflows() -> set[str]:
     return workflows - DEVELOPER_WORKFLOWS - {PLANNER_WORKFLOW}
 
 
-def _schema_errors(payload: Mapping[str, Any]) -> list[str]:
+def _schema_errors(payload: Mapping[str, Any]) -> list[_Issue]:
     """Return stable path-qualified JSON Schema errors."""
 
     validator = Draft202012Validator(_schema())
@@ -171,18 +203,23 @@ def _schema_errors(payload: Mapping[str, Any]) -> list[str]:
         key=lambda item: tuple(str(part) for part in item.path),
     ):
         location = ".".join(str(part) for part in error.absolute_path) or "$"
-        errors.append(f"schema {location}: {error.message}")
+        errors.append(
+            _Issue(f"schema.{error.validator}", f"schema {location}: {error.message}")
+        )
     return errors
 
 
-def _duplicate_id_errors(items: Any, *, field: str) -> list[str]:
+def _duplicate_id_errors(items: Any, *, field: str) -> list[_Issue]:
     """Return duplicate ID errors for a validated list of objects."""
 
     if not isinstance(items, list):
         return []
     ids = [item.get("id") for item in items if isinstance(item, dict)]
     duplicates = sorted({item_id for item_id in ids if ids.count(item_id) > 1})
-    return [f"{field} contains duplicate id {item_id!r}" for item_id in duplicates]
+    return [
+        _Issue(f"duplicate_id.{field}", f"{field} contains duplicate id {item_id!r}")
+        for item_id in duplicates
+    ]
 
 
 def validate_advisory_contract(
@@ -192,6 +229,15 @@ def validate_advisory_contract(
 ) -> list[str]:
     """Validate schema plus mechanically verifiable cross-field consistency."""
 
+    return [
+        issue.message
+        for issue in _contract_issues(payload, known_workflows=known_workflows)
+    ]
+
+
+def _contract_issues(
+    payload: Mapping[str, Any], *, known_workflows: set[str] | None = None
+) -> list[_Issue]:
     errors = _schema_errors(payload)
     if errors:
         return errors
@@ -202,13 +248,21 @@ def validate_advisory_contract(
     selected = str(payload["selected_clara_workflow"])
     if selected not in workflows:
         errors.append(
-            "selected_clara_workflow must name an available non-developer Clara "
-            f"handoff workflow; found {selected!r}"
+            _Issue(
+                "workflow.unavailable",
+                "selected_clara_workflow must name an available non-developer Clara "
+                f"handoff workflow; found {selected!r}",
+            )
         )
 
     handoff = payload["generation_handoff"]
     if handoff["workflow"] != selected:
-        errors.append("generation_handoff.workflow must equal selected_clara_workflow")
+        errors.append(
+            _Issue(
+                "handoff.workflow_mismatch",
+                "generation_handoff.workflow must equal selected_clara_workflow",
+            )
+        )
 
     available_inputs = payload["available_inputs"]
     errors.extend(_duplicate_id_errors(available_inputs, field="available_inputs"))
@@ -236,7 +290,12 @@ def validate_advisory_contract(
     )
     for field, input_id in referenced_inputs:
         if input_id not in input_ids:
-            errors.append(f"{field} references unknown available input {input_id!r}")
+            errors.append(
+                _Issue(
+                    f"input_reference.{field}",
+                    f"{field} references unknown available input {input_id!r}",
+                )
+            )
 
     handoff_input_ids = set(handoff["input_ids"])
     required_handoff_input_ids = {
@@ -247,10 +306,13 @@ def validate_advisory_contract(
     missing_handoff_input_ids = sorted(required_handoff_input_ids - handoff_input_ids)
     if missing_handoff_input_ids:
         errors.append(
-            "generation_handoff.input_ids must include every input referenced by "
-            "evidence_requirements, analysis_plan, source_facts, and "
-            "explicit_questions; missing "
-            + ", ".join(repr(input_id) for input_id in missing_handoff_input_ids)
+            _Issue(
+                "handoff.missing_inputs",
+                "generation_handoff.input_ids must include every input referenced by "
+                "evidence_requirements, analysis_plan, source_facts, and "
+                "explicit_questions; missing "
+                + ", ".join(repr(input_id) for input_id in missing_handoff_input_ids),
+            )
         )
 
     blocking_questions = [
@@ -258,16 +320,31 @@ def validate_advisory_contract(
     ]
     status = payload["contract_status"]
     if status == "ready_for_handoff" and blocking_questions:
-        errors.append("ready_for_handoff cannot retain a blocking unresolved question")
+        errors.append(
+            _Issue(
+                "status.ready_with_blocker",
+                "ready_for_handoff cannot retain a blocking unresolved question",
+            )
+        )
     if status == "needs_clarification" and not blocking_questions:
-        errors.append("needs_clarification requires a blocking unresolved question")
+        errors.append(
+            _Issue(
+                "status.clarification_without_blocker",
+                "needs_clarification requires a blocking unresolved question",
+            )
+        )
 
     review = payload["model_review"]
     review_statuses = [*review["dimensions"].values(), review["overall_status"]]
     if status == "ready_for_handoff" and any(
         review_status != "conforms" for review_status in review_statuses
     ):
-        errors.append("ready_for_handoff requires every model_review status to conform")
+        errors.append(
+            _Issue(
+                "status.ready_without_conformance",
+                "ready_for_handoff requires every model_review status to conform",
+            )
+        )
     return errors
 
 
@@ -277,7 +354,14 @@ def validate_literal_preservation(
 ) -> tuple[list[str], dict[str, dict[str, list[str]]]]:
     """Check model-declared exact anchors, typed literals, and questions."""
 
-    errors: list[str] = []
+    issues, inventories = _literal_issues(payload, source_texts)
+    return [issue.message for issue in issues], inventories
+
+
+def _literal_issues(
+    payload: Mapping[str, Any], source_texts: Mapping[str, str]
+) -> tuple[list[_Issue], dict[str, dict[str, list[str]]]]:
+    errors: list[_Issue] = []
     inventories: dict[str, dict[str, list[str]]] = {}
     facts_by_input: dict[str, list[Mapping[str, Any]]] = {}
     for fact in payload.get("source_facts", []):
@@ -300,7 +384,10 @@ def validate_literal_preservation(
             anchor = _normalized_literal(str(fact.get("source_anchor", "")))
             if anchor and anchor not in normalized_source:
                 errors.append(
-                    f"source_facts anchor for {input_id!r} is not literal source text: {anchor!r}"
+                    _Issue(
+                        "literal.source_anchor",
+                        f"source_facts anchor for {input_id!r} is not literal source text: {anchor!r}",
+                    )
                 )
                 continue
             category = str(fact.get("category", ""))
@@ -320,13 +407,19 @@ def validate_literal_preservation(
                 or literal_value not in anchor_literals
             ):
                 errors.append(
-                    f"source_facts {category} literal for {input_id!r} is not an "
-                    f"exact recognized literal in its source anchor: {literal_value!r}"
+                    _Issue(
+                        f"literal.{category}",
+                        f"source_facts {category} literal for {input_id!r} is not an "
+                        f"exact recognized literal in its source anchor: {literal_value!r}",
+                    )
                 )
         for question in question_anchors:
             if question and question not in normalized_source:
                 errors.append(
-                    f"explicit_questions entry for {input_id!r} is not literal source text: {question!r}"
+                    _Issue(
+                        "literal.explicit_question",
+                        f"explicit_questions entry for {input_id!r} is not literal source text: {question!r}",
+                    )
                 )
     return errors, inventories
 
@@ -339,13 +432,19 @@ def _parse_source_specs(specs: Sequence[str]) -> dict[str, Path]:
         input_id, separator, raw_path = spec.partition("=")
         if not separator or not input_id or not raw_path:
             raise ContractValidationError(
-                f"invalid --source {spec!r}; expected INPUT_ID=PATH"
+                f"invalid --source {spec!r}; expected INPUT_ID=PATH",
+                rule="source.invalid_argument",
             )
         if input_id in sources:
-            raise ContractValidationError(f"duplicate --source input id {input_id!r}")
+            raise ContractValidationError(
+                f"duplicate --source input id {input_id!r}",
+                rule="source.duplicate_argument",
+            )
         path = Path(raw_path).expanduser().resolve()
         if not path.is_file():
-            raise ContractValidationError(f"source file does not exist: {path}")
+            raise ContractValidationError(
+                f"source file does not exist: {path}", rule="source.missing_file"
+            )
         sources[input_id] = path
     return sources
 
@@ -458,6 +557,15 @@ def package_advisory_contract(
 ) -> tuple[Path | None, Path, list[str]]:
     """Validate a model-authored draft and write canonical package artifacts."""
 
+    canonical, report, issues = _package_advisory_contract(
+        draft_path, output_dir, source_paths=source_paths
+    )
+    return canonical, report, [issue.message for issue in issues]
+
+
+def _package_advisory_contract(
+    draft_path: Path, output_dir: Path, *, source_paths: Mapping[str, Path] | None
+) -> tuple[Path | None, Path, list[_Issue]]:
     source_receipts: list[dict[str, Any]] = []
     inventories: dict[str, dict[str, list[str]]] = {}
     output_dir = output_dir.resolve()
@@ -466,7 +574,7 @@ def package_advisory_contract(
     report_path = output_dir / VALIDATION_FILENAME
     try:
         payload = load_contract(draft_path)
-        errors = validate_advisory_contract(payload)
+        errors = _contract_issues(payload)
         sources = dict(source_paths or {})
         declared_input_ids = {
             str(item.get("id"))
@@ -477,19 +585,24 @@ def package_advisory_contract(
         for input_id, path in sorted(sources.items()):
             if input_id not in declared_input_ids:
                 errors.append(
-                    f"--source references undeclared available input {input_id!r}"
+                    _Issue(
+                        "source.undeclared_input",
+                        f"--source references undeclared available input {input_id!r}",
+                    )
                 )
             try:
                 raw = path.read_bytes()
             except OSError as exc:
                 raise ContractValidationError(
-                    f"cannot read source file for {input_id!r}: {path.name}"
+                    f"cannot read source file for {input_id!r}: {path.name}",
+                    rule="source.unreadable",
                 ) from exc
             try:
                 source_texts[input_id] = raw.decode("utf-8")
             except UnicodeDecodeError as exc:
                 raise ContractValidationError(
-                    f"source file for {input_id!r} is not UTF-8 text: {path.name}"
+                    f"source file for {input_id!r} is not UTF-8 text: {path.name}",
+                    rule="source.invalid_utf8",
                 ) from exc
             source_receipts.append(
                 {
@@ -501,9 +614,7 @@ def package_advisory_contract(
             )
 
         if not errors and source_texts:
-            literal_errors, inventories = validate_literal_preservation(
-                payload, source_texts
-            )
+            literal_errors, inventories = _literal_issues(payload, source_texts)
             errors.extend(literal_errors)
     except ContractValidationError as exc:
         _write_failed_validation_report(
@@ -520,7 +631,7 @@ def package_advisory_contract(
     else:
         report_path = _write_failed_validation_report(
             output_dir,
-            errors,
+            [issue.message for issue in errors],
             source_receipts=source_receipts,
             inventories=inventories,
         )
@@ -579,17 +690,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         LOGGER.error("%s", exc)
         return 2
     try:
-        canonical_path, report_path, errors = package_advisory_contract(
+        canonical_path, report_path, issues = _package_advisory_contract(
             args.draft_contract.resolve(),
             args.output_dir,
             source_paths=sources,
         )
+        if issues:
+            raise _AdvisoryContractRejected(
+                "Advisory contract failed validation.", issues
+            )
+    except _AdvisoryContractRejected:
+        LOGGER.error("advisory contract failed validation; see %s", report_path)
+        return 1
     except ContractValidationError as exc:
         LOGGER.error("%s", exc)
         return 2
-    if errors:
-        LOGGER.error("advisory contract failed validation; see %s", report_path)
-        return 1
     LOGGER.info("advisory contract: %s", canonical_path)
     LOGGER.info("validation report: %s", report_path)
     return 0

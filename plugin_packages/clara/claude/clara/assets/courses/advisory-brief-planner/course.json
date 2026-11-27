@@ -104,11 +104,11 @@
     },
     {
       "path": "scripts/validate_advisory_contract.py",
-      "sha256": "e4d5b2f7cb0bccba36454510bd6cf554e04b3b003eedb6755a25047152f10ac0"
+      "sha256": "62e1bf0b010860faae6152e9d37a50fbce474c4ffba2401f6e5be11f47c9e543"
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "1e6f369ddf2e7c511e83d86ec63d9c8997ab7b204a8f1917be582bbc7a139364"
+      "sha256": "d1601ae35f76c43a0fa465054a84b50055317a723c5946a04983a2244f5a12aa"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -497,5 +497,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "da8cb3737e2b07504ebe518c13511d81982cb109deba774d9402218676f80478"
+  "canonical_course_sha256": "8b143d1ee5561c016371089203323d88ad88e2f987187ca0166c2edbe1a85c69"
 }

@@ -44,6 +44,7 @@ __all__ = [
     "execution_lease_fds",
     "acquire_execution_lease",
     "recover_abandoned_execution_roots",
+    "recover_abandoned_windows_bootstraps",
     "report_preparation_failure",
     "current_incident_settings",
     "main",
@@ -88,6 +89,15 @@ def own_execution_root(root: Path) -> None:
     """Record a newly created code root and hold its kernel lifetime lease."""
     info = root.lstat()
     _OWNED_COPIES[root] = (os.getpid(), info.st_dev, info.st_ino)
+    if (
+        os.name == "nt"
+        and root.parent == Path(tempfile.gettempdir()).resolve()
+        and _windows_bootstrap_name(root.name)
+    ):
+        try:
+            _mark_windows_bootstrap(root, info)
+        except (OSError, ValueError):
+            LOGGER.warning("Windows bootstrap lease unavailable; using normal cleanup")
     if os.name != "posix":
         return
     import fcntl
@@ -238,6 +248,94 @@ def recover_abandoned_execution_roots() -> None:
                 os.close(descriptor)
 
 
+def _windows_bootstrap_name(name: str) -> bool:
+    return re.fullmatch(r"vera-execution-bootstrap-[A-Za-z0-9_-]+", name) is not None
+
+
+def _windows_bootstrap_lease_directory() -> Path:
+    directory = Path(tempfile.gettempdir()).resolve() / ".vera-windows-bootstrap-leases"
+    directory.mkdir(exist_ok=True)
+    info = directory.lstat()
+    if not stat.S_ISDIR(info.st_mode) or _is_reparse_point(info):
+        raise ValueError("Invalid Windows bootstrap lease directory")
+    return directory
+
+
+def _is_reparse_point(info: os.stat_result) -> bool:
+    return bool(
+        getattr(info, "st_file_attributes", 0) & stat.FILE_ATTRIBUTE_REPARSE_POINT
+    )
+
+
+def _mark_windows_bootstrap(root: Path, info: os.stat_result) -> None:
+    if not info.st_ino or _is_reparse_point(info):
+        raise ValueError("Windows bootstrap identity is unavailable")
+    lease = _windows_bootstrap_lease_directory() / f"{root.name}.json"
+    with lease.open("xb"):
+        pass
+    descriptor = _lock_descriptor(lease, exclusive=True, create=False)
+    try:
+        os.write(descriptor, json.dumps([info.st_dev, info.st_ino]).encode())
+        _LEASES[root] = descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def recover_abandoned_windows_bootstraps() -> None:
+    """Reclaim only marked bootstraps whose OS lease can be acquired exclusively."""
+    try:
+        directory = _windows_bootstrap_lease_directory()
+    except (OSError, ValueError):
+        LOGGER.warning("Windows bootstrap recovery is unavailable")
+        return
+    for lease in directory.glob("*.json"):
+        if not _windows_bootstrap_name(lease.stem):
+            continue
+        descriptor = None
+        remove_lease = False
+        try:
+            before = lease.lstat()
+            if not stat.S_ISREG(before.st_mode) or _is_reparse_point(before):
+                continue
+            descriptor = _lock_descriptor(
+                lease, exclusive=True, wait=False, create=False
+            )
+            opened = os.fstat(descriptor)
+            if (
+                not opened.st_ino
+                or opened.st_size > 256
+                or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino)
+            ):
+                continue
+            root = directory.parent / lease.stem
+            try:
+                info = root.lstat()
+            except FileNotFoundError:
+                remove_lease = True
+                continue
+            identity = json.loads(os.read(descriptor, 256))
+            if (
+                not stat.S_ISDIR(info.st_mode)
+                or _is_reparse_point(info)
+                or not info.st_ino
+                or identity != [info.st_dev, info.st_ino]
+            ):
+                continue
+            shutil.rmtree(root)
+            remove_lease = True
+        except (OSError, ValueError):
+            continue
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+            if remove_lease:
+                try:
+                    lease.unlink(missing_ok=True)
+                except OSError:
+                    pass
+
+
 def release_execution_root(root: Path) -> None:
     """Remove owned code only after all inherited kernel leases have closed."""
     shared = _SHARED_ROOTS.get(root)
@@ -254,7 +352,8 @@ def release_execution_root(root: Path) -> None:
     if identity is None or identity[0] != os.getpid():
         return
     descriptor = _LEASES.pop(root, None)
-    if descriptor is not None:
+    windows_bootstrap = os.name == "nt" and descriptor is not None
+    if descriptor is not None and not windows_bootstrap:
         os.close(descriptor)
     exclusive = None
     lease = None
@@ -290,6 +389,15 @@ def release_execution_root(root: Path) -> None:
     finally:
         if exclusive is not None:
             os.close(exclusive)
+        if windows_bootstrap:
+            assert descriptor is not None
+            os.close(descriptor)
+            if root not in _OWNED_COPIES:
+                try:
+                    lease = _windows_bootstrap_lease_directory() / f"{root.name}.json"
+                    lease.unlink(missing_ok=True)
+                except (OSError, ValueError):
+                    pass
 
 
 def _release_owned_copies() -> None:
@@ -630,10 +738,14 @@ def _code_store() -> Path:
     return directory
 
 
-def _lock_descriptor(path: Path, *, exclusive: bool, wait: bool = True) -> int:
+def _lock_descriptor(
+    path: Path, *, exclusive: bool, wait: bool = True, create: bool = True
+) -> int:
     """Acquire a kernel lease; close releases it, including after a crash."""
     descriptor = os.open(
-        path, os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600
+        path,
+        (os.O_CREAT if create else 0) | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0),
+        0o600,
     )
     try:
         info = os.fstat(descriptor)
@@ -1038,6 +1150,7 @@ def report_preparation_failure(
     technical_code: str | None = None,
     technical_type: str | None = None,
     settings: dict | None = None,
+    elapsed_ms: int | None = None,
 ) -> None:
     """Report through independently index-verified code while keeping work blocked.
 
@@ -1092,6 +1205,8 @@ def report_preparation_failure(
             trace = trace.tb_next
         frames = frames[-100:]  # The incident schema accepts at most 100 frames.
         facts = {}
+        if elapsed_ms is not None:
+            facts["elapsed_ms"] = elapsed_ms
         if isinstance(error, OSError):
             winerror = getattr(error, "winerror", None)
             if isinstance(winerror, int):

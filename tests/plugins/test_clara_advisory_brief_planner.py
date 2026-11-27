@@ -3,6 +3,8 @@ from __future__ import annotations
 import copy
 import importlib.util
 import json
+import shutil
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -459,6 +461,72 @@ def test_invalid_source_argument_replaces_stale_success_report(tmp_path: Path) -
     assert "invalid --source" in report["errors"][0]
     assert report["invalidated_prior_canonical"] is not None
     assert not (output_dir / "advisory_contract.json").exists()
+
+
+@pytest.mark.parametrize("schema_error", [False, True])
+def test_managed_diagnostics_include_rules_without_private_values(
+    tmp_path: Path, schema_error: bool
+) -> None:
+    # Use the real source-bound runner without provisioning a Python environment.
+    plugin = tmp_path / "clara"
+    for source in (
+        SCRIPT_PATH,
+        SCHEMA_PATH,
+        CLARA_ROOT / "scripts/technical_runner.py",
+    ):
+        target = plugin / source.relative_to(CLARA_ROOT)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, target)
+    contract = _representative_contract()
+    selected = contract["selected_clara_workflow"].removeprefix("clara:")
+    skill = plugin / "skills" / selected / "SKILL.md"
+    skill.parent.mkdir(parents=True)
+    skill.touch()
+    private_value = "SyntheticPrivateClientValue"
+    if schema_error:
+        contract["scope_included"] = private_value
+        expected = {"advisory_contract.schema.type": 1}
+    else:
+        contract["generation_handoff"]["input_ids"].append(private_value)
+        expected = {"advisory_contract.input_reference.generation_handoff": 1}
+    draft = tmp_path / "synthetic-private-draft.json"
+    draft.write_text(json.dumps(contract), encoding="utf-8")
+    report_dir = tmp_path / "validation"
+    diagnostic = tmp_path / "stderr.technical.json"
+
+    run = subprocess.run(
+        [
+            sys.executable,
+            str(plugin / "scripts/technical_runner.py"),
+            str(plugin),
+            str(diagnostic),
+            str(plugin / "scripts/validate_advisory_contract.py"),
+            str(draft),
+            "--output-dir",
+            str(report_dir),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+
+    assert run.returncode == 1, run.stderr
+    saved = diagnostic.read_text(encoding="utf-8")
+    evidence = json.loads(saved)
+    assert evidence["capture_complete"] is True
+    (event,) = evidence["events"]
+    assert event["technical_facts"] == expected
+    assert event["message"] == "Advisory contract failed validation."
+    assert private_value not in saved
+    assert draft.name not in saved
+    assert str(report_dir) not in saved
+    validation = json.loads(
+        (report_dir / "advisory_contract_validation.json").read_text(encoding="utf-8")
+    )
+    assert validation["status"] == "failed"
+    assert private_value in " ".join(validation["errors"])
+    assert not (report_dir / "advisory_contract.json").exists()
 
 
 def test_advisory_contract_rejects_inconsistent_ready_state_and_route() -> None:

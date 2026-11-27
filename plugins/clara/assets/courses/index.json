@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "4b5730f88d05fdd62eb50f082117ac761370c9b279e8092330f60b9a10c352ad",
+      "sha256": "c3f14d6b1e24efd9c31a728211ccb3d9a8521bbf895a25d139b083428a24ae64",
       "languages": [
         "it",
         "en",
